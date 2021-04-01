@@ -1,13 +1,13 @@
 #pragma once
 
 #include "Utility.h"
+#include "FRHI.h"
 
 #include <d3d12.h>
 #include <wrl/client.h>
 #include <dxgi1_6.h>
 #include<thread>
 
-class FDeviceManager;
 class FRenderer;
 class FRenderWindow;
 class FScene;
@@ -16,7 +16,7 @@ class FInputManager;
 class FEngine;
 class FRenderProxy;
 class FShaderManager;
-class FRootSignatureManager;
+class FShaderBindingsManager;
 class FPipelineStateManager;
 
 class FRenderThread
@@ -61,6 +61,7 @@ private:
     bool mInited;
 
     FEngine* mEngine;
+    FRHI* mRHI;
     FRenderWindow* mRenderWindow;
     FRenderer* mRenderer;
     FScene* mScene;

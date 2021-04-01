@@ -4,7 +4,7 @@
 
 #include <string>
 
-class FTexture2D;
+class FRHITexture2D;
 
 class UTexture : public UResource
 {
@@ -22,7 +22,7 @@ public:
 	UTexture2D();
 	virtual ~UTexture2D() override;
 public:
-    FTexture2D* Texture;
+    FRHITexture2D* Texture;
 
 public:
     virtual void Load() override;

@@ -4,7 +4,7 @@
 #include "Utility.h"
 #include "TSingleton.h"
 
-class FShader;
+class FRHIShader;
 
 class FShaderManager : TSingleton<FShaderManager>
 {
@@ -15,9 +15,9 @@ public:
     void Init();
     void UnInit();
 
-    FShader* GetOrCreateShader(std::string& fileName, std::string& enterPoint, std::string& target);
+    FRHIShader* GetOrCreateShader(std::string& fileName, std::string& enterPoint, std::string& target);
 
 private:
-    std::map<std::string, FShader*> mShader;
+    std::map<std::string, FRHIShader*> mShader;
 
 };

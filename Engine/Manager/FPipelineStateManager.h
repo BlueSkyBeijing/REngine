@@ -3,7 +3,7 @@
 #include <wrl/client.h>
 #include "d3d12.h"
 
-class FPipelineState;
+class FRHIPipelineState;
 class FRenderProxy;
 
 class FPipelineStateManager : TSingleton<FPipelineStateManager>
@@ -15,8 +15,8 @@ public:
     void Init();
     void UnInit();
 
-    FPipelineState* GetOrCreatePipleLineState(FRenderProxy* renderProxy);
+    FRHIPipelineState* GetOrCreatePipleLineState(FRenderProxy* renderProxy);
 
 private:
-	FPipelineState* mPipelineState;
+	FRHIPipelineState* mPipelineState;
 };

@@ -1,11 +1,10 @@
 #include "FRenderProxy.h"
-#include "FDeviceManager.h"
 #include "WindowsUtility.h"
 #include "DX12Utility.h"
-#include "FDevice.h"
+#include "FRHI.h"
 #include "FShaderManager.h"
 #include "FMaterial.h"
-#include "FBuffer.h"
+#include "FRHIBuffer.h"
 
 #include <d3d12.h>
 #include "d3dx12.h"
@@ -31,6 +30,7 @@ void FRenderProxy::CreateRenderResource()
 {
 
 }
+
 void FRenderProxy::ReleaseRenderResource()
 {
 
@@ -51,16 +51,16 @@ FStaticMeshRenderProxy::~FStaticMeshRenderProxy()
 
 void FStaticMeshRenderProxy::CreateRenderResource()
 {
-    VertexBuffer = new FVertexBuffer;
+    VertexBuffer = new FRHIVertexBuffer;
     VertexBuffer->Vertexes = mVertexes;
     VertexBuffer->VertexLayout = VertexLayout;
     VertexBuffer->Init();
 
-    IndexBuffer = new FIndexBuffer;
+    IndexBuffer = new FRHIIndexBuffer;
     IndexBuffer->Indexes = mIndexes;
     IndexBuffer->Init();
 
-    ConstantBuffer = new FConstantBuffer<FObjectConstant>;
+    ConstantBuffer = new FRHIConstantBuffer<FObjectConstant>;
 
     WorldMatrix = FMatrix4x4(
         1.0f, 0.0f, 0.0f, 0.0f,

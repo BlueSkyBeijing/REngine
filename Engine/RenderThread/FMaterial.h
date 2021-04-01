@@ -1,10 +1,10 @@
 #pragma once
-#include "FRenderResource.h"
+#include "FRHIResource.h"
 
-class FShader;
-class FTexture2D;
+class FRHIShader;
+class FRHITexture2D;
 
-class FMaterial : public FRenderResource
+class FMaterial : public FRHIResource
 {
 public:
 	FMaterial();
@@ -14,13 +14,13 @@ public:
     void UnInit();
 
 public:
-    FShader* VertexShader;
-    FShader* PixelShader;
+    FRHIShader* VertexShader;
+    FRHIShader* PixelShader;
 
-    FTexture2D* BaseColor;
-    FTexture2D* MetallicSpecularRoughness;
-    FTexture2D* NormalMap;
-    FTexture2D* EmissiveColor;
+    FRHITexture2D* BaseColor;
+    FRHITexture2D* MetallicSpecularRoughness;
+    FRHITexture2D* NormalMap;
+    FRHITexture2D* EmissiveColor;
 
 private:
 

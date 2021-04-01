@@ -1,5 +1,5 @@
 #include "UTexture.h"
-#include "FTexture.h"
+#include "FRHITexture.h"
 
 UTexture::UTexture()
 {

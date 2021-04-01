@@ -1,13 +1,13 @@
 #include "FRenderThread.h"
-#include "FDeviceManager.h"
-#include "FDevice.h"
-#include "FRenderTarget.h"
+#include "FRHI.h"
+#include "FD3D12RHI.h"
+#include "FRHIRenderTarget.h"
 #include "FRenderer.h"
 #include "FScene.h"
 #include "FView.h"
 #include "FEngine.h"
 #include "FInputManager.h"
-#include "FRootSignatureManager.h"
+#include "FShaderBindingsManager.h"
 #include "FPipelineStateManager.h"
 
 #include<thread>
@@ -62,9 +62,11 @@ void FRenderThread::InitView(FVector3& position, FVector3& target, FVector3& up)
 
 void FRenderThread::init()
 {
-    TSingleton<FDeviceManager>::GetInstance().Init();
+    mRHI = new FD3D12RHI;
+    mRHI->Init();
+
     TSingleton<FPipelineStateManager>::GetInstance().Init();
-    TSingleton<FRootSignatureManager>::GetInstance().Init();
+    TSingleton<FShaderBindingsManager>::GetInstance().Init();
 
     mRenderWindow = new FRenderWindow(1024, 768, DXGI_FORMAT_R8G8B8A8_UNORM);
     mRenderWindow->Init();
@@ -97,9 +99,12 @@ void FRenderThread::unInit()
     delete mRenderWindow;
     mRenderWindow = nullptr;
 
-    TSingleton<FRootSignatureManager>::GetInstance().UnInit();
+    TSingleton<FShaderBindingsManager>::GetInstance().UnInit();
     TSingleton<FPipelineStateManager>::GetInstance().UnInit();
-    TSingleton<FDeviceManager>::GetInstance().UnInit();
+
+    mRHI->UnInit();
+    delete mRHI;
+    mRHI = nullptr;
 
     delete mRenderThread;
     mRenderThread = nullptr;

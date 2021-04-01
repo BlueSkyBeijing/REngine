@@ -1,7 +1,7 @@
 #pragma once
 
 #include "UObject.h"
-#include "FVertex.h"
+#include "FRHIVertex.h"
 
 #include <vector>
 #include <string>
@@ -26,7 +26,7 @@ public:
         return mIndexes;
     }
 
-    const FVertexLayout& GetVertexLayout() const
+    const FRHIVertexLayout& GetVertexLayout() const
     {
         return mVertexLayout;
     }
@@ -34,5 +34,5 @@ public:
 private:
 	std::vector<FStaticMeshVertex> mVertexes;
 	std::vector<uint16> mIndexes;
-	FVertexLayout mVertexLayout;
+	FRHIVertexLayout mVertexLayout;
 };

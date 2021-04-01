@@ -1,6 +1,6 @@
 #include "FMaterial.h"
-#include "FShader.h"
-#include "FTexture.h"
+#include "FRHIShader.h"
+#include "FRHITexture.h"
 
 FMaterial::FMaterial():
     VertexShader(nullptr),
@@ -18,19 +18,19 @@ FMaterial::~FMaterial()
 
 void FMaterial::Init()
 {
-    VertexShader = new FShader;
+    VertexShader = new FRHIShader;
     VertexShader->FilePathName = L"Engine\\Shader\\ForwardShadingVS.hlsl";
     VertexShader->EnterPoint = "VSMain";
     VertexShader->Target = "vs_5_0";
     VertexShader->Init();
 
-    PixelShader = new FShader;
+    PixelShader = new FRHIShader;
     PixelShader->FilePathName = L"Engine\\Shader\\ForwardShadingPS.hlsl";
     PixelShader->EnterPoint = "PSMain";
     PixelShader->Target = "ps_5_0";
     PixelShader->Init();
 
-    BaseColor = new FTexture2D;
+    BaseColor = new FRHITexture2D;
     BaseColor->FilePathName = L"Content\\Texture\\T_Stone_C.dds";
     BaseColor->Slot = 0;
     BaseColor->Init();

@@ -1,7 +1,6 @@
 #include "FShaderManager.h"
-#include "FDeviceManager.h"
-#include "FDevice.h"
-#include "FShader.h"
+#include "FRHI.h"
+#include "FRHIShader.h"
 
 FShaderManager::FShaderManager()
 {
@@ -19,23 +18,23 @@ void FShaderManager::UnInit()
 {
     for (auto it = mShader.begin(); it != mShader.end(); it++)
     {
-        FShader* shader = it->second;
+        FRHIShader* shader = it->second;
         delete shader;
     }
 
     mShader.clear();
 }
 
-FShader* FShaderManager::GetOrCreateShader(std::string& fileName, std::string& enterPoint, std::string& target)
+FRHIShader* FShaderManager::GetOrCreateShader(std::string& fileName, std::string& enterPoint, std::string& target)
 {
-    std::map<std::string, FShader*>::iterator it =  mShader.find(fileName);
+    std::map<std::string, FRHIShader*>::iterator it =  mShader.find(fileName);
     if (it != mShader.end())
     {
         return it->second;
     }
 
-    FShader* shader = new FShader;
-    TSingleton<FDeviceManager>::GetInstance().GetRootDevice()->CreateShader(shader);
+    FRHIShader* shader = new FRHIShader;
+    TSingleton<FD3D12RHIManager>::GetInstance().GetRootDevice()->CreateShader(shader);
 
     return nullptr;
 }

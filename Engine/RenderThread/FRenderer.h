@@ -1,14 +1,13 @@
 #pragma once
-#include "FBuffer.h"
+#include "FRHIBuffer.h"
 
-class FDeviceManager;
 class FRenderWindow;
 class FSceneManager;
 class FScene;
 class FView;
-class FRenderTarget;
+class FRHIRenderTarget;
 class FShaderManager;
-class FRootSignatureManager;
+class FShaderBindingsManager;
 class FPipelineStateManager;
 
 struct FPassConstant
@@ -36,7 +35,7 @@ protected:
     virtual void clear();
     virtual void initView();
     virtual void computeVisibility();
-    virtual void setRenderTarget(FRenderTarget* renderTarget);
+    virtual void setRenderTarget(FRHIRenderTarget* renderTarget);
     virtual void setViewPort();
     virtual void drawRenderables();
     virtual void postProcess();
@@ -45,9 +44,9 @@ protected:
     void createPassConstantBuffer();
 
 private:
-    FDevice* mDevice;
+    FRHI* mDevice;
     FRenderWindow* mRenderWindow;
     FScene* mScene;
     FView* mView;
-    FConstantBuffer<FPassConstant>* mPassConstantBuffer;
+    FRHIConstantBuffer<FPassConstant>* mPassConstantBuffer;
 };

@@ -1,25 +1,25 @@
 #include "FRenderer.h"
-#include "FRenderTarget.h"
+#include "FRHIRenderTarget.h"
 #include "FRenderProxy.h"
 #include "FScene.h"
-#include "FDeviceManager.h"
-#include "FDevice.h"
+#include "FD3D12RHIManager.h"
+#include "FRHI.h"
 #include "FPipelineStateManager.h"
-#include "FRootSignatureManager.h"
-#include "FShader.h"
+#include "FShaderBindingsManager.h"
+#include "FRHIShader.h"
 #include "Utility.h"
-#include "FPipelineState.h"
-#include "FRootSignature.h"
+#include "FRHIPipelineState.h"
+#include "FRHIShaderBindings.h"
 #include "TSingleton.h"
 #include "FMaterial.h"
-#include "FBuffer.h"
+#include "FRHIBuffer.h"
 #include "FView.h"
 
 #include <vector>
 #include <string>
 
 FRenderer::FRenderer(FRenderWindow* renderWindow, FScene* scene, FView* view) :
-    mDevice(TSingleton<FDeviceManager>::GetInstance().GetRootDevice()),
+    mDevice(),
     mRenderWindow(renderWindow),
     mScene(scene),
     mView(view)
@@ -96,7 +96,7 @@ void FRenderer::computeVisibility()
 {
 }
 
-void FRenderer::setRenderTarget(FRenderTarget* renderTarget)
+void FRenderer::setRenderTarget(FRHIRenderTarget* renderTarget)
 {
     mDevice->SetRenderTarget(renderTarget);
 }
@@ -114,7 +114,7 @@ void FRenderer::setViewPort()
 
 void FRenderer::drawRenderables()
 {
-    FDevice* curDevice = mDevice;
+    FRHI* curDevice = mDevice;
 
     const std::vector<FRenderProxy*>& renderProxys = mScene->GetRenderProxys();
     for (auto it = renderProxys.begin(); it != renderProxys.end(); it++)
@@ -123,7 +123,7 @@ void FRenderer::drawRenderables()
 
         curDevice->BeginEvent(renderProxy->DebugName);
 
-        FPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetOrCreatePipleLineState(renderProxy);
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetOrCreatePipleLineState(renderProxy);
 
         curDevice->SetPipelineState(pipelineState);
         curDevice->SetPrimitiveTopology(FPrimitiveTopology::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -172,7 +172,7 @@ void FRenderer::createPassConstantBuffer()
     DirectX::XMStoreFloat4x4(&constant.View, DirectX::XMMatrixTranspose(view));
     DirectX::XMStoreFloat4x4(&constant.ViewProj, DirectX::XMMatrixTranspose(view * proj));
 
-    mPassConstantBuffer = new FConstantBuffer<FPassConstant>;
+    mPassConstantBuffer = new FRHIConstantBuffer<FPassConstant>;
     mPassConstantBuffer->BufferStruct = constant;
     mPassConstantBuffer->Slot = 3;
     mPassConstantBuffer->Init();

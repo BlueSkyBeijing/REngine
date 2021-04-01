@@ -3,16 +3,15 @@
 #include <wrl/client.h>
 #include <DirectXMath.h>
 
-#include "FVertex.h"
-#include "FBuffer.h"
+#include "FRHIVertex.h"
+#include "FRHIBuffer.h"
 
 // render thread render element
 
-class FDeviceManager;
 class FMaterial;
-class FBuffer;
-class FVertexBuffer;
-class FIndexBuffer;
+class FRHIBuffer;
+class FRHIVertexBuffer;
+class FRHIIndexBuffer;
 
 struct FObjectConstant
 {
@@ -27,7 +26,7 @@ public:
 
     std::vector<FStaticMeshVertex> Vertexes;
     std::vector<std::uint16_t> Indexes;
-    FVertexLayout VertexLayout;
+    FRHIVertexLayout VertexLayout;
     FMaterial* Material;
     FVector3 Position;
     FVector3 Rotation;
@@ -45,16 +44,16 @@ public:
 
 public:
     FMaterial* Material;
-    FVertexBuffer* VertexBuffer;
-    FIndexBuffer* IndexBuffer;
-    FConstantBuffer<FObjectConstant>* ConstantBuffer;
+    FRHIVertexBuffer* VertexBuffer;
+    FRHIIndexBuffer* IndexBuffer;
+    FRHIConstantBuffer<FObjectConstant>* ConstantBuffer;
     uint32 IndexCountPerInstance;
     uint32 InstanceCount;
     uint32 StartIndexLocation;
     int32 BaseVertexLocation;
     uint32 StartInstanceLocation;
     FMatrix4x4 WorldMatrix;
-    FVertexLayout VertexLayout;
+    FRHIVertexLayout VertexLayout;
 
     std::string DebugName;
 
