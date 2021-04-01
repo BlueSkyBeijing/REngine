@@ -1,0 +1,324 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Engine\Core">
+      <UniqueIdentifier>{a7b72e42-7546-4498-87a0-3240bf7837f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Utility">
+      <UniqueIdentifier>{de978045-f0e8-4186-8d02-66b304cc5b23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Manager">
+      <UniqueIdentifier>{f5719a8e-d7a7-4c5a-8b32-7e7912aec79d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\RenderThread">
+      <UniqueIdentifier>{e75510b1-89e3-4311-865a-e1f51190fdf5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\MainThread">
+      <UniqueIdentifier>{610d619a-2af2-4f4c-8be1-552121203cc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\RenderThread\RHI">
+      <UniqueIdentifier>{de5ef717-fc44-4261-82f1-bf86aa51e1ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\RenderThread\D3D12RHI">
+      <UniqueIdentifier>{f805898a-3324-4c15-bf84-42cde8953496}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Engine\Main.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Manager\FDeviceManager.cpp">
+      <Filter>Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Manager\FInputManager.cpp">
+      <Filter>Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Manager\FLogManager.cpp">
+      <Filter>Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Manager\FPipelineStateManager.cpp">
+      <Filter>Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Manager\FRootSignatureManager.cpp">
+      <Filter>Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Manager\FSceneManager.cpp">
+      <Filter>Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Manager\FConfigManager.cpp">
+      <Filter>Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Utility\DX12Utility.cpp">
+      <Filter>Engine\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Utility\DDSTextureLoader.cpp">
+      <Filter>Engine\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Manager\FShaderManager.cpp">
+      <Filter>Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Manager\FResourceManager.cpp">
+      <Filter>Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\MainThread\UCamera.cpp">
+      <Filter>Engine\MainThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\MainThread\ULight.cpp">
+      <Filter>Engine\MainThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\MainThread\UMaterial.cpp">
+      <Filter>Engine\MainThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\MainThread\UObject.cpp">
+      <Filter>Engine\MainThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\MainThread\UStaticMesh.cpp">
+      <Filter>Engine\MainThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\MainThread\UStaticMeshObject.cpp">
+      <Filter>Engine\MainThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\MainThread\UTexture.cpp">
+      <Filter>Engine\MainThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\MainThread\UWorld.cpp">
+      <Filter>Engine\MainThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\RenderThread\FAdapter.cpp">
+      <Filter>Engine\RenderThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\RenderThread\FBuffer.cpp">
+      <Filter>Engine\RenderThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\RenderThread\FCommandList.cpp">
+      <Filter>Engine\RenderThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\RenderThread\FDevice.cpp">
+      <Filter>Engine\RenderThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\RenderThread\FMaterial.cpp">
+      <Filter>Engine\RenderThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\RenderThread\FPipelineState.cpp">
+      <Filter>Engine\RenderThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\RenderThread\FPostProcessing.cpp">
+      <Filter>Engine\RenderThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\RenderThread\FRenderer.cpp">
+      <Filter>Engine\RenderThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\RenderThread\FRenderProxy.cpp">
+      <Filter>Engine\RenderThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\RenderThread\FRenderResource.cpp">
+      <Filter>Engine\RenderThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\RenderThread\FRenderTarget.cpp">
+      <Filter>Engine\RenderThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\RenderThread\FRenderThread.cpp">
+      <Filter>Engine\RenderThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\RenderThread\FRootSignature.cpp">
+      <Filter>Engine\RenderThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\RenderThread\FScene.cpp">
+      <Filter>Engine\RenderThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\RenderThread\FShader.cpp">
+      <Filter>Engine\RenderThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\RenderThread\FTexture.cpp">
+      <Filter>Engine\RenderThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\RenderThread\FVertex.cpp">
+      <Filter>Engine\RenderThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\RenderThread\FView.cpp">
+      <Filter>Engine\RenderThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\FEngine.cpp">
+      <Filter>Engine\Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Engine\Utility\d3dx12.h">
+      <Filter>Engine\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Manager\FDeviceManager.h">
+      <Filter>Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Manager\FInputManager.h">
+      <Filter>Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Manager\FLogManager.h">
+      <Filter>Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Manager\FPipelineStateManager.h">
+      <Filter>Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Manager\FRootSignatureManager.h">
+      <Filter>Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Manager\FSceneManager.h">
+      <Filter>Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utility\WindowsUtility.h">
+      <Filter>Engine\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Manager\FConfigManager.h">
+      <Filter>Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utility\DX12Utility.h">
+      <Filter>Engine\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utility\DDSTextureLoader.h">
+      <Filter>Engine\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Manager\FShaderManager.h">
+      <Filter>Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utility\Utility.h">
+      <Filter>Engine\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utility\TSingleton.h">
+      <Filter>Engine\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Manager\FResourceManager.h">
+      <Filter>Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\MainThread\UCamera.h">
+      <Filter>Engine\MainThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\MainThread\ULight.h">
+      <Filter>Engine\MainThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\MainThread\UMaterial.h">
+      <Filter>Engine\MainThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\MainThread\UObject.h">
+      <Filter>Engine\MainThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\MainThread\UStaticMesh.h">
+      <Filter>Engine\MainThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\MainThread\UStaticMeshObject.h">
+      <Filter>Engine\MainThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\MainThread\UTexture.h">
+      <Filter>Engine\MainThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\MainThread\UWorld.h">
+      <Filter>Engine\MainThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderThread\FAdapter.h">
+      <Filter>Engine\RenderThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderThread\FBuffer.h">
+      <Filter>Engine\RenderThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderThread\FCommandList.h">
+      <Filter>Engine\RenderThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderThread\FDevice.h">
+      <Filter>Engine\RenderThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderThread\FMaterial.h">
+      <Filter>Engine\RenderThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderThread\FPipelineState.h">
+      <Filter>Engine\RenderThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderThread\FPostProcessing.h">
+      <Filter>Engine\RenderThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderThread\FRenderer.h">
+      <Filter>Engine\RenderThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderThread\FRenderProxy.h">
+      <Filter>Engine\RenderThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderThread\FRenderResource.h">
+      <Filter>Engine\RenderThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderThread\FRenderTarget.h">
+      <Filter>Engine\RenderThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderThread\FRenderThread.h">
+      <Filter>Engine\RenderThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderThread\FRootSignature.h">
+      <Filter>Engine\RenderThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderThread\FScene.h">
+      <Filter>Engine\RenderThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderThread\FShader.h">
+      <Filter>Engine\RenderThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderThread\FTexture.h">
+      <Filter>Engine\RenderThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderThread\FVertex.h">
+      <Filter>Engine\RenderThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderThread\FView.h">
+      <Filter>Engine\RenderThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\FEngine.h">
+      <Filter>Engine\Core</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Engine\Shader\Common.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\Shader\DeferredShadingCommon.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\Shader\DeferredShadingPS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\Shader\DeferredShadingVS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\Shader\ForwardShadingCommon.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\Shader\ForwardShadingPS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\Shader\ForwardShadingVS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\Shader\LightingModel.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\Shader\Postprocess.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\Shader\ShadingCommon.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\Shader\Tonemap.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Engine\RenderThread\FBuffer.inl">
+      <Filter>Engine\RenderThread</Filter>
+    </None>
+    <None Include="Engine\RenderThread\FDevice.inl">
+      <Filter>Engine\RenderThread</Filter>
+    </None>
+  </ItemGroup>
+</Project>
