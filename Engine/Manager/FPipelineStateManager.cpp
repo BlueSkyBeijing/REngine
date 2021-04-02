@@ -6,6 +6,11 @@
 #include "FShaderBindingsManager.h"
 #include "FMaterial.h"
 #include "FRHIVertex.h"
+#include "FRHIShaderBindings.h"
+#include "FEngine.h"
+#include "TSingleton.h"
+#include "FRHI.h"
+#include "FRenderThread.h"
 
 FPipelineStateManager::FPipelineStateManager():
     mPipelineState(nullptr)
@@ -20,15 +25,11 @@ FRHIPipelineState* FPipelineStateManager::GetOrCreatePipleLineState(FRenderProxy
 {
     if (nullptr == mPipelineState)
     {
-        mPipelineState = new FRHIPipelineState;
-        FRHIShaderBindings* rootSignature = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
 
-        mPipelineState->VertexShader = renderProxy->Material->VertexShader;
-        mPipelineState->PixelShader = renderProxy->Material->PixelShader;
-        mPipelineState->ShaderBindings = rootSignature;
-        mPipelineState->VertexLayout = &renderProxy->VertexLayout;
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
 
-        mPipelineState->Init();
+        mPipelineState  = rhi->CreatePipelineState(shaderBindings, renderProxy->Material->VertexShader, renderProxy->Material->PixelShader, &renderProxy->VertexLayout);
     }
 
     return mPipelineState;
@@ -43,7 +44,6 @@ void FPipelineStateManager::UnInit()
 {
     if (mPipelineState != nullptr)
     {
-        mPipelineState->UnInit();
         delete mPipelineState;
         mPipelineState = nullptr;
     }

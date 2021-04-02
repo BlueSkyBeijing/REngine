@@ -1,5 +1,4 @@
 #include "FRHIShader.h"
-#include "FD3D12RHIManager.h"
 #include "FRHI.h"
 
 #include <d3d12shader.h>

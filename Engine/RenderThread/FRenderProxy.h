@@ -6,6 +6,8 @@
 #include "FRHIVertex.h"
 #include "FRHIBuffer.h"
 
+#include <string>
+
 // render thread render element
 
 class FMaterial;
@@ -46,7 +48,7 @@ public:
     FMaterial* Material;
     FRHIVertexBuffer* VertexBuffer;
     FRHIIndexBuffer* IndexBuffer;
-    FRHIConstantBuffer<FObjectConstant>* ConstantBuffer;
+    FRHIConstantBuffer* ConstantBuffer;
     uint32 IndexCountPerInstance;
     uint32 InstanceCount;
     uint32 StartIndexLocation;

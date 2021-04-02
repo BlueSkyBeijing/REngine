@@ -11,7 +11,6 @@ FD3D12PipelineState::~FD3D12PipelineState()
 
 void FD3D12PipelineState::Init()
 {
-    TSingleton<FD3D12RHIManager>::GetInstance().GetRootDevice()->CreatePipelineState(this);
 
 }
 

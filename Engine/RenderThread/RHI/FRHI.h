@@ -11,12 +11,13 @@ class FRHIVertexBuffer;
 class FRHIIndexBuffer;
 class FRHIShaderBindings;
 class FRHITexture2D;
+class FRHIRenderWindow;
 
 class FRHI
 {
 public:
-	FRHI() = 0;
-    virtual ~FRHI() = 0;
+	FRHI(){}
+    virtual ~FRHI(){}
 
     virtual void Init() = 0;
     virtual void UnInit() = 0;
@@ -43,15 +44,14 @@ public:
     virtual void SetIndexBuffer(FRHIIndexBuffer* buffer) = 0;
     virtual void DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation,int32 baseVertexLocation,uint32 startInstanceLocation) = 0;
 
-    template <typename TBufferStruct>
-    virtual void CreateConstantBuffer(FRHIConstantBuffer<TBufferStruct>* constantBuffer) = 0;
-    virtual void CreateVertexBuffer(FRHIVertexBuffer* vertexBuffer) = 0;
-    virtual void CreateIndexBuffer(FRHIIndexBuffer* indexBuffer) = 0;
-    virtual void CreateShader(FRHIShader* shader) = 0;
-    virtual void CreateRootSignature(FRHIShaderBindings* rootSignature) = 0;
-    virtual void CreatePipelineState(FRHIPipelineState* pipelineState) = 0;
-    virtual void CreateTexture(FRHITexture2D* texture2D) = 0;
-    virtual void CreateRenderTarget(FRenderWindow* renderTarget) = 0;
+    virtual FRHIConstantBuffer* CreateConstantBuffer(uint32 structureSize, uint8* bufferData, int32 slot) = 0;
+    virtual FRHIVertexBuffer* CreateVertexBuffer(uint32 structureSize, uint32 vertexCount, uint8* bufferData) = 0;
+    virtual FRHIIndexBuffer* CreateIndexBuffer(uint32 structureSize, uint32 indexCount, uint8* bufferData) = 0;
+    virtual FRHIShader* CreateShader(const std::wstring& filePathName, const std::string& EnterPoint, const std::string& target) = 0;
+    virtual FRHIShaderBindings* CreateShaderBindings() = 0;
+    virtual FRHIPipelineState* CreatePipelineState(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout) = 0;
+    virtual FRHITexture2D* CreateTexture2D(const std::wstring& filePathName, int32 slot) = 0;
+    virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) = 0;
 
     virtual void BeginEvent(std::string& eventName) = 0;
     virtual void EndEvent() = 0;

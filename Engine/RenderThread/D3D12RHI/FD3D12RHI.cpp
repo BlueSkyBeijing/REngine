@@ -18,7 +18,6 @@
 
 FD3D12RHI::FD3D12RHI():
     mDX12Device(nullptr),
-    mAdapterParent(nullptr),
     mEventHandle(0),
     mFenceValue(0),
     mDepthStencilFormat(DXGI_FORMAT_D24_UNORM_S8_UINT),
@@ -200,10 +199,10 @@ void FD3D12RHI::EndEvent()
 
 void FD3D12RHI::SetRenderTarget(FRHIRenderTarget* renderTarget)
 {
-    mRenderTarget = dynamic_cast<FRenderWindow*>(renderTarget);
+    mRenderTarget = dynamic_cast<FD3D12RenderWindow*>(renderTarget);
     //set render target
-    D3D12_CPU_DESCRIPTOR_HANDLE renderBufferView = renderTarget->GetRenderBufferView();
-    D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = renderTarget->GetDepthStencilView();
+    D3D12_CPU_DESCRIPTOR_HANDLE renderBufferView = mRenderTarget->GetRenderBufferView();
+    D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = mRenderTarget->GetDepthStencilView();
     mDX12CommandList->OMSetRenderTargets(1, &renderBufferView, true, &depthStencilView);
 }
 
@@ -219,9 +218,12 @@ void FD3D12RHI::SetSetScissor(FRect& scissorRect)
 
 void FD3D12RHI::SetPipelineState(FRHIPipelineState* pipelineState)
 {
-    mDX12CommandList->SetGraphicsRootSignature(pipelineState->ShaderBindings->mDX12RootSignature.Get());
+    FD3D12PipelineState* state = dynamic_cast<FD3D12PipelineState*>(pipelineState);
+    FD3D12ShaderBindings* bindings = dynamic_cast<FD3D12ShaderBindings*>(state->ShaderBindings);
 
-    mDX12CommandList->SetPipelineState(pipelineState->mDX12PipleLineState.Get());
+    mDX12CommandList->SetGraphicsRootSignature(bindings->mDX12RootSignature.Get());
+
+    mDX12CommandList->SetPipelineState(state->mDX12PipleLineState.Get());
 }
 
 void FD3D12RHI::SetPrimitiveTopology(FPrimitiveTopology topology)
@@ -231,12 +233,16 @@ void FD3D12RHI::SetPrimitiveTopology(FPrimitiveTopology topology)
 
 void FD3D12RHI::SetVertexBuffer(FRHIVertexBuffer* buffer)
 {
-    mDX12CommandList->IASetVertexBuffers(0, 1, &buffer->mVertexBufferView);
+    FD3D12VertexBuffer* vertexBuffer = dynamic_cast<FD3D12VertexBuffer*>(buffer);
+
+    mDX12CommandList->IASetVertexBuffers(0, 1, &vertexBuffer->mVertexBufferView);
 }
 
 void FD3D12RHI::SetIndexBuffer(FRHIIndexBuffer* buffer)
 {
-    mDX12CommandList->IASetIndexBuffer(&buffer->mIndexBufferView);
+    FD3D12IndexBuffer* indexBuffer = dynamic_cast<FD3D12IndexBuffer*>(buffer);
+
+    mDX12CommandList->IASetIndexBuffer(&indexBuffer->mIndexBufferView);
 }
 
 void FD3D12RHI::DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation)
@@ -254,9 +260,9 @@ void FD3D12RHI::DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instan
     mDX12CommandList->DrawIndexedInstanced(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
 }
 
-void FD3D12RHI::CreateVertexBuffer(FRHIVertexBuffer* vertexBuffer)
+FRHIVertexBuffer* FD3D12RHI::CreateVertexBuffer(uint32 structureSize, uint32 vertexCount, uint8* bufferData)
 {
-    const uint64 vertexCount = vertexBuffer->Vertexes.size();
+    FD3D12VertexBuffer* vertexBuffer = new FD3D12VertexBuffer;
 
     //create vertex buffer
     CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_UPLOAD);
@@ -270,26 +276,28 @@ void FD3D12RHI::CreateVertexBuffer(FRHIVertexBuffer* vertexBuffer)
         nullptr,
         IID_PPV_ARGS(&vertexBuffer->mVertexBuffer)));
 
-    const uint32 vbByteSize = static_cast<uint32>(vertexCount * sizeof(FStaticMeshVertex));
+    const uint32 vbByteSize = static_cast<uint32>(vertexCount * structureSize);
 
     //copy data
     uint8* vertexBufferData;
     vertexBuffer->mVertexBuffer->Map(0, nullptr, reinterpret_cast<void**>(&vertexBufferData));
-    memcpy(vertexBufferData, vertexBuffer->Vertexes.data(), vbByteSize);
+    memcpy(vertexBufferData, bufferData, vbByteSize);
     vertexBuffer->mVertexBuffer->Unmap(0, nullptr);
 
     //vertex buffer view
     vertexBuffer->mVertexBufferView.BufferLocation = vertexBuffer->mVertexBuffer->GetGPUVirtualAddress();
     vertexBuffer->mVertexBufferView.StrideInBytes = sizeof(FStaticMeshVertex);
     vertexBuffer->mVertexBufferView.SizeInBytes = vbByteSize;
+
+    return vertexBuffer;
 }
 
-void FD3D12RHI::CreateIndexBuffer(FRHIIndexBuffer* indexBuffer)
+FRHIIndexBuffer* FD3D12RHI::CreateIndexBuffer(uint32 structureSize, uint32 indexCount, uint8* bufferData)
 {
-    const uint64 indexCount = indexBuffer->Indexes.size();
+    FD3D12IndexBuffer* indexBuffer = new FD3D12IndexBuffer;
 
     //create index buffer
-    CD3DX12_RESOURCE_DESC indexResourceDesc = CD3DX12_RESOURCE_DESC::Buffer(indexCount * sizeof(std::uint16_t));
+    CD3DX12_RESOURCE_DESC indexResourceDesc = CD3DX12_RESOURCE_DESC::Buffer(indexCount * structureSize);
     CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_UPLOAD);
     THROW_IF_FAILED(mDX12Device->CreateCommittedResource(
         &heapProperties,
@@ -299,20 +307,59 @@ void FD3D12RHI::CreateIndexBuffer(FRHIIndexBuffer* indexBuffer)
         nullptr,
         IID_PPV_ARGS(&indexBuffer->mIndexBuffer)));
 
-    const uint32 ibByteSize = static_cast<uint32>(indexCount * sizeof(uint16));
+    const uint32 ibByteSize = static_cast<uint32>(indexCount * structureSize);
 
     uint8* indexBufferData;
     indexBuffer->mIndexBuffer->Map(0, nullptr, reinterpret_cast<void**>(&indexBufferData));
-    memcpy(indexBufferData, indexBuffer->Indexes.data(), ibByteSize);
+    memcpy(indexBufferData, bufferData, ibByteSize);
     indexBuffer->mIndexBuffer->Unmap(0, nullptr);
 
     indexBuffer->mIndexBufferView.BufferLocation = indexBuffer->mIndexBuffer->GetGPUVirtualAddress();
     indexBuffer->mIndexBufferView.Format = DXGI_FORMAT_R16_UINT;
     indexBuffer->mIndexBufferView.SizeInBytes = ibByteSize;;
+
+    return indexBuffer;
 }
 
-void FD3D12RHI::CreateShader(FRHIShader* shader)
+FRHIConstantBuffer* FD3D12RHI::CreateConstantBuffer(uint32 structureSize, uint8* bufferData, int32 slot)
 {
+    FD3D12ConstantBuffer* constantBuffer = new FD3D12ConstantBuffer;
+
+    //create object constant buffer
+    CD3DX12_RESOURCE_DESC objConstantResourceDesc = CD3DX12_RESOURCE_DESC::Buffer(CalcConstantBufferByteSize(structureSize));
+
+    CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_UPLOAD);
+    THROW_IF_FAILED(mDX12Device->CreateCommittedResource(
+        &heapProperties,
+        D3D12_HEAP_FLAG_NONE,
+        &objConstantResourceDesc,
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr,
+        IID_PPV_ARGS(&constantBuffer->mConstantBuffer)));
+
+    uint8* objectConstantBufferData;
+    constantBuffer->mConstantBuffer->Map(0, nullptr, reinterpret_cast<void**>(&objectConstantBufferData));
+    memcpy(objectConstantBufferData, bufferData, structureSize);
+    constantBuffer->mConstantBuffer->Unmap(0, nullptr);
+
+    D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDescObject;
+    cbvDescObject.BufferLocation = constantBuffer->mConstantBuffer->GetGPUVirtualAddress();
+    cbvDescObject.SizeInBytes = CalcConstantBufferByteSize(structureSize);
+
+    CD3DX12_CPU_DESCRIPTOR_HANDLE objConDescriptor(mCBVSRVUAVHeap->GetCPUDescriptorHandleForHeapStart());
+    objConDescriptor = objConDescriptor.Offset(slot, mCBVSRVVUAVDescriptorSize);
+
+    mDX12Device->CreateConstantBufferView(
+        &cbvDescObject,
+        objConDescriptor);
+
+    return constantBuffer;
+}
+
+FRHIShader* FD3D12RHI::CreateShader(const std::wstring& filePathName, const std::string& enterPoint, const std::string& target)
+{
+    FD3D12Shader* shader = new FD3D12Shader;
+
     Microsoft::WRL::ComPtr<ID3DBlob> errors;
 
 #if defined(_DEBUG)
@@ -321,15 +368,19 @@ void FD3D12RHI::CreateShader(FRHIShader* shader)
     UINT compileFlags = 0;
 #endif
 
-    D3DCompileFromFile(shader->FilePathName.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, shader->EnterPoint.c_str(), shader->Target.c_str(), compileFlags, 0, &shader->mShader, &errors);
+    D3DCompileFromFile(filePathName.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, enterPoint.c_str(), target.c_str(), compileFlags, 0, &shader->mShader, &errors);
     if (errors != nullptr)
     {
         OutputDebugStringA((char*)errors->GetBufferPointer());
     }
+
+    return shader;
 }
 
-void FD3D12RHI::CreateRootSignature(FRHIShaderBindings* rootSignature)
+FRHIShaderBindings* FD3D12RHI::CreateShaderBindings()
 {
+    FD3D12ShaderBindings* rootSignature = new FD3D12ShaderBindings;
+
     CD3DX12_ROOT_PARAMETER slotRootParameter[4];
 
     CD3DX12_DESCRIPTOR_RANGE objTexTable;
@@ -363,27 +414,34 @@ void FD3D12RHI::CreateRootSignature(FRHIShaderBindings* rootSignature)
     Microsoft::WRL::ComPtr <ID3DBlob> error;
     D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error);
     THROW_IF_FAILED(mDX12Device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&rootSignature->mDX12RootSignature)));
+
+    return rootSignature;
 }
 
-void FD3D12RHI::CreatePipelineState(FRHIPipelineState* pipelineState)
+FRHIPipelineState* FD3D12RHI::CreatePipelineState(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout)
 {
-    uint32 NumElements = static_cast<uint32>(pipelineState->VertexLayout->Elements.size());
+    FD3D12PipelineState* pipelineState = new FD3D12PipelineState;
+    pipelineState->ShaderBindings = shaderBindings;
+    FD3D12Shader* vs = dynamic_cast<FD3D12Shader*>(vertexShader);
+    FD3D12Shader* ps = dynamic_cast<FD3D12Shader*>(pixelShader);
+
+    uint32 numElements = static_cast<uint32>(vertexLayout->Elements.size());
 
     D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc;
     ZeroMemory(&psoDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
-    psoDesc.InputLayout = { pipelineState->VertexLayout->Elements.data(), NumElements };
-    psoDesc.pRootSignature = pipelineState->ShaderBindings->mDX12RootSignature.Get();
+    psoDesc.InputLayout = { vertexLayout->Elements.data(), numElements };
+    psoDesc.pRootSignature = dynamic_cast<FD3D12ShaderBindings*>(shaderBindings)->mDX12RootSignature.Get();
     psoDesc.DepthStencilState.DepthEnable = TRUE;
     psoDesc.DepthStencilState.StencilEnable = TRUE;
     psoDesc.VS =
     {
-        reinterpret_cast<BYTE*>(pipelineState->VertexShader->mShader->GetBufferPointer()),
-        pipelineState->VertexShader->mShader->GetBufferSize()
+        reinterpret_cast<BYTE*>(vs->mShader->GetBufferPointer()),
+        vs->mShader->GetBufferSize()
     };
     psoDesc.PS =
     {
-        reinterpret_cast<BYTE*>(pipelineState->PixelShader->mShader->GetBufferPointer()),
-        pipelineState->PixelShader->mShader->GetBufferSize()
+        reinterpret_cast<BYTE*>(ps->mShader->GetBufferPointer()),
+        ps->mShader->GetBufferSize()
     };
 
     D3D12_RASTERIZER_DESC RasterizerState;
@@ -411,19 +469,23 @@ void FD3D12RHI::CreatePipelineState(FRHIPipelineState* pipelineState)
     psoDesc.DSVFormat = mDepthStencilFormat;
     THROW_IF_FAILED(mDX12Device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState->mDX12PipleLineState)));
 
+    return pipelineState;
+
 }
-void FD3D12RHI::CreateTexture(FRHITexture2D* texture2D)
+FRHITexture2D* FD3D12RHI::CreateTexture2D(const std::wstring& filePathName, int32 slot)
 {
+    FD3D12Texture2D* texture2D = new FD3D12Texture2D;
+
     FlushCommandQueue();
 
     //reset command list
     THROW_IF_FAILED(mDX12CommandList->Reset(mDX12CommandAllocator.Get(), NULL));
 
     THROW_IF_FAILED(DirectX::CreateDDSTextureFromFile12(mDX12Device.Get(),
-        mDX12CommandList.Get(), texture2D->FilePathName.c_str(),
+        mDX12CommandList.Get(), filePathName.c_str(),
         mCurTexture, mCurTextureUploadHeap));
 
-    CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorObj(mCBVSRVUAVHeap->GetCPUDescriptorHandleForHeapStart(), texture2D->Slot);
+    CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorObj(mCBVSRVUAVHeap->GetCPUDescriptorHandleForHeapStart(), slot);
 
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -440,16 +502,21 @@ void FD3D12RHI::CreateTexture(FRHITexture2D* texture2D)
     //execute command list
     ID3D12CommandList* CommandLists[] = { mDX12CommandList.Get() };
     mDX12CommandQueue->ExecuteCommandLists(1, CommandLists);
+
+    return texture2D;
 }
 
-void FD3D12RHI::CreateRenderTarget(FRenderWindow* renderTarget)
+FRHIRenderWindow* FD3D12RHI::CreateRenderWindow(uint32 width, uint32 hight)
 {
+    FD3D12RenderWindow* renderTarget = new FD3D12RenderWindow(width, hight, DXGI_FORMAT_R8G8B8A8_UNORM);
+    renderTarget->Init();
+
     DXGI_SWAP_CHAIN_DESC swapChainDesc;
     swapChainDesc.BufferDesc.Width = renderTarget->Width;
     swapChainDesc.BufferDesc.Height = renderTarget->Height;
     swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
     swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-    swapChainDesc.BufferDesc.Format = renderTarget->Format;
+    swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
     swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
     swapChainDesc.SampleDesc.Count = 1;
@@ -544,6 +611,8 @@ void FD3D12RHI::CreateRenderTarget(FRenderWindow* renderTarget)
     renderTarget->mDSVDescriptorSize = mDSVDescriptorSize;
 
     FlushCommandQueue();
+
+    return renderTarget;
 }
 
 void FD3D12RHI::Present()

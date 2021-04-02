@@ -8,7 +8,7 @@ class FRHIShader
     friend class FRHI;
 public:
 	FRHIShader();
-	~FRHIShader();
+	virtual ~FRHIShader();
 
     void Init();
     void UnInit();

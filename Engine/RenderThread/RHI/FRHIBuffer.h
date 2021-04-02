@@ -8,7 +8,7 @@ class FRHIBuffer : public FRHIResource
 {
 public:
 	FRHIBuffer();
-	~FRHIBuffer();
+	virtual~FRHIBuffer() override;
 
     virtual void Init() {}
     virtual void Uninit() {}
@@ -22,7 +22,7 @@ class FRHIVertexBuffer : public FRHIBuffer
     friend class FRHI;
 public:
     FRHIVertexBuffer();
-    ~FRHIVertexBuffer();
+    virtual ~FRHIVertexBuffer() override;
 
 public:
     virtual void Init() override;
@@ -41,7 +41,7 @@ class FRHIIndexBuffer : public FRHIBuffer
 
 public:
     FRHIIndexBuffer();
-    ~FRHIIndexBuffer();
+    virtual ~FRHIIndexBuffer() override;
 
 public:
     virtual void Init() override;
@@ -54,22 +54,19 @@ private:
 
 };
 
-template<typename TBufferStruct>
 class FRHIConstantBuffer : public FRHIBuffer
 {
     friend class FRHI;
 
 public:
     FRHIConstantBuffer();
-    ~FRHIConstantBuffer();
+    virtual ~FRHIConstantBuffer() override;
 
     int32 Slot;
 public:
     virtual void Init() override;
     virtual void Uninit() override;
 
-    TBufferStruct BufferStruct;
 private:
+    uint8* mData;
 };
-
-#include "FD3D12Buffer.inl"

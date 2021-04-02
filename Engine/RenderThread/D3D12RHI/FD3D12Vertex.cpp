@@ -8,11 +8,3 @@ FD3D12VertexLayout::~FD3D12VertexLayout()
 {
 }
 
-
-FStaticMeshVertex::FStaticMeshVertex()
-{
-}
-
-FStaticMeshVertex::~FStaticMeshVertex()
-{
-}

@@ -5,7 +5,7 @@ class FRHIResource
 {
 public:
 	FRHIResource();
-	~FRHIResource();
+    virtual~FRHIResource();
 
     virtual void Init() {}
     virtual void UnInit() {}

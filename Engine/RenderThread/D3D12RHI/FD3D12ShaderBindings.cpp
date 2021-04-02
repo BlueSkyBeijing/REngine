@@ -12,7 +12,6 @@ FD3D12ShaderBindings::~FD3D12ShaderBindings()
 
 void FD3D12ShaderBindings::Init()
 {
-    TSingleton<FD3D12RHIManager>::GetInstance().GetRootDevice()->CreateRootSignature(this);
 
 }
 

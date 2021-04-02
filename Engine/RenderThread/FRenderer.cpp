@@ -2,7 +2,6 @@
 #include "FRHIRenderTarget.h"
 #include "FRenderProxy.h"
 #include "FScene.h"
-#include "FD3D12RHIManager.h"
 #include "FRHI.h"
 #include "FPipelineStateManager.h"
 #include "FShaderBindingsManager.h"
@@ -14,12 +13,14 @@
 #include "FMaterial.h"
 #include "FRHIBuffer.h"
 #include "FView.h"
+#include "FEngine.h"
+#include "FRenderThread.h"
 
 #include <vector>
 #include <string>
 
-FRenderer::FRenderer(FRenderWindow* renderWindow, FScene* scene, FView* view) :
-    mDevice(),
+FRenderer::FRenderer(FRHIRenderWindow* renderWindow, FScene* scene, FView* view) :
+    mRHI(TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI()),
     mRenderWindow(renderWindow),
     mScene(scene),
     mView(view)
@@ -32,12 +33,12 @@ FRenderer::~FRenderer()
 
 void FRenderer::Init()
 {
-    mDevice->FlushCommandQueue();
+    mRHI->FlushCommandQueue();
 }
 
 void FRenderer::UnInit()
 {
-    mDevice->FlushCommandQueue();
+    mRHI->FlushCommandQueue();
 
     mPassConstantBuffer->UnInit();
     delete mPassConstantBuffer;
@@ -55,14 +56,14 @@ void FRenderer::CreateRenderResources()
         renderProxy->CreateRenderResource();
     }
 
-    mDevice->FlushCommandQueue();
+    mRHI->FlushCommandQueue();
 }
 
 void FRenderer::preRender()
 {
-    mDevice->BeginCommmandList();
-    mDevice->SetRenderTarget(mRenderWindow);
-    mDevice->BeginDraw();
+    mRHI->BeginCommmandList();
+    mRHI->SetRenderTarget(mRenderWindow);
+    mRHI->BeginDraw();
 }
 
 void FRenderer::RenderOneFrame()
@@ -83,7 +84,7 @@ void FRenderer::RenderOneFrame()
 void FRenderer::clear()
 {
     const DirectX::XMFLOAT4 clearColor = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-    mDevice->Clear(clearColor);
+    mRHI->Clear(clearColor);
 }
 
 void FRenderer::initView()
@@ -98,7 +99,7 @@ void FRenderer::computeVisibility()
 
 void FRenderer::setRenderTarget(FRHIRenderTarget* renderTarget)
 {
-    mDevice->SetRenderTarget(renderTarget);
+    mRHI->SetRenderTarget(renderTarget);
 }
 
 void FRenderer::setViewPort()
@@ -108,30 +109,28 @@ void FRenderer::setViewPort()
     //scissor rectangle
     FRect scissorRect = { 0, 0, static_cast<LONG>(mRenderWindow->Width), static_cast<LONG>(mRenderWindow->Height) };
 
-    mDevice->SetViewPort(viewPort);
-    mDevice->SetSetScissor(scissorRect);
+    mRHI->SetViewPort(viewPort);
+    mRHI->SetSetScissor(scissorRect);
 }
 
 void FRenderer::drawRenderables()
 {
-    FRHI* curDevice = mDevice;
-
     const std::vector<FRenderProxy*>& renderProxys = mScene->GetRenderProxys();
     for (auto it = renderProxys.begin(); it != renderProxys.end(); it++)
     {
         FRenderProxy * renderProxy = *it;
 
-        curDevice->BeginEvent(renderProxy->DebugName);
+        mRHI->BeginEvent(renderProxy->DebugName);
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetOrCreatePipleLineState(renderProxy);
 
-        curDevice->SetPipelineState(pipelineState);
-        curDevice->SetPrimitiveTopology(FPrimitiveTopology::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        curDevice->SetVertexBuffer(renderProxy->VertexBuffer);
-        curDevice->SetIndexBuffer(renderProxy->IndexBuffer);
-        curDevice->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
+        mRHI->SetPipelineState(pipelineState);
+        mRHI->SetPrimitiveTopology(FPrimitiveTopology::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        mRHI->SetVertexBuffer(renderProxy->VertexBuffer);
+        mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
+        mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
 
-        curDevice->EndEvent();
+        mRHI->EndEvent();
     }
 }
 
@@ -141,11 +140,11 @@ void FRenderer::postProcess()
 
 void FRenderer::postRender()
 {
-    mDevice->EndDraw();
-    mDevice->EndCommmandList();
+    mRHI->EndDraw();
+    mRHI->EndCommmandList();
 
-    mDevice->ExecuteCommandList();
-    mDevice->FlushCommandQueue();
+    mRHI->ExecuteCommandList();
+    mRHI->FlushCommandQueue();
 }
 
 void FRenderer::createPassConstantBuffer()
@@ -172,8 +171,5 @@ void FRenderer::createPassConstantBuffer()
     DirectX::XMStoreFloat4x4(&constant.View, DirectX::XMMatrixTranspose(view));
     DirectX::XMStoreFloat4x4(&constant.ViewProj, DirectX::XMMatrixTranspose(view * proj));
 
-    mPassConstantBuffer = new FRHIConstantBuffer<FPassConstant>;
-    mPassConstantBuffer->BufferStruct = constant;
-    mPassConstantBuffer->Slot = 3;
-    mPassConstantBuffer->Init();
+    mPassConstantBuffer = mRHI->CreateConstantBuffer(sizeof(constant), (uint8*)&constant, 3);
 }

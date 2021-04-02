@@ -1,7 +1,7 @@
 #pragma once
 #include "FRHIBuffer.h"
 
-class FRenderWindow;
+class FRHIRenderWindow;
 class FSceneManager;
 class FScene;
 class FView;
@@ -20,7 +20,7 @@ struct FPassConstant
 class FRenderer
 {
 public:
-	FRenderer(FRenderWindow* renderWindow, FScene* scene, FView* view);
+	FRenderer(FRHIRenderWindow* renderWindow, FScene* scene, FView* view);
 	~FRenderer();
 
     virtual void Init();
@@ -44,9 +44,9 @@ protected:
     void createPassConstantBuffer();
 
 private:
-    FRHI* mDevice;
-    FRenderWindow* mRenderWindow;
+    FRHI* mRHI;
+    FRHIRenderWindow* mRenderWindow;
     FScene* mScene;
     FView* mView;
-    FRHIConstantBuffer<FPassConstant>* mPassConstantBuffer;
+    FRHIConstantBuffer* mPassConstantBuffer;
 };

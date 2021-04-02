@@ -1,6 +1,5 @@
 #include "FRHIBuffer.h"
 #include "FRHI.h"
-#include "FD3D12RHIManager.h"
 
 
 FRHIBuffer::FRHIBuffer()
@@ -43,4 +42,21 @@ void FRHIIndexBuffer::Init()
 void FRHIIndexBuffer::Uninit()
 {
 }
+
+FRHIConstantBuffer::FRHIConstantBuffer()
+{
+}
+
+FRHIConstantBuffer::~FRHIConstantBuffer()
+{
+}
+
+void FRHIConstantBuffer::Init()
+{
+}
+
+void FRHIConstantBuffer::Uninit()
+{
+}
+
 

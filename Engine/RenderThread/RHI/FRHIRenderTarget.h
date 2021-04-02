@@ -10,7 +10,7 @@ class FRHIRenderTarget
 
 public:
 	FRHIRenderTarget(unsigned int width, unsigned int hight);
-	~FRHIRenderTarget();
+	virtual ~FRHIRenderTarget();
 
     virtual void Init();
     virtual void UnInit();
@@ -23,18 +23,18 @@ protected:
 
 };
 
-class FRenderWindow : public FRHIRenderTarget
+class FRHIRenderWindow : public FRHIRenderTarget
 {
     friend class FRHI;
 
 public:
-    FRenderWindow(unsigned int width, unsigned int hight);
-    ~FRenderWindow();
+    FRHIRenderWindow(uint32 width, uint32 hight);
+    virtual ~FRHIRenderWindow() override;
 
     virtual void Init() override;
     virtual void UnInit() override;
 
-    void Present();
+    virtual void Present();
 
 private:
 };

@@ -1,7 +1,7 @@
 #pragma once
 #include <d3d12.h>
 #include <wrl/client.h>
-
+#include "FRHIShaderBindings.h"
 
 class FD3D12ShaderBindings : public FRHIShaderBindings
 {
@@ -9,7 +9,7 @@ class FD3D12ShaderBindings : public FRHIShaderBindings
 
 public:
 	FD3D12ShaderBindings();
-	~FD3D12ShaderBindings();
+	virtual ~FD3D12ShaderBindings();
 
     void Init();
     void UnInit();

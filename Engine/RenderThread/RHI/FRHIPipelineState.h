@@ -12,7 +12,7 @@ class FRHIPipelineState
 
 public:
 	FRHIPipelineState();
-	~FRHIPipelineState();
+	virtual ~FRHIPipelineState();
 
     void Init();
     void UnInit();

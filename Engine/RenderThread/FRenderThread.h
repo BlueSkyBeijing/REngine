@@ -9,7 +9,7 @@
 #include<thread>
 
 class FRenderer;
-class FRenderWindow;
+class FRHIRenderWindow;
 class FScene;
 class FView;
 class FInputManager;
@@ -43,6 +43,11 @@ public:
         return mInited;
     }
 
+    FRHI* GetRHI() const
+    {
+        return mRHI;
+    }
+
 protected:
     virtual void start();
 
@@ -62,7 +67,7 @@ private:
 
     FEngine* mEngine;
     FRHI* mRHI;
-    FRenderWindow* mRenderWindow;
+    FRHIRenderWindow* mRenderWindow;
     FRenderer* mRenderer;
     FScene* mScene;
     FView* mView;

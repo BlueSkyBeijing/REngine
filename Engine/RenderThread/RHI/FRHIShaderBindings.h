@@ -9,7 +9,7 @@ class FRHIShaderBindings
 
 public:
 	FRHIShaderBindings();
-	~FRHIShaderBindings();
+	virtual~FRHIShaderBindings();
 
     void Init();
     void UnInit();

@@ -8,13 +8,13 @@ class FD3D12ShaderBindings;
 class FD3D12Shader;
 class FD3D12VertexLayout;
 
-class FD3D12PipelineState : FRHIPipelineState
+class FD3D12PipelineState : public FRHIPipelineState
 {
     friend class FD3D12RHI;
 
 public:
 	FD3D12PipelineState();
-	~FD3D12PipelineState();
+    virtual ~FD3D12PipelineState();
 
     void Init();
     void UnInit();

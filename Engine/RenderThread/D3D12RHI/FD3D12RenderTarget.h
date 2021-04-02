@@ -24,8 +24,6 @@ public:
     virtual void UnInit();
 
 public:
-    uint32 Width;
-    uint32 Height;
     DXGI_FORMAT Format;
 
 private:
@@ -38,24 +36,24 @@ protected:
 
 };
 
-class FRenderWindow : public FD3D12RenderTarget
+class FD3D12RenderWindow : public FRHIRenderWindow
 {
     friend class FD3D12RHI;
 
 public:
-    FRenderWindow(unsigned int width, unsigned int hight, DXGI_FORMAT format);
-    ~FRenderWindow();
+    FD3D12RenderWindow(unsigned int width, unsigned int hight, DXGI_FORMAT format);
+    ~FD3D12RenderWindow();
 
     virtual void Init() override;
     virtual void UnInit() override;
 
-    void Present();
+    virtual void Present() override;
 
 private:
-    virtual Microsoft::WRL::ComPtr <ID3D12Resource> GetRenderBuffer() const override;
+    virtual Microsoft::WRL::ComPtr <ID3D12Resource> GetRenderBuffer() const ;
 
-    virtual D3D12_CPU_DESCRIPTOR_HANDLE GetRenderBufferView() const override;
-    virtual D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView() const override;
+    virtual D3D12_CPU_DESCRIPTOR_HANDLE GetRenderBufferView() const ;
+    virtual D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView() const ;
 
 private:
     Microsoft::WRL::ComPtr <IDXGISwapChain> mDXGISwapChain;

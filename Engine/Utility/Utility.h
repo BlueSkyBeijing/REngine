@@ -23,3 +23,4 @@ typedef D3D_PRIMITIVE_TOPOLOGY FPrimitiveTopology;
 
 typedef D3D12_VIEWPORT FViewPort;
 typedef D3D12_RECT FRect;
+typedef D3D12_INPUT_ELEMENT_DESC FInputElementDesc;

@@ -3,8 +3,8 @@
 #include "WindowsUtility.h"
 
 FRHIRenderTarget::FRHIRenderTarget(
-    unsigned int width,
-    unsigned int height):
+    uint32 width,
+    uint32 height):
     Width(width),
     Height(height)
 {
@@ -24,25 +24,25 @@ void FRHIRenderTarget::UnInit()
 
 }
 
-FRenderWindow::FRenderWindow(
-    unsigned int width, 
-    unsigned int height):
-    FRHIRenderTarget(width, height),
+FRHIRenderWindow::FRHIRenderWindow(
+    uint32 width, 
+    uint32 height):
+    FRHIRenderTarget(width, height)
 {
 }
 
-FRenderWindow::~FRenderWindow()
+FRHIRenderWindow::~FRHIRenderWindow()
 {
 }
 
-void FRenderWindow::Init()
+void FRHIRenderWindow::Init()
 {
 }
 
-void FRenderWindow::UnInit()
+void FRHIRenderWindow::UnInit()
 {
 }
 
-void FRenderWindow::Present()
+void FRHIRenderWindow::Present()
 {
 }

@@ -1,5 +1,4 @@
 #include "FRHIPipelineState.h"
-#include "FD3D12RHIManager.h"
 #include "FRHI.h"
 
 FRHIPipelineState::FRHIPipelineState()

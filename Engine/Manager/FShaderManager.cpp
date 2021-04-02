@@ -33,8 +33,5 @@ FRHIShader* FShaderManager::GetOrCreateShader(std::string& fileName, std::string
         return it->second;
     }
 
-    FRHIShader* shader = new FRHIShader;
-    TSingleton<FD3D12RHIManager>::GetInstance().GetRootDevice()->CreateShader(shader);
-
     return nullptr;
 }

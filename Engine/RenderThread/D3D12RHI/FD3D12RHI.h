@@ -9,8 +9,7 @@
 #include <string>
 #include <dxgi1_6.h>
 
-class FRenderProxy;
-class FRenderWindow;
+class FD3D12RenderWindow;
 class FD3D12RenderTarget;
 class FD3D12Shader;
 class FD3D12PipelineState;
@@ -50,15 +49,14 @@ public:
     virtual void SetIndexBuffer(FRHIIndexBuffer* buffer) override;
     virtual void DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation,int32 baseVertexLocation,uint32 startInstanceLocation) override;
 
-    template <typename TBufferStruct>
-    virtual void CreateConstantBuffer(FRHIConstantBuffer<TBufferStruct>* constantBuffer) override;
-    virtual void CreateVertexBuffer(FRHIVertexBuffer* vertexBuffer) override;
-    virtual void CreateIndexBuffer(FRHIIndexBuffer* indexBuffer) override;
-    virtual void CreateShader(FRHIShader* shader) override;
-    virtual void CreateRootSignature(FRHIShaderBindings* rootSignature) override;
-    virtual void CreatePipelineState(FRHIPipelineState* pipelineState) override;
-    virtual void CreateTexture(FRHITexture2D* texture2D) override;
-    virtual void CreateRenderTarget(FRenderWindow* renderTarget) override;
+    virtual FRHIConstantBuffer* CreateConstantBuffer(uint32 structureSize, uint8* bufferData, int32 slot) override;
+    virtual FRHIVertexBuffer* CreateVertexBuffer(uint32 structureSize, uint32 vertexCount, uint8* bufferData) override;
+    virtual FRHIIndexBuffer* CreateIndexBuffer(uint32 structureSize, uint32 indexCount, uint8* bufferData) override;
+    virtual FRHIShader* CreateShader(const std::wstring& filePathName, const std::string& enterPoint, const std::string& target) override;
+    virtual FRHIShaderBindings* CreateShaderBindings() override;
+    virtual FRHIPipelineState* CreatePipelineState(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout) override;
+    virtual FRHITexture2D* CreateTexture2D(const std::wstring& filePathName, int32 slot) override;
+    virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) override;
 
     virtual void BeginEvent(std::string& eventName) override;
     virtual void EndEvent() override;
@@ -68,7 +66,7 @@ public:
 protected:
 
 private:
-    FRenderWindow* mRenderTarget;
+    FD3D12RenderWindow* mRenderTarget;
 
     Microsoft::WRL::ComPtr <IDXGIFactory2> mDXGIFactory;
     Microsoft::WRL::ComPtr <IDXGISwapChain> mDXGISwapChain;
@@ -98,5 +96,3 @@ private:
     D3D12_RECT mScissorRect;
     D3D12_VIEWPORT mViewPort;
 };
-
-#include "FD3D12RHI.inl"

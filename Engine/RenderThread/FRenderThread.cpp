@@ -68,8 +68,7 @@ void FRenderThread::init()
     TSingleton<FPipelineStateManager>::GetInstance().Init();
     TSingleton<FShaderBindingsManager>::GetInstance().Init();
 
-    mRenderWindow = new FRenderWindow(1024, 768, DXGI_FORMAT_R8G8B8A8_UNORM);
-    mRenderWindow->Init();
+    mRenderWindow = mRHI->CreateRenderWindow(1024, 768);
 
     mScene = new FScene();
     mScene->Init();

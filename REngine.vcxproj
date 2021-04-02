@@ -37,6 +37,8 @@
     <ClCompile Include="Engine\Manager\FShaderBindingsManager.cpp" />
     <ClCompile Include="Engine\Manager\FSceneManager.cpp" />
     <ClCompile Include="Engine\Manager\FShaderManager.cpp" />
+    <ClCompile Include="Engine\RenderThread\D3D12RHI\DDSTextureLoader.cpp" />
+    <ClCompile Include="Engine\RenderThread\D3D12RHI\DX12Utility.cpp" />
     <ClCompile Include="Engine\RenderThread\D3D12RHI\FD3D12Buffer.cpp" />
     <ClCompile Include="Engine\RenderThread\D3D12RHI\FD3D12CommandList.cpp" />
     <ClCompile Include="Engine\RenderThread\D3D12RHI\FD3D12RHI.cpp" />
@@ -64,8 +66,6 @@
     <ClCompile Include="Engine\RenderThread\RHI\FRHIShaderBindings.cpp" />
     <ClCompile Include="Engine\RenderThread\RHI\FRHITexture.cpp" />
     <ClCompile Include="Engine\RenderThread\RHI\FRHIVertex.cpp" />
-    <ClCompile Include="Engine\Utility\DDSTextureLoader.cpp" />
-    <ClCompile Include="Engine\Utility\DX12Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Core\FEngine.h" />
@@ -85,6 +85,9 @@
     <ClInclude Include="Engine\Manager\FShaderBindingsManager.h" />
     <ClInclude Include="Engine\Manager\FSceneManager.h" />
     <ClInclude Include="Engine\Manager\FShaderManager.h" />
+    <ClInclude Include="Engine\RenderThread\D3D12RHI\d3dx12.h" />
+    <ClInclude Include="Engine\RenderThread\D3D12RHI\DDSTextureLoader.h" />
+    <ClInclude Include="Engine\RenderThread\D3D12RHI\DX12Utility.h" />
     <ClInclude Include="Engine\RenderThread\D3D12RHI\FD3D12Buffer.h" />
     <ClInclude Include="Engine\RenderThread\D3D12RHI\FD3D12CommandList.h" />
     <ClInclude Include="Engine\RenderThread\D3D12RHI\FD3D12Vertex.h" />
@@ -112,9 +115,6 @@
     <ClInclude Include="Engine\RenderThread\RHI\FRHIShaderBindings.h" />
     <ClInclude Include="Engine\RenderThread\RHI\FRHITexture.h" />
     <ClInclude Include="Engine\RenderThread\RHI\FRHIVertex.h" />
-    <ClInclude Include="Engine\Utility\d3dx12.h" />
-    <ClInclude Include="Engine\Utility\DDSTextureLoader.h" />
-    <ClInclude Include="Engine\Utility\DX12Utility.h" />
     <ClInclude Include="Engine\Utility\TSingleton.h" />
     <ClInclude Include="Engine\Utility\Utility.h" />
     <ClInclude Include="Engine\Utility\WindowsUtility.h" />
@@ -186,11 +186,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Engine\RenderThread\D3D12RHI\FD3D12Buffer.inl" />
-    <None Include="Engine\RenderThread\D3D12RHI\FD3D12RHI.inl" />
-    <None Include="Engine\RenderThread\RHI\FRHIBuffer.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

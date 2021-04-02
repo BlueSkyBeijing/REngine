@@ -2,6 +2,9 @@
 #include "FInputManager.h"
 #include "FD3D12RHI.h"
 #include "WindowsUtility.h"
+#include "FEngine.h"
+#include "TSingleton.h"
+#include "FRenderThread.h"
 
 #include <Windows.h>
 #include <stdexcept>
@@ -12,9 +15,7 @@ FD3D12RenderTarget::FD3D12RenderTarget(
     unsigned int width,
     unsigned int height,
     DXGI_FORMAT format):
-    Width(width),
-    Height(height),
-    Format(format)
+    FRHIRenderTarget(width, height)
 {
 }
 
@@ -32,11 +33,11 @@ void FD3D12RenderTarget::UnInit()
 
 }
 
-FRenderWindow::FRenderWindow(
+FD3D12RenderWindow::FD3D12RenderWindow(
     unsigned int width, 
     unsigned int height,
     DXGI_FORMAT format):
-    FD3D12RenderTarget(width, height, format),
+    FRHIRenderWindow(width, height),
     mWindowHandle(nullptr),
     mDXGISwapChain(nullptr),
     mSwapChainBufferCount(SWAPCHAIN_BUFFER_COUNT),
@@ -48,11 +49,11 @@ FRenderWindow::FRenderWindow(
 {
 }
 
-FRenderWindow::~FRenderWindow()
+FD3D12RenderWindow::~FD3D12RenderWindow()
 {
 }
 
-void FRenderWindow::Init()
+void FD3D12RenderWindow::Init()
 {
     WNDCLASSEX wcex;
     ZeroMemory(&wcex, sizeof(wcex));
@@ -88,25 +89,26 @@ void FRenderWindow::Init()
     ShowWindow(mWindowHandle, SW_SHOW);
     UpdateWindow(mWindowHandle);
 
-    TSingleton<FD3D12RHIManager>::GetInstance().GetRootDevice()->CreateRenderTarget(this);
 }
 
-void FRenderWindow::UnInit()
+void FD3D12RenderWindow::UnInit()
 {
     DestroyWindow(mWindowHandle);
 }
 
-void FRenderWindow::Present()
+void FD3D12RenderWindow::Present()
 {
-    TSingleton<FD3D12RHIManager>::GetInstance().GetRootDevice()->Present();
+    FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
+
+    rhi->Present();
 }
 
-Microsoft::WRL::ComPtr <ID3D12Resource> FRenderWindow::GetRenderBuffer() const
+Microsoft::WRL::ComPtr <ID3D12Resource> FD3D12RenderWindow::GetRenderBuffer() const
 {
     return mRenderTargets[mChainBufferndex];
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE FRenderWindow::GetRenderBufferView() const
+D3D12_CPU_DESCRIPTOR_HANDLE FD3D12RenderWindow::GetRenderBufferView() const
 {
     return CD3DX12_CPU_DESCRIPTOR_HANDLE(
         mDX12DescriptorHeapRenderTarget->GetCPUDescriptorHandleForHeapStart(),
@@ -114,7 +116,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE FRenderWindow::GetRenderBufferView() const
         mRTVDescriptorSize);
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE FRenderWindow::GetDepthStencilView() const
+D3D12_CPU_DESCRIPTOR_HANDLE FD3D12RenderWindow::GetDepthStencilView() const
 {
     return mDX12DescriptorHeapDepthStencil->GetCPUDescriptorHandleForHeapStart();
 }

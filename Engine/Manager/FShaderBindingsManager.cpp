@@ -2,6 +2,9 @@
 #include "d3dx12.h"
 #include "FRHI.h"
 #include "FRHIShaderBindings.h"
+#include "FEngine.h"
+#include "TSingleton.h"
+#include "FRenderThread.h"
 
 FShaderBindingsManager::FShaderBindingsManager()
 {
@@ -18,8 +21,9 @@ FRHIShaderBindings* FShaderBindingsManager::GetOrCreateRootSignature()
         return it->second;
     }
 
-    FRHIShaderBindings* rootSignature = new FRHIShaderBindings;
-    rootSignature->Init();
+    FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
+
+    FRHIShaderBindings* rootSignature = rhi->CreateShaderBindings();
 
     mRootSignatures.insert(std::make_pair(0, rootSignature));
 

@@ -1,6 +1,10 @@
 #include "FMaterial.h"
 #include "FRHIShader.h"
 #include "FRHITexture.h"
+#include "FEngine.h"
+#include "TSingleton.h"
+#include "FRHI.h"
+#include "FRenderThread.h"
 
 FMaterial::FMaterial():
     VertexShader(nullptr),
@@ -18,22 +22,24 @@ FMaterial::~FMaterial()
 
 void FMaterial::Init()
 {
-    VertexShader = new FRHIShader;
-    VertexShader->FilePathName = L"Engine\\Shader\\ForwardShadingVS.hlsl";
-    VertexShader->EnterPoint = "VSMain";
-    VertexShader->Target = "vs_5_0";
-    VertexShader->Init();
+    FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
 
-    PixelShader = new FRHIShader;
-    PixelShader->FilePathName = L"Engine\\Shader\\ForwardShadingPS.hlsl";
-    PixelShader->EnterPoint = "PSMain";
-    PixelShader->Target = "ps_5_0";
-    PixelShader->Init();
+    const std::wstring vsFilePathName = L"Engine\\Shader\\ForwardShadingVS.hlsl";
+    const std::string vsEnterPoint = "VSMain";
+    const std::string vsTarget = "vs_5_0";
 
-    BaseColor = new FRHITexture2D;
-    BaseColor->FilePathName = L"Content\\Texture\\T_Stone_C.dds";
-    BaseColor->Slot = 0;
-    BaseColor->Init();
+    VertexShader = rhi->CreateShader(vsFilePathName, vsEnterPoint, vsTarget);
+
+    const std::wstring psFilePathName = L"Engine\\Shader\\ForwardShadingPS.hlsl";
+    const std::string psEnterPoint = "PSMain";
+    const std::string psTarget = "ps_5_0";
+
+    PixelShader = rhi->CreateShader(psFilePathName, psEnterPoint, psTarget);
+
+    const std::wstring textureFilePathName = L"Content\\Texture\\T_Stone_C.dds";
+    const int32 textureSlot = 0;
+
+    BaseColor = rhi->CreateTexture2D(textureFilePathName, textureSlot);
 
     //MetallicSpecularRoughness->Init();
     //EmissiveColor->Init();
@@ -42,15 +48,12 @@ void FMaterial::Init()
 
 void FMaterial::UnInit()
 {
-    VertexShader->UnInit();
     delete VertexShader;
     VertexShader = nullptr;
 
-    PixelShader->UnInit();
     delete PixelShader;
     PixelShader = nullptr;
 
-    BaseColor->UnInit();
     delete BaseColor;
     BaseColor = nullptr;
 }

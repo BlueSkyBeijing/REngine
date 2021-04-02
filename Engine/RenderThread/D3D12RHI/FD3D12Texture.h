@@ -1,5 +1,7 @@
 #pragma once
 #include "FD3D12Resource.h"
+#include "FRHITexture.h"
+
 #include "Utility.h"
 #include <string>
 
@@ -22,7 +24,7 @@ private:
 
 };
 
-class FD3D12Texture2D : public FD3D12Texture
+class FD3D12Texture2D : public FRHITexture2D
 {
 public:
     FD3D12Texture2D();
