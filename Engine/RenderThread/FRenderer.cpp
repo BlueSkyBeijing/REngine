@@ -125,7 +125,7 @@ void FRenderer::drawRenderables()
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetOrCreatePipleLineState(renderProxy);
 
         mRHI->SetPipelineState(pipelineState);
-        mRHI->SetPrimitiveTopology(FPrimitiveTopology::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        mRHI->SetPrimitiveTopology(EPrimitiveTopology::PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         mRHI->SetVertexBuffer(renderProxy->VertexBuffer);
         mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
         mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);

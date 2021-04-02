@@ -228,9 +228,11 @@ void FD3D12RHI::SetPipelineState(FRHIPipelineState* pipelineState)
     mDX12CommandList->SetPipelineState(state->mDX12PipleLineState.Get());
 }
 
-void FD3D12RHI::SetPrimitiveTopology(FPrimitiveTopology topology)
+void FD3D12RHI::SetPrimitiveTopology(EPrimitiveTopology topology)
 {
-    mDX12CommandList->IASetPrimitiveTopology(topology);
+    //todo: add a translator
+    D3D_PRIMITIVE_TOPOLOGY dxToplogy = (D3D_PRIMITIVE_TOPOLOGY)topology;
+    mDX12CommandList->IASetPrimitiveTopology(dxToplogy);
 }
 
 void FD3D12RHI::SetVertexBuffer(FRHIVertexBuffer* buffer)

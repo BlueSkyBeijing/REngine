@@ -1,5 +1,4 @@
 #include "FShaderBindingsManager.h"
-#include "d3dx12.h"
 #include "FRHI.h"
 #include "FRHIShaderBindings.h"
 #include "FEngine.h"

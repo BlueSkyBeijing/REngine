@@ -20,8 +20,6 @@ typedef DirectX::XMFLOAT2 FVector2;
 
 typedef DirectX::XMFLOAT4X4 FMatrix4x4;
 
-typedef D3D_PRIMITIVE_TOPOLOGY FPrimitiveTopology;
-
 typedef D3D12_VIEWPORT FViewPort;
 typedef D3D12_RECT FRect;
 typedef D3D12_INPUT_ELEMENT_DESC FInputElementDesc;

@@ -60,6 +60,8 @@ void FEngine::unInit()
     delete mWorld;
     mWorld = nullptr;
 
+    TSingleton<FInputManager>::GetInstance().UnInit();
+
     mInited = false;
 }
 

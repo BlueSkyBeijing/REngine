@@ -1,16 +1,11 @@
 #include "FRenderProxy.h"
 #include "WindowsUtility.h"
-#include "DX12Utility.h"
 #include "FRHI.h"
 #include "FShaderManager.h"
 #include "FMaterial.h"
 #include "FRHIBuffer.h"
 #include "FEngine.h"
 #include "FRenderThread.h"
-
-#include <d3d12.h>
-#include <d3dx12.h>
-
 
 FRenderProxyInitializer::FRenderProxyInitializer()
 {

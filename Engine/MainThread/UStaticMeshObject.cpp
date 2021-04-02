@@ -1,5 +1,4 @@
 #include "UStaticMeshObject.h"
-
 #include "UStaticMesh.h"
 #include "UMaterial.h"
 #include "FEngine.h"
