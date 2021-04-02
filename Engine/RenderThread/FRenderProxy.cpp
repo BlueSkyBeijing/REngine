@@ -71,7 +71,7 @@ void FStaticMeshRenderProxy::CreateRenderResource()
 
     DirectX::XMStoreFloat4x4(&mObjectConstants.World, XMMatrixTranspose(world));
 
-    ConstantBuffer = rhi->CreateConstantBuffer(sizeof(mObjectConstants), (uint8*)&mObjectConstants, 0);
+    ConstantBuffer = rhi->CreateConstantBuffer(sizeof(mObjectConstants), (uint8*)&mObjectConstants, 1);
 
     Material->Init();
 
