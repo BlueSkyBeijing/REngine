@@ -65,7 +65,6 @@ private:
     DXGI_FORMAT mBackBufferFormat;
     DXGI_FORMAT mDepthStencilFormat;
 
-    HWND mWindowHandle;
     uint32 mSwapChainBufferCount;
     uint32 mChainBufferndex;
     uint32 mRTVDescriptorSize;

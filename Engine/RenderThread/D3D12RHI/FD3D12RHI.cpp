@@ -9,6 +9,8 @@
 #include "WindowsUtility.h"
 #include "DX12Utility.h"
 #include "DDSTextureLoader.h"
+#include "FEngine.h"
+#include "TSingleton.h"
 #include "pix3.h"
 
 #include <d3dx12.h>
@@ -523,7 +525,7 @@ FRHIRenderWindow* FD3D12RHI::CreateRenderWindow(uint32 width, uint32 hight)
     swapChainDesc.SampleDesc.Quality = 0;
     swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     swapChainDesc.BufferCount = renderTarget->mSwapChainBufferCount;
-    swapChainDesc.OutputWindow = renderTarget->mWindowHandle;
+    swapChainDesc.OutputWindow = TSingleton<FEngine>::GetInstance().GetWindowHandle();
     swapChainDesc.Windowed = true;
     swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
     swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;

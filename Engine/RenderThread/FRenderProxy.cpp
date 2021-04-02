@@ -9,7 +9,8 @@
 #include "FRenderThread.h"
 
 #include <d3d12.h>
-#include "d3dx12.h"
+#include <d3dx12.h>
+
 
 FRenderProxyInitializer::FRenderProxyInitializer()
 {
@@ -45,6 +46,9 @@ FStaticMeshRenderProxy::FStaticMeshRenderProxy(const FRenderProxyInitializer& in
     mIndexes = initializer.Indexes;
     Material = initializer.Material;
     VertexLayout = initializer.VertexLayout;
+    Position = initializer.Position;
+    Rotation = initializer.Rotation;
+    Scale = initializer.Scale;
 }
 
 FStaticMeshRenderProxy::~FStaticMeshRenderProxy()

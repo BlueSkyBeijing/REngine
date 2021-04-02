@@ -29,10 +29,10 @@ public:
     std::vector<FStaticMeshVertex> Vertexes;
     std::vector<std::uint16_t> Indexes;
     FRHIVertexLayout VertexLayout;
-    FMaterial* Material;
     FVector3 Position;
     FVector3 Rotation;
     FVector3 Scale;
+    FMaterial* Material;
 };
 
 class FRenderProxy
@@ -56,6 +56,9 @@ public:
     uint32 StartInstanceLocation;
     FMatrix4x4 WorldMatrix;
     FRHIVertexLayout VertexLayout;
+    FVector3 Position;
+    FVector3 Rotation;
+    FVector3 Scale;
 
     std::string DebugName;
 

@@ -10,6 +10,14 @@ FInputManager::~FInputManager()
 {
 }
 
+void FInputManager::Init()
+{
+}
+
+void FInputManager::UnInit()
+{
+}
+
 void FInputManager::ProcessQuit()
 {
     TSingleton<FEngine>::GetInstance().Exit();

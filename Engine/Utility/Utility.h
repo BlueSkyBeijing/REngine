@@ -2,6 +2,7 @@
 #include <DirectXMath.h>
 #include <d3d12.h>
 #include <stdint.h>
+#include <Eigen/Dense>
 
 typedef uint8_t	    uint8;
 typedef uint16_t	uint16;

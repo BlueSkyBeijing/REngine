@@ -1,5 +1,8 @@
 #pragma once
 #include "TSingleton.h"
+#include "Utility.h"
+
+#include <Windows.h>
 
 class FRenderThread;
 class UWorld;
@@ -18,12 +21,29 @@ public:
         return mRenderThread;
     }
 
+    inline HWND GetWindowHandle() const
+    {
+        return mWindowHandle;
+    }
+
+    inline uint32 GetWindowWidth() const
+    {
+        return mWindowWidth;
+    }
+
+    inline uint32 GetWindowHeight() const
+    {
+        return mWindowHeight;
+    }
+
 protected:
     virtual void init();
     virtual void unInit();
 
     virtual void loop();
     virtual void update();
+
+    void createWindow();
 
     void startRenderThread();
     void stopRenderingThread();
@@ -37,4 +57,8 @@ private:
 
     FRenderThread* mRenderThread;
     UWorld* mWorld;
+
+    HWND mWindowHandle;
+    uint32 mWindowWidth;
+    uint32 mWindowHeight;
 };

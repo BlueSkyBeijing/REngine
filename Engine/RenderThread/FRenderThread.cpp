@@ -68,7 +68,7 @@ void FRenderThread::init()
     TSingleton<FPipelineStateManager>::GetInstance().Init();
     TSingleton<FShaderBindingsManager>::GetInstance().Init();
 
-    mRenderWindow = mRHI->CreateRenderWindow(1024, 768);
+    mRenderWindow = mRHI->CreateRenderWindow(mEngine->GetWindowWidth(), mEngine->GetWindowHeight());
 
     mScene = new FScene();
     mScene->Init();
@@ -126,14 +126,6 @@ void FRenderThread::loop()
     while (mHeartbeat)
     {
         update();
-
-        //@todo; need to improve implement way
-        MSG msg;
-        if (GetMessage(&msg, nullptr, 0, 0))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
     };
 }
 
