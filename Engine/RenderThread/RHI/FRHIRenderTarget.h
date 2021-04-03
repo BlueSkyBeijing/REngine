@@ -1,8 +1,6 @@
 #pragma once
 #include "Utility.h"
 
-#define SWAPCHAIN_BUFFER_COUNT 2
-
 
 class FRHIRenderTarget
 {
