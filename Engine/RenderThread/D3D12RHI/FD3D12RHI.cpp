@@ -177,7 +177,7 @@ void FD3D12RHI::BeginDraw()
 void FD3D12RHI::Clear(const FVector4& color)
 {
     //clear color and depth stencil
-    const float ClearColor[] = { color.x, color.y, color.z, color.w };
+    const float ClearColor[] = { color.x(), color.y(), color.z(), color.w() };
     mDX12CommandList->ClearRenderTargetView(mRenderTarget->GetRenderBufferView(), ClearColor, 0, nullptr);
     mDX12CommandList->ClearDepthStencilView(mRenderTarget->GetDepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 

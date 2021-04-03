@@ -6,6 +6,7 @@
 #include "FRHIBuffer.h"
 #include "FEngine.h"
 #include "FRenderThread.h"
+#include "Utility.h"
 
 FRenderProxyInitializer::FRenderProxyInitializer()
 {
@@ -57,14 +58,7 @@ void FStaticMeshRenderProxy::CreateRenderResource()
 
     IndexBuffer = rhi->CreateIndexBuffer(sizeof(uint16), (uint32)mIndexes.size(), (uint8*) mIndexes.data());
 
-    WorldMatrix = FMatrix4x4(
-        1.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 1.0f);
-    DirectX::XMMATRIX world = XMLoadFloat4x4(&WorldMatrix);
-
-    DirectX::XMStoreFloat4x4(&mObjectConstants.World, XMMatrixTranspose(world));
+    mObjectConstants.World.setIdentity();
 
     ConstantBuffer = rhi->CreateConstantBuffer(sizeof(mObjectConstants), (uint8*)&mObjectConstants, 1);
 

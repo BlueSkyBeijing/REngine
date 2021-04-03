@@ -5,7 +5,6 @@
 
 #include <wrl/client.h>
 #include "d3d12.h"
-#include <DirectXMath.h>
 #include <string>
 #include <dxgi1_6.h>
 

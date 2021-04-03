@@ -15,7 +15,6 @@
 #include "FView.h"
 #include "FEngine.h"
 #include "FRenderThread.h"
-#include <Eigen/Dense>
 
 #include <vector>
 #include <string>
@@ -84,7 +83,7 @@ void FRenderer::RenderOneFrame()
 
 void FRenderer::clear()
 {
-    const DirectX::XMFLOAT4 clearColor = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+    const FVector4 clearColor(0.5f, 0.5f, 0.5f, 1.0f);
     mRHI->Clear(clearColor);
 }
 
@@ -150,30 +149,11 @@ void FRenderer::postRender()
 
 void FRenderer::createPassConstantBuffer()
 {
-    ////create pass constant buffer
-    //FPassConstant constant;
-    //FMatrix4x4 mViewMatrix;
-    //FMatrix4x4 mProjMatrix;
-    //
-    ////build view matrix.
-    //DirectX::XMVECTOR pos = DirectX::XMVectorSet(mView->Position.x, mView->Position.y, mView->Position.z, 1.0f);
-    //DirectX::XMVECTOR target = DirectX::XMVectorSet(mView->Target.x, mView->Target.y, mView->Target.z, 1.0f);
-    //DirectX::XMVECTOR up = DirectX::XMVectorSet(mView->Up.x, mView->Up.y, mView->Up.z, 1.0f);
-
-    //DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(pos, target, up);
-    //DirectX::XMStoreFloat4x4(&mViewMatrix, view);
-
-    //const float AspectRatio = 1.7f;
-    //DirectX::XMMATRIX P = DirectX::XMMatrixPerspectiveFovLH(0.25f * DirectX::XM_PI, AspectRatio, 1.0f, 100000.0f);
-    //DirectX::XMStoreFloat4x4(&mProjMatrix, P);
-
-    //DirectX::XMMATRIX proj = DirectX::XMLoadFloat4x4(&mProjMatrix);
-
-    //DirectX::XMStoreFloat4x4(&constant.View, DirectX::XMMatrixTranspose(view));
-    //DirectX::XMStoreFloat4x4(&constant.ViewProj, DirectX::XMMatrixTranspose(view * proj));
-
-    //mPassConstantBuffer = mRHI->CreateConstantBuffer(sizeof(constant), (uint8*)&constant, 3);
-
+    //create pass constant buffer
+    FPassConstant constant;
+    
+    //build view matrix.
+    //from:https://docs.microsoft.com/en-us/previous-versions/windows/desktop/bb281710(v=vs.85)
     //zaxis = normal(cameraTarget - cameraPosition)
     //    xaxis = normal(cross(cameraUpVector, zaxis))
     //    yaxis = cross(zaxis, xaxis)
@@ -183,53 +163,44 @@ void FRenderer::createPassConstantBuffer()
     //    xaxis.z           yaxis.z           zaxis.z          0
     //    - dot(xaxis, cameraPosition) - dot(yaxis, cameraPosition) - dot(zaxis, cameraPosition)  1
 
-    Eigen::Matrix4f ViewMatrix, ProjectionMatrix;
-    Eigen::Vector3f position(mView->Position.x, mView->Position.y, mView->Position.z);
-    Eigen::Vector3f target(mView->Target.x, mView->Target.y, mView->Target.z);
-    Eigen::Vector3f up(mView->Up.x, mView->Up.y, mView->Up.z);
+    Eigen::Matrix4f viewMatrix, projectionMatrix;
+    Eigen::Vector3f position(mView->Position.x(), mView->Position.y(), mView->Position.z());
+    Eigen::Vector3f target(mView->Target.x(), mView->Target.y(), mView->Target.z());
+    Eigen::Vector3f up(mView->Up.x(), mView->Up.y(), mView->Up.z());
 
     Eigen::Vector3f zaxis = (target - position).normalized();
     Eigen::Vector3f xaxis = up.cross(zaxis).normalized();
     Eigen::Vector3f yaxis = zaxis.cross(xaxis);
 
-    ViewMatrix.col(0) = Eigen::Vector4f(xaxis.x(), xaxis.y(), xaxis.z(), -xaxis.dot(position));
-    ViewMatrix.col(1) = Eigen::Vector4f(yaxis.x(), yaxis.y(), yaxis.z(), -yaxis.dot(position));
-    ViewMatrix.col(2) = Eigen::Vector4f(zaxis.x(), zaxis.y(), zaxis.z(), -zaxis.dot(position));
-    ViewMatrix.col(3) = Eigen::Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
+    viewMatrix.col(0) = Eigen::Vector4f(xaxis.x(), xaxis.y(), xaxis.z(), -xaxis.dot(position));
+    viewMatrix.col(1) = Eigen::Vector4f(yaxis.x(), yaxis.y(), yaxis.z(), -yaxis.dot(position));
+    viewMatrix.col(2) = Eigen::Vector4f(zaxis.x(), zaxis.y(), zaxis.z(), -zaxis.dot(position));
+    viewMatrix.col(3) = Eigen::Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
 
-    //w       0       0                                             0
+    //from:https://docs.microsoft.com/en-us/previous-versions/windows/desktop/bb281727(v=vs.85)
+    //    w       0       0                                             0
     //    0       h       0                                             0
-    //    0       0       zfarPlane / (zfarPlane - znearPlane)              1
+    //    0       0       zfarPlane / (zfarPlane - znearPlane)          1
     //    0       0 - znearPlane * zfarPlane / (zfarPlane - znearPlane)  0
-
     float fovY = 3.1415f * 0.25f;
     float aspect = 1.7f;
     float nearPlane = 1.0f;
     float farPlane = 100000.0f;
     float theta = fovY * 0.5f;
     float range = farPlane - nearPlane;
-    float invtan = 1. / tan(theta);
+    float invtan = 1.0f / tan(theta);
 
-    ProjectionMatrix.setConstant(0.0f);
-    ProjectionMatrix(0, 0) = invtan / aspect;
-    ProjectionMatrix(1, 1) = invtan;
-    ProjectionMatrix(2, 2) = farPlane /  range;
-    ProjectionMatrix(2, 3) = 1;
-    ProjectionMatrix(3, 2) = -nearPlane * farPlane / range;
-    ProjectionMatrix(3, 3) = 0;
+    projectionMatrix.setConstant(0.0f);
+    projectionMatrix(0, 0) = invtan / aspect;
+    projectionMatrix(1, 1) = invtan;
+    projectionMatrix(2, 2) = farPlane /  range;
+    projectionMatrix(2, 3) = 1;
+    projectionMatrix(3, 2) = -nearPlane * farPlane / range;
+    projectionMatrix(3, 3) = 0;
 
-    struct ConstantMy
-    {
-        Eigen::Matrix4f View;
-        Eigen::Matrix4f Proj;
-        Eigen::Matrix4f ViewProj;
-    };
+    constant.View = viewMatrix;
+    constant.Proj = projectionMatrix;
+    constant.ViewProj = viewMatrix * projectionMatrix;
 
-    ConstantMy m;
-
-    m.View = ViewMatrix;
-    m.Proj = ProjectionMatrix;
-    m.ViewProj = ViewMatrix * ProjectionMatrix;
-
-    mPassConstantBuffer = mRHI->CreateConstantBuffer(sizeof(ConstantMy), (uint8*)&m, 3);
+    mPassConstantBuffer = mRHI->CreateConstantBuffer(sizeof(constant), (uint8*)&constant, 3);
 }

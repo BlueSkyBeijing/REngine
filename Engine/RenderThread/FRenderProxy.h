@@ -1,7 +1,4 @@
 #pragma once
-#include <d3d12.h>
-#include <wrl/client.h>
-#include <DirectXMath.h>
 
 #include "FRHIVertex.h"
 #include "FRHIBuffer.h"
