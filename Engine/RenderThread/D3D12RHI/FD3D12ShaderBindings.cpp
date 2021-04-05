@@ -1,3 +1,4 @@
+#include "PrecompiledHeader.h"
 #include "FD3D12ShaderBindings.h"
 #include "FD3D12RHI.h"
 

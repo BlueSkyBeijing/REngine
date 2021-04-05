@@ -1,3 +1,4 @@
+#include "PrecompiledHeader.h"
 #include "UStaticMeshObject.h"
 #include "UStaticMesh.h"
 #include "UMaterial.h"

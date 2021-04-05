@@ -1,7 +1,7 @@
+#include "PrecompiledHeader.h"
 #include "FRHITexture.h"
 #include "FRHI.h"
 
-#include <string>
 
 FRHITexture::FRHITexture()
 {

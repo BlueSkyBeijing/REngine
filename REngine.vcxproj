@@ -66,6 +66,10 @@
     <ClCompile Include="Engine\RenderThread\RHI\FRHIShaderBindings.cpp" />
     <ClCompile Include="Engine\RenderThread\RHI\FRHITexture.cpp" />
     <ClCompile Include="Engine\RenderThread\RHI\FRHIVertex.cpp" />
+    <ClCompile Include="Engine\Utility\PrecompiledHeader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Core\FEngine.h" />
@@ -115,6 +119,7 @@
     <ClInclude Include="Engine\RenderThread\RHI\FRHIShaderBindings.h" />
     <ClInclude Include="Engine\RenderThread\RHI\FRHITexture.h" />
     <ClInclude Include="Engine\RenderThread\RHI\FRHIVertex.h" />
+    <ClInclude Include="Engine\Utility\PrecompiledHeader.h" />
     <ClInclude Include="Engine\Utility\TSingleton.h" />
     <ClInclude Include="Engine\Utility\Utility.h" />
     <ClInclude Include="Engine\Utility\WindowsUtility.h" />
@@ -290,6 +295,8 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)\Engine\Core;$(SolutionDir)\Engine\Manager;$(SolutionDir)\Engine\Utility;$(SolutionDir)\Engine\RenderThread;$(SolutionDir)\Engine\RenderThread\D3D12RHI;$(SolutionDir)\Engine\RenderThread\RHI;$(SolutionDir)\Engine\MainThread;$(SolutionDir)\Engine\ThirdParty;$(SolutionDir)\Engine\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(SolutionDir)\Engine\ThirdParty\Eigen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -309,6 +316,8 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)\Engine\Core;$(SolutionDir)\Engine\Manager;$(SolutionDir)\Engine\Utility;$(SolutionDir)\Engine\RenderThread;$(SolutionDir)\Engine\RenderThread\D3D12RHI;$(SolutionDir)\Engine\RenderThread\RHI;$(SolutionDir)\Engine\MainThread;$(SolutionDir)\Engine\ThirdParty;$(SolutionDir)\Engine\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(SolutionDir)\Engine\ThirdParty\Eigen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

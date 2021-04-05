@@ -1,3 +1,4 @@
+#include "PrecompiledHeader.h"
 #include "FRenderer.h"
 #include "FRHIRenderTarget.h"
 #include "FRenderProxy.h"
@@ -15,9 +16,6 @@
 #include "FView.h"
 #include "FEngine.h"
 #include "FRenderThread.h"
-
-#include <vector>
-#include <string>
 
 FRenderer::FRenderer(FRHIRenderWindow* renderWindow, FScene* scene, FView* view) :
     mRHI(TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI()),

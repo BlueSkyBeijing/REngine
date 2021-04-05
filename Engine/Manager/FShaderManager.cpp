@@ -1,3 +1,4 @@
+#include "PrecompiledHeader.h"
 #include "FShaderManager.h"
 #include "FRHI.h"
 #include "FRHIShader.h"

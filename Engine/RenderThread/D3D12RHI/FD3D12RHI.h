@@ -5,7 +5,6 @@
 
 #include <wrl/client.h>
 #include "d3d12.h"
-#include <string>
 #include <dxgi1_6.h>
 
 class FD3D12RenderWindow;

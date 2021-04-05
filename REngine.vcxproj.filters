@@ -173,6 +173,9 @@
     <ClCompile Include="Engine\RenderThread\D3D12RHI\DX12Utility.cpp">
       <Filter>Engine\RenderThread\D3D12RHI</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Utility\PrecompiledHeader.cpp">
+      <Filter>Engine\Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Manager\FInputManager.h">
@@ -324,6 +327,9 @@
     </ClInclude>
     <ClInclude Include="Engine\RenderThread\D3D12RHI\DX12Utility.h">
       <Filter>Engine\RenderThread\D3D12RHI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utility\PrecompiledHeader.h">
+      <Filter>Engine\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

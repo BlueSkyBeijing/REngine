@@ -1,3 +1,4 @@
+#include "PrecompiledHeader.h"
 #include "UStaticMesh.h"
 #include "Utility.h"
 
