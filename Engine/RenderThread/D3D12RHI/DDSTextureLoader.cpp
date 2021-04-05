@@ -19,11 +19,6 @@
 //--------------------------------------------------------------------------------------
 #include "PrecompiledHeader.h"
 
-#include <assert.h>
-#include <algorithm>
-#include <memory>
-#include <wrl.h>
-
 #include "DDSTextureLoader.h" 
 
 using namespace Microsoft::WRL;

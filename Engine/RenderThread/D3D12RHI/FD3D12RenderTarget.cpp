@@ -1,4 +1,5 @@
 #include "PrecompiledHeader.h"
+
 #include "FD3D12RenderTarget.h"
 #include "FInputManager.h"
 #include "FD3D12RHI.h"
@@ -6,11 +7,6 @@
 #include "FEngine.h"
 #include "TSingleton.h"
 #include "FRenderThread.h"
-
-#include <Windows.h>
-#include <stdexcept>
-#include <functional>
-#include <memory>
 
 FD3D12RenderTarget::FD3D12RenderTarget(
     unsigned int width,

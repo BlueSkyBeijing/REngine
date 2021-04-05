@@ -1,5 +1,4 @@
 #include "PrecompiledHeader.h"
-#include <windows.h>
 
 #define _CRTDBG_MAP_ALLOC
 

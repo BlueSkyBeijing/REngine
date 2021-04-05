@@ -7,6 +7,10 @@
 #include <iostream>
 #include <fstream>
 #include <map>
+#include <algorithm>
+#include <memory>
+#include <stdexcept>
+#include <functional>
 #include <assert.h>
 
 //-----------------------------

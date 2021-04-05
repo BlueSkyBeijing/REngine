@@ -1,4 +1,5 @@
 #include "PrecompiledHeader.h"
+
 #include "DX12Utility.h"
 
 Microsoft::WRL::ComPtr<ID3DBlob> CompileShader(

@@ -1,4 +1,5 @@
 #include "PrecompiledHeader.h"
+
 #include "FRenderThread.h"
 #include "FRHI.h"
 #include "FD3D12RHI.h"
@@ -114,7 +115,7 @@ void FRenderThread::unInit()
 
 void FRenderThread::update()
 {
-    mRenderer->RenderOneFrame();
+    mRenderer->Render();
 
     mRenderWindow->Present();
 }

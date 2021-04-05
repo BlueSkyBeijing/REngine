@@ -28,7 +28,7 @@ public:
 
     virtual void CreateRenderResources();
 
-    virtual void RenderOneFrame();
+    virtual void Render();
 
 protected:
     virtual void preRender();

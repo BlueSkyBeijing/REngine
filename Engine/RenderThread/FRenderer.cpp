@@ -1,4 +1,5 @@
 #include "PrecompiledHeader.h"
+
 #include "FRenderer.h"
 #include "FRHIRenderTarget.h"
 #include "FRenderProxy.h"
@@ -64,7 +65,7 @@ void FRenderer::preRender()
     mRHI->BeginDraw();
 }
 
-void FRenderer::RenderOneFrame()
+void FRenderer::Render()
 {
     preRender();
 
