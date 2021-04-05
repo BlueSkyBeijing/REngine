@@ -1,11 +1,5 @@
 #pragma once
 #include "FRHIRenderTarget.h"
-
-#include "d3dx12.h"
-
-#include <d3d12.h>
-#include <wrl/client.h>
-#include <dxgi1_6.h>
 #include "Utility.h"
 
 #define SWAPCHAIN_BUFFER_COUNT 2

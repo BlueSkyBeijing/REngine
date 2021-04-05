@@ -11,7 +11,6 @@
 #include "FShaderBindingsManager.h"
 #include "FPipelineStateManager.h"
 
-#include<thread>
 
 FRenderThread::FRenderThread(FEngine* engine) :
     mEngine(engine),

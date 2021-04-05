@@ -3,7 +3,6 @@
 #include "FRHITexture.h"
 
 #include "Utility.h"
-#include <string>
 
 class FD3D12Texture : public FD3D12Resource
 {

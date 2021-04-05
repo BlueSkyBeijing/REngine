@@ -2,9 +2,6 @@
 #include "UStaticMesh.h"
 #include "Utility.h"
 
-#include <iostream>
-#include <fstream>
-
 UStaticMesh::UStaticMesh()
 {
     FilePathName = L"Content\\StaticMesh\\SM_Rock.stm";

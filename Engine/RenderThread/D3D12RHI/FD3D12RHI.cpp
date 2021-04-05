@@ -12,12 +12,7 @@
 #include "DDSTextureLoader.h"
 #include "FEngine.h"
 #include "TSingleton.h"
-#include "pix3.h"
 
-#include <d3dx12.h>
-#include <d3d12shader.h>
-#include <d3dcompiler.h>
-#include <dxgidebug.h>
 
 FD3D12RHI::FD3D12RHI():
     mDX12Device(nullptr),

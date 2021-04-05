@@ -1,10 +1,6 @@
 #pragma once
 #include "FRHIShader.h"
 
-#include <string>
-#include <wrl/client.h>
-#include "d3d12.h"
-
 class FD3D12Shader : public FRHIShader
 {
     friend class FD3D12RHI;

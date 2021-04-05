@@ -1,10 +1,7 @@
 #pragma once
-
 #include "UObject.h"
 #include "FRHIVertex.h"
 
-#include <vector>
-#include <string>
 
 class UStaticMesh : public UResource
 {

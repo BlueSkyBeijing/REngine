@@ -2,8 +2,6 @@
 #include "Utility.h"
 #include "FRHIBuffer.h"
 
-#include <string>
-
 class FRHIRenderTarget;
 class FRHIShader;
 class FRHIPipelineState;

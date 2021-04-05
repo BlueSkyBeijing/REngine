@@ -2,7 +2,6 @@
 #include "FRHIResource.h"
 #include "FRHIBuffer.h"
 #include "FRHIVertex.h"
-#include <vector>
 
 class FRHIBuffer : public FRHIResource
 {

@@ -3,10 +3,6 @@
 #include "FD3D12Buffer.h"
 #include "FRHI.h"
 
-#include <wrl/client.h>
-#include "d3d12.h"
-#include <dxgi1_6.h>
-
 class FD3D12RenderWindow;
 class FD3D12RenderTarget;
 class FD3D12Shader;

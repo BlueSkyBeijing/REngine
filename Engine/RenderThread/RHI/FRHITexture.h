@@ -1,7 +1,6 @@
 #pragma once
 #include "FRHIResource.h"
 #include "Utility.h"
-#include <string>
 
 class FRHITexture : public FRHIResource
 {

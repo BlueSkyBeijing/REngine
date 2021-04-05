@@ -1,9 +1,6 @@
 #pragma once
 #include "TSingleton.h"
-#include <wrl/client.h>
-#include "d3d12.h"
 #include "Utility.h"
-#include <map>
 
 class FRHIShaderBindings;
 

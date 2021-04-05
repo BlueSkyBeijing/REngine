@@ -4,10 +4,6 @@
 #include "FD3D12Vertex.h"
 #include "FRHIBuffer.h"
 
-#include <vector>
-#include <wrl/client.h>
-#include "d3d12.h"
-
 class FD3D12Buffer : public FD3D12Resource
 {
 public:

@@ -2,8 +2,6 @@
 #include "TSingleton.h"
 #include "Utility.h"
 
-#include <Windows.h>
-
 class FRenderThread;
 class UWorld;
 

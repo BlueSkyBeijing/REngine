@@ -1,8 +1,5 @@
 #pragma once
-
 #include "UObject.h"
-
-#include <string>
 
 class UTexture2D;
 class FMaterial;

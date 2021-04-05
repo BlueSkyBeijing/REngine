@@ -1,7 +1,6 @@
 #include "PrecompiledHeader.h"
 #include "FScene.h"
 #include "FRenderProxy.h"
-#include <assert.h>
 
 FScene::FScene()
 {

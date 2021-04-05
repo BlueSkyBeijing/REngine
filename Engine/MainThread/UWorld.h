@@ -1,9 +1,6 @@
 #pragma once
 #include "UObject.h"
 
-#include <vector>
-#include <string>
-
 class UStaticMeshObject;
 class UCamera;
 class UDirectionalLight;

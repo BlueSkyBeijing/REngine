@@ -1,6 +1,5 @@
 #pragma once
 #include "Utility.h"
-#include <string>
 
 // main thread serializable
 

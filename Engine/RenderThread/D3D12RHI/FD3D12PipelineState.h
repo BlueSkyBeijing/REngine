@@ -1,9 +1,6 @@
 #pragma once
 #include "FRHIPipelineState.h"
 
-#include <d3d12.h>
-#include <wrl/client.h>
-
 class FD3D12ShaderBindings;
 class FD3D12Shader;
 class FD3D12VertexLayout;

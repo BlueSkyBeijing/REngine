@@ -3,8 +3,6 @@
 #include "FRHIVertex.h"
 #include "FRHIBuffer.h"
 
-#include <string>
-
 // render thread render element
 
 class FMaterial;

@@ -2,8 +2,6 @@
 #include "FD3D12Texture.h"
 #include "FD3D12RHI.h"
 
-#include <string>
-
 FD3D12Texture::FD3D12Texture()
 {
 }

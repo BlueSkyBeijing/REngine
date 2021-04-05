@@ -1,8 +1,5 @@
 #pragma once
-
 #include "UObject.h"
-
-#include <string>
 
 class FRHITexture2D;
 

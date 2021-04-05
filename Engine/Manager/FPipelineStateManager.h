@@ -1,7 +1,5 @@
 #pragma once
 #include "TSingleton.h"
-#include <wrl/client.h>
-#include "d3d12.h"
 
 class FRHIPipelineState;
 class FRenderProxy;

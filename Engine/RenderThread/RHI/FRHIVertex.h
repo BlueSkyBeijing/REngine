@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Utility.h"
-#include <vector>
-#include <d3d12.h>
 
 class FRHIVertex
 {

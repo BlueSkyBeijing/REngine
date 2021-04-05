@@ -1,8 +1,6 @@
 #pragma once
 #include "TSingleton.h"
 
-#include <Windows.h>
-
 class FRenderThread;
 
 class FInputManager : TSingleton<FInputManager>

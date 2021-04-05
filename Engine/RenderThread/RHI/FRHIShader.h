@@ -1,7 +1,4 @@
 #pragma once
-#include <string>
-#include <wrl/client.h>
-#include "d3d12.h"
 
 class FRHIShader
 {
