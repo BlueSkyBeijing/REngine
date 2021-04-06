@@ -207,12 +207,14 @@ void FD3D12RHI::SetRenderTarget(FRHIRenderTarget* renderTarget)
 
 void FD3D12RHI::SetViewPort(FViewPort& viewPort)
 {
-    mDX12CommandList->RSSetViewports(1, &viewPort);
+    D3D12_VIEWPORT* dxViewport = (D3D12_VIEWPORT*)&viewPort;
+    mDX12CommandList->RSSetViewports(1, dxViewport);
 }
 
 void FD3D12RHI::SetSetScissor(FRect& scissorRect)
 {
-    mDX12CommandList->RSSetScissorRects(1, &scissorRect);
+    D3D12_RECT* dxRect = (D3D12_RECT*)&scissorRect;
+    mDX12CommandList->RSSetScissorRects(1, dxRect);
 }
 
 void FD3D12RHI::SetPipelineState(FRHIPipelineState* pipelineState)
@@ -430,7 +432,7 @@ FRHIPipelineState* FD3D12RHI::CreatePipelineState(FRHIShaderBindings* shaderBind
 
     D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc;
     ZeroMemory(&psoDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
-    psoDesc.InputLayout = { vertexLayout->Elements.data(), numElements };
+    psoDesc.InputLayout = { (D3D12_INPUT_ELEMENT_DESC*)vertexLayout->Elements.data(), numElements };
     psoDesc.pRootSignature = dynamic_cast<FD3D12ShaderBindings*>(shaderBindings)->mDX12RootSignature.Get();
     psoDesc.DepthStencilState.DepthEnable = TRUE;
     psoDesc.DepthStencilState.StencilEnable = TRUE;

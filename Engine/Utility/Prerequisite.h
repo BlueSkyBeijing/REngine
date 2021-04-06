@@ -15,9 +15,12 @@ typedef Eigen::Vector2f FVector2;
 
 typedef Eigen::Matrix4f FMatrix4x4;
 
-typedef D3D12_VIEWPORT FViewPort;
-typedef D3D12_RECT FRect;
-typedef D3D12_INPUT_ELEMENT_DESC FInputElementDesc;
+enum EPixelFormat;
+enum EInputClassification;
+
+struct FViewPort;
+struct FRect;
+struct FInputElementDesc;
 
 class UObject;
 class UWorld;

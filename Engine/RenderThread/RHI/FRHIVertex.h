@@ -31,3 +31,20 @@ public:
 private:
 
 };
+
+enum EInputClassification
+{
+    ICF_PER_VERTEX_DATA = 0,
+    ICF_PER_INSTANCE_DATA = 1
+};
+
+struct FInputElementDesc
+{
+    LPCSTR SemanticName;
+    uint32 SemanticIndex;
+    EPixelFormat Format;
+    uint32 InputSlot;
+    uint32 AlignedByteOffset;
+    EInputClassification InputSlotClass;
+    uint32 InstanceDataStepRate;
+};

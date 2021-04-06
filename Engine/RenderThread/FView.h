@@ -15,3 +15,21 @@ public:
 private:
 
 };
+
+struct FViewPort
+{
+    float TopLeftX;
+    float TopLeftY;
+    float Width;
+    float Height;
+    float MinDepth;
+    float MaxDepth;
+};
+
+struct FRect
+{
+    int32    left;
+    int32    top;
+    int32    right;
+    int32    bottom;
+};
