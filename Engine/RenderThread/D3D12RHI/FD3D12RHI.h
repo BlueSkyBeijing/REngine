@@ -1,16 +1,9 @@
 #pragma once
-#include "Utility.h"
+#include "Prerequisite.h"
+
 #include "FD3D12Buffer.h"
 #include "FRHI.h"
 
-class FD3D12RenderWindow;
-class FD3D12RenderTarget;
-class FD3D12Shader;
-class FD3D12PipelineState;
-class FD3D12VertexBuffer;
-class FRHIIndexBuffer;
-class FD3D12ShaderBindings;
-class FD3D12Texture2D;
 
 class FD3D12RHI : public FRHI
 {

@@ -1,8 +1,8 @@
 #pragma once
+#include "Prerequisite.h"
+
 #include "UObject.h"
 
-class UTexture2D;
-class FMaterial;
 
 class UMaterial : UObject
 {

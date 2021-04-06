@@ -1,5 +1,6 @@
 #pragma once
-#include "Utility.h"
+#include "Prerequisite.h"
+
 
 class FD3D12Vertex
 {

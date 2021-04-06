@@ -8,7 +8,7 @@
 #include "FRHIBuffer.h"
 #include "FEngine.h"
 #include "FRenderThread.h"
-#include "Utility.h"
+
 
 FRenderProxyInitializer::FRenderProxyInitializer()
 {

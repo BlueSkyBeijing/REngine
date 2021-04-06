@@ -1,14 +1,7 @@
 #pragma once
-#include "FRHIBuffer.h"
+#include "Prerequisite.h"
 
-class FRHIRenderWindow;
-class FSceneManager;
-class FScene;
-class FView;
-class FRHIRenderTarget;
-class FShaderManager;
-class FShaderBindingsManager;
-class FPipelineStateManager;
+#include "FRHIBuffer.h"
 
 struct FPassConstant
 {

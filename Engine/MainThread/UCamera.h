@@ -1,7 +1,8 @@
 #pragma once
+#include "Prerequisite.h"
 
 #include "UObject.h"
-class FEngine;
+
 
 class UCamera : public USceneObject
 {

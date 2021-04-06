@@ -1,18 +1,8 @@
 #pragma once
-#include "Utility.h"
+#include "Prerequisite.h"
+
 #include "FRHI.h"
 
-
-class FRenderer;
-class FRHIRenderWindow;
-class FScene;
-class FView;
-class FInputManager;
-class FEngine;
-class FRenderProxy;
-class FShaderManager;
-class FShaderBindingsManager;
-class FPipelineStateManager;
 
 class FRenderThread
 {

@@ -120,6 +120,7 @@
     <ClInclude Include="Engine\RenderThread\RHI\FRHITexture.h" />
     <ClInclude Include="Engine\RenderThread\RHI\FRHIVertex.h" />
     <ClInclude Include="Engine\Utility\PrecompiledHeader.h" />
+    <ClInclude Include="Engine\Utility\Prerequisite.h" />
     <ClInclude Include="Engine\Utility\TSingleton.h" />
     <ClInclude Include="Engine\Utility\Utility.h" />
     <ClInclude Include="Engine\Utility\WindowsUtility.h" />

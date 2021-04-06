@@ -1,6 +1,6 @@
 #pragma once
+#include "Prerequisite.h"
 
-#include "Utility.h"
 
 class FRHIVertex
 {

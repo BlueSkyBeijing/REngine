@@ -1,8 +1,8 @@
 #pragma once
+#include "Prerequisite.h"
+
 #include "FRHIResource.h"
 
-class FRHIShader;
-class FRHITexture2D;
 
 class FMaterial : public FRHIResource
 {

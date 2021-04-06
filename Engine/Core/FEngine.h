@@ -1,9 +1,7 @@
 #pragma once
-#include "TSingleton.h"
-#include "Utility.h"
+#include "Prerequisite.h"
 
-class FRenderThread;
-class UWorld;
+#include "TSingleton.h"
 
 class FEngine : TSingleton<FEngine>
 {

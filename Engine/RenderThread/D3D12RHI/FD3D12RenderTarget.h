@@ -1,10 +1,10 @@
 #pragma once
+#include "Prerequisite.h"
+
 #include "FRHIRenderTarget.h"
-#include "Utility.h"
 
 #define SWAPCHAIN_BUFFER_COUNT 2
 
-class FInputManager;
 
 class FD3D12RenderTarget : FRHIRenderTarget
 {

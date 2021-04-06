@@ -1,14 +1,11 @@
 #pragma once
+#include "Prerequisite.h"
 
 #include "FRHIVertex.h"
 #include "FRHIBuffer.h"
 
-// render thread render element
 
-class FMaterial;
-class FRHIBuffer;
-class FRHIVertexBuffer;
-class FRHIIndexBuffer;
+// render thread render element
 
 struct FObjectConstant
 {
@@ -22,7 +19,7 @@ public:
     ~FRenderProxyInitializer();
 
     std::vector<FStaticMeshVertex> Vertexes;
-    std::vector<std::uint16_t> Indexes;
+    std::vector<uint16> Indexes;
     FRHIVertexLayout VertexLayout;
     FVector3 Position;
     FVector3 Rotation;

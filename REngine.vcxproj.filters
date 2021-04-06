@@ -331,6 +331,9 @@
     <ClInclude Include="Engine\Utility\PrecompiledHeader.h">
       <Filter>Engine\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Utility\Prerequisite.h">
+      <Filter>Engine\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shader\Common.hlsl">

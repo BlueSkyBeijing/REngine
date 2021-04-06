@@ -1,5 +1,5 @@
 #pragma once
-class FRenderProxy;
+#include "Prerequisite.h"
 
 class FScene
 {

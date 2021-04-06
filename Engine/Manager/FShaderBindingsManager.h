@@ -1,6 +1,7 @@
 #pragma once
+#include "Prerequisite.h"
+
 #include "TSingleton.h"
-#include "Utility.h"
 
 class FRHIShaderBindings;
 

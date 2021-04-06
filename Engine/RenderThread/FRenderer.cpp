@@ -8,7 +8,6 @@
 #include "FPipelineStateManager.h"
 #include "FShaderBindingsManager.h"
 #include "FRHIShader.h"
-#include "Utility.h"
 #include "FRHIPipelineState.h"
 #include "FRHIShaderBindings.h"
 #include "TSingleton.h"

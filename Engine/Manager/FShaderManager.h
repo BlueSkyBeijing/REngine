@@ -1,5 +1,6 @@
 #pragma once
-#include "Utility.h"
+#include "Prerequisite.h"
+
 #include "TSingleton.h"
 
 class FRHIShader;

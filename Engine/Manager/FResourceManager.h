@@ -1,5 +1,6 @@
 #pragma once
-class UObject;
+#include "Prerequisite.h"
+
 
 enum EResourceType
 {

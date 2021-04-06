@@ -1,4 +1,6 @@
 #pragma once
+#include "Prerequisite.h"
+
 #include "UObject.h"
 #include "FRHIVertex.h"
 

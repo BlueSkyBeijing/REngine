@@ -1,8 +1,9 @@
 #pragma once
+#include "Prerequisite.h"
+
 #include "FD3D12Resource.h"
 #include "FRHITexture.h"
 
-#include "Utility.h"
 
 class FD3D12Texture : public FD3D12Resource
 {

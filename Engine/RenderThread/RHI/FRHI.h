@@ -1,15 +1,7 @@
 #pragma once
-#include "Utility.h"
-#include "FRHIBuffer.h"
+#include "Prerequisite.h"
 
-class FRHIRenderTarget;
-class FRHIShader;
-class FRHIPipelineState;
-class FRHIVertexBuffer;
-class FRHIIndexBuffer;
-class FRHIShaderBindings;
-class FRHITexture2D;
-class FRHIRenderWindow;
+#include "FRHIBuffer.h"
 
 
 enum EPrimitiveTopology

@@ -1,6 +1,8 @@
 #pragma once
+#include "Prerequisite.h"
+
 #include "FRHIResource.h"
-#include "Utility.h"
+
 
 class FRHITexture : public FRHIResource
 {
