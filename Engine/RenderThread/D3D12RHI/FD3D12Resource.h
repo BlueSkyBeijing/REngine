@@ -1,4 +1,5 @@
 #pragma once
+#include "Prerequisite.h"
 
 #include "FRHIResource.h"
 

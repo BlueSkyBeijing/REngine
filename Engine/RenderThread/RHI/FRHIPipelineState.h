@@ -1,8 +1,6 @@
 #pragma once
+#include "Prerequisite.h"
 
-class FRHIShaderBindings;
-class FRHIShader;
-class FRHIVertexLayout;
 
 class FRHIPipelineState
 {

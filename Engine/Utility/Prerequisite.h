@@ -58,6 +58,7 @@ class FRHIShaderBindings;
 class FRHITexture2D;
 class FRHIRenderWindow;
 class FRHIRenderTarget;
+class FRHIVertexLayout;
 
 class FD3D12ShaderBindings;
 class FD3D12Shader;

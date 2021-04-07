@@ -7,9 +7,6 @@
 #include "FConfigManager.h"
 #include "UWorld.h"
 
-#include <thread>
-#include <mutex>
-#include <condition_variable>
 
 FEngine::FEngine():mHeartbeat(true),
     mInited(false),

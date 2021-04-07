@@ -1,7 +1,6 @@
 #pragma once
 #include "Prerequisite.h"
 
-
 enum EResourceType
 {
     RT_StaticMesh,

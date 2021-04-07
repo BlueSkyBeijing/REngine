@@ -1,4 +1,6 @@
 #pragma once
+#include "Prerequisite.h"
+
 #include "FRHIShaderBindings.h"
 
 class FD3D12ShaderBindings : public FRHIShaderBindings

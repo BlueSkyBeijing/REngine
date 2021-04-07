@@ -161,14 +161,14 @@ void FRenderer::createPassConstantBuffer()
     //    xaxis.z           yaxis.z           zaxis.z          0
     //    - dot(xaxis, cameraPosition) - dot(yaxis, cameraPosition) - dot(zaxis, cameraPosition)  1
 
-    Eigen::Matrix4f viewMatrix, projectionMatrix;
-    Eigen::Vector3f position(mView->Position.x(), mView->Position.y(), mView->Position.z());
-    Eigen::Vector3f target(mView->Target.x(), mView->Target.y(), mView->Target.z());
-    Eigen::Vector3f up(mView->Up.x(), mView->Up.y(), mView->Up.z());
+    FMatrix4x4 viewMatrix, projectionMatrix;
+    FVector3 position(mView->Position.x(), mView->Position.y(), mView->Position.z());
+    FVector3 target(mView->Target.x(), mView->Target.y(), mView->Target.z());
+    FVector3 up(mView->Up.x(), mView->Up.y(), mView->Up.z());
 
-    Eigen::Vector3f zaxis = (target - position).normalized();
-    Eigen::Vector3f xaxis = up.cross(zaxis).normalized();
-    Eigen::Vector3f yaxis = zaxis.cross(xaxis);
+    FVector3 zaxis = (target - position).normalized();
+    FVector3 xaxis = up.cross(zaxis).normalized();
+    FVector3 yaxis = zaxis.cross(xaxis);
 
     viewMatrix.col(0) = Eigen::Vector4f(xaxis.x(), xaxis.y(), xaxis.z(), -xaxis.dot(position));
     viewMatrix.col(1) = Eigen::Vector4f(yaxis.x(), yaxis.y(), yaxis.z(), -yaxis.dot(position));
@@ -180,13 +180,13 @@ void FRenderer::createPassConstantBuffer()
     //    0       h       0                                             0
     //    0       0       zfarPlane / (zfarPlane - znearPlane)          1
     //    0       0 - znearPlane * zfarPlane / (zfarPlane - znearPlane)  0
-    float fovY = 3.1415f * 0.25f;
-    float aspect = 1.7f;
-    float nearPlane = 1.0f;
-    float farPlane = 100000.0f;
-    float theta = fovY * 0.5f;
-    float range = farPlane - nearPlane;
-    float invtan = 1.0f / tan(theta);
+    const float fovY = 3.1415f * 0.25f;
+    const float aspect = 1.7f;
+    const float nearPlane = 1.0f;
+    const float farPlane = 100000.0f;
+    const float theta = fovY * 0.5f;
+    const float range = farPlane - nearPlane;
+    const float invtan = 1.0f / tan(theta);
 
     projectionMatrix.setConstant(0.0f);
     projectionMatrix(0, 0) = invtan / aspect;

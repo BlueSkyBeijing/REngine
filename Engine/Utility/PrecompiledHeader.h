@@ -11,6 +11,10 @@
 #include <memory>
 #include <stdexcept>
 #include <functional>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+#include <type_traits>
 
 #include <assert.h>
 #include <stdint.h>

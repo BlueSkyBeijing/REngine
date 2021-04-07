@@ -1,4 +1,6 @@
 #pragma once
+#include "Prerequisite.h"
+
 #include "FD3D12Resource.h"
 #include "FD3D12Buffer.h"
 #include "FD3D12Vertex.h"

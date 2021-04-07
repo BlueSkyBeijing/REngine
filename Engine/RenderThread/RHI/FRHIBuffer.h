@@ -1,4 +1,6 @@
 #pragma once
+#include "Prerequisite.h"
+
 #include "FRHIResource.h"
 #include "FRHIBuffer.h"
 #include "FRHIVertex.h"

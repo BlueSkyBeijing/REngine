@@ -1,4 +1,5 @@
 #pragma once
+#include "Prerequisite.h"
 
 class FD3D12CommandList
 {
