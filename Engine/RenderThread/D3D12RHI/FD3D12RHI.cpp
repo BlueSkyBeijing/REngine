@@ -1,4 +1,4 @@
-#include "PrecompiledHeader.h"
+﻿#include "PrecompiledHeader.h"
 
 #include "FD3D12RHI.h"
 #include "FRenderProxy.h"
@@ -15,12 +15,12 @@
 #include "TSingleton.h"
 
 
-FD3D12RHI::FD3D12RHI():
+FD3D12RHI::FD3D12RHI() :
     mDX12Device(nullptr),
     mEventHandle(0),
     mFenceValue(0),
     mDepthStencilFormat(DXGI_FORMAT_D24_UNORM_S8_UINT),
-	mBackBufferFormat(DXGI_FORMAT_R8G8B8A8_UNORM),
+    mBackBufferFormat(DXGI_FORMAT_R8G8B8A8_UNORM),
     mRTVDescriptorSize(0),
     mDSVDescriptorSize(0),
     mCBVSRVVUAVDescriptorSize(0),
@@ -96,8 +96,8 @@ void FD3D12RHI::Init()
     mBackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
     mDepthStencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
-	mRTVDescriptorSize = mDX12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	mDSVDescriptorSize = mDX12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+    mRTVDescriptorSize = mDX12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+    mDSVDescriptorSize = mDX12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
     mCBVSRVVUAVDescriptorSize = mDX12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
     //create command allocator
@@ -154,7 +154,7 @@ void FD3D12RHI::ExecuteCommandList()
 
 void FD3D12RHI::FlushCommandQueue()
 {
-    const UINT64 cmdFence = mFenceValue;
+    const uint64 cmdFence = mFenceValue;
     mDX12CommandQueue->Signal(mDX12Fence.Get(), cmdFence);
     mFenceValue++;
 
@@ -165,12 +165,6 @@ void FD3D12RHI::FlushCommandQueue()
     }
 }
 
-void FD3D12RHI::BeginDraw()
-{
-    CD3DX12_RESOURCE_BARRIER resourceBarries = CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->GetRenderBuffer().Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-    mDX12CommandList->ResourceBarrier(1, &resourceBarries);
-}
-
 void FD3D12RHI::Clear(const FVector4& color)
 {
     //clear color and depth stencil
@@ -178,12 +172,6 @@ void FD3D12RHI::Clear(const FVector4& color)
     mDX12CommandList->ClearRenderTargetView(mRenderTarget->GetRenderBufferView(), ClearColor, 0, nullptr);
     mDX12CommandList->ClearDepthStencilView(mRenderTarget->GetDepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
-}
-
-void FD3D12RHI::EndDraw()
-{
-    CD3DX12_RESOURCE_BARRIER resourceBarries = CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->GetRenderBuffer().Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-    mDX12CommandList->ResourceBarrier(1, &resourceBarries);
 }
 
 void FD3D12RHI::BeginEvent(std::string& eventName)
@@ -618,9 +606,23 @@ FRHIRenderWindow* FD3D12RHI::CreateRenderWindow(uint32 width, uint32 hight)
     return renderTarget;
 }
 
+void FD3D12RHI::Transition(const FRHITransitionInfo& info)
+{
+    if ((info.AccessBefore == ACCESS_PRESENT) && (info.AccessAfter == ACCESS_RENDER_TARGET))
+    {
+        CD3DX12_RESOURCE_BARRIER resourceBarries = CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->GetRenderBuffer().Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+        mDX12CommandList->ResourceBarrier(1, &resourceBarries);
+    }
+    else if ((info.AccessBefore == ACCESS_RENDER_TARGET) && (info.AccessAfter == ACCESS_PRESENT))
+    {
+        CD3DX12_RESOURCE_BARRIER resourceBarries = CD3DX12_RESOURCE_BARRIER::Transition(mRenderTarget->GetRenderBuffer().Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+        mDX12CommandList->ResourceBarrier(1, &resourceBarries);
+    }
+}
+
 void FD3D12RHI::Present()
 {
     THROW_IF_FAILED(mRenderTarget->mDXGISwapChain->Present(0, 0));
-    
+
     mRenderTarget->mChainBufferndex = (mRenderTarget->mChainBufferndex + 1) % mRenderTarget->mSwapChainBufferCount;
 }

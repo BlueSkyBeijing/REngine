@@ -1,14 +1,16 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
+#include "FRHIResource.h"
 
-class FRHIRenderTarget
+
+class FRHIRenderTarget : public FRHIResource
 {
     friend class FRHI;
 
 public:
-	FRHIRenderTarget(unsigned int width, unsigned int hight);
-	virtual ~FRHIRenderTarget();
+    FRHIRenderTarget(unsigned int width, unsigned int hight);
+    virtual ~FRHIRenderTarget();
 
     virtual void Init();
     virtual void UnInit();

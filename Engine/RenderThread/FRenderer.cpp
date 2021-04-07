@@ -1,4 +1,4 @@
-#include "PrecompiledHeader.h"
+﻿#include "PrecompiledHeader.h"
 
 #include "FRenderer.h"
 #include "FRHIRenderTarget.h"
@@ -61,7 +61,9 @@ void FRenderer::preRender()
 {
     mRHI->BeginCommmandList();
     mRHI->SetRenderTarget(mRenderWindow);
-    mRHI->BeginDraw();
+
+    const FRHITransitionInfo info(mRenderWindow, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
+    mRHI->Transition(info);
 }
 
 void FRenderer::Render()
@@ -116,7 +118,7 @@ void FRenderer::drawRenderables()
     const std::vector<FRenderProxy*>& renderProxys = mScene->GetRenderProxys();
     for (auto it = renderProxys.begin(); it != renderProxys.end(); it++)
     {
-        FRenderProxy * renderProxy = *it;
+        FRenderProxy* renderProxy = *it;
 
         mRHI->BeginEvent(renderProxy->DebugName);
 
@@ -138,7 +140,9 @@ void FRenderer::postProcess()
 
 void FRenderer::postRender()
 {
-    mRHI->EndDraw();
+    const FRHITransitionInfo info(mRenderWindow, ACCESS_RENDER_TARGET, ACCESS_PRESENT);
+    mRHI->Transition(info);
+
     mRHI->EndCommmandList();
 
     mRHI->ExecuteCommandList();
@@ -149,7 +153,7 @@ void FRenderer::createPassConstantBuffer()
 {
     //create pass constant buffer
     FPassConstant constant;
-    
+
     //build view matrix.
     //from:https://docs.microsoft.com/en-us/previous-versions/windows/desktop/bb281710(v=vs.85)
     //zaxis = normal(cameraTarget - cameraPosition)
@@ -191,7 +195,7 @@ void FRenderer::createPassConstantBuffer()
     projectionMatrix.setConstant(0.0f);
     projectionMatrix(0, 0) = invtan / aspect;
     projectionMatrix(1, 1) = invtan;
-    projectionMatrix(2, 2) = farPlane /  range;
+    projectionMatrix(2, 2) = farPlane / range;
     projectionMatrix(2, 3) = 1;
     projectionMatrix(3, 2) = -nearPlane * farPlane / range;
     projectionMatrix(3, 3) = 0;

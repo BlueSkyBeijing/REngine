@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 #include "FD3D12Buffer.h"
@@ -8,7 +8,7 @@
 class FD3D12RHI : public FRHI
 {
 public:
-	FD3D12RHI();
+    FD3D12RHI();
     virtual ~FD3D12RHI() override;
 
     virtual void Init() override;
@@ -16,12 +16,8 @@ public:
 
     virtual void BeginCommmandList() override;
     virtual void EndCommmandList() override;
-
     virtual void ExecuteCommandList() override;
     virtual void FlushCommandQueue() override;
-
-    virtual void BeginDraw() override;
-    virtual void EndDraw() override;
 
     virtual void Clear(const FVector4& color) override;
 
@@ -34,7 +30,7 @@ public:
     virtual void SetPrimitiveTopology(EPrimitiveTopology topology) override;
     virtual void SetVertexBuffer(FRHIVertexBuffer* buffer) override;
     virtual void SetIndexBuffer(FRHIIndexBuffer* buffer) override;
-    virtual void DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation,int32 baseVertexLocation,uint32 startInstanceLocation) override;
+    virtual void DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation) override;
 
     virtual FRHIConstantBuffer* CreateConstantBuffer(uint32 structureSize, uint8* bufferData, int32 slot) override;
     virtual FRHIVertexBuffer* CreateVertexBuffer(uint32 structureSize, uint32 vertexCount, uint8* bufferData) override;
@@ -44,6 +40,8 @@ public:
     virtual FRHIPipelineState* CreatePipelineState(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout) override;
     virtual FRHITexture2D* CreateTexture2D(const std::wstring& filePathName, int32 slot) override;
     virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) override;
+
+    virtual void Transition(const FRHITransitionInfo& info) override;
 
     virtual void BeginEvent(std::string& eventName) override;
     virtual void EndEvent() override;
@@ -68,13 +66,13 @@ private:
 
     Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> mCBVSRVUAVHeap;
 
-	Microsoft::WRL::ComPtr <ID3D12Resource> mCurTexture;
-	Microsoft::WRL::ComPtr <ID3D12Resource> mCurTextureUploadHeap;
+    Microsoft::WRL::ComPtr <ID3D12Resource> mCurTexture;
+    Microsoft::WRL::ComPtr <ID3D12Resource> mCurTextureUploadHeap;
 
     DXGI_FORMAT mBackBufferFormat;
     DXGI_FORMAT mDepthStencilFormat;
 
-	uint32 mRTVDescriptorSize;
+    uint32 mRTVDescriptorSize;
     uint32 mDSVDescriptorSize;
     uint32 mCBVSRVVUAVDescriptorSize;
 

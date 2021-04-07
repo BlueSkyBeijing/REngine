@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 #include "FRHIBuffer.h"
@@ -143,23 +143,59 @@ enum EPixelFormat
     PF_FORCE_UINT = 0xffffffff
 };
 
+enum ERHIAccess
+{
+    ACCESS_COMMON = 0,
+    ACCESS_VERTEX_AND_CONSTANT_BUFFER = 0x1,
+    ACCESS_INDEX_BUFFER = 0x2,
+    ACCESS_RENDER_TARGET = 0x4,
+    ACCESS_UNORDERED_ACCESS = 0x8,
+    ACCESS_DEPTH_WRITE = 0x10,
+    ACCESS_DEPTH_READ = 0x20,
+    ACCESS_NON_PIXEL_SHADER_RESOURCE = 0x40,
+    ACCESS_PIXEL_SHADER_RESOURCE = 0x80,
+    ACCESS_STREAM_OUT = 0x100,
+    ACCESS_INDIRECT_ARGUMENT = 0x200,
+    ACCESS_COPY_DEST = 0x400,
+    ACCESS_COPY_SOURCE = 0x800,
+    ACCESS_RESOLVE_DEST = 0x1000,
+    ACCESS_RESOLVE_SOURCE = 0x2000,
+    ACCESS_RAYTRACING_ACCELERATION_STRUCTURE = 0x400000,
+    ACCESS_SHADING_RATE_SOURCE = 0x1000000,
+    ACCESS_GENERIC_READ = (((((0x1 | 0x2) | 0x40) | 0x80) | 0x200) | 0x800),
+    ACCESS_PRESENT = 0,
+    ACCESS_PREDICATION = 0x200,
+};
+
+struct FRHITransitionInfo
+{
+    FRHIResource* Resource;
+    ERHIAccess AccessBefore;
+    ERHIAccess AccessAfter;
+
+    FRHITransitionInfo(
+        FRHIResource* InResource,
+        ERHIAccess InPreviousState,
+        ERHIAccess InNewState)
+        : Resource(InResource)
+        , AccessBefore(InPreviousState)
+        , AccessAfter(InNewState)
+    {}
+};
+
 class FRHI
 {
 public:
-	FRHI(){}
-    virtual ~FRHI(){}
+    FRHI() {}
+    virtual ~FRHI() {}
 
     virtual void Init() = 0;
     virtual void UnInit() = 0;
 
     virtual void BeginCommmandList() = 0;
     virtual void EndCommmandList() = 0;
-
     virtual void ExecuteCommandList() = 0;
     virtual void FlushCommandQueue() = 0;
-
-    virtual void BeginDraw() = 0;
-    virtual void EndDraw() = 0;
 
     virtual void Clear(const FVector4& color) = 0;
 
@@ -172,7 +208,7 @@ public:
     virtual void SetPrimitiveTopology(EPrimitiveTopology topology) = 0;
     virtual void SetVertexBuffer(FRHIVertexBuffer* buffer) = 0;
     virtual void SetIndexBuffer(FRHIIndexBuffer* buffer) = 0;
-    virtual void DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation,int32 baseVertexLocation,uint32 startInstanceLocation) = 0;
+    virtual void DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation) = 0;
 
     virtual FRHIConstantBuffer* CreateConstantBuffer(uint32 structureSize, uint8* bufferData, int32 slot) = 0;
     virtual FRHIVertexBuffer* CreateVertexBuffer(uint32 structureSize, uint32 vertexCount, uint8* bufferData) = 0;
@@ -183,6 +219,8 @@ public:
     virtual FRHITexture2D* CreateTexture2D(const std::wstring& filePathName, int32 slot) = 0;
     virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) = 0;
 
+    virtual void Transition(const FRHITransitionInfo& info) = 0;
+
     virtual void BeginEvent(std::string& eventName) = 0;
     virtual void EndEvent() = 0;
 
@@ -192,4 +230,3 @@ protected:
 
 private:
 };
-
