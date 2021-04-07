@@ -3,6 +3,7 @@
 #include "FRHIShader.h"
 #include "FRHI.h"
 
+
 FRHIShader::FRHIShader() :
     FilePathName(),
     EnterPoint(),
@@ -21,3 +22,4 @@ void FRHIShader::Init()
 void FRHIShader::UnInit()
 {
 }
+

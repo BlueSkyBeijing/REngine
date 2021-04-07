@@ -48,3 +48,4 @@ void FRHIRenderWindow::UnInit()
 void FRHIRenderWindow::Present()
 {
 }
+

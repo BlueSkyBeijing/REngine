@@ -19,3 +19,4 @@ void FRHIShaderBindings::Init()
 void FRHIShaderBindings::UnInit()
 {
 }
+

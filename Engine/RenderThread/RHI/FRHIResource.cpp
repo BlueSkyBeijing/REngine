@@ -2,7 +2,6 @@
 
 #include "FRHIResource.h"
 
-
 FRHIResource::FRHIResource()
 {
 }

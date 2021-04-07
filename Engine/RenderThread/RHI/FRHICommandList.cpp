@@ -9,3 +9,4 @@ FRHICommandList::FRHICommandList()
 FRHICommandList::~FRHICommandList()
 {
 }
+
