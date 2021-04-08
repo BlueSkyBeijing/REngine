@@ -1,4 +1,4 @@
-#include "PrecompiledHeader.h"
+﻿#include "PrecompiledHeader.h"
 
 #include "FShaderManager.h"
 #include "FRHI.h"
@@ -27,9 +27,15 @@ void FShaderManager::UnInit()
     mShader.clear();
 }
 
-FRHIShader* FShaderManager::GetOrCreateShader(std::string& fileName, std::string& enterPoint, std::string& target)
+FRHIShader* FShaderManager::CreateShader(std::string& fileName, std::string& enterPoint, std::string& target)
 {
-    std::map<std::string, FRHIShader*>::iterator it =  mShader.find(fileName);
+
+    return nullptr;
+}
+
+FRHIShader* FShaderManager::GetShader(std::string& fileName, std::string& enterPoint, std::string& target)
+{
+    std::map<std::string, FRHIShader*>::iterator it = mShader.find(fileName);
     if (it != mShader.end())
     {
         return it->second;

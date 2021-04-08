@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 #include "UObject.h"
@@ -8,8 +8,8 @@ class FRHITexture2D;
 class UTexture : public UResource
 {
 public:
-	UTexture();
-	virtual ~UTexture() override;
+    UTexture();
+    virtual ~UTexture() override;
 
 private:
 
@@ -18,8 +18,9 @@ private:
 class UTexture2D : public UTexture
 {
 public:
-	UTexture2D();
-	virtual ~UTexture2D() override;
+    UTexture2D();
+    virtual ~UTexture2D() override;
+
 public:
     FRHITexture2D* Texture;
 

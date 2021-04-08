@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 class FRHICommandList
 {
 public:
-	FRHICommandList();
-	~FRHICommandList();
+    FRHICommandList();
+    ~FRHICommandList();
 
 private:
 
@@ -27,5 +27,5 @@ public:
     }
 
 private:
-    std::function < ReturnType()> mFunction;
+    std::function <ReturnType()> mFunction;
 };

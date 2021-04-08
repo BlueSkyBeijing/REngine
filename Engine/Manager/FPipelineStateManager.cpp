@@ -1,4 +1,4 @@
-#include "PrecompiledHeader.h"
+﻿#include "PrecompiledHeader.h"
 
 #include "FPipelineStateManager.h"
 #include "FRHIPipelineState.h"
@@ -14,7 +14,7 @@
 #include "FRHI.h"
 #include "FRenderThread.h"
 
-FPipelineStateManager::FPipelineStateManager():
+FPipelineStateManager::FPipelineStateManager() :
     mPipelineState(nullptr)
 {
 }
@@ -23,7 +23,7 @@ FPipelineStateManager::~FPipelineStateManager()
 {
 }
 
-FRHIPipelineState* FPipelineStateManager::GetOrCreatePipleLineState(FRenderProxy* renderProxy)
+FRHIPipelineState* FPipelineStateManager::CreatePipleLineState(FRenderProxy* renderProxy)
 {
     if (nullptr == mPipelineState)
     {
@@ -31,12 +31,16 @@ FRHIPipelineState* FPipelineStateManager::GetOrCreatePipleLineState(FRenderProxy
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
 
-        mPipelineState  = rhi->CreatePipelineState(shaderBindings, renderProxy->Material->VertexShader, renderProxy->Material->PixelShader, &renderProxy->VertexLayout);
+        mPipelineState = rhi->CreatePipelineState(shaderBindings, renderProxy->Material->VertexShader, renderProxy->Material->PixelShader, &renderProxy->VertexLayout);
     }
 
     return mPipelineState;
 }
 
+FRHIPipelineState* FPipelineStateManager::GetPipleLineState(FRenderProxy* renderProxy)
+{
+    return mPipelineState;
+}
 
 void FPipelineStateManager::Init()
 {

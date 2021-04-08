@@ -1,38 +1,42 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
-#include "FRHI.h"
+#include "FRHICommandList.h"
 
 
 class FRenderThread
 {
 public:
-	FRenderThread(FEngine* engine);
-	~FRenderThread();
+    FRenderThread(FEngine* engine);
+    ~FRenderThread();
 
     void Start();
 
     void Exit();
 
     void AddToScene(FRenderProxy* renderProxy);
- 
+
     void InitView(FVector3& position, FVector3& target, FVector3& up);
 
-    void MarkLoadCompleted()
+    inline void MarkLoadCompleted()
     {
         mLoadCompleted = true;
     }
 
-    bool IsInited() const
+    inline bool IsInited() const
     {
         return mInited;
     }
 
-    FRHI* GetRHI() const
+    inline FRHI* GetRHI() const
     {
         return mRHI;
     }
 
+    inline int32 GetFrameNum() const
+    {
+        return mSyncNum;
+    }
 protected:
     virtual void start();
 
@@ -42,6 +46,8 @@ protected:
     virtual void update();
 
     virtual void loop();
+
+    virtual void processRenderCommand();
 
     virtual void waitResourceReady();
 
@@ -57,5 +63,10 @@ private:
     FScene* mScene;
     FView* mView;
 
+    std::mutex mRenderMutex;
+    std::condition_variable mRenderCondition;
+    int32 mSyncNum;
+
     std::thread* mRenderThread;
+    std::vector<FRenderCommand<void>*> mRenderCommands;
 };

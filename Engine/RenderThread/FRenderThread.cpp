@@ -1,7 +1,8 @@
-#include "PrecompiledHeader.h"
+﻿#include "PrecompiledHeader.h"
 
 #include "FRenderThread.h"
 #include "FRHI.h"
+#include "FRHICommandList.h"
 #include "FD3D12RHI.h"
 #include "FRHIRenderTarget.h"
 #include "FRenderer.h"
@@ -123,11 +124,23 @@ void FRenderThread::update()
 void FRenderThread::loop()
 {
     waitResourceReady();
+    processRenderCommand();
 
     while (mHeartbeat)
     {
         update();
     };
+}
+
+void FRenderThread::processRenderCommand()
+{
+    for (auto it = mRenderCommands.begin(); it != mRenderCommands.end(); it++)
+    {
+        FRenderCommand<void>* command = *it;
+        command->Excecute();
+    }
+
+    mRenderCommands.clear();
 }
 
 void FRenderThread::waitResourceReady()
@@ -143,4 +156,3 @@ void FRenderThread::waitResourceReady()
     //create render resources
     mRenderer->CreateRenderResources();
 }
-

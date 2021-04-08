@@ -1,4 +1,4 @@
-#include "PrecompiledHeader.h"
+﻿#include "PrecompiledHeader.h"
 
 #include "UWorld.h"
 #include "FEngine.h"
@@ -7,7 +7,7 @@
 #include "UCamera.h"
 #include "ULight.h"
 
-UWorld::UWorld(FEngine* engine):
+UWorld::UWorld(FEngine* engine) :
     mEngine(engine),
     mCamera(nullptr)
 {
@@ -21,15 +21,15 @@ UWorld::~UWorld()
 void UWorld::Load()
 {
     //load from file
-    UStaticMeshObject* staticMeshObject = new UStaticMeshObject(mEngine);
+    UStaticMeshObject* staticMeshObject = new UStaticMeshObject();
     staticMeshObject->Load();
     mStaticMeshObjects.push_back(staticMeshObject);
 
-    UCamera* camera = new UCamera(mEngine);
+    UCamera* camera = new UCamera();
     camera->Load();
     mCamera = camera;
 
-    UDirectionalLight* directionalLight = new UDirectionalLight(mEngine);
+    UDirectionalLight* directionalLight = new UDirectionalLight();
     directionalLight->Load();
     mDirectionalLight = directionalLight;
 

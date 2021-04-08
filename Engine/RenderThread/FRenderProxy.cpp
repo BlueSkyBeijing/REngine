@@ -1,4 +1,4 @@
-#include "PrecompiledHeader.h"
+﻿#include "PrecompiledHeader.h"
 
 #include "FRenderProxy.h"
 #include "WindowsUtility.h"
@@ -8,6 +8,8 @@
 #include "FRHIBuffer.h"
 #include "FEngine.h"
 #include "FRenderThread.h"
+#include "FPipelineStateManager.h"
+#include "FRHIPipelineState.h"
 
 
 FRenderProxyInitializer::FRenderProxyInitializer()
@@ -18,7 +20,7 @@ FRenderProxyInitializer::~FRenderProxyInitializer()
 {
 }
 
-FRenderProxy::FRenderProxy():
+FRenderProxy::FRenderProxy() :
     WorldMatrix()
 {
 }
@@ -58,7 +60,7 @@ void FStaticMeshRenderProxy::CreateRenderResource()
     FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
     VertexBuffer = rhi->CreateVertexBuffer(sizeof(FStaticMeshVertex), (uint32)mVertexes.size(), (uint8*)mVertexes.data());
 
-    IndexBuffer = rhi->CreateIndexBuffer(sizeof(uint16), (uint32)mIndexes.size(), (uint8*) mIndexes.data());
+    IndexBuffer = rhi->CreateIndexBuffer(sizeof(uint16), (uint32)mIndexes.size(), (uint8*)mIndexes.data());
 
     mObjectConstants.World.setIdentity();
 
@@ -71,6 +73,9 @@ void FStaticMeshRenderProxy::CreateRenderResource()
     StartIndexLocation = 0;
     BaseVertexLocation = 0;
     StartInstanceLocation = 0;
+
+    TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(this);
+
 }
 
 void FStaticMeshRenderProxy::ReleaseRenderResource()

@@ -1,4 +1,4 @@
-#include "PrecompiledHeader.h"
+﻿#include "PrecompiledHeader.h"
 
 #include "UStaticMeshObject.h"
 #include "UStaticMesh.h"
@@ -6,11 +6,12 @@
 #include "FEngine.h"
 #include "FRenderThread.h"
 #include "FRenderProxy.h"
+#include "FEngine.h"
+#include "TSingleton.h"
 
-UStaticMeshObject::UStaticMeshObject(FEngine* engine):
+UStaticMeshObject::UStaticMeshObject() :
     mMaterial(nullptr),
-    mStaticMesh(nullptr),
-    mEngine(engine)
+    mStaticMesh(nullptr)
 {
 }
 
@@ -60,5 +61,5 @@ void UStaticMeshObject::createRenderProxy()
     mRenderProxy->DebugName = Name;
 
     //add to scene
-    mEngine->GetRenderThread()->AddToScene(mRenderProxy);
+    TSingleton<FEngine>::GetInstance().GetRenderThread()->AddToScene(mRenderProxy);
 }

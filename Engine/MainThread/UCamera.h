@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 #include "UObject.h"
@@ -7,7 +7,7 @@
 class UCamera : public USceneObject
 {
 public:
-    UCamera(FEngine* engine);
+    UCamera();
     virtual ~UCamera() override;
 
 public:
@@ -21,6 +21,5 @@ protected:
     void initView();
 
 private:
-    FEngine* mEngine;
 
 };

@@ -122,7 +122,7 @@ void FRenderer::drawRenderables()
 
         mRHI->BeginEvent(renderProxy->DebugName);
 
-        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetOrCreatePipleLineState(renderProxy);
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(renderProxy);
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveTopology(EPrimitiveTopology::PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -166,17 +166,17 @@ void FRenderer::createPassConstantBuffer()
     //    - dot(xaxis, cameraPosition) - dot(yaxis, cameraPosition) - dot(zaxis, cameraPosition)  1
 
     FMatrix4x4 viewMatrix, projectionMatrix;
-    FVector3 position(mView->Position.x(), mView->Position.y(), mView->Position.z());
-    FVector3 target(mView->Target.x(), mView->Target.y(), mView->Target.z());
-    FVector3 up(mView->Up.x(), mView->Up.y(), mView->Up.z());
+    const FVector3 cameraPos(mView->Position.x(), mView->Position.y(), mView->Position.z());
+    const FVector3 cameraTarget(mView->Target.x(), mView->Target.y(), mView->Target.z());
+    const FVector3 cameraUp(mView->Up.x(), mView->Up.y(), mView->Up.z());
 
-    FVector3 zaxis = (target - position).normalized();
-    FVector3 xaxis = up.cross(zaxis).normalized();
-    FVector3 yaxis = zaxis.cross(xaxis);
+    const FVector3 zaxis = (cameraTarget - cameraPos).normalized();
+    const FVector3 xaxis = cameraUp.cross(zaxis).normalized();
+    const FVector3 yaxis = zaxis.cross(xaxis);
 
-    viewMatrix.col(0) = Eigen::Vector4f(xaxis.x(), xaxis.y(), xaxis.z(), -xaxis.dot(position));
-    viewMatrix.col(1) = Eigen::Vector4f(yaxis.x(), yaxis.y(), yaxis.z(), -yaxis.dot(position));
-    viewMatrix.col(2) = Eigen::Vector4f(zaxis.x(), zaxis.y(), zaxis.z(), -zaxis.dot(position));
+    viewMatrix.col(0) = Eigen::Vector4f(xaxis.x(), xaxis.y(), xaxis.z(), -xaxis.dot(cameraPos));
+    viewMatrix.col(1) = Eigen::Vector4f(yaxis.x(), yaxis.y(), yaxis.z(), -yaxis.dot(cameraPos));
+    viewMatrix.col(2) = Eigen::Vector4f(zaxis.x(), zaxis.y(), zaxis.z(), -zaxis.dot(cameraPos));
     viewMatrix.col(3) = Eigen::Vector4f(0.0f, 0.0f, 0.0f, 1.0f);
 
     //from:https://docs.microsoft.com/en-us/previous-versions/windows/desktop/bb281727(v=vs.85)
@@ -204,5 +204,15 @@ void FRenderer::createPassConstantBuffer()
     constant.Proj = projectionMatrix;
     constant.ViewProj = viewMatrix * projectionMatrix;
 
-    mPassConstantBuffer = mRHI->CreateConstantBuffer(sizeof(constant), (uint8*)&constant, 3);
+    const FVector3 cameraDirection = (cameraTarget - cameraPos).normalized();
+    const FVector3 directonalLightDirection(-1.0f, -1.0f, -1.0f);
+    const FVector3 directonalLightColor(1.0f, 1.0f, 1.0f);
+
+    constant.CameraPos = FVector3(cameraPos.x(), cameraPos.y(), cameraPos.z());
+    constant.CameraDir = FVector3(cameraDirection.x(), cameraDirection.y(), cameraDirection.z());
+    //should use negative value of camera direction in shader
+    constant.DirectionalLightDir = -FVector3(directonalLightDirection.x(), directonalLightDirection.y(), directonalLightDirection.z());
+    constant.DirectionalLightColor = FVector3(directonalLightColor.x(), directonalLightColor.y(), directonalLightColor.z());
+
+    mPassConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FPassConstant), (uint8*)&constant, 3);
 }

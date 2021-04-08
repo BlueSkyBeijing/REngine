@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 // main thread serializable
@@ -6,8 +6,9 @@
 class UObject
 {
 public:
-	UObject();
+    UObject();
     virtual ~UObject();
+
 public:
     std::string Name;
 
@@ -23,6 +24,7 @@ class UResource : public UObject
 public:
     UResource();
     virtual ~UResource();
+
 public:
     std::wstring FilePathName;
 
@@ -42,6 +44,7 @@ public:
     virtual void Load() override;
     virtual void Unload() override;
 
+public:
     FVector3 Position;
     FVector3 Rotation;
     FVector3 Scale;

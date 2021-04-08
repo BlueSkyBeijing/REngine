@@ -1,4 +1,4 @@
-#include "PrecompiledHeader.h"
+﻿#include "PrecompiledHeader.h"
 
 #include "FEngine.h"
 #include "FRenderThread.h"
@@ -8,12 +8,12 @@
 #include "UWorld.h"
 
 
-FEngine::FEngine():mHeartbeat(true),
-    mInited(false),
-    mRenderThread(nullptr),
-    mWorld(nullptr),
-    mWindowWidth(1024),
-    mWindowHeight(768)
+FEngine::FEngine() :mHeartbeat(true),
+mInited(false),
+mRenderThread(nullptr),
+mWorld(nullptr),
+mWindowWidth(1024),
+mWindowHeight(768)
 {
 }
 
@@ -31,7 +31,7 @@ void FEngine::Launch()
 void FEngine::init()
 {
     TSingleton<FInputManager>::GetInstance().Init();
-    
+
     createWindow();
 
     //start render thread
@@ -66,7 +66,7 @@ void FEngine::unInit()
 
 void FEngine::loop()
 {
-    while(mHeartbeat)
+    while (mHeartbeat)
     {
         //@todo; need to improve implement way
         MSG msg;
@@ -148,19 +148,19 @@ void FEngine::stopRenderingThread()
 
 void FEngine::waitRenderThreadInited()
 {
-	//@todo; need to improve implement way
-	while (!mRenderThread->IsInited())
-	{
-		Sleep(100);
-	}
+    //@todo; need to improve implement way
+    while (!mRenderThread->IsInited())
+    {
+        Sleep(100);
+    }
 }
 
 void FEngine::waitRenderThreadUninited()
 {
-	//@todo; need to improve implement way
-	//wait until uninted
-	while (mRenderThread->IsInited())
-	{
-		Sleep(100);
-	}
+    //@todo; need to improve implement way
+    //wait until uninted
+    while (mRenderThread->IsInited())
+    {
+        Sleep(100);
+    }
 }

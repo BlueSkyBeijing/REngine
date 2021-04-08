@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 #include "UObject.h"
@@ -13,25 +13,23 @@ class FEngine;
 class UStaticMeshObject : public UPrimitiveObject
 {
 public:
-	UStaticMeshObject(FEngine* engine);
-	virtual ~UStaticMeshObject() override;
+    UStaticMeshObject();
+    virtual ~UStaticMeshObject() override;
 
 public:
-	std::string StaticMeshPath;
+    std::string StaticMeshPath;
 
 public:
     virtual void Load() override;
     virtual void Unload() override;
 
 protected:
-	virtual void createRenderProxy() override;
+    virtual void createRenderProxy() override;
 
 private:
 
-	UStaticMesh* mStaticMesh;
-	UMaterial* mMaterial;
-    FEngine* mEngine;
+    UStaticMesh* mStaticMesh;
+    UMaterial* mMaterial;
 
-	FRenderProxy* mRenderProxy;
+    FRenderProxy* mRenderProxy;
 };
-

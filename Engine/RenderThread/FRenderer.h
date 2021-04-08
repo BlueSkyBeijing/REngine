@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 #include "FRHIBuffer.h"
@@ -8,13 +8,21 @@ struct FPassConstant
     FMatrix4x4 View;
     FMatrix4x4 Proj;
     FMatrix4x4 ViewProj;
+    FVector3 CameraPos;
+    float a;
+    FVector3 CameraDir;
+    float b;
+    FVector3 DirectionalLightDir;
+    float c;
+    FVector3 DirectionalLightColor;
+    float d;
 };
 
 class FRenderer
 {
 public:
-	FRenderer(FRHIRenderWindow* renderWindow, FScene* scene, FView* view);
-	~FRenderer();
+    FRenderer(FRHIRenderWindow* renderWindow, FScene* scene, FView* view);
+    ~FRenderer();
 
     virtual void Init();
     virtual void UnInit();
