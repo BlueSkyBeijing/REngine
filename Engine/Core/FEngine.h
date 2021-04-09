@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 #include "TSingleton.h"
@@ -15,6 +15,16 @@ public:
     inline FRenderThread* GetRenderThread() const
     {
         return mRenderThread;
+    }
+
+    inline UWorld* GetWorld() const
+    {
+        return mWorld;
+    }
+
+    inline float GetDeltaSeconds()
+    {
+        return mDeltaSeconds;
     }
 
     inline HWND GetWindowHandle() const
@@ -44,8 +54,8 @@ protected:
     void startRenderThread();
     void stopRenderingThread();
 
-	void waitRenderThreadInited();
-	void waitRenderThreadUninited();
+    void waitRenderThreadInited();
+    void waitRenderThreadUninited();
 
 private:
     bool mHeartbeat;
@@ -57,4 +67,6 @@ private:
     HWND mWindowHandle;
     uint32 mWindowWidth;
     uint32 mWindowHeight;
+
+    float mDeltaSeconds;
 };

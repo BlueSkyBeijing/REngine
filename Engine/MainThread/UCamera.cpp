@@ -23,10 +23,10 @@ void UCamera::Load()
     Target = FVector3(0.0f, 0.0f, 500.0f);
     Up = FVector3(0.0f, 0.0f, 1.0f);
 
-    initView();
+    updateView();
 }
 
-void UCamera::initView()
+void UCamera::updateView()
 {
     TSingleton<FEngine>::GetInstance().GetRenderThread()->InitView(Position, Target, Up);
 }

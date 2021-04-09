@@ -136,7 +136,7 @@ void FRenderThread::processRenderCommand()
 {
     for (auto it = mRenderCommands.begin(); it != mRenderCommands.end(); it++)
     {
-        FRenderCommand<void>* command = *it;
+        FRenderCommand* command = *it;
         command->Excecute();
     }
 

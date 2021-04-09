@@ -11,7 +11,6 @@ private:
 
 };
 
-template<typename ReturnType = void>
 struct FRenderCommand
 {
 public:
@@ -21,11 +20,11 @@ public:
         mFunction = [&] {return function(args...); };
     }
 
-    ReturnType Excecute()
+    void Excecute()
     {
         return mFunction();
     }
 
 private:
-    std::function <ReturnType()> mFunction;
+    std::function<void()> mFunction;
 };

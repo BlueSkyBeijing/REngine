@@ -18,7 +18,7 @@ public:
     virtual void Load() override;
 
 protected:
-    void initView();
+    void updateView();
 
 private:
 

@@ -68,5 +68,5 @@ private:
     int32 mSyncNum;
 
     std::thread* mRenderThread;
-    std::vector<FRenderCommand<void>*> mRenderCommands;
+    std::vector<FRenderCommand*> mRenderCommands;
 };
