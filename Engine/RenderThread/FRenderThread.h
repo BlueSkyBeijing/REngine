@@ -16,7 +16,7 @@ public:
 
     void AddToScene(FRenderProxy* renderProxy);
 
-    void InitView(FVector3& position, FVector3& target, FVector3& up);
+    void SetView(FVector3& position, FVector3& target, FVector3& up);
 
     inline void MarkLoadCompleted()
     {

@@ -28,5 +28,5 @@ void UCamera::Load()
 
 void UCamera::updateView()
 {
-    TSingleton<FEngine>::GetInstance().GetRenderThread()->InitView(Position, Target, Up);
+    TSingleton<FEngine>::GetInstance().GetRenderThread()->SetView(Position, Target, Up);
 }

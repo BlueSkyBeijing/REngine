@@ -89,12 +89,10 @@ void FEngine::Exit()
 void FEngine::update()
 {
     mCurFrameTime = mTimer.now();
-    mRenderThread->InitView(mWorld->GetCamera()->Position, mWorld->GetCamera()->Target, mWorld->GetCamera()->Up);
-
-    using ms = std::chrono::duration<float, std::milli>;
-    mDeltaSeconds = std::chrono::duration_cast<ms>(mCurFrameTime - mLastFrameTime).count() / 1000.0f;
-
+    mDeltaSeconds = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(mCurFrameTime - mLastFrameTime).count() / 1000.0f;
     mLastFrameTime = mCurFrameTime;
+
+    mRenderThread->SetView(mWorld->GetCamera()->Position, mWorld->GetCamera()->Target, mWorld->GetCamera()->Up);
 }
 
 void FEngine::createWindow()

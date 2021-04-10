@@ -55,7 +55,7 @@ void FRenderThread::AddToScene(FRenderProxy* renderProxy)
     mScene->AddRenderable(renderProxy);
 }
 
-void FRenderThread::InitView(FVector3& position, FVector3& target, FVector3& up)
+void FRenderThread::SetView(FVector3& position, FVector3& target, FVector3& up)
 {
     mView->Position = position;
     mView->Target = target;
