@@ -74,30 +74,31 @@ void FInputManager::OnMouseUp(WPARAM btnState, int x, int y)
 void FInputManager::OnKeyInput()
 {
     FEngine& engine = TSingleton<FEngine>::GetInstance();
-    const float deltaSeconds = engine.GetDeltaSeconds() + 10.0f;
+    const float deltaSeconds = engine.GetDeltaSeconds();
+    const float deltaScale = 1000.0f;
 
     if (GetAsyncKeyState('W') & 0x8000)
     {
         FVector3 direction = engine.GetWorld()->GetCamera()->Target - engine.GetWorld()->GetCamera()->Position;
         direction = direction.normalized();
-        engine.GetWorld()->GetCamera()->Position += deltaSeconds * direction;
+        engine.GetWorld()->GetCamera()->Position += deltaSeconds * direction * deltaScale;
     }
 
     if (GetAsyncKeyState('S') & 0x8000)
     {
         FVector3 direction = engine.GetWorld()->GetCamera()->Target - engine.GetWorld()->GetCamera()->Position;
         direction = direction.normalized();
-        engine.GetWorld()->GetCamera()->Position -= deltaSeconds * direction;
+        engine.GetWorld()->GetCamera()->Position -= deltaSeconds * direction * deltaScale;
     }
 
     if (GetAsyncKeyState('A') & 0x8000)
     {
-        engine.GetWorld()->GetCamera()->Rotation.y() += deltaSeconds;
+        engine.GetWorld()->GetCamera()->Rotation.y() += deltaSeconds * deltaScale;
     }
 
     if (GetAsyncKeyState('D') & 0x8000)
     {
-        engine.GetWorld()->GetCamera()->Rotation.y() -= deltaSeconds;
+        engine.GetWorld()->GetCamera()->Rotation.y() -= deltaSeconds * deltaScale;
     }
 
 }

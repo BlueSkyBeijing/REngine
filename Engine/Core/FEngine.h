@@ -68,5 +68,8 @@ private:
     uint32 mWindowWidth;
     uint32 mWindowHeight;
 
+    std::chrono::high_resolution_clock mTimer;
+    std::chrono::steady_clock::time_point mLastFrameTime;
+    std::chrono::steady_clock::time_point mCurFrameTime;
     float mDeltaSeconds;
 };
