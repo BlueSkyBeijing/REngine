@@ -91,6 +91,7 @@ void FRenderer::initView()
 {
     setViewPort();
     computeVisibility();
+    updatePassConstantBuffer();
 }
 
 void FRenderer::computeVisibility()
@@ -153,7 +154,22 @@ void FRenderer::createPassConstantBuffer()
 {
     //create pass constant buffer
     FPassConstant constant;
+    _createPassConstant(constant);
 
+    mPassConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FPassConstant), (uint8*)&constant, 3);
+}
+
+void FRenderer::updatePassConstantBuffer()
+{
+    //create pass constant buffer
+    FPassConstant constant;
+    _createPassConstant(constant);
+
+    mRHI->UpdateConstantBuffer(mPassConstantBuffer, sizeof(FPassConstant), (uint8*)&constant);
+}
+
+void FRenderer::_createPassConstant(FPassConstant& constant)
+{
     //build view matrix.
     //from:https://docs.microsoft.com/en-us/previous-versions/windows/desktop/bb281710(v=vs.85)
     //zaxis = normal(cameraTarget - cameraPosition)
@@ -214,5 +230,4 @@ void FRenderer::createPassConstantBuffer()
     constant.DirectionalLightDir = -FVector3(directonalLightDirection.x(), directonalLightDirection.y(), directonalLightDirection.z());
     constant.DirectionalLightColor = FVector3(directonalLightColor.x(), directonalLightColor.y(), directonalLightColor.z());
 
-    mPassConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FPassConstant), (uint8*)&constant, 3);
 }

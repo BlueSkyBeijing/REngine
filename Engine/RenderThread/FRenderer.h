@@ -43,6 +43,10 @@ protected:
     virtual void postRender();
 
     void createPassConstantBuffer();
+    void updatePassConstantBuffer();
+
+private:
+    void _createPassConstant(FPassConstant& constant);
 
 private:
     FRHI* mRHI;

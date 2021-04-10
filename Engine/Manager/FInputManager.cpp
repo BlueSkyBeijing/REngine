@@ -74,7 +74,7 @@ void FInputManager::OnMouseUp(WPARAM btnState, int x, int y)
 void FInputManager::OnKeyInput()
 {
     FEngine& engine = TSingleton<FEngine>::GetInstance();
-    const float deltaSeconds = engine.GetDeltaSeconds();
+    const float deltaSeconds = engine.GetDeltaSeconds() + 10.0f;
 
     if (GetAsyncKeyState('W') & 0x8000)
     {

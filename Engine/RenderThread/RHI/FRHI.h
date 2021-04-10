@@ -219,6 +219,8 @@ public:
     virtual FRHITexture2D* CreateTexture2D(const std::wstring& filePathName, int32 slot) = 0;
     virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) = 0;
 
+    virtual void UpdateConstantBuffer(FRHIConstantBuffer* constantBuffer, uint32 structureSize, uint8* bufferData) = 0;
+
     virtual void Transition(const FRHITransitionInfo& info) = 0;
 
     virtual void BeginEvent(std::string& eventName) = 0;

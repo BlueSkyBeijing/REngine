@@ -6,6 +6,7 @@
 #include "FLogManager.h"
 #include "FConfigManager.h"
 #include "UWorld.h"
+#include "UCamera.h"
 
 
 FEngine::FEngine() :mHeartbeat(true),
@@ -87,6 +88,7 @@ void FEngine::Exit()
 
 void FEngine::update()
 {
+    mRenderThread->InitView(mWorld->GetCamera()->Position, mWorld->GetCamera()->Target, mWorld->GetCamera()->Up);
 }
 
 void FEngine::createWindow()

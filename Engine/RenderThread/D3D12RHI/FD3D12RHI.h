@@ -41,6 +41,8 @@ public:
     virtual FRHITexture2D* CreateTexture2D(const std::wstring& filePathName, int32 slot) override;
     virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) override;
 
+    virtual void UpdateConstantBuffer(FRHIConstantBuffer* constantBuffer, uint32 structureSize, uint8* bufferData) override;
+
     virtual void Transition(const FRHITransitionInfo& info) override;
 
     virtual void BeginEvent(std::string& eventName) override;

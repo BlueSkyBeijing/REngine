@@ -606,6 +606,16 @@ FRHIRenderWindow* FD3D12RHI::CreateRenderWindow(uint32 width, uint32 hight)
     return renderTarget;
 }
 
+void FD3D12RHI::UpdateConstantBuffer(FRHIConstantBuffer* constantBuffer, uint32 structureSize, uint8* bufferData)
+{
+    FD3D12ConstantBuffer* dx12ConstantBuffer = dynamic_cast<FD3D12ConstantBuffer*>(constantBuffer);
+
+    uint8* objectConstantBufferData;
+    dx12ConstantBuffer->mConstantBuffer->Map(0, nullptr, reinterpret_cast<void**>(&objectConstantBufferData));
+    memcpy(objectConstantBufferData, bufferData, structureSize);
+    dx12ConstantBuffer->mConstantBuffer->Unmap(0, nullptr);
+}
+
 void FD3D12RHI::Transition(const FRHITransitionInfo& info)
 {
     if ((info.AccessBefore == ACCESS_PRESENT) && (info.AccessAfter == ACCESS_RENDER_TARGET))
