@@ -176,6 +176,12 @@
     <ClCompile Include="Engine\Utility\PrecompiledHeader.cpp">
       <Filter>Engine\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\RenderThread\FFrame.cpp">
+      <Filter>Engine\RenderThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\RenderThread\FRenderCommandFence.cpp">
+      <Filter>Engine\RenderThread</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Manager\FInputManager.h">
@@ -333,6 +339,12 @@
     </ClInclude>
     <ClInclude Include="Engine\Utility\Prerequisite.h">
       <Filter>Engine\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderThread\FFrame.h">
+      <Filter>Engine\RenderThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderThread\FRenderCommandFence.h">
+      <Filter>Engine\RenderThread</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

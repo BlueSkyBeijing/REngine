@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 class FView
 {
 public:
-	FView();
-	~FView();
+    FView();
+    ~FView();
 
 public:
     FVector3 Position;
@@ -28,8 +28,8 @@ struct FViewPort
 
 struct FRect
 {
-    int32    left;
-    int32    top;
-    int32    right;
-    int32    bottom;
+    int32    Left;
+    int32    Top;
+    int32    Right;
+    int32    Bottom;
 };

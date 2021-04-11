@@ -62,6 +62,13 @@ void FRenderThread::SetView(FVector3& position, FVector3& target, FVector3& up)
     mView->Up = up;
 }
 
+void FRenderThread::SignalRender()
+{
+    std::unique_lock<std::mutex> RenderLock(mRenderMutex);
+    mSyncNum++;
+    mRenderCondition.notify_one();
+}
+
 void FRenderThread::init()
 {
     mRHI = new FD3D12RHI;
@@ -141,6 +148,13 @@ void FRenderThread::processRenderCommand()
     }
 
     mRenderCommands.clear();
+}
+
+void FRenderThread::waitRenderSignal()
+{
+    std::unique_lock<std::mutex> RenderLock(mRenderMutex);
+    mSyncNum--;
+    mRenderCondition.wait(RenderLock);
 }
 
 void FRenderThread::waitResourceReady()

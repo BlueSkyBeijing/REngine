@@ -49,8 +49,10 @@
     <ClCompile Include="Engine\RenderThread\D3D12RHI\FD3D12Shader.cpp" />
     <ClCompile Include="Engine\RenderThread\D3D12RHI\FD3D12Texture.cpp" />
     <ClCompile Include="Engine\RenderThread\D3D12RHI\FD3D12Vertex.cpp" />
+    <ClCompile Include="Engine\RenderThread\FFrame.cpp" />
     <ClCompile Include="Engine\RenderThread\FMaterial.cpp" />
     <ClCompile Include="Engine\RenderThread\FPostProcessing.cpp" />
+    <ClCompile Include="Engine\RenderThread\FRenderCommandFence.cpp" />
     <ClCompile Include="Engine\RenderThread\FRenderer.cpp" />
     <ClCompile Include="Engine\RenderThread\FRenderProxy.cpp" />
     <ClCompile Include="Engine\RenderThread\FRenderThread.cpp" />
@@ -102,8 +104,10 @@
     <ClInclude Include="Engine\RenderThread\D3D12RHI\FD3D12ShaderBindings.h" />
     <ClInclude Include="Engine\RenderThread\D3D12RHI\FD3D12Shader.h" />
     <ClInclude Include="Engine\RenderThread\D3D12RHI\FD3D12Texture.h" />
+    <ClInclude Include="Engine\RenderThread\FFrame.h" />
     <ClInclude Include="Engine\RenderThread\FMaterial.h" />
     <ClInclude Include="Engine\RenderThread\FPostProcessing.h" />
+    <ClInclude Include="Engine\RenderThread\FRenderCommandFence.h" />
     <ClInclude Include="Engine\RenderThread\FRenderer.h" />
     <ClInclude Include="Engine\RenderThread\FRenderProxy.h" />
     <ClInclude Include="Engine\RenderThread\FRenderThread.h" />

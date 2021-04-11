@@ -18,6 +18,8 @@ public:
 
     void SetView(FVector3& position, FVector3& target, FVector3& up);
 
+    void SignalRender();
+
     inline void MarkLoadCompleted()
     {
         mLoadCompleted = true;
@@ -38,18 +40,20 @@ public:
         return mSyncNum;
     }
 protected:
-    virtual void start();
+    void start();
 
-    virtual void init();
-    virtual void unInit();
+    void init();
+    void unInit();
 
-    virtual void update();
+    void update();
 
-    virtual void loop();
+    void loop();
 
-    virtual void processRenderCommand();
+    void processRenderCommand();
 
-    virtual void waitResourceReady();
+    void waitRenderSignal();
+
+    void waitResourceReady();
 
 private:
     bool mHeartbeat;
