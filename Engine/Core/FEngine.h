@@ -3,6 +3,8 @@
 
 #include "TSingleton.h"
 
+#define FRAME_BUFFER_NUM 2
+
 class FEngine : TSingleton<FEngine>
 {
 public:
@@ -56,6 +58,8 @@ protected:
 
     void waitRenderThreadInited();
     void waitRenderThreadUninited();
+
+    void syncRenderThread();
 
 private:
     bool mHeartbeat;

@@ -62,10 +62,10 @@ void FRenderThread::SetView(FVector3& position, FVector3& target, FVector3& up)
     mView->Up = up;
 }
 
-void FRenderThread::SignalRender()
+void FRenderThread::OnNewFrame()
 {
     std::unique_lock<std::mutex> RenderLock(mRenderMutex);
-    mSyncNum++;
+    mProcessFrameNum++;
     mRenderCondition.notify_one();
 }
 
@@ -126,6 +126,8 @@ void FRenderThread::update()
     mRenderer->Render();
 
     mRenderWindow->Present();
+
+    syncMainThread();
 }
 
 void FRenderThread::loop()
@@ -150,10 +152,10 @@ void FRenderThread::processRenderCommand()
     mRenderCommands.clear();
 }
 
-void FRenderThread::waitRenderSignal()
+void FRenderThread::syncMainThread()
 {
     std::unique_lock<std::mutex> RenderLock(mRenderMutex);
-    mSyncNum--;
+    mProcessFrameNum--;
     mRenderCondition.wait(RenderLock);
 }
 

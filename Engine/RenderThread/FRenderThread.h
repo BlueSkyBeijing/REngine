@@ -18,7 +18,7 @@ public:
 
     void SetView(FVector3& position, FVector3& target, FVector3& up);
 
-    void SignalRender();
+    void OnNewFrame();
 
     inline void MarkLoadCompleted()
     {
@@ -35,9 +35,9 @@ public:
         return mRHI;
     }
 
-    inline int32 GetFrameNum() const
+    inline int32 GetProcessFrameNum() const
     {
-        return mSyncNum;
+        return mProcessFrameNum;
     }
 protected:
     void start();
@@ -51,7 +51,7 @@ protected:
 
     void processRenderCommand();
 
-    void waitRenderSignal();
+    void syncMainThread();
 
     void waitResourceReady();
 
@@ -69,7 +69,7 @@ private:
 
     std::mutex mRenderMutex;
     std::condition_variable mRenderCondition;
-    int32 mSyncNum;
+    int32 mProcessFrameNum;
 
     std::thread* mRenderThread;
     std::vector<FRenderCommand*> mRenderCommands;

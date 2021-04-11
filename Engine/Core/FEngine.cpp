@@ -88,11 +88,15 @@ void FEngine::Exit()
 
 void FEngine::update()
 {
+    syncRenderThread();
+
     mCurFrameTime = mTimer.now();
     mDeltaSeconds = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(mCurFrameTime - mLastFrameTime).count() / 1000.0f;
     mLastFrameTime = mCurFrameTime;
 
     mRenderThread->SetView(mWorld->GetCamera()->Position, mWorld->GetCamera()->Target, mWorld->GetCamera()->Up);
+
+    mRenderThread->OnNewFrame();
 }
 
 void FEngine::createWindow()
@@ -168,5 +172,13 @@ void FEngine::waitRenderThreadUninited()
     while (mRenderThread->IsInited())
     {
         Sleep(100);
+    }
+}
+
+void FEngine::syncRenderThread()
+{
+    while (mRenderThread->GetProcessFrameNum() >= FRAME_BUFFER_NUM)
+    {
+        Sleep(1);
     }
 }
