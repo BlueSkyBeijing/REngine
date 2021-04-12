@@ -1,8 +1,6 @@
 ﻿#pragma once
 #include "Prerequisite.h"
 
-#include "FRHICommandList.h"
-
 
 class FRenderThread
 {
@@ -19,6 +17,8 @@ public:
     void SetView(FVector3& position, FVector3& target, FVector3& up);
 
     void OnNewFrame();
+
+    void EnqueueRenderCommand(FRenderCommand* renderCommand);
 
     inline void MarkLoadCompleted()
     {
@@ -52,8 +52,6 @@ protected:
     void processRenderCommand();
 
     void syncMainThread();
-
-    void waitResourceReady();
 
 private:
     bool mHeartbeat;

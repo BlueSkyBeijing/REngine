@@ -69,6 +69,11 @@ void FRenderThread::OnNewFrame()
     mRenderCondition.notify_one();
 }
 
+void FRenderThread::EnqueueRenderCommand(FRenderCommand* renderCommand)
+{
+    mRenderCommands.push_back(renderCommand);
+}
+
 void FRenderThread::init()
 {
     mRHI = new FD3D12RHI;
@@ -123,6 +128,8 @@ void FRenderThread::unInit()
 
 void FRenderThread::update()
 {
+    processRenderCommand();
+
     mRenderer->Render();
 
     mRenderWindow->Present();
@@ -132,9 +139,6 @@ void FRenderThread::update()
 
 void FRenderThread::loop()
 {
-    waitResourceReady();
-    processRenderCommand();
-
     while (mHeartbeat)
     {
         update();
@@ -147,6 +151,8 @@ void FRenderThread::processRenderCommand()
     {
         FRenderCommand* command = *it;
         command->Excecute();
+
+        delete command;
     }
 
     mRenderCommands.clear();
@@ -157,18 +163,4 @@ void FRenderThread::syncMainThread()
     std::unique_lock<std::mutex> RenderLock(mRenderMutex);
     mProcessFrameNum--;
     mRenderCondition.wait(RenderLock);
-}
-
-void FRenderThread::waitResourceReady()
-{
-    //@todo; need to improve implement way
-    //load completed 
-    while (!mLoadCompleted)
-    {
-        Sleep(100);
-        //wait
-    }
-
-    //create render resources
-    mRenderer->CreateRenderResources();
 }

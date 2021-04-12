@@ -32,6 +32,10 @@ FRenderer::~FRenderer()
 void FRenderer::Init()
 {
     mRHI->FlushCommandQueue();
+
+    createPassConstantBuffer();
+    mRHI->FlushCommandQueue();
+
 }
 
 void FRenderer::UnInit()
@@ -41,20 +45,6 @@ void FRenderer::UnInit()
     mPassConstantBuffer->UnInit();
     delete mPassConstantBuffer;
     mPassConstantBuffer = nullptr;
-}
-
-void FRenderer::CreateRenderResources()
-{
-    createPassConstantBuffer();
-
-    std::vector<FRenderProxy*>& renderProxys = mScene->GetRenderProxys();
-    for (auto it = renderProxys.begin(); it != renderProxys.end(); it++)
-    {
-        FRenderProxy* renderProxy = *it;
-        renderProxy->CreateRenderResource();
-    }
-
-    mRHI->FlushCommandQueue();
 }
 
 void FRenderer::preRender()
