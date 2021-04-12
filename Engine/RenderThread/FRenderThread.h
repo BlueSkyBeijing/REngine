@@ -67,7 +67,7 @@ private:
 
     std::mutex mRenderMutex;
     std::condition_variable mRenderCondition;
-    int32 mProcessFrameNum;
+    std::atomic_int32_t mProcessFrameNum;
 
     std::thread* mRenderThread;
     std::vector<FRenderCommand*> mRenderCommands;

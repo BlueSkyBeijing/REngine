@@ -3,8 +3,6 @@
 
 #include "TSingleton.h"
 
-class FRHIShader;
-
 class FShaderManager : TSingleton<FShaderManager>
 {
 public:

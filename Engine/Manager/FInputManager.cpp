@@ -63,19 +63,38 @@ LRESULT CALLBACK FInputManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
 
 void FInputManager::OnMouseDown(WPARAM btnState, int x, int y)
 {
+    mLastMousePos.x() = x;
+    mLastMousePos.y() = y;
+    //SetCapture(mhMainWnd);
 
 }
 
 void FInputManager::OnMouseUp(WPARAM btnState, int x, int y)
 {
+    ReleaseCapture();
+}
 
+void FInputManager::OnMouseMove(WPARAM btnState, int x, int y)
+{
+    //if ((btnState & MK_LBUTTON) != 0)
+    //{
+    //    // Make each pixel correspond to a quarter of a degree.
+    //    float dx = XMConvertToRadians(0.25f * static_cast<float>(x - mLastMousePos.x));
+    //    float dy = XMConvertToRadians(0.25f * static_cast<float>(y - mLastMousePos.y));
+
+    //    engine.GetWorld()->GetCamera().Pitch(dy);
+    //    engine.GetWorld()->GetCamera().RotateY(dx);
+    //}
+
+    mLastMousePos.x() = x;
+    mLastMousePos.y() = y;
 }
 
 void FInputManager::OnKeyInput()
 {
     FEngine& engine = TSingleton<FEngine>::GetInstance();
     const float deltaSeconds = engine.GetDeltaSeconds();
-    const float deltaScale = 1000.0f;
+    const float deltaScale = 10000.0f;
 
     if (GetAsyncKeyState('W') & 0x8000)
     {
@@ -93,12 +112,14 @@ void FInputManager::OnKeyInput()
 
     if (GetAsyncKeyState('A') & 0x8000)
     {
-        engine.GetWorld()->GetCamera()->Rotation.y() += deltaSeconds * deltaScale;
+        engine.GetWorld()->GetCamera()->Target.y() -= deltaSeconds * deltaScale;
+        engine.GetWorld()->GetCamera()->Position.y() -= deltaSeconds * deltaScale;
     }
 
     if (GetAsyncKeyState('D') & 0x8000)
     {
-        engine.GetWorld()->GetCamera()->Rotation.y() -= deltaSeconds * deltaScale;
+        engine.GetWorld()->GetCamera()->Target.y() += deltaSeconds * deltaScale;
+        engine.GetWorld()->GetCamera()->Position.y() += deltaSeconds * deltaScale;
     }
 
 }

@@ -8,6 +8,7 @@
 #include "FRenderProxy.h"
 #include "FEngine.h"
 #include "TSingleton.h"
+#include "FRHICommandList.h"
 
 UStaticMeshObject::UStaticMeshObject() :
     mMaterial(nullptr),
@@ -61,5 +62,13 @@ void UStaticMeshObject::createRenderProxy()
     mRenderProxy->DebugName = Name;
 
     //add to scene
-    TSingleton<FEngine>::GetInstance().GetRenderThread()->AddToScene(mRenderProxy);
+    FRenderThread* renderThread = TSingleton<FEngine>::GetInstance().GetRenderThread();
+    FRenderProxy* renderProxy = mRenderProxy;
+
+    ENQUEUE_RENDER_COMMAND([renderThread, renderProxy]
+    {
+        renderThread->AddToScene(renderProxy);
+        renderProxy->CreateRenderResource();
+    });
+
 }

@@ -13,6 +13,8 @@ public:
 public:
     FVector3 Target;
     FVector3 Up;
+    FVector3 Right;
+    FVector3 Look;
 
 public:
     virtual void Load() override;

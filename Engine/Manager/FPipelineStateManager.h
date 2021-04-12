@@ -1,8 +1,7 @@
 ﻿#pragma once
-#include "TSingleton.h"
+#include "Prerequisite.h"
 
-class FRHIPipelineState;
-class FRenderProxy;
+#include "TSingleton.h"
 
 class FPipelineStateManager : TSingleton<FPipelineStateManager>
 {

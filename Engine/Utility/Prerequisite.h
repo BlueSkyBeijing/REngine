@@ -12,6 +12,7 @@ typedef int64_t     int64;
 typedef Eigen::Vector4f FVector4;
 typedef Eigen::Vector3f FVector3;
 typedef Eigen::Vector2f FVector2;
+typedef Eigen::Vector2i FVector2i;
 
 typedef Eigen::Matrix4f FMatrix4x4;
 
@@ -42,6 +43,7 @@ class FPipelineStateManager;
 class FShaderManager;
 class FShaderBindingsManager;
 class FPipelineStateManager;
+class FRenderCommand;
 
 class FRHI;
 class FRHIShader;

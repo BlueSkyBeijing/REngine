@@ -1,9 +1,7 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 #include "TSingleton.h"
-
-class FRHIShaderBindings;
 
 struct FRHIShaderRegisterCounts
 {
@@ -25,5 +23,5 @@ public:
     FRHIShaderBindings* GetOrCreateRootSignature();
 
 private:
-	std::map<int32, FRHIShaderBindings*> mRootSignatures;
+    std::map<int32, FRHIShaderBindings*> mRootSignatures;
 };

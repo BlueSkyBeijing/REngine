@@ -1,13 +1,15 @@
-#pragma once
+﻿#pragma once
+#include "Prerequisite.h"
+
 #include "TSingleton.h"
 
 class FConfigManager : TSingleton<FConfigManager>
 {
 public:
-	FConfigManager();
-	~FConfigManager();
+    FConfigManager();
+    ~FConfigManager();
 
-	static std::string ContentPath;
+    static std::string ContentPath;
 
 private:
 

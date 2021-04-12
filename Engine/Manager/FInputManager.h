@@ -1,4 +1,6 @@
 ﻿#pragma once
+#include "Prerequisite.h"
+
 #include "TSingleton.h"
 
 class FRenderThread;
@@ -16,10 +18,12 @@ public:
 
     void OnMouseDown(WPARAM btnState, int x, int y);
     void OnMouseUp(WPARAM btnState, int x, int y);
+    void OnMouseMove(WPARAM btnState, int x, int y);
     void OnKeyInput();
 
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 private:
     FRenderThread* mRenderThread;
+    FVector2i mLastMousePos;
 };

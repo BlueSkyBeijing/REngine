@@ -23,7 +23,8 @@ FRenderThread::FRenderThread(FEngine* engine) :
     mLoadCompleted(false),
     mRenderThread(nullptr),
     mScene(nullptr),
-    mInited(false)
+    mInited(false),
+    mProcessFrameNum(0)
 {
 }
 
