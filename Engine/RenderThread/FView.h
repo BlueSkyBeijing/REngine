@@ -11,6 +11,8 @@ public:
     FVector3 Position;
     FVector3 Target;
     FVector3 Up;
+    FVector3 Right;
+    FVector3 Look;
 
 private:
 

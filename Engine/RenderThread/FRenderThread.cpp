@@ -56,11 +56,13 @@ void FRenderThread::AddToScene(FRenderProxy* renderProxy)
     mScene->AddRenderable(renderProxy);
 }
 
-void FRenderThread::SetView(FVector3& position, FVector3& target, FVector3& up)
+void FRenderThread::SetView(FVector3& position, FVector3& target, FVector3& up, FVector3& right, FVector3& look)
 {
     mView->Position = position;
     mView->Target = target;
     mView->Up = up;
+    mView->Right = right;
+    mView->Look = look;
 }
 
 void FRenderThread::OnNewFrame()

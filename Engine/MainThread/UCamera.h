@@ -19,6 +19,9 @@ public:
 public:
     virtual void Load() override;
 
+    void SetPitch(float pitch);
+    void SetYaw(float yaw);
+
 protected:
     void updateView();
 

@@ -176,9 +176,9 @@ void FRenderer::_createPassConstant(FPassConstant& constant)
     const FVector3 cameraTarget(mView->Target.x(), mView->Target.y(), mView->Target.z());
     const FVector3 cameraUp(mView->Up.x(), mView->Up.y(), mView->Up.z());
 
-    const FVector3 zaxis = (cameraTarget - cameraPos).normalized();
-    const FVector3 xaxis = cameraUp.cross(zaxis).normalized();
-    const FVector3 yaxis = zaxis.cross(xaxis);
+    const FVector3 xaxis = mView->Right;
+    const FVector3 yaxis = mView->Up;
+    const FVector3 zaxis = mView->Look;
 
     viewMatrix.col(0) = Eigen::Vector4f(xaxis.x(), xaxis.y(), xaxis.z(), -xaxis.dot(cameraPos));
     viewMatrix.col(1) = Eigen::Vector4f(yaxis.x(), yaxis.y(), yaxis.z(), -yaxis.dot(cameraPos));

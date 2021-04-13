@@ -88,15 +88,18 @@ void FEngine::Exit()
 
 void FEngine::update()
 {
+    TSingleton<FInputManager>::GetInstance().OnKeyInput();
+
     syncRenderThread();
 
     mCurFrameTime = mTimer.now();
     mDeltaSeconds = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(mCurFrameTime - mLastFrameTime).count() / 1000.0f;
     mLastFrameTime = mCurFrameTime;
 
-    mRenderThread->SetView(mWorld->GetCamera()->Position, mWorld->GetCamera()->Target, mWorld->GetCamera()->Up);
+    mRenderThread->SetView(mWorld->GetCamera()->Position, mWorld->GetCamera()->Target, mWorld->GetCamera()->Up, mWorld->GetCamera()->Right, mWorld->GetCamera()->Look);
 
     mRenderThread->OnNewFrame();
+
 }
 
 void FEngine::createWindow()
