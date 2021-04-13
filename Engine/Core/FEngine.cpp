@@ -88,7 +88,7 @@ void FEngine::Exit()
 
 void FEngine::update()
 {
-    TSingleton<FInputManager>::GetInstance().OnKeyInput();
+    TSingleton<FInputManager>::GetInstance().Update(mDeltaSeconds);
 
     syncRenderThread();
 

@@ -14,12 +14,14 @@ public:
     void Init();
     void UnInit();
 
+    void Update(float deltaSeconds);
+
     void ProcessQuit();
 
     void OnMouseDown(WPARAM btnState, int x, int y);
     void OnMouseUp(WPARAM btnState, int x, int y);
     void OnMouseMove(WPARAM btnState, int x, int y);
-    void OnKeyInput();
+    void OnKeyInput(float deltaTime);
 
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 

@@ -2,7 +2,7 @@
 
 #include "FRenderThread.h"
 #include "FRHI.h"
-#include "FRHICommandList.h"
+#include "FRenderCommand.h"
 #include "FD3D12RHI.h"
 #include "FRHIRenderTarget.h"
 #include "FRenderer.h"

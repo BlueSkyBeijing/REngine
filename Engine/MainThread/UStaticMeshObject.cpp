@@ -8,7 +8,7 @@
 #include "FRenderProxy.h"
 #include "FEngine.h"
 #include "TSingleton.h"
-#include "FRHICommandList.h"
+#include "FRenderCommand.h"
 
 UStaticMeshObject::UStaticMeshObject() :
     mMaterial(nullptr),

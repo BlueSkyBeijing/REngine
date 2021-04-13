@@ -23,6 +23,11 @@ void FInputManager::UnInit()
 {
 }
 
+void FInputManager::Update(float deltaSeconds)
+{
+    OnKeyInput(deltaSeconds);
+}
+
 void FInputManager::ProcessQuit()
 {
     TSingleton<FEngine>::GetInstance().Exit();
@@ -47,14 +52,11 @@ LRESULT CALLBACK FInputManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
     case WM_QUIT:
         inputManager->ProcessQuit();
         break;
-    case WM_KEYDOWN:
-        //inputManager->OnKeyInput();
+    case WM_LBUTTONDOWN:
+        inputManager->OnMouseDown(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
         break;
-        //case WM_LBUTTONDOWN:
-        //    inputManager->OnMouseDown(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-        //    break;
-        //case WM_LBUTTONUP:
-        //    inputManager->OnMouseUp(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+    case WM_LBUTTONUP:
+        inputManager->OnMouseUp(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
         break;
     case WM_MOUSEMOVE:
         inputManager->OnMouseMove(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
@@ -69,8 +71,7 @@ void FInputManager::OnMouseDown(WPARAM btnState, int x, int y)
 {
     mLastMousePos.x() = x;
     mLastMousePos.y() = y;
-    //SetCapture(mhMainWnd);
-
+    SetCapture(TSingleton<FEngine>::GetInstance().GetWindowHandle());
 }
 
 void FInputManager::OnMouseUp(WPARAM btnState, int x, int y)
@@ -83,57 +84,50 @@ void FInputManager::OnMouseMove(WPARAM btnState, int x, int y)
     FEngine& engine = TSingleton<FEngine>::GetInstance();
     if ((btnState & MK_LBUTTON) != 0)
     {
-        // Make each pixel correspond to a quarter of a degree.
-        float dx = (0.0025f * static_cast<float>(x - mLastMousePos.x()));
-        float dy = (0.0025f * static_cast<float>(y - mLastMousePos.y()));
+        const float deltaScale = 0.0025f;
+        float dx = (deltaScale * static_cast<float>(x - mLastMousePos.x()));
+        float dy = (deltaScale * static_cast<float>(y - mLastMousePos.y()));
 
-        engine.GetWorld()->GetCamera()->SetPitch(dy);
-        engine.GetWorld()->GetCamera()->SetYaw(dx);
+        engine.GetWorld()->GetCamera()->AdjustPitch(dy);
+        engine.GetWorld()->GetCamera()->AdjustYaw(dx);
     }
 
     mLastMousePos.x() = x;
     mLastMousePos.y() = y;
 }
 
-void FInputManager::OnKeyInput()
+void FInputManager::OnKeyInput(float deltaSeconds)
 {
     FEngine& engine = TSingleton<FEngine>::GetInstance();
-    const float deltaSeconds = engine.GetDeltaSeconds();
     const float deltaScale = 1000.0f;
 
     if ((GetAsyncKeyState('W') & 0x8000) || (GetAsyncKeyState(VK_UP) & 0x8000))
     {
-        FVector3 direction = engine.GetWorld()->GetCamera()->Target - engine.GetWorld()->GetCamera()->Position;
-        direction = direction.normalized();
-        engine.GetWorld()->GetCamera()->Position += deltaSeconds * direction * deltaScale;
+        engine.GetWorld()->GetCamera()->AdjustMoveStraight(deltaSeconds * deltaScale);
     }
 
     if ((GetAsyncKeyState('S') & 0x8000) || (GetAsyncKeyState(VK_DOWN) & 0x8000))
     {
-        FVector3 direction = engine.GetWorld()->GetCamera()->Target - engine.GetWorld()->GetCamera()->Position;
-        direction = direction.normalized();
-        engine.GetWorld()->GetCamera()->Position -= deltaSeconds * direction * deltaScale;
+        engine.GetWorld()->GetCamera()->AdjustMoveStraight(-deltaSeconds * deltaScale);
     }
 
     if (GetAsyncKeyState('A') & 0x8000)
     {
-        engine.GetWorld()->GetCamera()->Position -= deltaSeconds * engine.GetWorld()->GetCamera()->Right * deltaScale;
+        engine.GetWorld()->GetCamera()->AdjustMoveLaterally(-deltaSeconds * deltaScale);
     }
 
     if (GetAsyncKeyState('D') & 0x8000)
     {
-        engine.GetWorld()->GetCamera()->Position += deltaSeconds * engine.GetWorld()->GetCamera()->Right * deltaScale;
+        engine.GetWorld()->GetCamera()->AdjustMoveLaterally(deltaSeconds * deltaScale);
     }
 
     if (GetAsyncKeyState(VK_LEFT) & 0x8000)
     {
-        engine.GetWorld()->GetCamera()->SetYaw(-deltaSeconds);
+        engine.GetWorld()->GetCamera()->AdjustYaw(-deltaSeconds);
     }
 
     if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
     {
-        engine.GetWorld()->GetCamera()->SetYaw(deltaSeconds);
+        engine.GetWorld()->GetCamera()->AdjustYaw(deltaSeconds);
     }
-
-
 }

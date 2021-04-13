@@ -113,9 +113,6 @@
     <ClCompile Include="Engine\RenderThread\RHI\FRHIBuffer.cpp">
       <Filter>Engine\RenderThread\RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\RenderThread\RHI\FRHICommandList.cpp">
-      <Filter>Engine\RenderThread\RHI</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\RenderThread\RHI\FRHIPipelineState.cpp">
       <Filter>Engine\RenderThread\RHI</Filter>
     </ClCompile>
@@ -176,10 +173,7 @@
     <ClCompile Include="Engine\Utility\PrecompiledHeader.cpp">
       <Filter>Engine\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\RenderThread\FFrame.cpp">
-      <Filter>Engine\RenderThread</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\RenderThread\FRenderCommandFence.cpp">
+    <ClCompile Include="Engine\RenderThread\FRenderCommand.cpp">
       <Filter>Engine\RenderThread</Filter>
     </ClCompile>
   </ItemGroup>
@@ -271,9 +265,6 @@
     <ClInclude Include="Engine\RenderThread\RHI\FRHIBuffer.h">
       <Filter>Engine\RenderThread\RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\RenderThread\RHI\FRHICommandList.h">
-      <Filter>Engine\RenderThread\RHI</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\RenderThread\RHI\FRHIPipelineState.h">
       <Filter>Engine\RenderThread\RHI</Filter>
     </ClInclude>
@@ -340,11 +331,11 @@
     <ClInclude Include="Engine\Utility\Prerequisite.h">
       <Filter>Engine\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\RenderThread\FFrame.h">
+    <ClInclude Include="Engine\RenderThread\FRenderCommand.h">
       <Filter>Engine\RenderThread</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\RenderThread\FRenderCommandFence.h">
-      <Filter>Engine\RenderThread</Filter>
+    <ClInclude Include="Engine\Utility\MathUtility.h">
+      <Filter>Engine\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

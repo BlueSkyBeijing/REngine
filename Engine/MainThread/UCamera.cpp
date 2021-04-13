@@ -27,19 +27,30 @@ void UCamera::Load()
 
     updateView();
 }
-void UCamera::SetPitch(float pitch)
+
+void UCamera::AdjustMoveStraight(float deltaMove)
 {
-    Eigen::Matrix3f rotationMatrix;
-    rotationMatrix = Eigen::AngleAxisf(pitch, Right);
+    Position += Look * deltaMove;
+}
+
+void UCamera::AdjustMoveLaterally(float deltaMove)
+{
+    Position += Right * deltaMove;
+}
+
+void UCamera::AdjustPitch(float deltaPitch)
+{
+    FMatrix3x3 rotationMatrix;
+    rotationMatrix = Eigen::AngleAxisf(deltaPitch, Right);
 
     Up = rotationMatrix * Up;
     Look = rotationMatrix * Look;
 }
 
-void UCamera::SetYaw(float yaw)
+void UCamera::AdjustYaw(float deltaYaw)
 {
-    Eigen::Matrix3f rotationMatrix;
-    rotationMatrix = Eigen::AngleAxisf(yaw, Up);
+    FMatrix3x3 rotationMatrix;
+    rotationMatrix = Eigen::AngleAxisf(deltaYaw, Up);
 
     Right = rotationMatrix * Right;
     Look = rotationMatrix * Look;
