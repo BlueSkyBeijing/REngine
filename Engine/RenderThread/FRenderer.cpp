@@ -162,7 +162,7 @@ void FRenderer::updatePassConstantBuffer()
 void FRenderer::_createPassConstant(FPassConstant& constant)
 {
     FMatrix4x4 viewMatrix;
-    ConstructMatrixLookUpRight(viewMatrix, mView->Position, mView->Look, mView->Up, mView->Right);
+    ConstructMatrixLookRight(viewMatrix, mView->Position, mView->Look, mView->Right);
 
     FMatrix4x4 projectionMatrix;
     const float fovY = 3.1415f * 0.25f;

@@ -76,6 +76,7 @@ void FStaticMeshRenderProxy::CreateRenderResource()
 
     TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(this);
 
+    rhi->FlushCommandQueue();
 }
 
 void FStaticMeshRenderProxy::ReleaseRenderResource()

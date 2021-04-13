@@ -16,7 +16,7 @@ public:
 
     void SetView(FVector3& position, FVector3& target, FVector3& up, FVector3& right, FVector3& look);
 
-    void OnNewFrame();
+    void OnReadyToRender();
 
     void EnqueueRenderCommand(FRenderCommand* renderCommand);
 

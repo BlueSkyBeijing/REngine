@@ -71,13 +71,26 @@ void FEngine::loop()
     {
         //@todo; need to improve implement way
         MSG msg;
-        if (GetMessage(&msg, nullptr, 0, 0))
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
-        }
 
-        update();
+            if (msg.message == WM_QUIT)
+            {
+                mHeartbeat = false;
+            }
+        }
+        else
+        {
+            update();
+        }
+    }
+
+    //stop wait main thread
+    if (!mHeartbeat)
+    {
+        mRenderThread->OnReadyToRender();
     }
 }
 
@@ -98,7 +111,7 @@ void FEngine::update()
 
     mRenderThread->SetView(mWorld->GetCamera()->Position, mWorld->GetCamera()->Target, mWorld->GetCamera()->Up, mWorld->GetCamera()->Right, mWorld->GetCamera()->Look);
 
-    mRenderThread->OnNewFrame();
+    mRenderThread->OnReadyToRender();
 
 }
 

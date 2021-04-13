@@ -22,11 +22,11 @@ void ConstructMatrixLookAtLH(FMatrix4x4& viewMatrix, FVector3& pos, FVector3& ta
     viewMatrix.col(3) = FVector4(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
-void ConstructMatrixLookUpRight(FMatrix4x4& viewMatrix, FVector3& pos, FVector3& look, FVector3& up, FVector3& right)
+void ConstructMatrixLookRight(FMatrix4x4& viewMatrix, FVector3& pos, FVector3& look, FVector3& right)
 {
-    const FVector3 xaxis = right;
-    const FVector3 yaxis = up;
     const FVector3 zaxis = look;
+    const FVector3 xaxis = right;
+    const FVector3 yaxis = zaxis.cross(xaxis);
 
     viewMatrix.col(0) = FVector4(xaxis.x(), xaxis.y(), xaxis.z(), -xaxis.dot(pos));
     viewMatrix.col(1) = FVector4(yaxis.x(), yaxis.y(), yaxis.z(), -yaxis.dot(pos));

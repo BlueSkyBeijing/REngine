@@ -25,8 +25,12 @@ cbuffer cbPass : register(b1)
     float4x4 gProj;
     float4x4 gViewProj;
     float3 gCameraPos;
+    float _Placeholder0;
     float3 gCameraDir;
+    float _Placeholder1;
     float3 gDirectionalLightDir;
+    float _Placeholder2;
     float3 gDirectionalLightColor;
+    float _Placeholder3;
 };
 

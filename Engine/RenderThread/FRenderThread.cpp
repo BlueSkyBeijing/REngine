@@ -65,7 +65,7 @@ void FRenderThread::SetView(FVector3& position, FVector3& target, FVector3& up, 
     mView->Look = look;
 }
 
-void FRenderThread::OnNewFrame()
+void FRenderThread::OnReadyToRender()
 {
     std::unique_lock<std::mutex> RenderLock(mRenderMutex);
     mProcessFrameNum++;
@@ -136,8 +136,6 @@ void FRenderThread::update()
     mRenderer->Render();
 
     mRenderWindow->Present();
-
-    syncMainThread();
 }
 
 void FRenderThread::loop()
@@ -145,6 +143,8 @@ void FRenderThread::loop()
     while (mHeartbeat)
     {
         update();
+
+        syncMainThread();
     };
 }
 

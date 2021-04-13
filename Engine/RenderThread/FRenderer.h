@@ -9,13 +9,13 @@ struct FPassConstant
     FMatrix4x4 Proj;
     FMatrix4x4 ViewProj;
     FVector3 CameraPos;
-    float a;
+    float _Placeholder0;
     FVector3 CameraDir;
-    float b;
+    float _Placeholder1;
     FVector3 DirectionalLightDir;
-    float c;
+    float _Placeholder2;
     FVector3 DirectionalLightColor;
-    float d;
+    float _Placeholder3;
 };
 
 class FRenderer
