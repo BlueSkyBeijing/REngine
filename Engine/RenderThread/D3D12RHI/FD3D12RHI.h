@@ -83,4 +83,14 @@ private:
     uint64 mFenceValue;
     D3D12_RECT mScissorRect;
     D3D12_VIEWPORT mViewPort;
+
+    static int32 msPassSRVRange;
+    static int32 msPassCBVRange;
+
+    static int32 msObjectSRVRange;
+    static int32 msObjectCBVRange;
+
+    static int32 msPassCBVCount;
+    static int32 msObjectCBVCount;
+
 };

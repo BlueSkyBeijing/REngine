@@ -15,6 +15,15 @@
 #include "TSingleton.h"
 
 
+int32 FD3D12RHI::msPassSRVRange = 1;
+int32 FD3D12RHI::msPassCBVRange = 1;
+
+int32 FD3D12RHI::msObjectCBVRange = 64;
+int32 FD3D12RHI::msObjectSRVRange = 64;
+
+int32 FD3D12RHI::msPassCBVCount = 0;
+int32 FD3D12RHI::msObjectCBVCount = 0;
+
 FD3D12RHI::FD3D12RHI() :
     mDX12Device(nullptr),
     mEventHandle(0),
@@ -107,7 +116,7 @@ void FD3D12RHI::Init()
     THROW_IF_FAILED(mDX12Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, mDX12CommandAllocator.Get(), mDX12PipleLineState.Get(), IID_PPV_ARGS(&mDX12CommandList)));
 
     D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDescPass;
-    cbvHeapDescPass.NumDescriptors = 67;
+    cbvHeapDescPass.NumDescriptors = msObjectSRVRange + msObjectCBVRange + msPassSRVRange + msPassCBVRange;
     cbvHeapDescPass.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
     cbvHeapDescPass.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
     cbvHeapDescPass.NodeMask = 0;
@@ -238,20 +247,22 @@ void FD3D12RHI::SetIndexBuffer(FRHIIndexBuffer* buffer)
 
 void FD3D12RHI::SetConstantBuffer(FRHIConstantBuffer* buffer)
 {
-    CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorRoot(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
-    CD3DX12_GPU_DESCRIPTOR_HANDLE descriptor(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
+    CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
 
-    mDX12CommandList->SetGraphicsRootDescriptorTable(0, descriptor);
-    descriptor.Offset(1 + buffer->Offset, mCBVSRVVUAVDescriptorSize);
-    mDX12CommandList->SetGraphicsRootDescriptorTable(1, descriptor);
-    descriptorRoot.Offset(1 + 64, mCBVSRVVUAVDescriptorSize);
-    mDX12CommandList->SetGraphicsRootDescriptorTable(2, descriptorRoot);
-    descriptorRoot.Offset(1, mCBVSRVVUAVDescriptorSize);
-    mDX12CommandList->SetGraphicsRootDescriptorTable(3, descriptorRoot);
+    descriptorObject.Offset(buffer->Offset, mCBVSRVVUAVDescriptorSize);
+    mDX12CommandList->SetGraphicsRootDescriptorTable(buffer->Slot, descriptorObject);
+
 }
 
 void FD3D12RHI::DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation)
 {
+    CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
+    CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorPass(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart(), msObjectSRVRange + msObjectCBVRange);
+
+    mDX12CommandList->SetGraphicsRootDescriptorTable(0, descriptorObject);
+
+    mDX12CommandList->SetGraphicsRootDescriptorTable(2, descriptorPass);
+
     mDX12CommandList->DrawIndexedInstanced(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
 }
 
@@ -320,7 +331,6 @@ FRHIConstantBuffer* FD3D12RHI::CreateConstantBuffer(uint32 structureSize, uint8*
 {
     FD3D12ConstantBuffer* constantBuffer = new FD3D12ConstantBuffer;
 
-    static int32 CurConstantBufferCount = 0;
     //create object constant buffer
     CD3DX12_RESOURCE_DESC objConstantResourceDesc = CD3DX12_RESOURCE_DESC::Buffer(CalcConstantBufferByteSize(structureSize));
 
@@ -342,22 +352,31 @@ FRHIConstantBuffer* FD3D12RHI::CreateConstantBuffer(uint32 structureSize, uint8*
     cbvDescObject.BufferLocation = constantBuffer->mConstantBuffer->GetGPUVirtualAddress();
     cbvDescObject.SizeInBytes = CalcConstantBufferByteSize(structureSize);
 
-    CD3DX12_CPU_DESCRIPTOR_HANDLE objConDescriptor(mCBVSRVUAVHeap->GetCPUDescriptorHandleForHeapStart());
+    CD3DX12_CPU_DESCRIPTOR_HANDLE cbvDescriptor(mCBVSRVUAVHeap->GetCPUDescriptorHandleForHeapStart());
+
+    constantBuffer->Slot = slot;
+
     if (slot == 3)
     {
-        objConDescriptor = objConDescriptor.Offset(64 + 2, mCBVSRVVUAVDescriptorSize);
+        const int32 offset = msObjectSRVRange + msObjectCBVRange + msPassSRVRange + msPassCBVCount;
+        cbvDescriptor = cbvDescriptor.Offset(offset, mCBVSRVVUAVDescriptorSize);
+        constantBuffer->Offset = offset;
+
+        msPassCBVCount++;
     }
     else
     {
-        objConDescriptor = objConDescriptor.Offset(slot + CurConstantBufferCount, mCBVSRVVUAVDescriptorSize);
+        const int32 offset = msObjectSRVRange + msObjectCBVCount;
+        cbvDescriptor = cbvDescriptor.Offset(offset, mCBVSRVVUAVDescriptorSize);
+        constantBuffer->Offset = offset;
+
+        msObjectCBVCount++;
     }
 
     mDX12Device->CreateConstantBufferView(
         &cbvDescObject,
-        objConDescriptor);
+        cbvDescriptor);
 
-    constantBuffer->Offset = CurConstantBufferCount;
-    CurConstantBufferCount++;
     return constantBuffer;
 }
 

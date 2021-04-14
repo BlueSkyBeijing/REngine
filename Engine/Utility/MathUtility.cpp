@@ -56,29 +56,14 @@ void ConstructMatrixPerspectiveFovLH(FMatrix4x4& projectionMatrix, float fovY, f
     projectionMatrix(3, 3) = 0;
 }
 
-//Eigen::Matrix<float, 4, 4, Eigen::ColMajor> ConstructAffineMatrix(float a, float b, float c, FVector3 trans)
-//{
-//    //from:https://stackoverflow.com/questions/25504397/eigen-combine-rotation-and-translation-into-one-matrix
-//    //Eigen::Transform<float, 3, Eigen::Affine> t;
-//    //t = Eigen::AngleAxis<float>(c, FVector3::UnitZ());
-//    //t.prerotate(Eigen::AngleAxis<float>(b, FVector3::UnitY()));
-//    //t.prerotate(Eigen::AngleAxis<float>(a, FVector3::UnitX()));
-//    //t.pretranslate(trans);
-//
-//    Eigen::Transform<float, 3, Eigen::Affine, Eigen::ColMajor> t;
-//    t = Eigen::Translation<float, 3>(trans);
-//    t.rotate(Eigen::AngleAxis<float>(a, FVector3::UnitX()));
-//    t.rotate(Eigen::AngleAxis<float>(b, FVector3::UnitY()));
-//    t.rotate(Eigen::AngleAxis<float>(c, FVector3::UnitZ()));
-//    return t.matrix();
-//}
-////Eigen::Affine3f create_rotation_matrix(float ax, float ay, float az)
-//{
-//    Eigen::Affine3f rx =
-//        Eigen::Affine3f(Eigen::AngleAxisf(ax, FVector3::UnitX()));
-//    Eigen::Affine3f ry =
-//        Eigen::Affine3f(Eigen::AngleAxisf(ay, FVector3::UnitY()));
-//    Eigen::Affine3f rz =
-//        Eigen::Affine3f(Eigen::AngleAxisf(az, FVector3::UnitZ()));
-//    return rz * ry * rx;
-//}
+FMatrix4x4 ConstructAffineMatrix(float rotX, float rotY, float rotZ, FVector3 trans)
+{
+    //from:https://stackoverflow.com/questions/25504397/eigen-combine-rotation-and-translation-into-one-matrix
+    Eigen::Transform<float, 3, Eigen::Affine> transform;
+    transform = Eigen::AngleAxis<float>(rotZ, FVector3::UnitZ());
+    transform.prerotate(Eigen::AngleAxis<float>(rotY, FVector3::UnitY()));
+    transform.prerotate(Eigen::AngleAxis<float>(rotX, FVector3::UnitX()));
+    transform.pretranslate(trans);
+
+    return transform.matrix();
+}
