@@ -10,6 +10,7 @@
 #include "FRenderThread.h"
 #include "FPipelineStateManager.h"
 #include "FRHIPipelineState.h"
+#include "MathUtility.h"
 
 
 FRenderProxyInitializer::FRenderProxyInitializer()
@@ -63,6 +64,16 @@ void FStaticMeshRenderProxy::CreateRenderResource()
     IndexBuffer = rhi->CreateIndexBuffer(sizeof(uint16), (uint32)mIndexes.size(), (uint8*)mIndexes.data());
 
     mObjectConstants.World.setIdentity();
+    //Eigen::Affine3f r = create_rotation_matrix(1.0f, 1.0f, 1.0f);
+    //Eigen::Affine3f t(Eigen::Translation3f(Position));
+
+    //Eigen::Matrix4d m = t.matrix(); // Option 2
+    //m *= r.matrix();
+
+    FMatrix3x3 R = Rotation.toRotationMatrix();
+    mObjectConstants.World.block<3, 3>(0, 0) = R;
+    mObjectConstants.World.block<1, 3>(3, 0) = Position;
+    //mObjectConstants.World = m;/* ConstructAffineMatrix(Rotation.x(), Rotation.y(), Rotation.z(), Position);*/
 
     ConstantBuffer = rhi->CreateConstantBuffer(sizeof(mObjectConstants), (uint8*)&mObjectConstants, 1);
 

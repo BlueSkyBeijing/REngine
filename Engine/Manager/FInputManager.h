@@ -18,9 +18,9 @@ public:
 
     void ProcessQuit();
 
-    void OnMouseDown(WPARAM btnState, int x, int y);
-    void OnMouseUp(WPARAM btnState, int x, int y);
-    void OnMouseMove(WPARAM btnState, int x, int y);
+    void OnMouseDown(WPARAM btnState, int32 x, int32 y);
+    void OnMouseUp(WPARAM btnState, int32 x, int32 y);
+    void OnMouseMove(WPARAM btnState, int32 x, int32 y);
     void OnKeyInput(float deltaTime);
 
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

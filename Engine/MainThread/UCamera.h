@@ -16,6 +16,9 @@ public:
     FVector3 Right;
     FVector3 Look;
 
+    float FOV;
+    float AspectRatio;
+
 public:
     virtual void Load() override;
 
@@ -30,4 +33,15 @@ protected:
 
 private:
 
+};
+
+struct FCameraData
+{
+    FCameraData() {}
+    ~FCameraData() {}
+
+    FVector3 Location;
+    FVector3 Target;
+    float FOV;
+    float AspectRatio;
 };

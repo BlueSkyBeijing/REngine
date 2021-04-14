@@ -9,5 +9,5 @@ float3 BlinnPhong(float3 normal, float3 lightDir, float3 lightColor, float3 spec
     float NdotH = max(0, dot(normal, halfVector));
     float3 spec = pow(NdotH, specPower) * specularColor;
 	 
-    return lightColor.rgb * NdotL + lightColor.rgb * specularColor.rgb * spec;
+    return lightColor.rgb * NdotL + specularColor.rgb * spec;
 }

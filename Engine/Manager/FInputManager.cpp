@@ -67,19 +67,19 @@ LRESULT CALLBACK FInputManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
     return 0;
 }
 
-void FInputManager::OnMouseDown(WPARAM btnState, int x, int y)
+void FInputManager::OnMouseDown(WPARAM btnState, int32 x, int32 y)
 {
     mLastMousePos.x() = x;
     mLastMousePos.y() = y;
     SetCapture(TSingleton<FEngine>::GetInstance().GetWindowHandle());
 }
 
-void FInputManager::OnMouseUp(WPARAM btnState, int x, int y)
+void FInputManager::OnMouseUp(WPARAM btnState, int32 x, int32 y)
 {
     ReleaseCapture();
 }
 
-void FInputManager::OnMouseMove(WPARAM btnState, int x, int y)
+void FInputManager::OnMouseMove(WPARAM btnState, int32 x, int32 y)
 {
     FEngine& engine = TSingleton<FEngine>::GetInstance();
     if ((btnState & MK_LBUTTON) != 0)

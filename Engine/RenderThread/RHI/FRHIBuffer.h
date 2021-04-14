@@ -64,6 +64,7 @@ public:
     virtual ~FRHIConstantBuffer() override;
 
     int32 Slot;
+    int32 Offset;
 public:
     virtual void Init() override;
     virtual void Uninit() override;

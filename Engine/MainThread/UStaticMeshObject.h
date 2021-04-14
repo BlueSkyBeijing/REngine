@@ -17,7 +17,7 @@ public:
     virtual ~UStaticMeshObject() override;
 
 public:
-    std::string StaticMeshPath;
+    std::string FullStaticMeshPath;
 
 public:
     virtual void Load() override;
@@ -32,4 +32,14 @@ private:
     UMaterial* mMaterial;
 
     FRenderProxy* mRenderProxy;
+};
+
+struct FStaticMeshObjectData
+{
+    FStaticMeshObjectData() {}
+    ~FStaticMeshObjectData() {}
+
+    FQuat Rotation;
+    FVector3 Location;
+    std::string ResourceName;
 };

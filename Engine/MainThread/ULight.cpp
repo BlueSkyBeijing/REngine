@@ -5,7 +5,7 @@
 
 
 ULight::ULight() :
-    Color(1.0f, 1.0f, 1.0f),
+    Color(1.0f, 1.0f, 1.0f, 1.0f),
     Intensity(1.0f)
 {
 }

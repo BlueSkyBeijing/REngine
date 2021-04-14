@@ -6,12 +6,13 @@
 #include "UStaticMeshObject.h"
 #include "UCamera.h"
 #include "ULight.h"
+#include "Utility.h"
+#include "FConfigManager.h"
 
 UWorld::UWorld(FEngine* engine) :
-    mEngine(engine),
-    mCamera(nullptr)
+    mEngine(engine)
 {
-    FilePathName = L"Content\\Map\\Defualt.map";
+    FilePathName = "Content\\Map\\Default.map";
 }
 
 UWorld::~UWorld()
@@ -21,17 +22,94 @@ UWorld::~UWorld()
 void UWorld::Load()
 {
     //load from file
-    UStaticMeshObject* staticMeshObject = new UStaticMeshObject();
-    staticMeshObject->Load();
-    mStaticMeshObjects.push_back(staticMeshObject);
+    std::ifstream mapFile(FilePathName, std::ios::in | std::ios::binary);
+    if (!mapFile)
+    {
+        //print error
+        return;
+    }
 
-    UCamera* camera = new UCamera();
-    camera->Load();
-    mCamera = camera;
+    int32 numCamera;
+    std::vector<FCameraData> cameraDatas;
+    mapFile.read((char*)&numCamera, sizeof(int32));
+    cameraDatas.resize(numCamera);
+    mapFile.read((char*)cameraDatas.data(), numCamera * sizeof(FCameraData));
 
-    UDirectionalLight* directionalLight = new UDirectionalLight();
-    directionalLight->Load();
-    mDirectionalLight = directionalLight;
+    int32 numDirectionalLight;
+    std::vector<FDirectionalLightData> directionalLightDatas;
+    mapFile.read((char*)&numDirectionalLight, sizeof(int32));
+    directionalLightDatas.resize(numDirectionalLight);
+    mapFile.read((char*)directionalLightDatas.data(), numDirectionalLight * sizeof(FDirectionalLightData));
+
+    int32 numStaticMeshObject;
+    std::vector<FStaticMeshObjectData> staticMeshObjectDatas;
+    mapFile.read((char*)&numStaticMeshObject, sizeof(int32));
+    for (int32 i = 0; i < numStaticMeshObject; i++)
+    {
+        FStaticMeshObjectData data;
+        mapFile.read((char*)&data.Rotation, sizeof(FQuat));
+        mapFile.read((char*)data.Location.data(), sizeof(FVector3));
+        int32 stringSize;
+        mapFile.read((char*)&stringSize, sizeof(int32));
+        mapFile.read((char*)data.ResourceName.data(), stringSize);
+
+        staticMeshObjectDatas.push_back(data);
+    }
+    mapFile.close();
+
+    //init from import data
+    mCameras.resize(numCamera);
+    int32 camerDataIndex = 0;
+    for (auto it = mCameras.begin(); it != mCameras.end(); it++)
+    {
+        UCamera* camera = new UCamera();
+
+        camera->Position = cameraDatas[camerDataIndex].Location;
+        camera->Target = cameraDatas[camerDataIndex].Target;
+        camera->FOV = cameraDatas[camerDataIndex].FOV;
+        camera->AspectRatio = cameraDatas[camerDataIndex].AspectRatio;
+
+        camera->Load();
+
+        *it = camera;
+
+        camerDataIndex++;
+    }
+
+    mDirectionalLights.resize(numDirectionalLight);
+    int32 directionalLightDataIndex = 0;
+    for (auto it = mDirectionalLights.begin(); it != mDirectionalLights.end(); it++)
+    {
+        UDirectionalLight* directionalLight = new UDirectionalLight();
+
+        directionalLight->Color = directionalLightDatas[directionalLightDataIndex].Color;
+        directionalLight->Direction = directionalLightDatas[directionalLightDataIndex].Direction;
+        directionalLight->Intensity = directionalLightDatas[directionalLightDataIndex].Intensity;
+
+        directionalLight->Load();
+
+        *it = directionalLight;
+
+        directionalLightDataIndex++;
+    }
+
+    mStaticMeshObjects.resize(numStaticMeshObject);
+    int32 staticMeshObjectDataIndex = 0;
+    for (auto it = mStaticMeshObjects.begin(); it != mStaticMeshObjects.end(); it++)
+    {
+        UStaticMeshObject* staticMeshObject = new UStaticMeshObject();
+
+        staticMeshObject->Position = staticMeshObjectDatas[staticMeshObjectDataIndex].Location;
+        staticMeshObject->Rotation = staticMeshObjectDatas[staticMeshObjectDataIndex].Rotation;
+        staticMeshObject->FullStaticMeshPath = FConfigManager::DefaultStaticMeshPath +
+            std::string(staticMeshObjectDatas[staticMeshObjectDataIndex].ResourceName.c_str()) +
+            FConfigManager::DefaultStaticMeshFileSuffix;
+        staticMeshObject->Load();
+
+        *it = staticMeshObject;
+
+        staticMeshObjectDataIndex++;
+    }
 
     //tell render thread load completed
     mEngine->GetRenderThread()->MarkLoadCompleted();
@@ -39,21 +117,27 @@ void UWorld::Load()
 
 void UWorld::Unload()
 {
-    //load from file
-    for (auto iter = mStaticMeshObjects.begin(); iter != mStaticMeshObjects.end(); iter++)
+    for (auto it = mCameras.begin(); it != mCameras.end(); it++)
     {
-        UStaticMeshObject* staticMeshObject = *iter;
+        UCamera* camera = *it;
+        camera->Unload();
+        delete camera;
+    }
+    mCameras.clear();
+
+    for (auto it = mStaticMeshObjects.begin(); it != mStaticMeshObjects.end(); it++)
+    {
+        UStaticMeshObject* staticMeshObject = *it;
         staticMeshObject->Unload();
         delete staticMeshObject;
     }
-
     mStaticMeshObjects.clear();
 
-    mCamera->Unload();
-    delete mCamera;
-    mCamera = nullptr;
-
-    mDirectionalLight->Unload();
-    delete mDirectionalLight;
-    mDirectionalLight = nullptr;
+    for (auto it = mDirectionalLights.begin(); it != mDirectionalLights.end(); it++)
+    {
+        UDirectionalLight* directionalLight = *it;
+        directionalLight->Unload();
+        delete directionalLight;
+    }
+    mDirectionalLights.clear();
 }

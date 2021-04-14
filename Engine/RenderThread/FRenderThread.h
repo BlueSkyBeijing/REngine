@@ -55,8 +55,8 @@ protected:
 
 private:
     bool mHeartbeat;
-    bool mLoadCompleted;
-    bool mInited;
+    std::atomic_bool mLoadCompleted;
+    std::atomic_bool mInited;
 
     FEngine* mEngine;
     FRHI* mRHI;

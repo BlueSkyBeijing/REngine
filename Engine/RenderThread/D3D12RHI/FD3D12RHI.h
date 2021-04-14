@@ -30,6 +30,7 @@ public:
     virtual void SetPrimitiveTopology(EPrimitiveTopology topology) override;
     virtual void SetVertexBuffer(FRHIVertexBuffer* buffer) override;
     virtual void SetIndexBuffer(FRHIIndexBuffer* buffer) override;
+    virtual void SetConstantBuffer(FRHIConstantBuffer* buffer) override;
     virtual void DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation) override;
 
     virtual FRHIConstantBuffer* CreateConstantBuffer(uint32 structureSize, uint8* bufferData, int32 slot) override;

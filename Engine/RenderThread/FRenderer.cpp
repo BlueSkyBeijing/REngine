@@ -120,6 +120,8 @@ void FRenderer::drawRenderables()
         mRHI->SetPrimitiveTopology(EPrimitiveTopology::PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         mRHI->SetVertexBuffer(renderProxy->VertexBuffer);
         mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
+        mRHI->SetConstantBuffer(renderProxy->ConstantBuffer);
+
         mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
 
         mRHI->EndEvent();

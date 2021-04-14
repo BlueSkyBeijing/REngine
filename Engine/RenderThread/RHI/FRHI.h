@@ -208,6 +208,7 @@ public:
     virtual void SetPrimitiveTopology(EPrimitiveTopology topology) = 0;
     virtual void SetVertexBuffer(FRHIVertexBuffer* buffer) = 0;
     virtual void SetIndexBuffer(FRHIIndexBuffer* buffer) = 0;
+    virtual void SetConstantBuffer(FRHIConstantBuffer* buffer) = 0;
     virtual void DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation) = 0;
 
     virtual FRHIConstantBuffer* CreateConstantBuffer(uint32 structureSize, uint8* bufferData, int32 slot) = 0;

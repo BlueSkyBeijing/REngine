@@ -21,6 +21,7 @@
 #include <stdint.h>
 
 #include <Eigen/Dense>
+#include <Eigen/Geometry>
 
 //-----------------------------
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)

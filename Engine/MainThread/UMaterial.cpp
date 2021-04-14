@@ -1,10 +1,10 @@
-#include "PrecompiledHeader.h"
+﻿#include "PrecompiledHeader.h"
 
 #include "UMaterial.h"
 #include "UTexture.h"
 #include "FMaterial.h"
 
-UMaterial::UMaterial():
+UMaterial::UMaterial() :
     mBaseColor(nullptr),
     mMetallicSpecularRoughness(nullptr),
     mNormalMap(nullptr),
@@ -19,7 +19,7 @@ UMaterial::~UMaterial()
 void UMaterial::Load()
 {
     mBaseColor = new UTexture2D();
-    mBaseColor->FilePathName = L"Content\\Texture\\T_Stone_C.dds";
+    mBaseColor->FilePathName = "Content\\Texture\\T_Stone_C.dds";
     mBaseColor->Load();
 
     //mMetallicSpecularRoughness = new UTexture2D();

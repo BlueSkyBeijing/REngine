@@ -176,6 +176,9 @@
     <ClCompile Include="Engine\RenderThread\FRenderCommand.cpp">
       <Filter>Engine\RenderThread</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Utility\MathUtility.cpp">
+      <Filter>Engine\Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Manager\FInputManager.h">

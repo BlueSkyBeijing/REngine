@@ -20,12 +20,12 @@ public:
 
     inline UCamera* GetCamera() const
     {
-        return mCamera;
+        return *(mCameras.begin());
     }
 
 private:
     std::vector<UStaticMeshObject*> mStaticMeshObjects;
-    UCamera* mCamera;
-    UDirectionalLight* mDirectionalLight;
+    std::vector<UCamera*> mCameras;
+    std::vector<UDirectionalLight*> mDirectionalLights;
     FEngine* mEngine;
 };

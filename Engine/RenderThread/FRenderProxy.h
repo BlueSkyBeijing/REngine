@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 #include "FRHIVertex.h"
@@ -22,7 +22,7 @@ public:
     std::vector<uint16> Indexes;
     FRHIVertexLayout VertexLayout;
     FVector3 Position;
-    FVector3 Rotation;
+    FQuat Rotation;
     FVector3 Scale;
     FMaterial* Material;
 };
@@ -30,8 +30,8 @@ public:
 class FRenderProxy
 {
 public:
-	FRenderProxy();
-	virtual ~FRenderProxy();
+    FRenderProxy();
+    virtual ~FRenderProxy();
 
     virtual void CreateRenderResource();
     virtual void ReleaseRenderResource();
@@ -49,7 +49,7 @@ public:
     FMatrix4x4 WorldMatrix;
     FRHIVertexLayout VertexLayout;
     FVector3 Position;
-    FVector3 Rotation;
+    FQuat Rotation;
     FVector3 Scale;
 
     std::string DebugName;

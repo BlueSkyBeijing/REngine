@@ -17,6 +17,8 @@ typedef Eigen::Vector2i FVector2i;
 typedef Eigen::Matrix4f FMatrix4x4;
 typedef Eigen::Matrix3f FMatrix3x3;
 
+typedef Eigen::Quaternionf FQuat;
+
 enum EPixelFormat;
 enum EInputClassification;
 

@@ -26,7 +26,7 @@ public:
     virtual ~UResource();
 
 public:
-    std::wstring FilePathName;
+    std::string FilePathName;
 
 public:
     virtual void Load() {};
@@ -46,7 +46,7 @@ public:
 
 public:
     FVector3 Position;
-    FVector3 Rotation;
+    FQuat Rotation;
     FVector3 Scale;
 
 protected:

@@ -107,7 +107,7 @@ void FD3D12RHI::Init()
     THROW_IF_FAILED(mDX12Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, mDX12CommandAllocator.Get(), mDX12PipleLineState.Get(), IID_PPV_ARGS(&mDX12CommandList)));
 
     D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDescPass;
-    cbvHeapDescPass.NumDescriptors = 4;
+    cbvHeapDescPass.NumDescriptors = 67;
     cbvHeapDescPass.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
     cbvHeapDescPass.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
     cbvHeapDescPass.NodeMask = 0;
@@ -236,18 +236,22 @@ void FD3D12RHI::SetIndexBuffer(FRHIIndexBuffer* buffer)
     mDX12CommandList->IASetIndexBuffer(&indexBuffer->mIndexBufferView);
 }
 
-void FD3D12RHI::DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation)
+void FD3D12RHI::SetConstantBuffer(FRHIConstantBuffer* buffer)
 {
+    CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorRoot(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
     CD3DX12_GPU_DESCRIPTOR_HANDLE descriptor(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
 
     mDX12CommandList->SetGraphicsRootDescriptorTable(0, descriptor);
-    descriptor.Offset(1, mCBVSRVVUAVDescriptorSize);
+    descriptor.Offset(1 + buffer->Offset, mCBVSRVVUAVDescriptorSize);
     mDX12CommandList->SetGraphicsRootDescriptorTable(1, descriptor);
-    descriptor.Offset(1, mCBVSRVVUAVDescriptorSize);
-    mDX12CommandList->SetGraphicsRootDescriptorTable(2, descriptor);
-    descriptor.Offset(1, mCBVSRVVUAVDescriptorSize);
-    mDX12CommandList->SetGraphicsRootDescriptorTable(3, descriptor);
+    descriptorRoot.Offset(1 + 64, mCBVSRVVUAVDescriptorSize);
+    mDX12CommandList->SetGraphicsRootDescriptorTable(2, descriptorRoot);
+    descriptorRoot.Offset(1, mCBVSRVVUAVDescriptorSize);
+    mDX12CommandList->SetGraphicsRootDescriptorTable(3, descriptorRoot);
+}
 
+void FD3D12RHI::DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation)
+{
     mDX12CommandList->DrawIndexedInstanced(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
 }
 
@@ -316,6 +320,7 @@ FRHIConstantBuffer* FD3D12RHI::CreateConstantBuffer(uint32 structureSize, uint8*
 {
     FD3D12ConstantBuffer* constantBuffer = new FD3D12ConstantBuffer;
 
+    static int32 CurConstantBufferCount = 0;
     //create object constant buffer
     CD3DX12_RESOURCE_DESC objConstantResourceDesc = CD3DX12_RESOURCE_DESC::Buffer(CalcConstantBufferByteSize(structureSize));
 
@@ -338,12 +343,21 @@ FRHIConstantBuffer* FD3D12RHI::CreateConstantBuffer(uint32 structureSize, uint8*
     cbvDescObject.SizeInBytes = CalcConstantBufferByteSize(structureSize);
 
     CD3DX12_CPU_DESCRIPTOR_HANDLE objConDescriptor(mCBVSRVUAVHeap->GetCPUDescriptorHandleForHeapStart());
-    objConDescriptor = objConDescriptor.Offset(slot, mCBVSRVVUAVDescriptorSize);
+    if (slot == 3)
+    {
+        objConDescriptor = objConDescriptor.Offset(64 + 2, mCBVSRVVUAVDescriptorSize);
+    }
+    else
+    {
+        objConDescriptor = objConDescriptor.Offset(slot + CurConstantBufferCount, mCBVSRVVUAVDescriptorSize);
+    }
 
     mDX12Device->CreateConstantBufferView(
         &cbvDescObject,
         objConDescriptor);
 
+    constantBuffer->Offset = CurConstantBufferCount;
+    CurConstantBufferCount++;
     return constantBuffer;
 }
 

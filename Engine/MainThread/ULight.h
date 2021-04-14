@@ -11,7 +11,7 @@ public:
     virtual~ULight() override;
 
 public:
-    FVector3 Color;
+    FVector4 Color;
     float Intensity;
 
 private:
@@ -26,6 +26,18 @@ public:
 
 public:
     FVector3 Direction;
+    float Intensity;
 
 private:
+};
+
+
+struct FDirectionalLightData
+{
+    FDirectionalLightData() {}
+    ~FDirectionalLightData() {}
+
+    FVector4 Color;
+    FVector3 Direction;
+    float Intensity;
 };

@@ -6,7 +6,7 @@
 
 UStaticMesh::UStaticMesh()
 {
-    FilePathName = L"Content\\StaticMesh\\SM_Rock.stm";
+    FilePathName = "Content\\StaticMesh\\SM_Rock.stm";
 }
 
 UStaticMesh::~UStaticMesh()
