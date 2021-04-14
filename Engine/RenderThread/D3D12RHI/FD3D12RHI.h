@@ -84,6 +84,11 @@ private:
     D3D12_RECT mScissorRect;
     D3D12_VIEWPORT mViewPort;
 
+    static int32 msPassSRVSlot;
+    static int32 msPassCBVSlot;
+    static int32 msObjectSRVSlot;
+    static int32 msObjectCBVSlot;
+
     static int32 msPassSRVRange;
     static int32 msPassCBVRange;
 

@@ -15,6 +15,11 @@
 #include "TSingleton.h"
 
 
+int32 FD3D12RHI::msPassSRVSlot = 2;
+int32 FD3D12RHI::msPassCBVSlot = 3;
+int32 FD3D12RHI::msObjectSRVSlot = 0;
+int32 FD3D12RHI::msObjectCBVSlot = 1;
+
 int32 FD3D12RHI::msPassSRVRange = 1;
 int32 FD3D12RHI::msPassCBVRange = 1;
 
@@ -356,7 +361,7 @@ FRHIConstantBuffer* FD3D12RHI::CreateConstantBuffer(uint32 structureSize, uint8*
 
     constantBuffer->Slot = slot;
 
-    if (slot == 3)
+    if (slot == msPassCBVSlot)
     {
         const int32 offset = msObjectSRVRange + msObjectCBVRange + msPassSRVRange + msPassCBVCount;
         cbvDescriptor = cbvDescriptor.Offset(offset, mCBVSRVVUAVDescriptorSize);
@@ -419,10 +424,10 @@ FRHIShaderBindings* FD3D12RHI::CreateShaderBindings()
     CD3DX12_DESCRIPTOR_RANGE passConTable;
     passConTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 1);
 
-    slotRootParameter[0].InitAsDescriptorTable(1, &objTexTable, D3D12_SHADER_VISIBILITY_PIXEL);
-    slotRootParameter[1].InitAsDescriptorTable(1, &objConTable, D3D12_SHADER_VISIBILITY_ALL);
-    slotRootParameter[2].InitAsDescriptorTable(1, &passTexTable, D3D12_SHADER_VISIBILITY_PIXEL);
-    slotRootParameter[3].InitAsDescriptorTable(1, &passConTable, D3D12_SHADER_VISIBILITY_ALL);
+    slotRootParameter[msObjectSRVSlot].InitAsDescriptorTable(1, &objTexTable, D3D12_SHADER_VISIBILITY_PIXEL);
+    slotRootParameter[msObjectCBVSlot].InitAsDescriptorTable(1, &objConTable, D3D12_SHADER_VISIBILITY_ALL);
+    slotRootParameter[msPassSRVSlot].InitAsDescriptorTable(1, &passTexTable, D3D12_SHADER_VISIBILITY_PIXEL);
+    slotRootParameter[msPassCBVSlot].InitAsDescriptorTable(1, &passConTable, D3D12_SHADER_VISIBILITY_ALL);
 
     const CD3DX12_STATIC_SAMPLER_DESC linearWrap(
         0, // shaderRegister

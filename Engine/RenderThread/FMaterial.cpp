@@ -1,4 +1,4 @@
-#include "PrecompiledHeader.h"
+﻿#include "PrecompiledHeader.h"
 
 #include "FMaterial.h"
 #include "FRHIShader.h"
@@ -8,7 +8,7 @@
 #include "FRHI.h"
 #include "FRenderThread.h"
 
-FMaterial::FMaterial():
+FMaterial::FMaterial() :
     VertexShader(nullptr),
     PixelShader(nullptr),
     BaseColor(nullptr),
@@ -38,7 +38,7 @@ void FMaterial::Init()
 
     PixelShader = rhi->CreateShader(psFilePathName, psEnterPoint, psTarget);
 
-    const std::wstring textureFilePathName = L"Content\\Texture\\T_Stone_C.dds";
+    const std::wstring textureFilePathName = L"Content\\Texture\\T_Default_Material_Grid_C.dds";
     const int32 textureSlot = 0;
 
     BaseColor = rhi->CreateTexture2D(textureFilePathName, textureSlot);
