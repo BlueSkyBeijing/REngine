@@ -8,7 +8,7 @@ float4 PSMain(VertexOut PIn) : SV_Target
     float4 outColor;
     
     const float4 diffuseColor = DiffuseMap.Sample(DiffuseSamplerState, PIn.TexCoord);
-    const float3 viewDir = normalize(gCameraPos - PIn.Pos.xyz);
+    const float3 viewDir = normalize(gCameraPos - PIn.PosW.xyz);
     const float lightIntensity = 0.8f;
     float3 lighting = BlinnPhong(PIn.Normal, gDirectionalLightDir, gDirectionalLightColor, lightIntensity, viewDir, diffuseColor.rgb);
 

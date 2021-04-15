@@ -10,6 +10,7 @@ struct VertexIn
 struct VertexOut
 {
     float4 Pos : SV_POSITION;
+    float4 PosW : POSITION;
     float3 Normal : NORMAL;
     float2 TexCoord : TEXCOORD;
 };
