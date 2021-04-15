@@ -7,13 +7,12 @@ float4 PSMain(VertexOut PIn) : SV_Target
 {
     float4 outColor;
     
-    float ambient = 0.1f;
-    float4 diffuse = DiffuseMap.Sample(DiffuseSamplerState, PIn.TexCoord);
-    const float specPower = 2.0f;
+    const float4 diffuseColor = DiffuseMap.Sample(DiffuseSamplerState, PIn.TexCoord);
     const float3 viewDir = gCameraPos - PIn.Pos.xyz;
-    float3 lighting = BlinnPhong(PIn.Normal, gDirectionalLightDir, gDirectionalLightColor, gDirectionalLightColor, specPower, viewDir);
+    const float lightIntensity = 1.0f;
+    float3 lighting = BlinnPhong(PIn.Normal, gDirectionalLightDir, gDirectionalLightColor, lightIntensity, viewDir, diffuseColor.rgb);
 
-    outColor.rgb = diffuse.rgb * (ambient + lighting);
+    outColor.rgb = lighting;
     outColor.a = 1.0f;
     
     return outColor;
