@@ -5,7 +5,7 @@ float3 BlinnPhong(float3 normal, float3 lightDir, float3 lightColor, float light
 {
     const float3 ambientColor = float3(0.1f, 0.1f, 0.1f);
     const float3 specularColor = float3(1.0f, 1.0f, 1.0f);
-    const float shininess = 6.0;
+    const float shininess = 16.0;
     
     float lambertian = max(dot(lightDir, normal), 0.0);
     float3 halfDir = normalize(lightDir + viewDir);

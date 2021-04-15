@@ -178,7 +178,7 @@ void FRenderer::_createPassConstant(FPassConstant& constant)
     constant.Proj = projectionMatrix;
     constant.ViewProj = viewMatrix * projectionMatrix;
 
-    const FVector3 cameraDirection = (mView->Target - mView->Position).normalized();
+    const FVector3 cameraDirection = mView->Look;
     const FVector3 directonalLightDirection(-1.0f, -1.0f, -1.0f);
     const FVector3 directonalLightColor(1.0f, 1.0f, 1.0f);
 
