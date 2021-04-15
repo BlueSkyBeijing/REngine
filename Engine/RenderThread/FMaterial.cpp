@@ -38,7 +38,7 @@ void FMaterial::Init()
 
     PixelShader = rhi->CreateShader(psFilePathName, psEnterPoint, psTarget);
 
-    const std::wstring textureFilePathName = L"Content\\Texture\\T_Default_Material_Grid_C.dds";
+    const std::wstring textureFilePathName = L"Content\\Texture\\T_Default_Material_Gray_C.dds";
     const int32 textureSlot = 0;
 
     BaseColor = rhi->CreateTexture2D(textureFilePathName, textureSlot);
