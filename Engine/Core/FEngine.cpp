@@ -13,7 +13,7 @@ FEngine::FEngine() :mHeartbeat(true),
 mInited(false),
 mRenderThread(nullptr),
 mWorld(nullptr),
-mWindowWidth(1024),
+mWindowWidth(1366),
 mWindowHeight(768)
 {
 }
@@ -109,7 +109,14 @@ void FEngine::update()
     mDeltaSeconds = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(mCurFrameTime - mLastFrameTime).count() / 1000.0f;
     mLastFrameTime = mCurFrameTime;
 
-    mRenderThread->SetView(mWorld->GetCamera()->Position, mWorld->GetCamera()->Target, mWorld->GetCamera()->Up, mWorld->GetCamera()->Right, mWorld->GetCamera()->Look);
+    UCamera* camera = mWorld->GetCamera();
+    mRenderThread->SetView(camera->Position,
+        camera->Target,
+        camera->Up,
+        camera->Right,
+        camera->Look,
+        camera->FOV,
+        camera->AspectRatio);
 
     mRenderThread->OnReadyToRender();
 

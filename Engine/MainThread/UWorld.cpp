@@ -64,7 +64,7 @@ void UWorld::Load()
     {
         UCamera* camera = new UCamera();
 
-        camera->Position = cameraDatas[camerDataIndex].Location;
+        camera->Position = cameraDatas[camerDataIndex].Position;
         camera->Target = cameraDatas[camerDataIndex].Target;
         camera->FOV = cameraDatas[camerDataIndex].FOV;
         camera->AspectRatio = cameraDatas[camerDataIndex].AspectRatio;

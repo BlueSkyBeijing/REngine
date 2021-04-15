@@ -19,8 +19,6 @@ UCamera::~UCamera()
 
 void UCamera::Load()
 {
-    Position = FVector3(-2000.0f, 0.0f, 1000.0f);
-    Target = FVector3(0.0f, 0.0f, 500.0f);
     Up = FVector3(0.0f, 0.0f, 1.0f);
     Look = (Target - Position).normalized();
     Right = Up.cross(Look).normalized();
@@ -50,7 +48,7 @@ void UCamera::AdjustPitch(float deltaPitch)
 void UCamera::AdjustYaw(float deltaYaw)
 {
     FMatrix3x3 rotationMatrix;
-    rotationMatrix = Eigen::AngleAxisf(deltaYaw, Up);
+    rotationMatrix = Eigen::AngleAxisf(deltaYaw, FVector3(0.0f, 0.0f, 1.0f));
 
     Right = rotationMatrix * Right;
     Look = rotationMatrix * Look;
@@ -58,5 +56,5 @@ void UCamera::AdjustYaw(float deltaYaw)
 
 void UCamera::updateView()
 {
-    TSingleton<FEngine>::GetInstance().GetRenderThread()->SetView(Position, Target, Up, Right, Look);
+    TSingleton<FEngine>::GetInstance().GetRenderThread()->SetView(Position, Target, Up, Right, Look, FOV, AspectRatio);
 }

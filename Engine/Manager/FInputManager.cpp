@@ -82,6 +82,7 @@ void FInputManager::OnMouseUp(WPARAM btnState, int32 x, int32 y)
 void FInputManager::OnMouseMove(WPARAM btnState, int32 x, int32 y)
 {
     FEngine& engine = TSingleton<FEngine>::GetInstance();
+
     if ((btnState & MK_LBUTTON) != 0)
     {
         const float deltaScale = 0.0025f;

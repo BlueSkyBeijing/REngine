@@ -41,12 +41,29 @@ protect用小写字母开头
 
 private用下划线+小写字母写开头
 
+## 操作控制
+
+WSAD控制相机前后左右移动
+
+上下箭头控制左右移动
+
+左右箭头控制摄像机转向
+
+鼠标按下控制相机旋转
 
 ## 目前进展
 
 读取UE4导出的二进制staticmesh，目前仅有position,normal,texcoord信息，渲染basecolor贴图作为颜色输出。
 
-独立出renderthread，封装rhi层，但很多方面需要完善。
+独立出renderthread，封装rhi层，增加渲染线程和主线程同步
+
+增加读取场景文件
+
+增加摄像机控制
+
+增加简单的BlinnPhong光照效果
+
+目前仍有很多方面需要完善
 
 
 截图

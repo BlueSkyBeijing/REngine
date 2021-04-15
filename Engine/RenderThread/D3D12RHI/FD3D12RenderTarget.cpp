@@ -1,4 +1,4 @@
-#include "PrecompiledHeader.h"
+﻿#include "PrecompiledHeader.h"
 
 #include "FD3D12RenderTarget.h"
 #include "FInputManager.h"
@@ -11,7 +11,7 @@
 FD3D12RenderTarget::FD3D12RenderTarget(
     unsigned int width,
     unsigned int height,
-    DXGI_FORMAT format):
+    DXGI_FORMAT format) :
     FRHIRenderTarget(width, height)
 {
 }
@@ -31,12 +31,12 @@ void FD3D12RenderTarget::UnInit()
 }
 
 FD3D12RenderWindow::FD3D12RenderWindow(
-    unsigned int width, 
+    unsigned int width,
     unsigned int height,
-    DXGI_FORMAT format):
+    DXGI_FORMAT format) :
     FRHIRenderWindow(width, height),
     mDXGISwapChain(nullptr),
-    mSwapChainBufferCount(SWAPCHAIN_BUFFER_COUNT),
+    mSwapChainBufferCount(FRAME_BUFFER_NUM),
     mChainBufferndex(0),
     mRTVDescriptorSize(0),
     mDepthStencilFormat(DXGI_FORMAT_D24_UNORM_S8_UINT),

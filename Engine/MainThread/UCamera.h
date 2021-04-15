@@ -40,7 +40,7 @@ struct FCameraData
     FCameraData() {}
     ~FCameraData() {}
 
-    FVector3 Location;
+    FVector3 Position;
     FVector3 Target;
     float FOV;
     float AspectRatio;

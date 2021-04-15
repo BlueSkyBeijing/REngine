@@ -168,8 +168,8 @@ void FRenderer::_createPassConstant(FPassConstant& constant)
     ConstructMatrixLookRight(viewMatrix, mView->Position, mView->Look, mView->Right);
 
     FMatrix4x4 projectionMatrix;
-    const float fovY = 3.1415f * 0.25f;
-    const float aspect = 1.7f;
+    const float fovY = mView->FOV;
+    const float aspect = mView->AspectRatio;
     const float nearPlane = 1.0f;
     const float farPlane = 100000.0f;
     ConstructMatrixPerspectiveFovLH(projectionMatrix, fovY, aspect, nearPlane, farPlane);

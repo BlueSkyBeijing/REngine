@@ -26,6 +26,5 @@ public:
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 private:
-    FRenderThread* mRenderThread;
     FVector2i mLastMousePos;
 };

@@ -13,6 +13,8 @@ public:
     FVector3 Up;
     FVector3 Right;
     FVector3 Look;
+    float FOV;
+    float AspectRatio;
 
 private:
 

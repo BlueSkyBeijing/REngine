@@ -56,13 +56,15 @@ void FRenderThread::AddToScene(FRenderProxy* renderProxy)
     mScene->AddRenderable(renderProxy);
 }
 
-void FRenderThread::SetView(FVector3& position, FVector3& target, FVector3& up, FVector3& right, FVector3& look)
+void FRenderThread::SetView(FVector3& position, FVector3& target, FVector3& up, FVector3& right, FVector3& look, float fov, float aspectRatio)
 {
     mView->Position = position;
     mView->Target = target;
     mView->Up = up;
     mView->Right = right;
     mView->Look = look;
+    mView->FOV = fov;
+    mView->AspectRatio = aspectRatio;
 }
 
 void FRenderThread::OnReadyToRender()
@@ -74,7 +76,9 @@ void FRenderThread::OnReadyToRender()
 
 void FRenderThread::EnqueueRenderCommand(FRenderCommand* renderCommand)
 {
-    mRenderCommands.push_back(renderCommand);
+    const int32 frameIndex = mProcessFrameNum > 1 ? mProcessFrameNum.load() - 1 : mProcessFrameNum.load();
+
+    mRenderCommands[frameIndex].push_back(renderCommand);
 }
 
 void FRenderThread::init()
@@ -131,6 +135,8 @@ void FRenderThread::unInit()
 
 void FRenderThread::update()
 {
+    syncMainThread();
+
     processRenderCommand();
 
     mRenderer->Render();
@@ -143,14 +149,14 @@ void FRenderThread::loop()
     while (mHeartbeat)
     {
         update();
-
-        syncMainThread();
     };
 }
 
 void FRenderThread::processRenderCommand()
 {
-    for (auto it = mRenderCommands.begin(); it != mRenderCommands.end(); it++)
+    const int32 frameIndex = mProcessFrameNum - 1;
+
+    for (auto it = mRenderCommands[frameIndex].begin(); it != mRenderCommands[frameIndex].end(); it++)
     {
         FRenderCommand* command = *it;
         command->Excecute();
@@ -158,12 +164,15 @@ void FRenderThread::processRenderCommand()
         delete command;
     }
 
-    mRenderCommands.clear();
+    mRenderCommands[frameIndex].clear();
 }
 
 void FRenderThread::syncMainThread()
 {
     std::unique_lock<std::mutex> RenderLock(mRenderMutex);
-    mProcessFrameNum--;
+    if (mProcessFrameNum.load() > 0)
+    {
+        mProcessFrameNum--;
+    }
     mRenderCondition.wait(RenderLock);
 }

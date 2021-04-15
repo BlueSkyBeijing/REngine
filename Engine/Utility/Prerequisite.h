@@ -75,3 +75,5 @@ class FD3D12PipelineState;
 class FD3D12VertexBuffer;
 class FD3D12ShaderBindings;
 class FD3D12Texture2D;
+
+#define FRAME_BUFFER_NUM 2

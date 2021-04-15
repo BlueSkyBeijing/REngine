@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Prerequisite.h"
 
+#include "FConfigManager.h"
 
 class FRenderThread
 {
@@ -14,7 +15,7 @@ public:
 
     void AddToScene(FRenderProxy* renderProxy);
 
-    void SetView(FVector3& position, FVector3& target, FVector3& up, FVector3& right, FVector3& look);
+    void SetView(FVector3& position, FVector3& target, FVector3& up, FVector3& right, FVector3& look, float fov, float aspectRatio);
 
     void OnReadyToRender();
 
@@ -70,5 +71,5 @@ private:
     std::atomic_int32_t mProcessFrameNum;
 
     std::thread* mRenderThread;
-    std::vector<FRenderCommand*> mRenderCommands;
+    std::vector<FRenderCommand*> mRenderCommands[FRAME_BUFFER_NUM];
 };

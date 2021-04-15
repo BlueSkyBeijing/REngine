@@ -3,7 +3,6 @@
 
 #include "TSingleton.h"
 
-#define FRAME_BUFFER_NUM 2
 
 class FEngine : TSingleton<FEngine>
 {

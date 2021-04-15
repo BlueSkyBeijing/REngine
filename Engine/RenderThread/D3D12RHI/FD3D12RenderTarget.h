@@ -1,9 +1,7 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 #include "FRHIRenderTarget.h"
-
-#define SWAPCHAIN_BUFFER_COUNT 2
 
 
 class FD3D12RenderTarget : FRHIRenderTarget
@@ -11,8 +9,8 @@ class FD3D12RenderTarget : FRHIRenderTarget
     friend class FD3D12RHI;
 
 public:
-	FD3D12RenderTarget(unsigned int width, unsigned int hight, DXGI_FORMAT format);
-	~FD3D12RenderTarget();
+    FD3D12RenderTarget(unsigned int width, unsigned int hight, DXGI_FORMAT format);
+    ~FD3D12RenderTarget();
 
     virtual void Init();
     virtual void UnInit();
@@ -44,14 +42,14 @@ public:
     virtual void Present() override;
 
 private:
-    virtual Microsoft::WRL::ComPtr <ID3D12Resource> GetRenderBuffer() const ;
+    virtual Microsoft::WRL::ComPtr <ID3D12Resource> GetRenderBuffer() const;
 
-    virtual D3D12_CPU_DESCRIPTOR_HANDLE GetRenderBufferView() const ;
-    virtual D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView() const ;
+    virtual D3D12_CPU_DESCRIPTOR_HANDLE GetRenderBufferView() const;
+    virtual D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView() const;
 
 private:
     Microsoft::WRL::ComPtr <IDXGISwapChain> mDXGISwapChain;
-    Microsoft::WRL::ComPtr <ID3D12Resource> mRenderTargets[SWAPCHAIN_BUFFER_COUNT];
+    Microsoft::WRL::ComPtr <ID3D12Resource> mRenderTargets[FRAME_BUFFER_NUM];
     Microsoft::WRL::ComPtr <ID3D12Resource> mDepthStencilBuffer;
     Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> mDX12DescriptorHeapRenderTarget;
     Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> mDX12DescriptorHeapDepthStencil;
