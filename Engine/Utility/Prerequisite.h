@@ -37,6 +37,7 @@ class FScene;
 class FView;
 class FRenderProxy;
 class FMaterial;
+class FDirectionalLight;
 
 class FSceneManager;
 class FShaderManager;

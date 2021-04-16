@@ -17,6 +17,7 @@
 #include "FEngine.h"
 #include "FRenderThread.h"
 #include "MathUtility.h"
+#include "FLight.h"
 
 FRenderer::FRenderer(FRHIRenderWindow* renderWindow, FScene* scene, FView* view) :
     mRHI(TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI()),
@@ -177,15 +178,12 @@ void FRenderer::_createPassConstant(FPassConstant& constant)
     constant.View = viewMatrix;
     constant.Proj = projectionMatrix;
     constant.ViewProj = viewMatrix * projectionMatrix;
+    constant.CameraPos = mView->Position;
+    constant.CameraDir = mView->Look;
 
-    const FVector3 cameraDirection = mView->Look;
-    const FVector3 directonalLightDirection(-0.5735f, -0.5735f, -0.5735f);
-    const FVector3 directonalLightColor(1.0f, 1.0f, 1.0f);
-
-    constant.CameraPos = FVector3(mView->Position.x(), mView->Position.y(), mView->Position.z());
-    constant.CameraDir = FVector3(cameraDirection.x(), cameraDirection.y(), cameraDirection.z());
+    FDirectionalLight* light = mScene->GetDirectionalLight();
     //should use negative value of camera direction in shader
-    constant.DirectionalLightDir = -FVector3(directonalLightDirection.x(), directonalLightDirection.y(), directonalLightDirection.z());
-    constant.DirectionalLightColor = FVector3(directonalLightColor.x(), directonalLightColor.y(), directonalLightColor.z());
+    constant.DirectionalLightDir = -light->Direction;
+    constant.DirectionalLightColor = FVector3(light->Color.x(), light->Color.y(), light->Color.z());
 
 }

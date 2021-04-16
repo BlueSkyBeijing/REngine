@@ -109,17 +109,9 @@ void FEngine::update()
     mDeltaSeconds = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(mCurFrameTime - mLastFrameTime).count() / 1000.0f;
     mLastFrameTime = mCurFrameTime;
 
-    UCamera* camera = mWorld->GetCamera();
-    mRenderThread->SetView(camera->Position,
-        camera->Target,
-        camera->Up,
-        camera->Right,
-        camera->Look,
-        camera->FOV,
-        camera->AspectRatio);
+    mWorld->GetCamera()->Update();
 
     mRenderThread->OnReadyToRender();
-
 }
 
 void FEngine::createWindow()
@@ -184,7 +176,7 @@ void FEngine::waitRenderThreadInited()
     //@todo; need to improve implement way
     while (!mRenderThread->IsInited())
     {
-        Sleep(100);
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
 
@@ -194,7 +186,7 @@ void FEngine::waitRenderThreadUninited()
     //wait until uninted
     while (mRenderThread->IsInited())
     {
-        Sleep(100);
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
 
@@ -202,6 +194,6 @@ void FEngine::syncRenderThread()
 {
     while (mRenderThread->GetProcessFrameNum() >= FRAME_BUFFER_NUM)
     {
-        Sleep(1);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }

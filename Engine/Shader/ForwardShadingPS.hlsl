@@ -3,14 +3,14 @@
 Texture2D DiffuseMap : register(t0);
 SamplerState DiffuseSamplerState : register(s0);
 
-float4 PSMain(VertexOut PIn) : SV_Target
+float4 PSMain(VertexOut pixelIn) : SV_Target
 {
     float4 outColor;
     
-    const float4 diffuseColor = DiffuseMap.Sample(DiffuseSamplerState, PIn.TexCoord);
-    const float3 viewDir = normalize(gCameraPos - PIn.PosW.xyz);
+    const float4 diffuseColor = DiffuseMap.Sample(DiffuseSamplerState, pixelIn.TexCoord);
+    const float3 viewDir = normalize(CameraPos - pixelIn.PosW.xyz);
     const float lightIntensity = 0.8f;
-    float3 lighting = BlinnPhong(PIn.Normal, gDirectionalLightDir, gDirectionalLightColor, lightIntensity, viewDir, diffuseColor.rgb);
+    float3 lighting = BlinnPhong(pixelIn.Normal, DirectionalLightDir, DirectionalLightColor, lightIntensity, viewDir, diffuseColor.rgb);
 
     outColor.rgb = lighting;
     outColor.a = 1.0f;

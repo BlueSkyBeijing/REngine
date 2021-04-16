@@ -28,8 +28,9 @@ public:
     void AdjustPitch(float deltaPitch);
     void AdjustYaw(float deltaYaw);
 
+    void Update();
+
 protected:
-    void updateView();
 
 private:
 

@@ -17,21 +17,21 @@ struct VertexOut
 
 cbuffer cbObject : register(b0)
 {
-    float4x4 gWorld;
+    float4x4 World;
 };
 
 cbuffer cbPass : register(b1)
 {
-    float4x4 gView;
-    float4x4 gProj;
-    float4x4 gViewProj;
-    float3 gCameraPos;
+    float4x4 View;
+    float4x4 Proj;
+    float4x4 ViewProj;
+    float3 CameraPos;
     float _Placeholder0;
-    float3 gCameraDir;
+    float3 CameraDir;
     float _Placeholder1;
-    float3 gDirectionalLightDir;
+    float3 DirectionalLightDir;
     float _Placeholder2;
-    float3 gDirectionalLightColor;
+    float3 DirectionalLightColor;
     float _Placeholder3;
 };
 

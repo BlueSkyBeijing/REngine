@@ -5,6 +5,8 @@
 #include "FRenderThread.h"
 #include "FEngine.h"
 #include "TSingleton.h"
+#include "FView.h"
+#include "FRenderCommand.h"
 
 UCamera::UCamera() :
     USceneObject(),
@@ -23,7 +25,7 @@ void UCamera::Load()
     Look = (Target - Position).normalized();
     Right = Up.cross(Look).normalized();
 
-    updateView();
+    Update();
 }
 
 void UCamera::AdjustMoveStraight(float deltaMove)
@@ -54,7 +56,22 @@ void UCamera::AdjustYaw(float deltaYaw)
     Look = rotationMatrix * Look;
 }
 
-void UCamera::updateView()
+void UCamera::Update()
 {
-    TSingleton<FEngine>::GetInstance().GetRenderThread()->SetView(Position, Target, Up, Right, Look, FOV, AspectRatio);
+    FView* view = new FView();
+    view->AspectRatio = AspectRatio;
+    view->FOV = FOV;
+    view->Look = Look;
+    view->Position = Position;
+    view->Right = Right;
+    view->Target = Target;
+    view->Up = Up;
+
+    FRenderThread* renderThread = TSingleton<FEngine>::GetInstance().GetRenderThread();
+
+    ENQUEUE_RENDER_COMMAND([renderThread, view]
+    {
+        renderThread->SetView(view);
+    });
+
 }

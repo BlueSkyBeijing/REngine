@@ -179,6 +179,9 @@
     <ClCompile Include="Engine\Utility\MathUtility.cpp">
       <Filter>Engine\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\RenderThread\FLight.cpp">
+      <Filter>Engine\RenderThread</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Manager\FInputManager.h">
@@ -339,6 +342,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Utility\MathUtility.h">
       <Filter>Engine\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderThread\FLight.h">
+      <Filter>Engine\RenderThread</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

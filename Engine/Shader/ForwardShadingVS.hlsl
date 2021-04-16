@@ -1,14 +1,14 @@
 #include "ForwardShadingCommon.hlsl"
 
-VertexOut VSMain(VertexIn VIn)
+VertexOut VSMain(VertexIn vertexIn)
 {
-    VertexOut VOut;
+    VertexOut vertexOut;
 	
-    float4x4 WorldViewProj = mul(gWorld, gViewProj);
-    VOut.Pos = mul(float4(VIn.Pos, 1.0f), WorldViewProj);
-    VOut.PosW = mul(float4(VIn.Pos, 1.0f), gWorld);
-    VOut.Normal = normalize(mul(VIn.Normal, (float3x3) gWorld));
-    VOut.TexCoord = VIn.TexCoord;
+    float4x4 worldViewProj = mul(World, ViewProj);
+    vertexOut.Pos = mul(float4(vertexIn.Pos, 1.0f), worldViewProj);
+    vertexOut.PosW = mul(float4(vertexIn.Pos, 1.0f), World);
+    vertexOut.Normal = normalize(mul(vertexIn.Normal, (float3x3) World));
+    vertexOut.TexCoord = vertexIn.TexCoord;
 
-    return VOut;
+    return vertexOut;
 }

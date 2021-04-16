@@ -12,6 +12,7 @@
 #include "FInputManager.h"
 #include "FShaderBindingsManager.h"
 #include "FPipelineStateManager.h"
+#include "FLight.h"
 
 
 FRenderThread::FRenderThread(FEngine* engine) :
@@ -56,15 +57,24 @@ void FRenderThread::AddToScene(FRenderProxy* renderProxy)
     mScene->AddRenderable(renderProxy);
 }
 
-void FRenderThread::SetView(FVector3& position, FVector3& target, FVector3& up, FVector3& right, FVector3& look, float fov, float aspectRatio)
+void FRenderThread::SetView(FView* view)
 {
-    mView->Position = position;
-    mView->Target = target;
-    mView->Up = up;
-    mView->Right = right;
-    mView->Look = look;
-    mView->FOV = fov;
-    mView->AspectRatio = aspectRatio;
+    assert(view != nullptr);
+
+    mView->Position = view->Position;
+    mView->Target = view->Target;
+    mView->Up = view->Up;
+    mView->Right = view->Right;
+    mView->Look = view->Look;
+    mView->FOV = view->FOV;
+    mView->AspectRatio = view->AspectRatio;
+
+    delete view;
+}
+
+void FRenderThread::SetDirectionalLight(FDirectionalLight* light)
+{
+    mScene->SetDirectionalLight(light);
 }
 
 void FRenderThread::OnReadyToRender()

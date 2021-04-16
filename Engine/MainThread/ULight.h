@@ -24,6 +24,8 @@ public:
     UDirectionalLight();
     virtual~UDirectionalLight() override;
 
+    virtual void Load() override;
+
 public:
     FVector3 Direction;
     float Intensity;

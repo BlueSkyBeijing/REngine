@@ -15,7 +15,9 @@ public:
 
     void AddToScene(FRenderProxy* renderProxy);
 
-    void SetView(FVector3& position, FVector3& target, FVector3& up, FVector3& right, FVector3& look, float fov, float aspectRatio);
+    void SetView(FView* view);
+
+    void SetDirectionalLight(FDirectionalLight* light);
 
     void OnReadyToRender();
 
