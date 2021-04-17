@@ -12,7 +12,6 @@
 UWorld::UWorld(FEngine* engine) :
     mEngine(engine)
 {
-    FilePathName = "Content\\Map\\Default.map";
 }
 
 UWorld::~UWorld()
@@ -21,6 +20,9 @@ UWorld::~UWorld()
 
 void UWorld::Load()
 {
+    FilePathName = TSingleton<FConfigManager>::GetInstance().DefaultMapPath +
+        TSingleton<FConfigManager>::GetInstance().DefaultMap;
+
     //load from file
     std::ifstream mapFile(FilePathName, std::ios::in | std::ios::binary);
     if (!mapFile)

@@ -2,7 +2,6 @@
 
 #include "FConfigManager.h"
 
-
 const std::string FConfigManager::ContentPath = "Content\\";
 
 const std::string FConfigManager::DefaultMapPath = "Content\\Map\\";
@@ -16,3 +15,36 @@ const std::string FConfigManager::DefaultMaterialFileSuffix = ".mat";
 const std::string FConfigManager::DefaultTextureFileSuffix = ".dds";
 
 const int32 FConfigManager::FrameBufferNum = 2;
+
+std::string FConfigManager::DefaultMap = "Default.map";
+
+FConfigManager::FConfigManager()
+{
+}
+
+FConfigManager::~FConfigManager()
+{
+}
+
+void FConfigManager::Init()
+{
+    CSimpleIniA engineConfig;
+    engineConfig.SetUnicode();
+
+    SI_Error rc = engineConfig.LoadFile("Config\\Engine.ini");
+    if (rc < 0)
+    {
+        //print error
+    };
+
+    const char* defaultMap;
+    defaultMap = engineConfig.GetValue("Map", "DefaultMap", "Default.map");
+    if (defaultMap != nullptr)
+    {
+        DefaultMap = defaultMap;
+    }
+}
+
+void FConfigManager::UnInit()
+{
+}

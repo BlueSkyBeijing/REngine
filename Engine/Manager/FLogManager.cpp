@@ -30,7 +30,7 @@ void FLogManager::UnInit()
     mLogFile = nullptr;
 }
 
-void FLogManager::LogMessage()
+void FLogManager::LogMessage(const char* loginfo)
 {
-    mLogFile->info("Engine log...");
+    mLogFile->info(loginfo);
 }

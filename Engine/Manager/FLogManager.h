@@ -9,7 +9,7 @@ public:
     FLogManager();
     ~FLogManager();
 
-    void LogMessage();
+    void LogMessage(const char* loginfo);
 
     void Init();
     void UnInit();

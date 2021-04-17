@@ -32,6 +32,7 @@ void FEngine::Launch()
 void FEngine::init()
 {
     TSingleton<FLogManager>::GetInstance().Init();
+    TSingleton<FConfigManager>::GetInstance().Init();
     TSingleton<FInputManager>::GetInstance().Init();
 
     createWindow();
@@ -45,7 +46,7 @@ void FEngine::init()
 
     mInited = true;
 
-    TSingleton<FLogManager>::GetInstance().LogMessage();
+    TSingleton<FLogManager>::GetInstance().LogMessage("Engine init end.");
 }
 
 void FEngine::unInit()
@@ -64,6 +65,7 @@ void FEngine::unInit()
     mWorld = nullptr;
 
     TSingleton<FInputManager>::GetInstance().UnInit();
+    TSingleton<FConfigManager>::GetInstance().UnInit();
     TSingleton<FLogManager>::GetInstance().UnInit();
 
     mInited = false;
