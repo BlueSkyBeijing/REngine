@@ -299,7 +299,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Engine\Core;$(SolutionDir)\Engine\Manager;$(SolutionDir)\Engine\Utility;$(SolutionDir)\Engine\RenderThread;$(SolutionDir)\Engine\RenderThread\D3D12RHI;$(SolutionDir)\Engine\RenderThread\RHI;$(SolutionDir)\Engine\MainThread;$(SolutionDir)\Engine\ThirdParty;$(SolutionDir)\Engine\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(SolutionDir)\Engine\ThirdParty\Eigen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Engine\Core;$(SolutionDir)\Engine\Manager;$(SolutionDir)\Engine\Utility;$(SolutionDir)\Engine\RenderThread;$(SolutionDir)\Engine\RenderThread\D3D12RHI;$(SolutionDir)\Engine\RenderThread\RHI;$(SolutionDir)\Engine\MainThread;$(SolutionDir)\Engine\ThirdParty;$(SolutionDir)\Engine\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(SolutionDir)\Engine\ThirdParty\Eigen;$(SolutionDir)\Engine\ThirdParty\spdlog-1.x\include;$(SolutionDir)\Engine\ThirdParty\spdlog-1.x;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -320,7 +320,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Engine\Core;$(SolutionDir)\Engine\Manager;$(SolutionDir)\Engine\Utility;$(SolutionDir)\Engine\RenderThread;$(SolutionDir)\Engine\RenderThread\D3D12RHI;$(SolutionDir)\Engine\RenderThread\RHI;$(SolutionDir)\Engine\MainThread;$(SolutionDir)\Engine\ThirdParty;$(SolutionDir)\Engine\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(SolutionDir)\Engine\ThirdParty\Eigen;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Engine\Core;$(SolutionDir)\Engine\Manager;$(SolutionDir)\Engine\Utility;$(SolutionDir)\Engine\RenderThread;$(SolutionDir)\Engine\RenderThread\D3D12RHI;$(SolutionDir)\Engine\RenderThread\RHI;$(SolutionDir)\Engine\MainThread;$(SolutionDir)\Engine\ThirdParty;$(SolutionDir)\Engine\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(SolutionDir)\Engine\ThirdParty\Eigen;$(SolutionDir)\Engine\ThirdParty\spdlog-1.x\include;$(SolutionDir)\Engine\ThirdParty\spdlog-1.x;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>

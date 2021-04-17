@@ -31,6 +31,7 @@ void FEngine::Launch()
 
 void FEngine::init()
 {
+    TSingleton<FLogManager>::GetInstance().Init();
     TSingleton<FInputManager>::GetInstance().Init();
 
     createWindow();
@@ -43,6 +44,8 @@ void FEngine::init()
     mWorld->Load();
 
     mInited = true;
+
+    TSingleton<FLogManager>::GetInstance().LogMessage();
 }
 
 void FEngine::unInit()
@@ -61,6 +64,7 @@ void FEngine::unInit()
     mWorld = nullptr;
 
     TSingleton<FInputManager>::GetInstance().UnInit();
+    TSingleton<FLogManager>::GetInstance().UnInit();
 
     mInited = false;
 }
