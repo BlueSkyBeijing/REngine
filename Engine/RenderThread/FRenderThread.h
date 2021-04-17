@@ -21,6 +21,8 @@ public:
 
     void OnReadyToRender();
 
+    void OnWindowResize(int32 newWidth, int32 newHeight);
+
     void EnqueueRenderCommand(FRenderCommand* renderCommand);
 
     inline void MarkLoadCompleted()

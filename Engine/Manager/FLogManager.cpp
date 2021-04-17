@@ -2,10 +2,6 @@
 
 #include "FLogManager.h"
 
-#include "spdlog/sinks/basic_file_sink.h"
-#include "spdlog/async.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
-
 FLogManager::FLogManager() :
     mLogFileName("Saved\\Logs\\Engine.log")
 {

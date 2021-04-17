@@ -23,9 +23,16 @@
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 
+
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/basic_file_sink.h"
+#include "spdlog/async.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
+
 //-----------------------------
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
 #include <windows.h>
+#include <WindowsX.h>
 #include <comdef.h>
 #include <wrl.h>
 #include <wrl/client.h>

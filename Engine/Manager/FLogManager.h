@@ -2,7 +2,6 @@
 #include "Prerequisite.h"
 
 #include "TSingleton.h"
-#include "spdlog/spdlog.h"
 
 class FLogManager : TSingleton<FLogManager>
 {

@@ -84,6 +84,11 @@ void FRenderThread::OnReadyToRender()
     mRenderCondition.notify_one();
 }
 
+void FRenderThread::OnWindowResize(int32 newWidth, int32 newHeight)
+{
+
+}
+
 void FRenderThread::EnqueueRenderCommand(FRenderCommand* renderCommand)
 {
     const int32 frameIndex = mProcessFrameNum > 1 ? mProcessFrameNum.load() - 1 : mProcessFrameNum.load();

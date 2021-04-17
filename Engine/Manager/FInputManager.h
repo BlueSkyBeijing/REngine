@@ -22,9 +22,11 @@ public:
     void OnMouseUp(WPARAM btnState, int32 x, int32 y);
     void OnMouseMove(WPARAM btnState, int32 x, int32 y);
     void OnKeyInput(float deltaTime);
+    void OnResize(LPARAM lParam);
 
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 private:
     FVector2i mLastMousePos;
+
 };

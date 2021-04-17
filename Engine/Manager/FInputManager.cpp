@@ -5,7 +5,11 @@
 #include "TSingleton.h"
 #include "UWorld.h"
 #include "UCamera.h"
-#include <WindowsX.h>
+#include "FRenderThread.h"
+#include "FEngine.h"
+#include "TSingleton.h"
+#include "FView.h"
+#include "FRenderCommand.h"
 
 FInputManager::FInputManager()
 {
@@ -49,7 +53,6 @@ LRESULT CALLBACK FInputManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
         PostQuitMessage(0);
         break;
     case WM_CLOSE:
-    case WM_QUIT:
         inputManager->ProcessQuit();
         break;
     case WM_LBUTTONDOWN:
@@ -60,6 +63,9 @@ LRESULT CALLBACK FInputManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
         break;
     case WM_MOUSEMOVE:
         inputManager->OnMouseMove(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+        break;
+    case WM_SIZE:
+        inputManager->OnResize(lParam);
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
@@ -130,5 +136,21 @@ void FInputManager::OnKeyInput(float deltaSeconds)
     if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
     {
         engine.GetWorld()->GetCamera()->AdjustYaw(deltaSeconds);
+    }
+}
+
+void FInputManager::OnResize(LPARAM lParam)
+{
+    int32 width = LOWORD(lParam);
+    int32 height = HIWORD(lParam);
+
+    FRenderThread* renderThread = TSingleton<FEngine>::GetInstance().GetRenderThread();
+
+    if (renderThread != nullptr)
+    {
+        ENQUEUE_RENDER_COMMAND([renderThread, width, height]
+        {
+            renderThread->OnWindowResize(width, height);
+        });
     }
 }
