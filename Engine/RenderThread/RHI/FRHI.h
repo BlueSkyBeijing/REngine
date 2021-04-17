@@ -4,14 +4,12 @@
 #include "FRHIBuffer.h"
 
 
-enum EPrimitiveTopology
+enum EPrimitiveType
 {
-    PRIMITIVE_TOPOLOGY_UNDEFINED = 0,
-    PRIMITIVE_TOPOLOGY_POINTLIST = 1,
-    PRIMITIVE_TOPOLOGY_LINELIST = 2,
-    PRIMITIVE_TOPOLOGY_LINESTRIP = 3,
-    PRIMITIVE_TOPOLOGY_TRIANGLELIST = 4,
-    PRIMITIVE_TOPOLOGY_TRIANGLESTRIP = 5,
+    PT_TriangleList,
+    PT_TriangleStrip,
+    PT_LineList,
+    PT_PointList,
 };
 
 enum EPixelFormat
@@ -205,7 +203,7 @@ public:
 
     virtual void SetPipelineState(FRHIPipelineState* pipelineState) = 0;
 
-    virtual void SetPrimitiveTopology(EPrimitiveTopology topology) = 0;
+    virtual void SetPrimitiveType(EPrimitiveType primitiveType) = 0;
     virtual void SetVertexBuffer(FRHIVertexBuffer* buffer) = 0;
     virtual void SetIndexBuffer(FRHIIndexBuffer* buffer) = 0;
     virtual void SetConstantBuffer(FRHIConstantBuffer* buffer) = 0;

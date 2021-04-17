@@ -229,10 +229,9 @@ void FD3D12RHI::SetPipelineState(FRHIPipelineState* pipelineState)
     mDX12CommandList->SetPipelineState(state->mDX12PipleLineState.Get());
 }
 
-void FD3D12RHI::SetPrimitiveTopology(EPrimitiveTopology topology)
+void FD3D12RHI::SetPrimitiveType(EPrimitiveType primitiveType)
 {
-    //todo: add a translator
-    D3D_PRIMITIVE_TOPOLOGY dxToplogy = (D3D_PRIMITIVE_TOPOLOGY)topology;
+    D3D_PRIMITIVE_TOPOLOGY dxToplogy = translatePrimitiveType(primitiveType);
     mDX12CommandList->IASetPrimitiveTopology(dxToplogy);
 }
 
@@ -673,4 +672,17 @@ void FD3D12RHI::Present()
     THROW_IF_FAILED(mRenderTarget->mDXGISwapChain->Present(0, 0));
 
     mRenderTarget->mChainBufferndex = (mRenderTarget->mChainBufferndex + 1) % mRenderTarget->mSwapChainBufferCount;
+}
+
+D3D_PRIMITIVE_TOPOLOGY FD3D12RHI::translatePrimitiveType(EPrimitiveType primitiveType)
+{
+    switch (primitiveType)
+    {
+    case PT_TriangleList:               return D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    case PT_TriangleStrip:              return D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+    case PT_LineList:                   return D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+    case PT_PointList:                  return D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
+    }
+
+    return D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
 }

@@ -118,7 +118,7 @@ void FRenderer::drawRenderables()
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(renderProxy);
 
         mRHI->SetPipelineState(pipelineState);
-        mRHI->SetPrimitiveTopology(EPrimitiveTopology::PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(renderProxy->VertexBuffer);
         mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
         mRHI->SetConstantBuffer(renderProxy->ConstantBuffer);

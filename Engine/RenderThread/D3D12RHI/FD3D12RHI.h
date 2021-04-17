@@ -27,7 +27,7 @@ public:
 
     virtual void SetPipelineState(FRHIPipelineState* pipelineState) override;
 
-    virtual void SetPrimitiveTopology(EPrimitiveTopology topology) override;
+    virtual void SetPrimitiveType(EPrimitiveType primitiveType) override;
     virtual void SetVertexBuffer(FRHIVertexBuffer* buffer) override;
     virtual void SetIndexBuffer(FRHIIndexBuffer* buffer) override;
     virtual void SetConstantBuffer(FRHIConstantBuffer* buffer) override;
@@ -52,6 +52,7 @@ public:
     virtual void Present() override;
 
 protected:
+    D3D_PRIMITIVE_TOPOLOGY translatePrimitiveType(EPrimitiveType primitiveType);
 
 private:
     FD3D12RenderWindow* mRenderTarget;
