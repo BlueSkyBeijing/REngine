@@ -25,7 +25,7 @@ FRenderThread::FRenderThread(FEngine* engine) :
     mRenderThread(nullptr),
     mScene(nullptr),
     mInited(false),
-    mProcessFrameNum(0)
+    mFrameSyncSignal(0)
 {
 }
 
@@ -50,6 +50,7 @@ void FRenderThread::start()
 void FRenderThread::Exit()
 {
     mHeartbeat = false;
+    mRenderCondition.notify_one();
 }
 
 void FRenderThread::AddToScene(FRenderProxy* renderProxy)
@@ -77,10 +78,11 @@ void FRenderThread::SetDirectionalLight(FDirectionalLight* light)
     mScene->SetDirectionalLight(light);
 }
 
-void FRenderThread::OnReadyToRender()
+void FRenderThread::OnProduceOneFrame()
 {
     std::unique_lock<std::mutex> RenderLock(mRenderMutex);
-    mProcessFrameNum++;
+    mFrameSyncSignal++;
+    mFrameCount++;
     mRenderCondition.notify_one();
 }
 
@@ -91,9 +93,9 @@ void FRenderThread::OnWindowResize(int32 newWidth, int32 newHeight)
 
 void FRenderThread::EnqueueRenderCommand(FRenderCommand* renderCommand)
 {
-    const int32 frameIndex = mProcessFrameNum > 1 ? mProcessFrameNum.load() - 1 : mProcessFrameNum.load();
+    const int32 frameIndexMainThread = mFrameCount % FRAME_BUFFER_NUM;
 
-    mRenderCommands[frameIndex].push_back(renderCommand);
+    mRenderCommands[frameIndexMainThread].push_back(renderCommand);
 }
 
 void FRenderThread::init()
@@ -119,6 +121,8 @@ void FRenderThread::init()
 
 void FRenderThread::unInit()
 {
+    processRemainRenderCommand();
+
     mRenderer->UnInit();
     delete mRenderer;
     mRenderer = nullptr;
@@ -169,9 +173,11 @@ void FRenderThread::loop()
 
 void FRenderThread::processRenderCommand()
 {
-    const int32 frameIndex = mProcessFrameNum - 1;
+    assert(mFrameCount > 0);
+    const int32 renderThreadDelayFrameNum = FRAME_BUFFER_NUM - 1;
+    const int32 frameIndexRenderThread = (mFrameCount - 1 - renderThreadDelayFrameNum) % FRAME_BUFFER_NUM;
 
-    for (auto it = mRenderCommands[frameIndex].begin(); it != mRenderCommands[frameIndex].end(); it++)
+    for (auto it = mRenderCommands[frameIndexRenderThread].begin(); it != mRenderCommands[frameIndexRenderThread].end(); it++)
     {
         FRenderCommand* command = *it;
         command->Excecute();
@@ -179,15 +185,32 @@ void FRenderThread::processRenderCommand()
         delete command;
     }
 
-    mRenderCommands[frameIndex].clear();
+    mRenderCommands[frameIndexRenderThread].clear();
+}
+
+void FRenderThread::processRemainRenderCommand()
+{
+    assert(mFrameCount > 0);
+    for (int32 frameRemianIndex = 1; frameRemianIndex < FRAME_BUFFER_NUM; frameRemianIndex++)
+    {
+        const int32 renderThreadDelayFrameNum = FRAME_BUFFER_NUM - 1;
+        const int32 frameIndexRenderThread = (mFrameCount - 1 - renderThreadDelayFrameNum + frameRemianIndex) % FRAME_BUFFER_NUM;
+
+        for (auto it = mRenderCommands[frameIndexRenderThread].begin(); it != mRenderCommands[frameIndexRenderThread].end(); it++)
+        {
+            FRenderCommand* command = *it;
+            command->Excecute();
+
+            delete command;
+        }
+
+        mRenderCommands[frameIndexRenderThread].clear();
+    }
 }
 
 void FRenderThread::syncMainThread()
 {
     std::unique_lock<std::mutex> RenderLock(mRenderMutex);
-    if (mProcessFrameNum.load() > 0)
-    {
-        mProcessFrameNum--;
-    }
+    mFrameSyncSignal--;
     mRenderCondition.wait(RenderLock);
 }

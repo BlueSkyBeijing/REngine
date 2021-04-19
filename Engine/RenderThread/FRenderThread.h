@@ -19,7 +19,7 @@ public:
 
     void SetDirectionalLight(FDirectionalLight* light);
 
-    void OnReadyToRender();
+    void OnProduceOneFrame();
 
     void OnWindowResize(int32 newWidth, int32 newHeight);
 
@@ -42,7 +42,7 @@ public:
 
     inline int32 GetProcessFrameNum() const
     {
-        return mProcessFrameNum;
+        return mFrameSyncSignal;
     }
 protected:
     void start();
@@ -55,6 +55,7 @@ protected:
     void loop();
 
     void processRenderCommand();
+    void processRemainRenderCommand();
 
     void syncMainThread();
 
@@ -62,6 +63,7 @@ private:
     bool mHeartbeat;
     std::atomic_bool mLoadCompleted;
     std::atomic_bool mInited;
+    int32 mFrameCount;
 
     FEngine* mEngine;
     FRHI* mRHI;
@@ -72,7 +74,7 @@ private:
 
     std::mutex mRenderMutex;
     std::condition_variable mRenderCondition;
-    std::atomic_int32_t mProcessFrameNum;
+    std::atomic_int32_t mFrameSyncSignal;
 
     std::thread* mRenderThread;
     std::vector<FRenderCommand*> mRenderCommands[FRAME_BUFFER_NUM];

@@ -8,6 +8,7 @@ float4 PSMain(VertexOut pixelIn) : SV_Target
     float4 outColor;
     
     const float4 diffuseColor = DiffuseMap.Sample(DiffuseSamplerState, pixelIn.TexCoord);
+    //view dir is different from camare dir,it's diffent in every pixel
     const float3 viewDir = normalize(CameraPos - pixelIn.PosW.xyz);
     const float lightIntensity = 0.8f;
     float3 lighting = BlinnPhong(pixelIn.Normal, DirectionalLightDir, DirectionalLightColor, lightIntensity, viewDir, diffuseColor.rgb);

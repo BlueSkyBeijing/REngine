@@ -92,12 +92,6 @@ void FEngine::loop()
             update();
         }
     }
-
-    //stop wait main thread
-    if (!mHeartbeat)
-    {
-        mRenderThread->OnReadyToRender();
-    }
 }
 
 void FEngine::Exit()
@@ -117,7 +111,7 @@ void FEngine::update()
 
     mWorld->GetCamera()->Update();
 
-    mRenderThread->OnReadyToRender();
+    mRenderThread->OnProduceOneFrame();
 }
 
 void FEngine::createWindow()
