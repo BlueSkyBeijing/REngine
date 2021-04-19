@@ -18,6 +18,10 @@ const int32 FConfigManager::FrameBufferNum = 2;
 
 std::string FConfigManager::DefaultMap = "Default.map";
 
+int32 FConfigManager::WindowWidth = 1366;
+int32 FConfigManager::WindowHeight = 768;
+
+
 FConfigManager::FConfigManager()
 {
 }
@@ -43,6 +47,12 @@ void FConfigManager::Init()
     {
         DefaultMap = defaultMap;
     }
+
+    std::stringstream streamWidth(engineConfig.GetValue("Render", "WindowWidth", "1024"));
+    streamWidth >> WindowWidth;
+
+    std::stringstream streamHeight(engineConfig.GetValue("Render", "WindowHeight", "768"));
+    streamHeight >> WindowHeight;
 }
 
 void FConfigManager::UnInit()

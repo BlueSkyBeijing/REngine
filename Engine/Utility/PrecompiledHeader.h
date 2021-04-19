@@ -16,6 +16,7 @@
 #include <condition_variable>
 #include <type_traits>
 #include <chrono>
+#include <sstream>
 
 #include <assert.h>
 #include <stdint.h>

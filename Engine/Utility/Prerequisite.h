@@ -21,6 +21,7 @@ typedef Eigen::Quaternionf FQuat;
 
 enum EPixelFormat;
 enum EInputClassification;
+enum ELogLevel;
 
 struct FViewPort;
 struct FRect;

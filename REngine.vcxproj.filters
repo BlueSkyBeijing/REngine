@@ -137,9 +137,6 @@
     <ClCompile Include="Engine\RenderThread\D3D12RHI\FD3D12Buffer.cpp">
       <Filter>Engine\RenderThread\D3D12RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\RenderThread\D3D12RHI\FD3D12CommandList.cpp">
-      <Filter>Engine\RenderThread\D3D12RHI</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\RenderThread\D3D12RHI\FD3D12RHI.cpp">
       <Filter>Engine\RenderThread\D3D12RHI</Filter>
     </ClCompile>
@@ -293,9 +290,6 @@
       <Filter>Engine\RenderThread\RHI</Filter>
     </ClInclude>
     <ClInclude Include="Engine\RenderThread\D3D12RHI\FD3D12Buffer.h">
-      <Filter>Engine\RenderThread\D3D12RHI</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\RenderThread\D3D12RHI\FD3D12CommandList.h">
       <Filter>Engine\RenderThread\D3D12RHI</Filter>
     </ClInclude>
     <ClInclude Include="Engine\RenderThread\D3D12RHI\FD3D12Vertex.h">

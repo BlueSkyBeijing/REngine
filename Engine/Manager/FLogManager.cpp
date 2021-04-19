@@ -30,7 +30,23 @@ void FLogManager::UnInit()
     mLogFile = nullptr;
 }
 
-void FLogManager::LogMessage(const char* loginfo)
+void FLogManager::LogMessage(ELogLevel level, const char* loginfo)
 {
-    mLogFile->info(loginfo);
+    switch (level)
+    {
+    case LL_Debug:
+        mLogFile->debug(loginfo);
+        break;
+    case LL_Info:
+        mLogFile->info(loginfo);
+        break;
+    case LL_Warning:
+        mLogFile->warn(loginfo);
+        break;
+    case LL_Error:
+        mLogFile->error(loginfo);
+        break;
+    default:
+        break;
+    }
 }

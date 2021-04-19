@@ -27,6 +27,8 @@ public:
     const static int32 FrameBufferNum;
 
     static std::string DefaultMap;
+    static int32 WindowWidth;
+    static int32 WindowHeight;
 
 private:
 

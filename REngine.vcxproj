@@ -40,7 +40,6 @@
     <ClCompile Include="Engine\RenderThread\D3D12RHI\DDSTextureLoader.cpp" />
     <ClCompile Include="Engine\RenderThread\D3D12RHI\DX12Utility.cpp" />
     <ClCompile Include="Engine\RenderThread\D3D12RHI\FD3D12Buffer.cpp" />
-    <ClCompile Include="Engine\RenderThread\D3D12RHI\FD3D12CommandList.cpp" />
     <ClCompile Include="Engine\RenderThread\D3D12RHI\FD3D12RHI.cpp" />
     <ClCompile Include="Engine\RenderThread\D3D12RHI\FD3D12PipelineState.cpp" />
     <ClCompile Include="Engine\RenderThread\D3D12RHI\FD3D12Resource.cpp" />
@@ -95,7 +94,6 @@
     <ClInclude Include="Engine\RenderThread\D3D12RHI\DDSTextureLoader.h" />
     <ClInclude Include="Engine\RenderThread\D3D12RHI\DX12Utility.h" />
     <ClInclude Include="Engine\RenderThread\D3D12RHI\FD3D12Buffer.h" />
-    <ClInclude Include="Engine\RenderThread\D3D12RHI\FD3D12CommandList.h" />
     <ClInclude Include="Engine\RenderThread\D3D12RHI\FD3D12Vertex.h" />
     <ClInclude Include="Engine\RenderThread\D3D12RHI\FD3D12RHI.h" />
     <ClInclude Include="Engine\RenderThread\D3D12RHI\FD3D12PipelineState.h" />

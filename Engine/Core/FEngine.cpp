@@ -46,7 +46,7 @@ void FEngine::init()
 
     mInited = true;
 
-    TSingleton<FLogManager>::GetInstance().LogMessage("Engine init end.");
+    TSingleton<FLogManager>::GetInstance().LogMessage(LL_Info, "Engine init end.");
 }
 
 void FEngine::unInit()
@@ -116,6 +116,9 @@ void FEngine::update()
 
 void FEngine::createWindow()
 {
+    mWindowWidth = TSingleton<FConfigManager>::GetInstance().WindowWidth;
+    mWindowHeight = TSingleton<FConfigManager>::GetInstance().WindowHeight;
+
     WNDCLASSEX wcex;
     ZeroMemory(&wcex, sizeof(wcex));
     wcex.cbSize = sizeof(WNDCLASSEX);
