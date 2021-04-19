@@ -29,6 +29,8 @@ public:
     static std::string DefaultMap;
     static int32 WindowWidth;
     static int32 WindowHeight;
+    static int32 ShadowMapWidth;
+    static int32 ShadowMapHeight;
 
 private:
 

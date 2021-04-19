@@ -195,7 +195,7 @@ public:
     virtual void ExecuteCommandList() = 0;
     virtual void FlushCommandQueue() = 0;
 
-    virtual void Clear(const FVector4& color) = 0;
+    virtual void Clear(bool clearColor, const FVector4& color, bool clearDepth, float depth, bool clearStencil, uint32 stencil) = 0;
 
     virtual void SetRenderTarget(FRHIRenderTarget* renderTarget) = 0;
     virtual void SetViewPort(FViewPort& viewPort) = 0;
@@ -216,6 +216,7 @@ public:
     virtual FRHIShaderBindings* CreateShaderBindings() = 0;
     virtual FRHIPipelineState* CreatePipelineState(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout) = 0;
     virtual FRHITexture2D* CreateTexture2D(const std::wstring& filePathName, int32 slot) = 0;
+    virtual FRHIRenderTarget* CreateRenderTarget(uint32 width, uint32 hight) = 0;
     virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) = 0;
 
     virtual void UpdateConstantBuffer(FRHIConstantBuffer* constantBuffer, uint32 structureSize, uint8* bufferData) = 0;

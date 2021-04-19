@@ -19,7 +19,7 @@ public:
     virtual void ExecuteCommandList() override;
     virtual void FlushCommandQueue() override;
 
-    virtual void Clear(const FVector4& color) override;
+    virtual void Clear(bool clearColor, const FVector4& color, bool clearDepth, float depth, bool clearStencil, uint32 stencil) override;
 
     virtual void SetRenderTarget(FRHIRenderTarget* renderTarget) override;
     virtual void SetViewPort(FViewPort& viewPort) override;
@@ -40,6 +40,7 @@ public:
     virtual FRHIShaderBindings* CreateShaderBindings() override;
     virtual FRHIPipelineState* CreatePipelineState(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout) override;
     virtual FRHITexture2D* CreateTexture2D(const std::wstring& filePathName, int32 slot) override;
+    virtual FRHIRenderTarget* CreateRenderTarget(uint32 width, uint32 hight) override;
     virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) override;
 
     virtual void UpdateConstantBuffer(FRHIConstantBuffer* constantBuffer, uint32 structureSize, uint8* bufferData) override;

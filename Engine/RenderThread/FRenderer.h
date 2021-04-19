@@ -40,6 +40,10 @@ protected:
     virtual void postProcess();
     virtual void postRender();
 
+    void initShadow();
+    void updateShadow();
+    void unInitShadow();
+
     void createPassConstantBuffer();
     void updatePassConstantBuffer();
 
@@ -52,4 +56,5 @@ private:
     FScene* mScene;
     FView* mView;
     FRHIConstantBuffer* mPassConstantBuffer;
+    FRHIRenderTarget* mShadowMap;
 };

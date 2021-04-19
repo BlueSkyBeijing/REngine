@@ -179,12 +179,30 @@ void FD3D12RHI::FlushCommandQueue()
     }
 }
 
-void FD3D12RHI::Clear(const FVector4& color)
+void FD3D12RHI::Clear(bool clearColor, const FVector4& color, bool clearDepth, float depth, bool clearStencil, uint32 stencil)
 {
     //clear color and depth stencil
-    const float ClearColor[] = { color.x(), color.y(), color.z(), color.w() };
-    mDX12CommandList->ClearRenderTargetView(mRenderTarget->GetRenderBufferView(), ClearColor, 0, nullptr);
-    mDX12CommandList->ClearDepthStencilView(mRenderTarget->GetDepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+    if (clearColor)
+    {
+        const float ClearColor[] = { color.x(), color.y(), color.z(), color.w() };
+        mDX12CommandList->ClearRenderTargetView(mRenderTarget->GetRenderBufferView(), ClearColor, 0, nullptr);
+    }
+
+    uint32 clearFlags = 0;
+    if (clearDepth)
+    {
+        clearFlags |= D3D12_CLEAR_FLAG_DEPTH;
+    }
+
+    if (clearStencil)
+    {
+        clearFlags |= D3D12_CLEAR_FLAG_STENCIL;
+    }
+
+    if (clearFlags != 0)
+    {
+        mDX12CommandList->ClearDepthStencilView(mRenderTarget->GetDepthStencilView(), (D3D12_CLEAR_FLAGS)clearFlags, depth, stencil, 0, nullptr);
+    }
 
 }
 
@@ -532,6 +550,16 @@ FRHITexture2D* FD3D12RHI::CreateTexture2D(const std::wstring& filePathName, int3
     mDX12CommandQueue->ExecuteCommandLists(1, CommandLists);
 
     return texture2D;
+}
+
+
+FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight)
+{
+    FRHIRenderTarget* renderTarget = new FD3D12RenderTarget(width, hight, DXGI_FORMAT_R8G8B8A8_UNORM);
+    renderTarget->Init();
+
+
+    return renderTarget;
 }
 
 FRHIRenderWindow* FD3D12RHI::CreateRenderWindow(uint32 width, uint32 hight)

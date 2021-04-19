@@ -38,11 +38,14 @@ void FRenderer::Init()
     createPassConstantBuffer();
     mRHI->FlushCommandQueue();
 
+    initShadow();
 }
 
 void FRenderer::UnInit()
 {
     mRHI->FlushCommandQueue();
+
+    unInitShadow();
 
     mPassConstantBuffer->UnInit();
     delete mPassConstantBuffer;
@@ -66,6 +69,8 @@ void FRenderer::Render()
 
     initView();
 
+    updateShadow();
+
     drawRenderables();
 
     postProcess();
@@ -76,7 +81,7 @@ void FRenderer::Render()
 void FRenderer::clear()
 {
     const FVector4 clearColor(0.5f, 0.5f, 0.5f, 1.0f);
-    mRHI->Clear(clearColor);
+    mRHI->Clear(true, clearColor, true, 1, true, 0);
 }
 
 void FRenderer::initView()
@@ -143,6 +148,25 @@ void FRenderer::postRender()
 
     mRHI->ExecuteCommandList();
     mRHI->FlushCommandQueue();
+}
+
+void FRenderer::initShadow()
+{
+    //create shadow depth render target
+    mShadowMap = mRHI->CreateRenderTarget(TSingleton<FConfigManager>::GetInstance().ShadowMapWidth,
+        TSingleton<FConfigManager>::GetInstance().ShadowMapHeight);
+}
+
+void FRenderer::updateShadow()
+{
+    //update light view
+
+    //update shadow map
+}
+void FRenderer::unInitShadow()
+{
+    delete mShadowMap;
+    mShadowMap = nullptr;
 }
 
 void FRenderer::createPassConstantBuffer()

@@ -21,6 +21,8 @@ std::string FConfigManager::DefaultMap = "Default.map";
 int32 FConfigManager::WindowWidth = 1366;
 int32 FConfigManager::WindowHeight = 768;
 
+int32 FConfigManager::ShadowMapWidth = 1024;
+int32 FConfigManager::ShadowMapHeight = 1024;
 
 FConfigManager::FConfigManager()
 {
@@ -48,11 +50,18 @@ void FConfigManager::Init()
         DefaultMap = defaultMap;
     }
 
-    std::stringstream streamWidth(engineConfig.GetValue("Render", "WindowWidth", "1024"));
-    streamWidth >> WindowWidth;
+    std::stringstream streamWindowWidth(engineConfig.GetValue("Render", "WindowWidth", "1024"));
+    streamWindowWidth >> WindowWidth;
 
-    std::stringstream streamHeight(engineConfig.GetValue("Render", "WindowHeight", "768"));
-    streamHeight >> WindowHeight;
+    std::stringstream streamWindowHeight(engineConfig.GetValue("Render", "WindowHeight", "768"));
+    streamWindowHeight >> WindowHeight;
+
+    std::stringstream streamShadowMapWidth(engineConfig.GetValue("Render", "ShadowMapWidth", "1024"));
+    streamShadowMapWidth >> ShadowMapWidth;
+
+    std::stringstream streamShadowMapHeight(engineConfig.GetValue("Render", "ShadowMapHeight", "1024"));
+    streamShadowMapHeight >> ShadowMapHeight;
+
 }
 
 void FConfigManager::UnInit()
