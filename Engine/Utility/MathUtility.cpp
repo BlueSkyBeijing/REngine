@@ -5,7 +5,7 @@
 void ConstructMatrixLookAtLH(FMatrix4x4& viewMatrix, FVector3& pos, FVector3& target, FVector3& up)
 {
     //from:https://docs.microsoft.com/en-us/previous-versions/windows/desktop/bb281710(v=vs.85)
-    //zaxis = normal(cameraTarget - cameraPosition)
+    //    zaxis = normal(cameraTarget - cameraPosition)
     //    xaxis = normal(cross(cameraUpVector, zaxis))
     //    yaxis = cross(zaxis, xaxis)
 
@@ -38,10 +38,10 @@ void ConstructMatrixLookRight(FMatrix4x4& viewMatrix, FVector3& pos, FVector3& l
 void ConstructMatrixPerspectiveFovLH(FMatrix4x4& projectionMatrix, float fovY, float aspect, float nearPlane, float farPlane)
 {
     //from:https://docs.microsoft.com/en-us/previous-versions/windows/desktop/bb281727(v=vs.85)
-//    w       0       0                                             0
-//    0       h       0                                             0
-//    0       0       zfarPlane / (zfarPlane - znearPlane)          1
-//    0       0 - znearPlane * zfarPlane / (zfarPlane - znearPlane)  0
+    //    w       0       0                                             0
+    //    0       h       0                                             0
+    //    0       0       zfarPlane / (zfarPlane - znearPlane)          1
+    //    0       0 - znearPlane * zfarPlane / (zfarPlane - znearPlane)  0
 
     const float theta = fovY * 0.5f;
     const float range = farPlane - nearPlane;
@@ -66,4 +66,28 @@ FMatrix4x4 ConstructAffineMatrix(float rotX, float rotY, float rotZ, FVector3 tr
     transform.pretranslate(trans);
 
     return transform.matrix();
+}
+
+void ConstructMatrixOrthoOffCenterLH(
+    FMatrix4x4& matrix,
+    float left,
+    float right,
+    float bottom,
+    float top,
+    float znearPlane,
+    float zfarPlane)
+{
+    //from:https://docs.microsoft.com/en-us/previous-versions/windows/desktop/bb281724(v=vs.85)
+    //    2 / (right - l)           0                         0                                  0
+    //    0                     2 / (top - bottom)            0                                  0
+    //    0                     0                         1 / (zfarPlane - znearPlane)           0
+    //    (l + right) / (l - right)  (top + bottom) / (bottom - top)  znearPlane / (znearPlane - zfarPlane)  1
+    matrix.setIdentity();
+
+    matrix(0, 0) = 2.0f / (right - 1);
+    matrix(1, 1) = 2.0f / (top - bottom);
+    matrix(2, 2) = 1.0f / (zfarPlane - znearPlane);
+    matrix(3, 0) = (left + right) / (left - right);
+    matrix(3, 1) = (top + bottom) / (bottom - top);
+    matrix(3, 2) = znearPlane / (znearPlane - zfarPlane);
 }

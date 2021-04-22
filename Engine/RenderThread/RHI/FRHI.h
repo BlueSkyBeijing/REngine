@@ -215,8 +215,9 @@ public:
     virtual FRHIShader* CreateShader(const std::wstring& filePathName, const std::string& EnterPoint, const std::string& target) = 0;
     virtual FRHIShaderBindings* CreateShaderBindings() = 0;
     virtual FRHIPipelineState* CreatePipelineState(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout) = 0;
+    virtual FRHIPipelineState* CreatePipelineStateShadow(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout) = 0;
     virtual FRHITexture2D* CreateTexture2D(const std::wstring& filePathName, int32 slot) = 0;
-    virtual FRHIRenderTarget* CreateRenderTarget(uint32 width, uint32 hight) = 0;
+    virtual FRHIRenderTarget* CreateRenderTarget(uint32 width, uint32 hight, uint32 numTarget, EPixelFormat formatTarget, EPixelFormat formatDepthStencil) = 0;
     virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) = 0;
 
     virtual void UpdateConstantBuffer(FRHIConstantBuffer* constantBuffer, uint32 structureSize, uint8* bufferData) = 0;
@@ -226,7 +227,7 @@ public:
     virtual void BeginEvent(std::string& eventName) = 0;
     virtual void EndEvent() = 0;
 
-    virtual void Present() = 0;
+    virtual void Present(FRHIRenderWindow* window) = 0;
 
 protected:
 

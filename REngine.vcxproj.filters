@@ -375,5 +375,11 @@
     <FxCompile Include="Engine\Shader\Tonemap.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
+    <FxCompile Include="Engine\Shader\ShadowFiltering.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\Shader\ShadowDepthVS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

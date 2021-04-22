@@ -1,4 +1,5 @@
 #include "ForwardShadingCommon.hlsl"
+#include "ShadowFiltering.hlsl"
 
 Texture2D DiffuseMap : register(t0);
 SamplerState DiffuseSamplerState : register(s0);
@@ -11,7 +12,8 @@ float4 PSMain(VertexOut pixelIn) : SV_Target
     //view dir is different from camare dir,it's diffent in every pixel
     const float3 viewDir = normalize(CameraPos - pixelIn.PosW.xyz);
     const float lightIntensity = 0.8f;
-    float3 lighting = BlinnPhong(pixelIn.Normal, DirectionalLightDir, DirectionalLightColor, lightIntensity, viewDir, diffuseColor.rgb);
+    const float shadow = ShadowFiltering(pixelIn.ShadowPosH);
+    float3 lighting = BlinnPhong(pixelIn.Normal, DirectionalLightDir, DirectionalLightColor, lightIntensity, viewDir, diffuseColor.rgb, shadow);
 
     outColor.rgb = lighting;
     outColor.a = 1.0f;

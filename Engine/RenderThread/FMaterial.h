@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 #include "FRHIResource.h"
@@ -7,8 +7,8 @@
 class FMaterial : public FRHIResource
 {
 public:
-	FMaterial();
-	~FMaterial();
+    FMaterial();
+    ~FMaterial();
 
     void Init();
     void UnInit();
@@ -16,6 +16,9 @@ public:
 public:
     FRHIShader* VertexShader;
     FRHIShader* PixelShader;
+
+    FRHIShader* VertexShaderShadow;
+    FRHIShader* PixelShaderShadow;
 
     FRHITexture2D* BaseColor;
     FRHITexture2D* MetallicSpecularRoughness;

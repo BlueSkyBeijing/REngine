@@ -1,7 +1,7 @@
 
 // Blinn-Phong
 // from: https://en.wikipedia.org/wiki/Blinn%E2%80%93Phong_reflection_model
-float3 BlinnPhong(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor)
+float3 BlinnPhong(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float shadow)
 {
     const float3 ambientColor = float3(0.1f, 0.1f, 0.1f);
     const float3 specularColor = float3(1.0f, 1.0f, 1.0f);
@@ -13,7 +13,7 @@ float3 BlinnPhong(float3 normal, float3 lightDir, float3 lightColor, float light
     float specular = pow(specAngle, shininess);
     
     float3 colorLinear = ambientColor +
-                     diffuseColor * lambertian * lightColor * lightIntensity +
+                     diffuseColor * lambertian * lightColor * lightIntensity * shadow +
                      specularColor * specular * lightColor * lightIntensity;
     	 
     return colorLinear;

@@ -22,7 +22,7 @@ UStaticMeshObject::~UStaticMeshObject()
 
 void UStaticMeshObject::Load()
 {
-    Name = "mesh01";
+    Name = FullStaticMeshPath;
 
     mStaticMesh = new UStaticMesh();
     mStaticMesh->FilePathName = FullStaticMeshPath;

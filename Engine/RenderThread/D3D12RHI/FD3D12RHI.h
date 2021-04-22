@@ -39,8 +39,9 @@ public:
     virtual FRHIShader* CreateShader(const std::wstring& filePathName, const std::string& enterPoint, const std::string& target) override;
     virtual FRHIShaderBindings* CreateShaderBindings() override;
     virtual FRHIPipelineState* CreatePipelineState(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout) override;
+    virtual FRHIPipelineState* CreatePipelineStateShadow(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout) override;
     virtual FRHITexture2D* CreateTexture2D(const std::wstring& filePathName, int32 slot) override;
-    virtual FRHIRenderTarget* CreateRenderTarget(uint32 width, uint32 hight) override;
+    virtual FRHIRenderTarget* CreateRenderTarget(uint32 width, uint32 hight, uint32 numTarget, EPixelFormat formatTarget, EPixelFormat formatDepthStencil) override;
     virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) override;
 
     virtual void UpdateConstantBuffer(FRHIConstantBuffer* constantBuffer, uint32 structureSize, uint8* bufferData) override;
@@ -50,13 +51,13 @@ public:
     virtual void BeginEvent(std::string& eventName) override;
     virtual void EndEvent() override;
 
-    virtual void Present() override;
+    virtual void Present(FRHIRenderWindow* window) override;
 
 protected:
     D3D_PRIMITIVE_TOPOLOGY translatePrimitiveType(EPrimitiveType primitiveType);
 
 private:
-    FD3D12RenderWindow* mRenderTarget;
+    FRHIRenderTarget* mRenderTargetCurrent;
 
     Microsoft::WRL::ComPtr <IDXGIFactory2> mDXGIFactory;
     Microsoft::WRL::ComPtr <IDXGISwapChain> mDXGISwapChain;
@@ -69,6 +70,8 @@ private:
     Microsoft::WRL::ComPtr <ID3D12RootSignature> mDX12RootSignature;
     Microsoft::WRL::ComPtr <ID3D12PipelineState> mDX12PipleLineState;
 
+    Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> mDX12DescriptorHeapRenderTarget;
+    Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> mDX12DescriptorHeapDepthStencil;
     Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> mCBVSRVUAVHeap;
 
     Microsoft::WRL::ComPtr <ID3D12Resource> mCurTexture;

@@ -3,11 +3,28 @@
 
 #include "FRHIBuffer.h"
 
-struct FPassConstant
+struct FMainPassConstant
 {
     FMatrix4x4 View;
     FMatrix4x4 Proj;
     FMatrix4x4 ViewProj;
+    FMatrix4x4 ShadowTransform;
+    FVector3 CameraPos;
+    float _Placeholder0;
+    FVector3 CameraDir;
+    float _Placeholder1;
+    FVector3 DirectionalLightDir;
+    float _Placeholder2;
+    FVector3 DirectionalLightColor;
+    float _Placeholder3;
+};
+
+struct FShadowPassConstant
+{
+    FMatrix4x4 View;
+    FMatrix4x4 Proj;
+    FMatrix4x4 ViewProj;
+    FMatrix4x4 ShadowTransform;
     FVector3 CameraPos;
     float _Placeholder0;
     FVector3 CameraDir;
@@ -44,17 +61,23 @@ protected:
     void updateShadow();
     void unInitShadow();
 
-    void createPassConstantBuffer();
-    void updatePassConstantBuffer();
+    void createMainPassConstantBuffer();
+    void updateMainPassConstantBuffer();
+
+    void creatShadowPassConstantBuffer();
+    void updateShadowPassConstantBuffer();
 
 private:
-    void _createPassConstant(FPassConstant& constant);
+    void _createMainPassConstant(FMainPassConstant& constant);
+    void _createShadowPassConstant(FShadowPassConstant& constant);
 
 private:
     FRHI* mRHI;
-    FRHIRenderWindow* mRenderWindow;
+    FRHIRenderTarget* mRenderTarget;
     FScene* mScene;
     FView* mView;
-    FRHIConstantBuffer* mPassConstantBuffer;
+    FRHIConstantBuffer* mMainPassConstantBuffer;
+    FRHIConstantBuffer* mShadowPassConstantBuffer;
     FRHIRenderTarget* mShadowMap;
+    FMatrix4x4 mShadowTransform;
 };

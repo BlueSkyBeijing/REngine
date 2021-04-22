@@ -1,4 +1,4 @@
-#include "PrecompiledHeader.h"
+﻿#include "PrecompiledHeader.h"
 
 #include "FRHIRenderTarget.h"
 #include "FRHI.h"
@@ -6,9 +6,11 @@
 
 FRHIRenderTarget::FRHIRenderTarget(
     uint32 width,
-    uint32 height):
+    uint32 height,
+    uint32 numTarget) :
     Width(width),
-    Height(height)
+    Height(height),
+    NumTarget(numTarget)
 {
 }
 
@@ -27,9 +29,10 @@ void FRHIRenderTarget::UnInit()
 }
 
 FRHIRenderWindow::FRHIRenderWindow(
-    uint32 width, 
-    uint32 height):
-    FRHIRenderTarget(width, height)
+    uint32 width,
+    uint32 height,
+    uint32 numTarget) :
+    FRHIRenderTarget(width, height, numTarget)
 {
 }
 
@@ -39,13 +42,14 @@ FRHIRenderWindow::~FRHIRenderWindow()
 
 void FRHIRenderWindow::Init()
 {
+
 }
 
 void FRHIRenderWindow::UnInit()
 {
+
 }
 
 void FRHIRenderWindow::Present()
 {
 }
-

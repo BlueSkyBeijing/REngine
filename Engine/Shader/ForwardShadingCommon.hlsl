@@ -11,6 +11,7 @@ struct VertexOut
 {
     float4 Pos : SV_POSITION;
     float4 PosW : POSITION;
+    float4 ShadowPosH : POSITION1;
     float3 Normal : NORMAL;
     float2 TexCoord : TEXCOORD;
 };
@@ -25,13 +26,14 @@ cbuffer cbPass : register(b1)
     float4x4 View;
     float4x4 Proj;
     float4x4 ViewProj;
+    float4x4 ShadowTransform;
     float3 CameraPos;
-    float _Placeholder0;
+    float _placeholder0;
     float3 CameraDir;
-    float _Placeholder1;
+    float _placeholder1;
     float3 DirectionalLightDir;
-    float _Placeholder2;
+    float _placeholder2;
     float3 DirectionalLightColor;
-    float _Placeholder3;
+    float _placeholder3;
 };
 

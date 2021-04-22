@@ -14,7 +14,9 @@ public:
 
     FRHIPipelineState* CreatePipleLineState(FRenderProxy* renderProxy);
     FRHIPipelineState* GetPipleLineState(FRenderProxy* renderProxy);
+    FRHIPipelineState* GetPipleLineStateShadow(FRenderProxy* renderProxy);
 
 private:
     FRHIPipelineState* mPipelineState;
+    FRHIPipelineState* mPipelineStateShadow;
 };

@@ -32,6 +32,8 @@ FRHIPipelineState* FPipelineStateManager::CreatePipleLineState(FRenderProxy* ren
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
 
         mPipelineState = rhi->CreatePipelineState(shaderBindings, renderProxy->Material->VertexShader, renderProxy->Material->PixelShader, &renderProxy->VertexLayout);
+
+        mPipelineStateShadow = rhi->CreatePipelineStateShadow(shaderBindings, renderProxy->Material->VertexShaderShadow, nullptr, &renderProxy->VertexLayout);
     }
 
     return mPipelineState;
@@ -40,6 +42,11 @@ FRHIPipelineState* FPipelineStateManager::CreatePipleLineState(FRenderProxy* ren
 FRHIPipelineState* FPipelineStateManager::GetPipleLineState(FRenderProxy* renderProxy)
 {
     return mPipelineState;
+}
+
+FRHIPipelineState* FPipelineStateManager::GetPipleLineStateShadow(FRenderProxy* renderProxy)
+{
+    return mPipelineStateShadow;
 }
 
 void FPipelineStateManager::Init()
@@ -53,4 +60,11 @@ void FPipelineStateManager::UnInit()
         delete mPipelineState;
         mPipelineState = nullptr;
     }
+
+    if (mPipelineStateShadow != nullptr)
+    {
+        delete mPipelineStateShadow;
+        mPipelineStateShadow = nullptr;
+    }
+
 }
