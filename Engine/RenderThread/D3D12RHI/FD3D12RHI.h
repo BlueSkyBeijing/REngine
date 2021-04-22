@@ -48,7 +48,7 @@ public:
 
     virtual void Transition(const FRHITransitionInfo& info) override;
 
-    virtual void BeginEvent(std::string& eventName) override;
+    virtual void BeginEvent(const char* eventName) override;
     virtual void EndEvent() override;
 
     virtual void Present(FRHIRenderWindow* window) override;

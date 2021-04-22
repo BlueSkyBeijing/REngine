@@ -224,7 +224,7 @@ public:
 
     virtual void Transition(const FRHITransitionInfo& info) = 0;
 
-    virtual void BeginEvent(std::string& eventName) = 0;
+    virtual void BeginEvent(const char* eventName) = 0;
     virtual void EndEvent() = 0;
 
     virtual void Present(FRHIRenderWindow* window) = 0;

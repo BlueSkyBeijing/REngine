@@ -119,12 +119,13 @@ void FRenderer::setViewPort()
 
 void FRenderer::drawRenderables()
 {
+    mRHI->BeginEvent("Main");
     const std::vector<FRenderProxy*>& renderProxys = mScene->GetRenderProxys();
     for (auto it = renderProxys.begin(); it != renderProxys.end(); it++)
     {
         FRenderProxy* renderProxy = *it;
 
-        mRHI->BeginEvent(renderProxy->DebugName);
+        mRHI->BeginEvent(renderProxy->DebugName.c_str());
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(renderProxy);
 
@@ -139,6 +140,7 @@ void FRenderer::drawRenderables()
 
         mRHI->EndEvent();
     }
+    mRHI->EndEvent();
 }
 
 void FRenderer::postProcess()
@@ -167,8 +169,7 @@ void FRenderer::initShadow()
 
 void FRenderer::updateShadow()
 {
-    std::string debugString("ShadowDepth");
-    mRHI->BeginEvent(debugString);
+    mRHI->BeginEvent("ShadowDepth");
     //update light view
     updateShadowPassConstantBuffer();
 
@@ -191,7 +192,7 @@ void FRenderer::updateShadow()
     {
         FRenderProxy* renderProxy = *it;
 
-        mRHI->BeginEvent(renderProxy->DebugName);
+        mRHI->BeginEvent(renderProxy->DebugName.c_str());
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateShadow(renderProxy);
 
@@ -240,9 +241,9 @@ void FRenderer::creatShadowPassConstantBuffer()
 
 void FRenderer::updateShadowPassConstantBuffer()
 {
-    //FMainPassConstant shadowConstant;
-    //_createMainPassConstant(shadowConstant);
-    //mRHI->UpdateConstantBuffer(mShadowPassConstantBuffer, sizeof(FShadowPassConstant), (uint8*)&shadowConstant);
+    FShadowPassConstant shadowConstant;
+    _createShadowPassConstant(shadowConstant);
+    mRHI->UpdateConstantBuffer(mShadowPassConstantBuffer, sizeof(FShadowPassConstant), (uint8*)&shadowConstant);
 }
 
 
@@ -255,7 +256,7 @@ void FRenderer::_createMainPassConstant(FMainPassConstant& constant)
     const float fovY = mView->FOV;
     const float aspect = mView->AspectRatio;
     const float nearPlane = 1.0f;
-    const float farPlane = 100000.0f;
+    const float farPlane = 1000000.0f;
     ConstructMatrixPerspectiveFovLH(projectionMatrix, fovY, aspect, nearPlane, farPlane);
 
     constant.View = viewMatrix;
@@ -276,12 +277,10 @@ void FRenderer::_createShadowPassConstant(FShadowPassConstant& constant)
 {
     FDirectionalLight* light = mScene->GetDirectionalLight();
     //should use negative value of camera direction in shader
-    FVector3 dir(-1.0f, -1.0f, -1.0f);
-    dir.normalize();
-    constant.DirectionalLightDir = -dir;
+    constant.DirectionalLightDir = -light->Direction;
     const float sceneBoundsRadius = 2000.0f;
     const FVector3 sceneBoundsCenter(0.0f, 0.0f, 0.0f);
-    FVector3 lightDir = dir;
+    FVector3 lightDir = light->Direction;
     FVector3 lightPos = -sceneBoundsRadius * lightDir * 0.8f;
     FVector3 targetPos = sceneBoundsCenter;
     FVector3 lightUp(0.0f, 0.0f, 1.0f);
@@ -293,7 +292,7 @@ void FRenderer::_createShadowPassConstant(FShadowPassConstant& constant)
     FVector4 tt(sceneBoundsCenter.x(), sceneBoundsCenter.y(), sceneBoundsCenter.z(), 0.0f);
     sphereCenterLS = lightView * tt;
 
-    //ortho frustum in light space encloses scene.
+    //orthogonal frustum in light space encloses scene
     float l = sphereCenterLS.x() - sceneBoundsRadius;
     float b = sphereCenterLS.z() - sceneBoundsRadius;
     float n = sphereCenterLS.y() - sceneBoundsRadius;
@@ -305,18 +304,17 @@ void FRenderer::_createShadowPassConstant(FShadowPassConstant& constant)
     ConstructMatrixOrthoOffCenterLH(lightProj, l, r, b, t, n, f);
 
     //transform NDC space [-1,+1]^2 to texture space [0,1]^2
-    FMatrix4x4 T;
+    FMatrix4x4 transformNDC;
 
-    T << 0.5f, 0.0f, 0.0f, 0.0f,
+    transformNDC << 0.5f, 0.0f, 0.0f, 0.0f,
         0.0f, -0.5f, 0.0f, 0.0f,
         0.0f, 0.0f, 1.0f, 0.0f,
         0.5f, 0.5f, 0.0f, 1.0f;
 
-    FMatrix4x4 S = lightView * lightProj * T;
+    mShadowTransform = lightView * lightProj * transformNDC;
 
     constant.View = lightView;
     constant.Proj = lightProj;
     constant.ViewProj = lightView * lightProj;
-    constant.ShadowTransform = S;
-    mShadowTransform = S;
+    constant.ShadowTransform = mShadowTransform;
 }

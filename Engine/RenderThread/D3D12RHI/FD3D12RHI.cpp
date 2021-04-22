@@ -243,9 +243,9 @@ void FD3D12RHI::Clear(bool clearColor, const FVector4& color, bool clearDepth, f
 
 }
 
-void FD3D12RHI::BeginEvent(std::string& eventName)
+void FD3D12RHI::BeginEvent(const char* eventName)
 {
-    PIXBeginEvent(mDX12CommandList.Get(), 0xffffffff, eventName.c_str());
+    PIXBeginEvent(mDX12CommandList.Get(), 0xffffffff, eventName);
 }
 
 void FD3D12RHI::EndEvent()
