@@ -282,7 +282,7 @@ void FRenderer::_createShadowPassConstant(FShadowPassConstant& constant)
     const float sceneBoundsRadius = 2000.0f;
     const FVector3 sceneBoundsCenter(0.0f, 0.0f, 0.0f);
     FVector3 lightDir = dir;
-    FVector3 lightPos = -sceneBoundsRadius * lightDir;
+    FVector3 lightPos = -sceneBoundsRadius * lightDir * 0.8f;
     FVector3 targetPos = sceneBoundsCenter;
     FVector3 lightUp(0.0f, 0.0f, 1.0f);
     FMatrix4x4 lightView;
