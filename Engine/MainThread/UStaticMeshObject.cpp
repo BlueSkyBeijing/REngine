@@ -22,8 +22,6 @@ UStaticMeshObject::~UStaticMeshObject()
 
 void UStaticMeshObject::Load()
 {
-    Name = FullStaticMeshPath;
-
     mStaticMesh = new UStaticMesh();
     mStaticMesh->FilePathName = FullStaticMeshPath;
     mStaticMesh->Load();

@@ -50,6 +50,11 @@ void FRenderer::UnInit()
     mMainPassConstantBuffer->UnInit();
     delete mMainPassConstantBuffer;
     mMainPassConstantBuffer = nullptr;
+
+    mShadowPassConstantBuffer->UnInit();
+    delete mShadowPassConstantBuffer;
+    mShadowPassConstantBuffer = nullptr;
+
 }
 
 void FRenderer::preRender()
@@ -167,6 +172,14 @@ void FRenderer::updateShadow()
     //update light view
     updateShadowPassConstantBuffer();
 
+    //viewport
+    FViewPort viewPort = { 0.0f, 0.0f, static_cast<float>(mShadowMap->Width), static_cast<float>(mShadowMap->Height), 0.0f, 1.0f };
+    //scissor rectangle
+    FRect scissorRect = { 0, 0, static_cast<LONG>(mShadowMap->Width), static_cast<LONG>(mShadowMap->Height) };
+
+    mRHI->SetViewPort(viewPort);
+    mRHI->SetSetScissor(scissorRect);
+
     //update shadow map
     mRHI->SetRenderTarget(mShadowMap);
 
@@ -187,7 +200,7 @@ void FRenderer::updateShadow()
         mRHI->SetVertexBuffer(renderProxy->VertexBuffer);
         mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
         mRHI->SetConstantBuffer(renderProxy->ConstantBuffer);
-        mRHI->SetConstantBuffer(mMainPassConstantBuffer);
+        mRHI->SetConstantBuffer(mShadowPassConstantBuffer);
 
         mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
 
@@ -222,7 +235,7 @@ void FRenderer::creatShadowPassConstantBuffer()
 {
     FShadowPassConstant shadowConstant;
     _createShadowPassConstant(shadowConstant);
-    //mShadowPassConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FShadowPassConstant), (uint8*)&shadowConstant, 3);
+    mShadowPassConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FShadowPassConstant), (uint8*)&shadowConstant, 3);
 }
 
 void FRenderer::updateShadowPassConstantBuffer()
@@ -263,11 +276,13 @@ void FRenderer::_createShadowPassConstant(FShadowPassConstant& constant)
 {
     FDirectionalLight* light = mScene->GetDirectionalLight();
     //should use negative value of camera direction in shader
-    constant.DirectionalLightDir = -light->Direction;
-    const float sceneBoundsRadius = 100000.0f;
+    FVector3 dir(-1.0f, -1.0f, -1.0f);
+    dir.normalize();
+    constant.DirectionalLightDir = -dir;
+    const float sceneBoundsRadius = 2000.0f;
     const FVector3 sceneBoundsCenter(0.0f, 0.0f, 0.0f);
-    FVector3 lightDir = -light->Direction;
-    FVector3 lightPos = -2.0f * sceneBoundsRadius * lightDir;
+    FVector3 lightDir = dir;
+    FVector3 lightPos = -sceneBoundsRadius * lightDir;
     FVector3 targetPos = sceneBoundsCenter;
     FVector3 lightUp(0.0f, 0.0f, 1.0f);
     FMatrix4x4 lightView;
@@ -280,11 +295,11 @@ void FRenderer::_createShadowPassConstant(FShadowPassConstant& constant)
 
     //ortho frustum in light space encloses scene.
     float l = sphereCenterLS.x() - sceneBoundsRadius;
-    float b = sphereCenterLS.y() - sceneBoundsRadius;
-    float n = sphereCenterLS.z() - sceneBoundsRadius;
+    float b = sphereCenterLS.z() - sceneBoundsRadius;
+    float n = sphereCenterLS.y() - sceneBoundsRadius;
     float r = sphereCenterLS.x() + sceneBoundsRadius;
-    float t = sphereCenterLS.y() + sceneBoundsRadius;
-    float f = sphereCenterLS.z() + sceneBoundsRadius;
+    float t = sphereCenterLS.z() + sceneBoundsRadius;
+    float f = sphereCenterLS.y() + sceneBoundsRadius;
 
     FMatrix4x4 lightProj;
     ConstructMatrixOrthoOffCenterLH(lightProj, l, r, b, t, n, f);

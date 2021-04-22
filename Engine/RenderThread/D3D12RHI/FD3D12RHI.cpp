@@ -21,7 +21,7 @@ int32 FD3D12RHI::msObjectSRVSlot = 0;
 int32 FD3D12RHI::msObjectCBVSlot = 1;
 
 int32 FD3D12RHI::msPassSRVRange = 1;
-int32 FD3D12RHI::msPassCBVRange = 1;
+int32 FD3D12RHI::msPassCBVRange = 2;
 
 int32 FD3D12RHI::msObjectCBVRange = 64;
 int32 FD3D12RHI::msObjectSRVRange = 64;
@@ -614,7 +614,7 @@ FRHIPipelineState* FD3D12RHI::CreatePipelineStateShadow(FRHIShaderBindings* shad
     psoDesc.InputLayout = { (D3D12_INPUT_ELEMENT_DESC*)vertexLayout->Elements.data(), numElements };
     psoDesc.pRootSignature = dynamic_cast<FD3D12ShaderBindings*>(shaderBindings)->mDX12RootSignature.Get();
     psoDesc.DepthStencilState.DepthEnable = TRUE;
-    psoDesc.DepthStencilState.StencilEnable = TRUE;
+    psoDesc.DepthStencilState.StencilEnable = FALSE;
     psoDesc.VS =
     {
         reinterpret_cast<BYTE*>(vs->mShader->GetBufferPointer()),
@@ -643,11 +643,10 @@ FRHIPipelineState* FD3D12RHI::CreatePipelineStateShadow(FRHIShaderBindings* shad
     RasterizerState.ForcedSampleCount = 0;
     RasterizerState.ConservativeRaster = D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF;
 
-    psoDesc.RasterizerState.DepthBias = 100000;
-    psoDesc.RasterizerState.DepthBiasClamp = 0.0f;
-    psoDesc.RasterizerState.SlopeScaledDepthBias = 1.0f;
-
     psoDesc.RasterizerState = RasterizerState;
+    psoDesc.RasterizerState.DepthBias = 2;
+    psoDesc.RasterizerState.DepthBiasClamp = 0.0f;
+    psoDesc.RasterizerState.SlopeScaledDepthBias = 2.0f;
     psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
     psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
     psoDesc.SampleMask = UINT_MAX;

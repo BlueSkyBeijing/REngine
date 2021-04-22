@@ -84,7 +84,7 @@ void ConstructMatrixOrthoOffCenterLH(
     //    (l + right) / (l - right)  (top + bottom) / (bottom - top)  znearPlane / (znearPlane - zfarPlane)  1
     matrix.setIdentity();
 
-    matrix(0, 0) = 2.0f / (right - 1);
+    matrix(0, 0) = 2.0f / (right - left);
     matrix(1, 1) = 2.0f / (top - bottom);
     matrix(2, 2) = 1.0f / (zfarPlane - znearPlane);
     matrix(3, 0) = (left + right) / (left - right);

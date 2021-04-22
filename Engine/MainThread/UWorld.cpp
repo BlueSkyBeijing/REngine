@@ -106,6 +106,7 @@ void UWorld::Load()
         staticMeshObject->FullStaticMeshPath = FConfigManager::DefaultStaticMeshPath +
             std::string(staticMeshObjectDatas[staticMeshObjectDataIndex].ResourceName.c_str()) +
             FConfigManager::DefaultStaticMeshFileSuffix;
+        staticMeshObject->Name = std::string(staticMeshObjectDatas[staticMeshObjectDataIndex].ResourceName.c_str());
         staticMeshObject->Load();
 
         *it = staticMeshObject;
