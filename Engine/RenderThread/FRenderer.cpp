@@ -184,7 +184,7 @@ void FRenderer::updateShadow()
     //update shadow map
     mRHI->SetRenderTarget(mShadowMap);
 
-    const FRHITransitionInfo infoBegin(mShadowMap, ACCESS_DEPTH_READ, ACCESS_DEPTH_WRITE);
+    const FRHITransitionInfo infoBegin(mShadowMap, ACCESS_GENERIC_READ, ACCESS_DEPTH_WRITE);
     mRHI->Transition(infoBegin);
 
     const std::vector<FRenderProxy*>& renderProxys = mScene->GetRenderProxys();
@@ -207,8 +207,10 @@ void FRenderer::updateShadow()
 
         mRHI->EndEvent();
     }
-    const FRHITransitionInfo infoEnd(mShadowMap, ACCESS_DEPTH_WRITE, ACCESS_DEPTH_READ);
+
+    const FRHITransitionInfo infoEnd(mShadowMap, ACCESS_DEPTH_WRITE, ACCESS_GENERIC_READ);
     mRHI->Transition(infoEnd);
+
     mRHI->EndEvent();
 }
 void FRenderer::unInitShadow()

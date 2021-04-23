@@ -44,12 +44,6 @@ void FMaterial::Init()
 
     VertexShaderShadow = rhi->CreateShader(vsShadowFilePathName, vsShadowEnterPoint, vsShadowTarget);
 
-    const std::wstring psShadowFilePathName = L"Engine\\Shader\\ShadowDepthPS.hlsl";
-    const std::string psShadowEnterPoint = "PSMain";
-    const std::string psShadowTarget = "ps_5_0";
-
-    PixelShaderShadow = rhi->CreateShader(psShadowFilePathName, psShadowEnterPoint, psShadowTarget);
-
     const std::wstring textureFilePathName = L"Content\\Texture\\T_Default_Material_Gray_C.dds";
     const int32 textureSlot = 0;
 
@@ -70,9 +64,6 @@ void FMaterial::UnInit()
 
     delete VertexShaderShadow;
     VertexShader = nullptr;
-
-    delete PixelShaderShadow;
-    PixelShaderShadow = nullptr;
 
     delete BaseColor;
     BaseColor = nullptr;

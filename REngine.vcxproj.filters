@@ -381,8 +381,5 @@
     <FxCompile Include="Engine\Shader\ShadowDepthVS.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="Engine\Shader\ShadowDepthPS.hlsl">
-      <Filter>Shader</Filter>
-    </FxCompile>
   </ItemGroup>
 </Project>

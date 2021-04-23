@@ -18,7 +18,6 @@ public:
     FRHIShader* PixelShader;
 
     FRHIShader* VertexShaderShadow;
-    FRHIShader* PixelShaderShadow;
 
     FRHITexture2D* BaseColor;
     FRHITexture2D* MetallicSpecularRoughness;

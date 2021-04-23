@@ -916,7 +916,7 @@ void FD3D12RHI::Transition(const FRHITransitionInfo& info)
 
     if (renderTargetDX12 != nullptr)
     {
-        if ((info.AccessBefore == ACCESS_DEPTH_READ) && (info.AccessAfter == ACCESS_DEPTH_WRITE))
+        if ((info.AccessBefore == ACCESS_GENERIC_READ) && (info.AccessAfter == ACCESS_DEPTH_WRITE))
         {
             CD3DX12_RESOURCE_BARRIER resourceBarries = CD3DX12_RESOURCE_BARRIER::Transition(renderTargetDX12->GetDepthStencilBuffer().Get(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_DEPTH_WRITE);
             mDX12CommandList->ResourceBarrier(1, &resourceBarries);
@@ -926,7 +926,7 @@ void FD3D12RHI::Transition(const FRHITransitionInfo& info)
                 D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
         }
-        else if ((info.AccessBefore == ACCESS_DEPTH_WRITE) && (info.AccessAfter == ACCESS_DEPTH_READ))
+        else if ((info.AccessBefore == ACCESS_DEPTH_WRITE) && (info.AccessAfter == ACCESS_GENERIC_READ))
         {
             CD3DX12_RESOURCE_BARRIER resourceBarries = CD3DX12_RESOURCE_BARRIER::Transition(renderTargetDX12->GetDepthStencilBuffer().Get(), D3D12_RESOURCE_STATE_DEPTH_WRITE, D3D12_RESOURCE_STATE_GENERIC_READ);
             mDX12CommandList->ResourceBarrier(1, &resourceBarries);
