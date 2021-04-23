@@ -184,6 +184,9 @@ void FRenderer::updateShadow()
     //update shadow map
     mRHI->SetRenderTarget(mShadowMap);
 
+    const FVector4 clearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    mRHI->Clear(false, clearColor, true, 1, true, 0);
+
     const FRHITransitionInfo infoBegin(mShadowMap, ACCESS_GENERIC_READ, ACCESS_DEPTH_WRITE);
     mRHI->Transition(infoBegin);
 
@@ -247,7 +250,6 @@ void FRenderer::updateShadowPassConstantBuffer()
     _createShadowPassConstant(shadowConstant);
     mRHI->UpdateConstantBuffer(mShadowPassConstantBuffer, sizeof(FShadowPassConstant), (uint8*)&shadowConstant);
 }
-
 
 void FRenderer::_createMainPassConstant(FMainPassConstant& constant)
 {

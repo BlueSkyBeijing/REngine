@@ -264,8 +264,6 @@ void FD3D12RHI::SetRenderTarget(FRHIRenderTarget* renderTarget)
         if (renderTargetDX12->mRenderTargetFormat == DXGI_FORMAT_UNKNOWN)
         {
             D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = renderTargetDX12->GetDepthStencilView();
-            //mDX12CommandList->ClearDepthStencilView(depthStencilView,
-            //    D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
             mDX12CommandList->OMSetRenderTargets(0, nullptr, false, &depthStencilView);
         }
@@ -273,6 +271,7 @@ void FD3D12RHI::SetRenderTarget(FRHIRenderTarget* renderTarget)
         {
             D3D12_CPU_DESCRIPTOR_HANDLE renderBufferView = renderTargetDX12->GetRenderTargetView(renderTargetDX12->GetRenderTargetIndex());
             D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = renderTargetDX12->GetDepthStencilView();
+
             mDX12CommandList->OMSetRenderTargets(1, &renderBufferView, true, &depthStencilView);
         }
 
@@ -282,12 +281,14 @@ void FD3D12RHI::SetRenderTarget(FRHIRenderTarget* renderTarget)
         if (renderWindowDX12->mRenderTargetFormat == DXGI_FORMAT_UNKNOWN)
         {
             D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = renderWindowDX12->GetDepthStencilView();
+
             mDX12CommandList->OMSetRenderTargets(0, nullptr, false, &depthStencilView);
         }
         else
         {
             D3D12_CPU_DESCRIPTOR_HANDLE renderBufferView = renderWindowDX12->GetRenderTargetView(renderWindowDX12->GetRenderTargetIndex());
             D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = renderWindowDX12->GetDepthStencilView();
+
             mDX12CommandList->OMSetRenderTargets(1, &renderBufferView, true, &depthStencilView);
         }
     }
@@ -920,11 +921,6 @@ void FD3D12RHI::Transition(const FRHITransitionInfo& info)
         {
             CD3DX12_RESOURCE_BARRIER resourceBarries = CD3DX12_RESOURCE_BARRIER::Transition(renderTargetDX12->GetDepthStencilBuffer().Get(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_DEPTH_WRITE);
             mDX12CommandList->ResourceBarrier(1, &resourceBarries);
-
-            D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = renderTargetDX12->GetDepthStencilView();
-            mDX12CommandList->ClearDepthStencilView(depthStencilView,
-                D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-
         }
         else if ((info.AccessBefore == ACCESS_DEPTH_WRITE) && (info.AccessAfter == ACCESS_GENERIC_READ))
         {
