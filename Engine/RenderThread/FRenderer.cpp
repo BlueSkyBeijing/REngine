@@ -184,11 +184,11 @@ void FRenderer::updateShadow()
     //update shadow map
     mRHI->SetRenderTarget(mShadowMap);
 
-    const FVector4 clearColor(0.5f, 0.5f, 0.5f, 1.0f);
-    mRHI->Clear(false, clearColor, true, 1, true, 0);
-
     const FRHITransitionInfo infoBegin(mShadowMap, ACCESS_GENERIC_READ, ACCESS_DEPTH_WRITE);
     mRHI->Transition(infoBegin);
+
+    const FVector4 clearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    mRHI->Clear(false, clearColor, true, 1, true, 0);
 
     const std::vector<FRenderProxy*>& renderProxys = mScene->GetRenderProxys();
     for (auto it = renderProxys.begin(); it != renderProxys.end(); it++)
@@ -292,17 +292,17 @@ void FRenderer::_createShadowPassConstant(FShadowPassConstant& constant)
     ConstructMatrixLookAtLH(lightView, lightPos, targetPos, lightUp);
 
     //transform bounding sphere to light space.
-    FVector4 sphereCenterLS;
-    FVector4 tt(sceneBoundsCenter.x(), sceneBoundsCenter.y(), sceneBoundsCenter.z(), 0.0f);
-    sphereCenterLS = lightView * tt;
+    FVector4 sphereCenterLightSpace;
+    FVector4 bounds(sceneBoundsCenter.x(), sceneBoundsCenter.y(), sceneBoundsCenter.z(), 0.0f);
+    sphereCenterLightSpace = lightView * bounds;
 
     //orthogonal frustum in light space encloses scene
-    float l = sphereCenterLS.x() - sceneBoundsRadius;
-    float b = sphereCenterLS.z() - sceneBoundsRadius;
-    float n = sphereCenterLS.y() - sceneBoundsRadius;
-    float r = sphereCenterLS.x() + sceneBoundsRadius;
-    float t = sphereCenterLS.z() + sceneBoundsRadius;
-    float f = sphereCenterLS.y() + sceneBoundsRadius;
+    float l = sphereCenterLightSpace.x() - sceneBoundsRadius;
+    float b = sphereCenterLightSpace.z() - sceneBoundsRadius;
+    float n = sphereCenterLightSpace.y() - sceneBoundsRadius;
+    float r = sphereCenterLightSpace.x() + sceneBoundsRadius;
+    float t = sphereCenterLightSpace.z() + sceneBoundsRadius;
+    float f = sphereCenterLightSpace.y() + sceneBoundsRadius;
 
     FMatrix4x4 lightProj;
     ConstructMatrixOrthoOffCenterLH(lightProj, l, r, b, t, n, f);
