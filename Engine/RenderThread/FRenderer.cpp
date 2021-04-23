@@ -307,9 +307,7 @@ void FRenderer::_createShadowPassConstant(FShadowPassConstant& constant)
     FMatrix4x4 lightProj;
     ConstructMatrixOrthoOffCenterLH(lightProj, l, r, b, t, n, f);
 
-    //transform NDC space [-1,+1]^2 to texture space [0,1]^2
     FMatrix4x4 transformNDC;
-
     transformNDC << 0.5f, 0.0f, 0.0f, 0.0f,
         0.0f, -0.5f, 0.0f, 0.0f,
         0.0f, 0.0f, 1.0f, 0.0f,
