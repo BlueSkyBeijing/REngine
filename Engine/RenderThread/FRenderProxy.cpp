@@ -68,7 +68,7 @@ void FStaticMeshRenderProxy::CreateRenderResource()
     mObjectConstants.World.block<3, 3>(0, 0) = rotation;
     mObjectConstants.World.block<1, 3>(3, 0) = Position;
 
-    ConstantBuffer = rhi->CreateConstantBuffer(sizeof(mObjectConstants), (uint8*)&mObjectConstants, 1);
+    ConstantBuffer = rhi->CreateConstantBuffer(sizeof(mObjectConstants), (uint8*)&mObjectConstants);
 
     Material->Init();
 

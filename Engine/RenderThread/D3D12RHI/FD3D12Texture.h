@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 #include "FD3D12Resource.h"
@@ -8,11 +8,11 @@
 class FD3D12Texture : public FD3D12Resource
 {
 public:
-	FD3D12Texture();
+    FD3D12Texture();
     virtual ~FD3D12Texture();
 public:
     std::wstring FilePathName;
-    int32 Slot;
+    int32 PosInShader;
 
 public:
     virtual void Init();

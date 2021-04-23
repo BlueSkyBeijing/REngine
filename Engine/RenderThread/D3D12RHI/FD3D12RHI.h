@@ -30,17 +30,18 @@ public:
     virtual void SetPrimitiveType(EPrimitiveType primitiveType) override;
     virtual void SetVertexBuffer(FRHIVertexBuffer* buffer) override;
     virtual void SetIndexBuffer(FRHIIndexBuffer* buffer) override;
-    virtual void SetConstantBuffer(FRHIConstantBuffer* buffer) override;
+    virtual void SetConstantBuffer(FRHIConstantBuffer* buffer, int32 shaderPos) override;
+    virtual void SetTexture2D(FRHITexture2D* texture, int32 shaderPos) override;
     virtual void DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation) override;
 
-    virtual FRHIConstantBuffer* CreateConstantBuffer(uint32 structureSize, uint8* bufferData, int32 slot) override;
+    virtual FRHIConstantBuffer* CreateConstantBuffer(uint32 structureSize, uint8* bufferData) override;
     virtual FRHIVertexBuffer* CreateVertexBuffer(uint32 structureSize, uint32 vertexCount, uint8* bufferData) override;
     virtual FRHIIndexBuffer* CreateIndexBuffer(uint32 structureSize, uint32 indexCount, uint8* bufferData) override;
     virtual FRHIShader* CreateShader(const std::wstring& filePathName, const std::string& enterPoint, const std::string& target) override;
     virtual FRHIShaderBindings* CreateShaderBindings() override;
     virtual FRHIPipelineState* CreatePipelineState(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout) override;
     virtual FRHIPipelineState* CreatePipelineStateShadow(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout) override;
-    virtual FRHITexture2D* CreateTexture2D(const std::wstring& filePathName, int32 slot) override;
+    virtual FRHITexture2D* CreateTexture2D(const std::wstring& filePathName) override;
     virtual FRHIRenderTarget* CreateRenderTarget(uint32 width, uint32 hight, uint32 numTarget, EPixelFormat formatTarget, EPixelFormat formatDepthStencil) override;
     virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) override;
 
@@ -89,18 +90,11 @@ private:
     D3D12_RECT mScissorRect;
     D3D12_VIEWPORT mViewPort;
 
-    static int32 msPassSRVSlot;
-    static int32 msPassCBVSlot;
-    static int32 msObjectSRVSlot;
-    static int32 msObjectCBVSlot;
+    static int32 msPassSRVTableIndex;
+    static int32 msPassCBVTableIndex;
+    static int32 msObjectSRVTableIndex;
+    static int32 msObjectCBVTableIndex;
 
-    static int32 msPassSRVRange;
-    static int32 msPassCBVRange;
-
-    static int32 msObjectSRVRange;
-    static int32 msObjectCBVRange;
-
-    static int32 msPassCBVCount;
-    static int32 msObjectCBVCount;
+    static int32 msCBVCount;
 
 };

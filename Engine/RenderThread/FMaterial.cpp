@@ -45,9 +45,8 @@ void FMaterial::Init()
     VertexShaderShadow = rhi->CreateShader(vsShadowFilePathName, vsShadowEnterPoint, vsShadowTarget);
 
     const std::wstring textureFilePathName = L"Content\\Texture\\T_Default_Material_Gray_C.dds";
-    const int32 textureSlot = 0;
 
-    BaseColor = rhi->CreateTexture2D(textureFilePathName, textureSlot);
+    BaseColor = rhi->CreateTexture2D(textureFilePathName);
 
     //MetallicSpecularRoughness->Init();
     //EmissiveColor->Init();

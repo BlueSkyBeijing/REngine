@@ -15,19 +15,12 @@
 #include "TSingleton.h"
 
 
-int32 FD3D12RHI::msPassSRVSlot = 2;
-int32 FD3D12RHI::msPassCBVSlot = 3;
-int32 FD3D12RHI::msObjectSRVSlot = 0;
-int32 FD3D12RHI::msObjectCBVSlot = 1;
+int32 FD3D12RHI::msObjectSRVTableIndex = 0;
+int32 FD3D12RHI::msObjectCBVTableIndex = 1;
+int32 FD3D12RHI::msPassSRVTableIndex = 2;
+int32 FD3D12RHI::msPassCBVTableIndex = 3;
 
-int32 FD3D12RHI::msPassSRVRange = 1;
-int32 FD3D12RHI::msPassCBVRange = 2;
-
-int32 FD3D12RHI::msObjectCBVRange = 64;
-int32 FD3D12RHI::msObjectSRVRange = 64;
-
-int32 FD3D12RHI::msPassCBVCount = 0;
-int32 FD3D12RHI::msObjectCBVCount = 0;
+int32 FD3D12RHI::msCBVCount = 0;
 
 FD3D12RHI::FD3D12RHI() :
     mDX12Device(nullptr),
@@ -120,8 +113,12 @@ void FD3D12RHI::Init()
     //create command list
     THROW_IF_FAILED(mDX12Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, mDX12CommandAllocator.Get(), mDX12PipleLineState.Get(), IID_PPV_ARGS(&mDX12CommandList)));
 
+    //this should be tweaked for each title as heaps require VRAM. The default value of 512k takes up ~16MB
+    // D3D12 is guaranteed to support 1M (D3D12_MAX_SHADER_VISIBLE_DESCRIPTOR_HEAP_SIZE_TIER_1) descriptors in a CBV/SRV/UAV heap, so clamp the size to this.
+    // https://docs.microsoft.com/en-us/windows/desktop/direct3d12/hardware-support
+    const int32 globalSRVCBVUAVHeapSize = 500 * 1000;
     D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDescPass;
-    cbvHeapDescPass.NumDescriptors = msObjectSRVRange + msObjectCBVRange + msPassSRVRange + msPassCBVRange;
+    cbvHeapDescPass.NumDescriptors = globalSRVCBVUAVHeapSize;
     cbvHeapDescPass.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
     cbvHeapDescPass.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
     cbvHeapDescPass.NodeMask = 0;
@@ -336,23 +333,29 @@ void FD3D12RHI::SetIndexBuffer(FRHIIndexBuffer* buffer)
     mDX12CommandList->IASetIndexBuffer(&indexBuffer->mIndexBufferView);
 }
 
-void FD3D12RHI::SetConstantBuffer(FRHIConstantBuffer* buffer)
+void FD3D12RHI::SetConstantBuffer(FRHIConstantBuffer* buffer, int32 shaderPos)
 {
     CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
 
-    descriptorObject.Offset(buffer->Offset, mCBVSRVVUAVDescriptorSize);
-    mDX12CommandList->SetGraphicsRootDescriptorTable(buffer->Slot, descriptorObject);
+    descriptorObject.Offset(buffer->PosInHeap, mCBVSRVVUAVDescriptorSize);
+    mDX12CommandList->SetGraphicsRootDescriptorTable(shaderPos, descriptorObject);
 
+}
+
+void FD3D12RHI::SetTexture2D(FRHITexture2D* texture, int32 shaderPos)
+{
+    CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
+
+    descriptorObject.Offset(texture->PosInHeap, mCBVSRVVUAVDescriptorSize);
+    mDX12CommandList->SetGraphicsRootDescriptorTable(shaderPos, descriptorObject);
 }
 
 void FD3D12RHI::DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation)
 {
     CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
-    CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorPass(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart(), msObjectSRVRange + msObjectCBVRange, mCBVSRVVUAVDescriptorSize);
 
-    mDX12CommandList->SetGraphicsRootDescriptorTable(0, descriptorObject);
-
-    mDX12CommandList->SetGraphicsRootDescriptorTable(2, descriptorPass);
+    descriptorObject.Offset(mRenderTargetCurrent->PosInHeap, mCBVSRVVUAVDescriptorSize);
+    mDX12CommandList->SetGraphicsRootDescriptorTable(2, descriptorObject);
 
     mDX12CommandList->DrawIndexedInstanced(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
 }
@@ -418,7 +421,7 @@ FRHIIndexBuffer* FD3D12RHI::CreateIndexBuffer(uint32 structureSize, uint32 index
     return indexBuffer;
 }
 
-FRHIConstantBuffer* FD3D12RHI::CreateConstantBuffer(uint32 structureSize, uint8* bufferData, int32 slot)
+FRHIConstantBuffer* FD3D12RHI::CreateConstantBuffer(uint32 structureSize, uint8* bufferData)
 {
     FD3D12ConstantBuffer* constantBuffer = new FD3D12ConstantBuffer;
 
@@ -445,24 +448,10 @@ FRHIConstantBuffer* FD3D12RHI::CreateConstantBuffer(uint32 structureSize, uint8*
 
     CD3DX12_CPU_DESCRIPTOR_HANDLE cbvDescriptor(mCBVSRVUAVHeap->GetCPUDescriptorHandleForHeapStart());
 
-    constantBuffer->Slot = slot;
+    constantBuffer->PosInHeap = msCBVCount;
+    cbvDescriptor = cbvDescriptor.Offset(constantBuffer->PosInHeap, mCBVSRVVUAVDescriptorSize);
 
-    if (slot == msPassCBVSlot)
-    {
-        const int32 offset = msObjectSRVRange + msObjectCBVRange + msPassSRVRange + msPassCBVCount;
-        cbvDescriptor = cbvDescriptor.Offset(offset, mCBVSRVVUAVDescriptorSize);
-        constantBuffer->Offset = offset;
-
-        msPassCBVCount++;
-    }
-    else
-    {
-        const int32 offset = msObjectSRVRange + msObjectCBVCount;
-        cbvDescriptor = cbvDescriptor.Offset(offset, mCBVSRVVUAVDescriptorSize);
-        constantBuffer->Offset = offset;
-
-        msObjectCBVCount++;
-    }
+    msCBVCount++;
 
     mDX12Device->CreateConstantBufferView(
         &cbvDescObject,
@@ -510,10 +499,10 @@ FRHIShaderBindings* FD3D12RHI::CreateShaderBindings()
     CD3DX12_DESCRIPTOR_RANGE passConTable;
     passConTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 1);
 
-    slotRootParameter[msObjectSRVSlot].InitAsDescriptorTable(1, &objTexTable, D3D12_SHADER_VISIBILITY_PIXEL);
-    slotRootParameter[msObjectCBVSlot].InitAsDescriptorTable(1, &objConTable, D3D12_SHADER_VISIBILITY_ALL);
-    slotRootParameter[msPassSRVSlot].InitAsDescriptorTable(1, &passTexTable, D3D12_SHADER_VISIBILITY_PIXEL);
-    slotRootParameter[msPassCBVSlot].InitAsDescriptorTable(1, &passConTable, D3D12_SHADER_VISIBILITY_ALL);
+    slotRootParameter[msObjectSRVTableIndex].InitAsDescriptorTable(1, &objTexTable, D3D12_SHADER_VISIBILITY_PIXEL);
+    slotRootParameter[msObjectCBVTableIndex].InitAsDescriptorTable(1, &objConTable, D3D12_SHADER_VISIBILITY_ALL);
+    slotRootParameter[msPassSRVTableIndex].InitAsDescriptorTable(1, &passTexTable, D3D12_SHADER_VISIBILITY_PIXEL);
+    slotRootParameter[msPassCBVTableIndex].InitAsDescriptorTable(1, &passConTable, D3D12_SHADER_VISIBILITY_ALL);
 
     const CD3DX12_STATIC_SAMPLER_DESC linearWrap(
         0, // shaderRegister
@@ -663,7 +652,7 @@ FRHIPipelineState* FD3D12RHI::CreatePipelineStateShadow(FRHIShaderBindings* shad
 
 }
 
-FRHITexture2D* FD3D12RHI::CreateTexture2D(const std::wstring& filePathName, int32 slot)
+FRHITexture2D* FD3D12RHI::CreateTexture2D(const std::wstring& filePathName)
 {
     FD3D12Texture2D* texture2D = new FD3D12Texture2D;
 
@@ -676,7 +665,11 @@ FRHITexture2D* FD3D12RHI::CreateTexture2D(const std::wstring& filePathName, int3
         mDX12CommandList.Get(), filePathName.c_str(),
         mCurTexture, mCurTextureUploadHeap));
 
-    CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorObj(mCBVSRVUAVHeap->GetCPUDescriptorHandleForHeapStart(), slot);
+    texture2D->PosInHeap = msCBVCount;
+
+    msCBVCount++;
+
+    CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorObj(mCBVSRVUAVHeap->GetCPUDescriptorHandleForHeapStart(), texture2D->PosInHeap, mCBVSRVVUAVDescriptorSize);
 
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -706,6 +699,7 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
     renderTarget->mDSVDescriptorSize = mDSVDescriptorSize;
     renderTarget->mRTVDescriptorSize = mRTVDescriptorSize;
     renderTarget->mRenderTargetFormat = DXGI_FORMAT_UNKNOWN;
+    renderTarget->PosInHeap = msCBVCount;
     renderTarget->Init();
 
     if (formatTarget != PF_UNKNOWN)
@@ -782,7 +776,7 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
         dsvDesc.Texture2D.MipSlice = 0;
         mDX12Device->CreateDepthStencilView(renderTarget->mDepthStencilBuffer.Get(), &dsvDesc, descriptorHandleDS);
 
-        CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorObj(mCBVSRVUAVHeap->GetCPUDescriptorHandleForHeapStart(), msObjectSRVRange + msObjectCBVRange, mCBVSRVVUAVDescriptorSize);
+        CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorObj(mCBVSRVUAVHeap->GetCPUDescriptorHandleForHeapStart(), renderTarget->PosInHeap, mCBVSRVVUAVDescriptorSize);
         D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
         srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
         srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
@@ -793,6 +787,7 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
         srvDesc.Texture2D.PlaneSlice = 0;
         mDX12Device->CreateShaderResourceView(renderTarget->mDepthStencilBuffer.Get(), &srvDesc, descriptorObj);
 
+        msCBVCount++;
     }
 
     renderTarget->mRTVDescriptorSize = mRTVDescriptorSize;

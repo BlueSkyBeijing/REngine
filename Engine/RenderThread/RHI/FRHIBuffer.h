@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 #include "FRHIResource.h"
@@ -8,8 +8,8 @@
 class FRHIBuffer : public FRHIResource
 {
 public:
-	FRHIBuffer();
-	virtual~FRHIBuffer() override;
+    FRHIBuffer();
+    virtual~FRHIBuffer() override;
 
     virtual void Init() {}
     virtual void Uninit() {}
@@ -63,8 +63,6 @@ public:
     FRHIConstantBuffer();
     virtual ~FRHIConstantBuffer() override;
 
-    int32 Slot;
-    int32 Offset;
 public:
     virtual void Init() override;
     virtual void Uninit() override;

@@ -133,8 +133,9 @@ void FRenderer::drawRenderables()
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(renderProxy->VertexBuffer);
         mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
-        mRHI->SetConstantBuffer(renderProxy->ConstantBuffer);
-        mRHI->SetConstantBuffer(mMainPassConstantBuffer);
+        mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 1);
+        mRHI->SetConstantBuffer(mMainPassConstantBuffer, 3);
+        mRHI->SetTexture2D(renderProxy->Material->BaseColor, 0);
 
         mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
 
@@ -163,6 +164,8 @@ void FRenderer::initShadow()
     //create shadow depth render target
     mShadowMap = mRHI->CreateRenderTarget(TSingleton<FConfigManager>::GetInstance().ShadowMapWidth,
         TSingleton<FConfigManager>::GetInstance().ShadowMapHeight, 0, PF_UNKNOWN, PF_R24_UNORM_X8_TYPELESS);
+
+    mRenderTarget->PosInHeap = mShadowMap->PosInHeap;
 
     creatShadowPassConstantBuffer();
 }
@@ -203,8 +206,8 @@ void FRenderer::updateShadow()
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(renderProxy->VertexBuffer);
         mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
-        mRHI->SetConstantBuffer(renderProxy->ConstantBuffer);
-        mRHI->SetConstantBuffer(mShadowPassConstantBuffer);
+        mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 1);
+        mRHI->SetConstantBuffer(mShadowPassConstantBuffer, 3);
 
         mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
 
@@ -227,7 +230,7 @@ void FRenderer::createMainPassConstantBuffer()
     //create pass constant buffer
     FMainPassConstant mainConstant;
     _createMainPassConstant(mainConstant);
-    mMainPassConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FMainPassConstant), (uint8*)&mainConstant, 3);
+    mMainPassConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FMainPassConstant), (uint8*)&mainConstant);
 }
 
 void FRenderer::updateMainPassConstantBuffer()
@@ -241,7 +244,7 @@ void FRenderer::creatShadowPassConstantBuffer()
 {
     FShadowPassConstant shadowConstant;
     _createShadowPassConstant(shadowConstant);
-    mShadowPassConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FShadowPassConstant), (uint8*)&shadowConstant, 3);
+    mShadowPassConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FShadowPassConstant), (uint8*)&shadowConstant);
 }
 
 void FRenderer::updateShadowPassConstantBuffer()

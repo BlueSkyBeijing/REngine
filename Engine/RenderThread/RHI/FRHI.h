@@ -206,17 +206,18 @@ public:
     virtual void SetPrimitiveType(EPrimitiveType primitiveType) = 0;
     virtual void SetVertexBuffer(FRHIVertexBuffer* buffer) = 0;
     virtual void SetIndexBuffer(FRHIIndexBuffer* buffer) = 0;
-    virtual void SetConstantBuffer(FRHIConstantBuffer* buffer) = 0;
+    virtual void SetConstantBuffer(FRHIConstantBuffer* buffer, int32 shaderPos) = 0;
+    virtual void SetTexture2D(FRHITexture2D* texture, int32 shaderPos) = 0;
     virtual void DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation) = 0;
 
-    virtual FRHIConstantBuffer* CreateConstantBuffer(uint32 structureSize, uint8* bufferData, int32 slot) = 0;
+    virtual FRHIConstantBuffer* CreateConstantBuffer(uint32 structureSize, uint8* bufferData) = 0;
     virtual FRHIVertexBuffer* CreateVertexBuffer(uint32 structureSize, uint32 vertexCount, uint8* bufferData) = 0;
     virtual FRHIIndexBuffer* CreateIndexBuffer(uint32 structureSize, uint32 indexCount, uint8* bufferData) = 0;
     virtual FRHIShader* CreateShader(const std::wstring& filePathName, const std::string& EnterPoint, const std::string& target) = 0;
     virtual FRHIShaderBindings* CreateShaderBindings() = 0;
     virtual FRHIPipelineState* CreatePipelineState(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout) = 0;
     virtual FRHIPipelineState* CreatePipelineStateShadow(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout) = 0;
-    virtual FRHITexture2D* CreateTexture2D(const std::wstring& filePathName, int32 slot) = 0;
+    virtual FRHITexture2D* CreateTexture2D(const std::wstring& filePathName) = 0;
     virtual FRHIRenderTarget* CreateRenderTarget(uint32 width, uint32 hight, uint32 numTarget, EPixelFormat formatTarget, EPixelFormat formatDepthStencil) = 0;
     virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) = 0;
 

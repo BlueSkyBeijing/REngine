@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 #include "FRHIResource.h"
@@ -7,11 +7,10 @@
 class FRHITexture : public FRHIResource
 {
 public:
-	FRHITexture();
+    FRHITexture();
     virtual ~FRHITexture();
 public:
     std::wstring FilePathName;
-    int32 Slot;
 
 public:
     virtual void Init();

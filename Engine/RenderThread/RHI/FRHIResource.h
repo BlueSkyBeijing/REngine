@@ -1,15 +1,18 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 
 class FRHIResource
 {
 public:
-	FRHIResource();
+    FRHIResource();
     virtual~FRHIResource();
 
     virtual void Init() {}
     virtual void UnInit() {}
+
+public:
+    int32 PosInHeap;
 
 private:
 
