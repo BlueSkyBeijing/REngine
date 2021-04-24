@@ -55,6 +55,7 @@ public:
     virtual void Present(FRHIRenderWindow* window) override;
 
 protected:
+    void createHeaps();
     D3D_PRIMITIVE_TOPOLOGY translatePrimitiveType(EPrimitiveType primitiveType);
 
 private:

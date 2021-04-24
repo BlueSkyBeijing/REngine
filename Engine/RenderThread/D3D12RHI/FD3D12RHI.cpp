@@ -113,33 +113,7 @@ void FD3D12RHI::Init()
     //create command list
     THROW_IF_FAILED(mDX12Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, mDX12CommandAllocator.Get(), mDX12PipleLineState.Get(), IID_PPV_ARGS(&mDX12CommandList)));
 
-    //this should be tweaked for each title as heaps require VRAM. The default value of 512k takes up ~16MB
-    // D3D12 is guaranteed to support 1M (D3D12_MAX_SHADER_VISIBLE_DESCRIPTOR_HEAP_SIZE_TIER_1) descriptors in a CBV/SRV/UAV heap, so clamp the size to this.
-    // https://docs.microsoft.com/en-us/windows/desktop/direct3d12/hardware-support
-    const int32 globalSRVCBVUAVHeapSize = 500 * 1000;
-    D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDescPass;
-    cbvHeapDescPass.NumDescriptors = globalSRVCBVUAVHeapSize;
-    cbvHeapDescPass.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-    cbvHeapDescPass.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-    cbvHeapDescPass.NodeMask = 0;
-    THROW_IF_FAILED(mDX12Device->CreateDescriptorHeap(&cbvHeapDescPass,
-        IID_PPV_ARGS(&mCBVSRVUAVHeap)));
-
-
-    //create render view description
-    D3D12_DESCRIPTOR_HEAP_DESC rtDescriptorHeapDesc;
-    rtDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-    rtDescriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    rtDescriptorHeapDesc.NumDescriptors = 2;
-    rtDescriptorHeapDesc.NodeMask = 0;
-    THROW_IF_FAILED(mDX12Device->CreateDescriptorHeap(&rtDescriptorHeapDesc, IID_PPV_ARGS(&mDX12DescriptorHeapRenderTarget)));
-
-    D3D12_DESCRIPTOR_HEAP_DESC dsDescriptorHeapDesc;
-    dsDescriptorHeapDesc.NumDescriptors = 2;
-    dsDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-    dsDescriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    dsDescriptorHeapDesc.NodeMask = 0;
-    THROW_IF_FAILED(mDX12Device->CreateDescriptorHeap(&dsDescriptorHeapDesc, IID_PPV_ARGS(&mDX12DescriptorHeapDepthStencil)));
+    createHeaps();
 
     mDX12CommandList->Close();
 
@@ -942,6 +916,34 @@ void FD3D12RHI::Transition(const FRHITransitionInfo& info)
 void FD3D12RHI::Present(FRHIRenderWindow* window)
 {
     window->Present();
+}
+
+void FD3D12RHI::createHeaps()
+{
+    //this should be tweaked for each title as heaps require VRAM. The default value of 512k takes up ~16MB
+    // D3D12 is guaranteed to support 1M (D3D12_MAX_SHADER_VISIBLE_DESCRIPTOR_HEAP_SIZE_TIER_1) descriptors in a CBV/SRV/UAV heap, so clamp the size to this.
+    // https://docs.microsoft.com/en-us/windows/desktop/direct3d12/hardware-support
+    const int32 globalSRVCBVUAVHeapSize = 500 * 1000;
+    D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDescPass;
+    cbvHeapDescPass.NumDescriptors = globalSRVCBVUAVHeapSize;
+    cbvHeapDescPass.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+    cbvHeapDescPass.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+    cbvHeapDescPass.NodeMask = 0;
+    THROW_IF_FAILED(mDX12Device->CreateDescriptorHeap(&cbvHeapDescPass, IID_PPV_ARGS(&mCBVSRVUAVHeap)));
+
+    D3D12_DESCRIPTOR_HEAP_DESC rtDescriptorHeapDesc;
+    rtDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+    rtDescriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+    rtDescriptorHeapDesc.NumDescriptors = 2;
+    rtDescriptorHeapDesc.NodeMask = 0;
+    THROW_IF_FAILED(mDX12Device->CreateDescriptorHeap(&rtDescriptorHeapDesc, IID_PPV_ARGS(&mDX12DescriptorHeapRenderTarget)));
+
+    D3D12_DESCRIPTOR_HEAP_DESC dsDescriptorHeapDesc;
+    dsDescriptorHeapDesc.NumDescriptors = 2;
+    dsDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+    dsDescriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+    dsDescriptorHeapDesc.NodeMask = 0;
+    THROW_IF_FAILED(mDX12Device->CreateDescriptorHeap(&dsDescriptorHeapDesc, IID_PPV_ARGS(&mDX12DescriptorHeapDepthStencil)));
 }
 
 D3D_PRIMITIVE_TOPOLOGY FD3D12RHI::translatePrimitiveType(EPrimitiveType primitiveType)
