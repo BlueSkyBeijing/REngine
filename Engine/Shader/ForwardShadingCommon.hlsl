@@ -16,12 +16,12 @@ struct VertexOut
     float2 TexCoord : TEXCOORD;
 };
 
-cbuffer cbObject : register(b0)
+cbuffer ObjectConstantBuffer : register(b0)
 {
     float4x4 World;
 };
 
-cbuffer cbPass : register(b1)
+cbuffer MainPassConstantBuffer : register(b1)
 {
     float4x4 View;
     float4x4 Proj;

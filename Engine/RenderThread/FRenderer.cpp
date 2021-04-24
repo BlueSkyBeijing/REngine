@@ -284,7 +284,6 @@ void FRenderer::_createShadowPassConstant(FShadowPassConstant& constant)
 {
     FDirectionalLight* light = mScene->GetDirectionalLight();
     //should use negative value of camera direction in shader
-    constant.DirectionalLightDir = -light->Direction;
     const float sceneBoundsRadius = 2000.0f;
     const FVector3 sceneBoundsCenter(0.0f, 0.0f, 0.0f);
     FVector3 lightDir = light->Direction;
@@ -321,5 +320,4 @@ void FRenderer::_createShadowPassConstant(FShadowPassConstant& constant)
     constant.View = lightView;
     constant.Proj = lightProj;
     constant.ViewProj = lightView * lightProj;
-    constant.ShadowTransform = mShadowTransform;
 }
