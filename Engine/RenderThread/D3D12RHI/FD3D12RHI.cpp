@@ -291,16 +291,16 @@ void FD3D12RHI::SetRenderTarget(FRHIRenderTarget* renderTarget)
     }
 }
 
-void FD3D12RHI::SetViewPort(FViewPort& viewPort)
+void FD3D12RHI::SetViewPort(float minX, float minY, float minZ, float maxX, float maxY, float maxZ)
 {
-    D3D12_VIEWPORT* dxViewport = (D3D12_VIEWPORT*)&viewPort;
-    mDX12CommandList->RSSetViewports(1, dxViewport);
+    const D3D12_VIEWPORT viewport = { minX, minY, (maxX - minX), (maxY - minY), minZ, maxZ };
+    mDX12CommandList->RSSetViewports(1, &viewport);
 }
 
-void FD3D12RHI::SetSetScissor(FRect& scissorRect)
+void FD3D12RHI::SetSetScissor(bool enable, float minX, float minY, float maxX, float maxY)
 {
-    D3D12_RECT* dxRect = (D3D12_RECT*)&scissorRect;
-    mDX12CommandList->RSSetScissorRects(1, dxRect);
+    const D3D12_RECT rect = { static_cast<LONG>(minX), static_cast<LONG>(minY), static_cast<LONG>(maxX), static_cast<LONG>(maxY) };
+    mDX12CommandList->RSSetScissorRects(1, &rect);
 }
 
 void FD3D12RHI::SetPipelineState(FRHIPipelineState* pipelineState)

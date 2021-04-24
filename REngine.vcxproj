@@ -57,6 +57,7 @@
     <ClCompile Include="Engine\RenderThread\FRenderThread.cpp" />
     <ClCompile Include="Engine\RenderThread\FScene.cpp" />
     <ClCompile Include="Engine\RenderThread\FView.cpp" />
+    <ClCompile Include="Engine\RenderThread\FViewPort.cpp" />
     <ClCompile Include="Engine\RenderThread\RHI\FRHI.cpp" />
     <ClCompile Include="Engine\RenderThread\RHI\FRHIBuffer.cpp" />
     <ClCompile Include="Engine\RenderThread\RHI\FRHIPipelineState.cpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="Engine\RenderThread\FRenderThread.h" />
     <ClInclude Include="Engine\RenderThread\FScene.h" />
     <ClInclude Include="Engine\RenderThread\FView.h" />
+    <ClInclude Include="Engine\RenderThread\FViewPort.h" />
     <ClInclude Include="Engine\RenderThread\RHI\FRHI.h" />
     <ClInclude Include="Engine\RenderThread\RHI\FRHIBuffer.h" />
     <ClInclude Include="Engine\RenderThread\RHI\FRHIPipelineState.h" />

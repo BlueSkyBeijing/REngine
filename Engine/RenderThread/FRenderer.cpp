@@ -108,13 +108,8 @@ void FRenderer::setRenderTarget(FRHIRenderTarget* renderTarget)
 
 void FRenderer::setViewPort()
 {
-    //viewport
-    FViewPort viewPort = { 0.0f, 0.0f, static_cast<float>(mRenderTarget->Width), static_cast<float>(mRenderTarget->Height), 0.0f, 1.0f };
-    //scissor rectangle
-    FRect scissorRect = { 0, 0, static_cast<LONG>(mRenderTarget->Width), static_cast<LONG>(mRenderTarget->Height) };
-
-    mRHI->SetViewPort(viewPort);
-    mRHI->SetSetScissor(scissorRect);
+    mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mRenderTarget->Width), static_cast<float>(mRenderTarget->Height), 1.0f);
+    mRHI->SetSetScissor(true, 0.0f, 0.0f, static_cast<float>(mRenderTarget->Width), static_cast<float>(mRenderTarget->Height));
 }
 
 void FRenderer::drawRenderables()
@@ -176,13 +171,8 @@ void FRenderer::updateShadow()
     //update light view
     updateShadowPassConstantBuffer();
 
-    //viewport
-    FViewPort viewPort = { 0.0f, 0.0f, static_cast<float>(mShadowMap->Width), static_cast<float>(mShadowMap->Height), 0.0f, 1.0f };
-    //scissor rectangle
-    FRect scissorRect = { 0, 0, static_cast<LONG>(mShadowMap->Width), static_cast<LONG>(mShadowMap->Height) };
-
-    mRHI->SetViewPort(viewPort);
-    mRHI->SetSetScissor(scissorRect);
+    mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mShadowMap->Width), static_cast<float>(mShadowMap->Height), 1.0f);
+    mRHI->SetSetScissor(true, 0.0f, 0.0f, static_cast<float>(mShadowMap->Width), static_cast<float>(mShadowMap->Height));
 
     //update shadow map
     mRHI->SetRenderTarget(mShadowMap);

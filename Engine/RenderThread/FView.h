@@ -20,16 +20,6 @@ private:
 
 };
 
-struct FViewPort
-{
-    float TopLeftX;
-    float TopLeftY;
-    float Width;
-    float Height;
-    float MinDepth;
-    float MaxDepth;
-};
-
 struct FRect
 {
     int32    Left;

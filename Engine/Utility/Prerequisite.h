@@ -23,7 +23,6 @@ enum EPixelFormat;
 enum EInputClassification;
 enum ELogLevel;
 
-struct FViewPort;
 struct FRect;
 struct FInputElementDesc;
 
@@ -36,6 +35,7 @@ class FRenderThread;
 class FRenderer;
 class FScene;
 class FView;
+class FViewPort;
 class FRenderProxy;
 class FMaterial;
 class FDirectionalLight;

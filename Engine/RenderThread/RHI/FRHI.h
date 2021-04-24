@@ -198,8 +198,8 @@ public:
     virtual void Clear(bool clearColor, const FVector4& color, bool clearDepth, float depth, bool clearStencil, uint32 stencil) = 0;
 
     virtual void SetRenderTarget(FRHIRenderTarget* renderTarget) = 0;
-    virtual void SetViewPort(FViewPort& viewPort) = 0;
-    virtual void SetSetScissor(FRect& scissorRect) = 0;
+    virtual void SetViewPort(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) = 0;
+    virtual void SetSetScissor(bool enable, float minX, float minY, float maxX, float maxY) = 0;
 
     virtual void SetPipelineState(FRHIPipelineState* pipelineState) = 0;
 
