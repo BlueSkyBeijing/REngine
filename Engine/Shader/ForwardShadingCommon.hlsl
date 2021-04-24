@@ -35,5 +35,6 @@ cbuffer MainPassConstantBuffer : register(b1)
     float _placeholder2;
     float3 DirectionalLightColor;
     float _placeholder3;
+    float2 InvShadowMapSize;
 };
 

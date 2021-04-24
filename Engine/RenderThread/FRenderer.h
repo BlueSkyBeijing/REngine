@@ -17,6 +17,7 @@ struct FMainPassConstant
     float _Placeholder2;
     FVector3 DirectionalLightColor;
     float _Placeholder3;
+    FVector2 InvShadowMapSize;
 };
 
 struct FShadowPassConstant
