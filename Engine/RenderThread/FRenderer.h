@@ -27,6 +27,22 @@ struct FShadowPassConstant
     FMatrix4x4 ViewProj;
 };
 
+class FFullscreenQuad
+{
+public:
+    FFullscreenQuad(FRHI* rhi);
+    ~FFullscreenQuad();
+
+    void Init();
+    void UnInit();
+    void Draw();
+
+private:
+    FRHI* mRHI;
+    FRHIVertexBuffer* VertexBuffer;
+    FRHIIndexBuffer* IndexBuffer;
+};
+
 class FRenderer
 {
 public:
@@ -59,6 +75,7 @@ protected:
     void creatShadowPassConstantBuffer();
     void updateShadowPassConstantBuffer();
 
+
 private:
     void _createMainPassConstant(FMainPassConstant& constant);
     void _createShadowPassConstant(FShadowPassConstant& constant);
@@ -72,4 +89,5 @@ private:
     FRHIConstantBuffer* mShadowPassConstantBuffer;
     FRHIRenderTarget* mShadowMap;
     FMatrix4x4 mShadowTransform;
+    FFullscreenQuad* mFullscreenQuad;
 };

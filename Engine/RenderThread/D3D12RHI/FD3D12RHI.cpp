@@ -224,6 +224,16 @@ void FD3D12RHI::EndEvent()
     PIXEndEvent(mDX12CommandList.Get());
 }
 
+void FD3D12RHI::BeginRenderPass(const FRHIRenderPassInfo& info, const char* name)
+{
+
+}
+
+void FD3D12RHI::EndRenderPass()
+{
+
+}
+
 void FD3D12RHI::SetRenderTarget(FRHIRenderTarget* renderTarget)
 {
     mRenderTargetCurrent = renderTarget;

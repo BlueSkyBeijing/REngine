@@ -19,11 +19,48 @@
 #include "MathUtility.h"
 #include "FLight.h"
 
+
+FFullscreenQuad::FFullscreenQuad(FRHI* rhi) :
+    mRHI(rhi)
+{
+}
+
+FFullscreenQuad::~FFullscreenQuad()
+{
+}
+
+
+void FFullscreenQuad::Init()
+{
+    const FScreenVertex vertexes[4] = { FScreenVertex(FVector3(-1.f, -1.f, 0.0f), FVector2(0.0f, 1.0f)),
+        FScreenVertex(FVector3(1.f, -1.f, 0.0f), FVector2(1.0f, 1.0f)),
+        FScreenVertex(FVector3(-1.f, 1.f, 0.0f), FVector2(0.0f, 0.0f)),
+        FScreenVertex(FVector3(1.f, 1.f, 0.0f), FVector2(1.0f, 0.0f)) };
+    const uint16 indexes[6] = { 0, 2, 1, 1, 2, 3 };
+
+    VertexBuffer = mRHI->CreateVertexBuffer(sizeof(FScreenVertex), 4, (uint8*)vertexes);
+    IndexBuffer = mRHI->CreateIndexBuffer(sizeof(uint16), 6, (uint8*)indexes);
+}
+
+void FFullscreenQuad::UnInit()
+{
+    delete VertexBuffer;
+    VertexBuffer = nullptr;
+
+    delete IndexBuffer;
+    IndexBuffer = nullptr;
+}
+
+void FFullscreenQuad::Draw()
+{
+}
+
 FRenderer::FRenderer(FRHIRenderWindow* renderWindow, FScene* scene, FView* view) :
     mRHI(TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI()),
     mRenderTarget(renderWindow),
     mScene(scene),
-    mView(view)
+    mView(view),
+    mFullscreenQuad(nullptr)
 {
 }
 
@@ -39,6 +76,9 @@ void FRenderer::Init()
     mRHI->FlushCommandQueue();
 
     initShadow();
+
+    mFullscreenQuad = new FFullscreenQuad(mRHI);
+    mFullscreenQuad->Init();
 }
 
 void FRenderer::UnInit()
@@ -55,6 +95,9 @@ void FRenderer::UnInit()
     delete mShadowPassConstantBuffer;
     mShadowPassConstantBuffer = nullptr;
 
+    mFullscreenQuad->UnInit();
+    delete mFullscreenQuad;
+    mFullscreenQuad = nullptr;
 }
 
 void FRenderer::preRender()
@@ -250,11 +293,11 @@ void FRenderer::_createMainPassConstant(FMainPassConstant& constant)
     ConstructMatrixLookRight(viewMatrix, mView->Position, mView->Look, mView->Right);
 
     FMatrix4x4 projectionMatrix;
-    const float fovY = mView->FOV;
-    const float aspect = mView->AspectRatio;
+    const float fovX = mView->FOV / 180.0f * 3.1415926f;
+    const float aspectRatio = mView->AspectRatio;
     const float nearPlane = 1.0f;
     const float farPlane = 1000000.0f;
-    ConstructMatrixPerspectiveFovLH(projectionMatrix, fovY, aspect, nearPlane, farPlane);
+    ConstructMatrixPerspectiveFovXLH(projectionMatrix, fovX, aspectRatio, nearPlane, farPlane);
 
     constant.View = viewMatrix;
     constant.Proj = projectionMatrix;

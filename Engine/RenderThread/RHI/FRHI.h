@@ -164,6 +164,44 @@ enum ERHIAccess
     ACCESS_PRESENT = 0,
     ACCESS_PREDICATION = 0x200,
 };
+enum ERenderTargetActions
+{
+    RTA_LoadOpMask = 2,
+
+    RTA_DontLoad_DontStore,
+
+    RTA_DontLoad_Store,
+    RTA_Clear_Store,
+    RTA_Load_Store,
+
+    RTA_Clear_DontStore,
+    RTA_Load_DontStore,
+    RTA_Clear_Resolve,
+    RTA_Load_Resolve,
+};
+
+enum EDepthStencilTargetActions
+{
+    DSTA_DepthMask = 4,
+
+    DSTA_DontLoad_DontStore,
+    DSTA_DontLoad_StoreDepthStencil,
+    DSTA_DontLoad_StoreStencilNotDepth,
+    DSTA_ClearDepthStencil_StoreDepthStencil,
+    DSTA_LoadDepthStencil_StoreDepthStencil,
+    DSTA_LoadDepthNotStencil_DontStore,
+    DSTA_LoadDepthStencil_StoreStencilNotDepth,
+
+    DSTA_ClearDepthStencil_DontStoreDepthStencil,
+    DSTA_LoadDepthStencil_DontStoreDepthStencil,
+    DSTA_ClearDepthStencil_StoreDepthNotStencil,
+    DSTA_ClearDepthStencil_StoreStencilNotDepth,
+    DSTA_ClearDepthStencil_ResolveDepthNotStencil,
+    DSTA_ClearDepthStencil_ResolveStencilNotDepth,
+    DSTA_LoadDepthClearStencil_StoreDepthStencil,
+
+    DSTA_ClearStencilDontLoadDepth_StoreStencilNotDepth,
+};
 
 struct FRHITransitionInfo
 {
@@ -179,6 +217,27 @@ struct FRHITransitionInfo
         , AccessBefore(InPreviousState)
         , AccessAfter(InNewState)
     {}
+};
+
+struct FRHIRenderPassInfo
+{
+    struct FColorEntry
+    {
+        FRHITexture* RenderTarget;
+        FRHITexture* ResolveTarget;
+        int32 ArraySlice;
+        uint8 MipIndex;
+        ERenderTargetActions Action;
+    };
+    FColorEntry ColorRenderTargets;
+
+    struct FDepthStencilEntry
+    {
+        FRHITexture* DepthStencilTarget;
+        FRHITexture* ResolveTarget;
+        EDepthStencilTargetActions Action;
+    };
+    FDepthStencilEntry DepthStencilRenderTarget;
 };
 
 class FRHI
@@ -227,6 +286,9 @@ public:
 
     virtual void BeginEvent(const char* eventName) = 0;
     virtual void EndEvent() = 0;
+
+    virtual void BeginRenderPass(const FRHIRenderPassInfo& info, const char* name) = 0;
+    virtual void EndRenderPass() = 0;
 
     virtual void Present(FRHIRenderWindow* window) = 0;
 

@@ -5,7 +5,9 @@ void ConstructMatrixLookAtLH(FMatrix4x4& viewMatrix, FVector3& pos, FVector3& ta
 
 void ConstructMatrixLookRight(FMatrix4x4& viewMatrix, FVector3& pos, FVector3& look, FVector3& right);
 
-void ConstructMatrixPerspectiveFovLH(FMatrix4x4& projectionMatrix, float fovY, float aspect, float nearPlane, float farPlane);
+void ConstructMatrixPerspectiveFovXLH(FMatrix4x4& projectionMatrix, float fovX, float aspectRatio, float nearPlane, float farPlane);
+
+void ConstructMatrixPerspectiveFovYLH(FMatrix4x4& projectionMatrix, float fovY, float aspectRatio, float nearPlane, float farPlane);
 
 FMatrix4x4 ConstructAffineMatrix(float rotX, float rotY, float rotZ, FVector3 trans);
 

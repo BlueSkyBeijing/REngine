@@ -52,6 +52,9 @@ public:
     virtual void BeginEvent(const char* eventName) override;
     virtual void EndEvent() override;
 
+    virtual void BeginRenderPass(const FRHIRenderPassInfo& info, const char* name) override;
+    virtual void EndRenderPass() override;
+
     virtual void Present(FRHIRenderWindow* window) override;
 
 protected:

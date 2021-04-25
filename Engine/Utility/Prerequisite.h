@@ -52,6 +52,8 @@ class FRenderCommand;
 
 class FRHI;
 class FRHIShader;
+class FRHITexture;
+class FScreenVertex;
 class FRHITexture2D;
 class FRHIBuffer;
 class FRHIIndexBuffer;

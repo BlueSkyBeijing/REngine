@@ -35,26 +35,47 @@ void ConstructMatrixLookRight(FMatrix4x4& viewMatrix, FVector3& pos, FVector3& l
     viewMatrix.col(3) = FVector4(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
-void ConstructMatrixPerspectiveFovLH(FMatrix4x4& projectionMatrix, float fovY, float aspect, float nearPlane, float farPlane)
+void ConstructMatrixPerspectiveFovYLH(FMatrix4x4& projectionMatrix, float fovY, float aspectRatio, float nearPlane, float farPlane)
 {
     //from:https://docs.microsoft.com/en-us/previous-versions/windows/desktop/bb281727(v=vs.85)
     //    w       0       0                                             0
     //    0       h       0                                             0
     //    0       0       zfarPlane / (zfarPlane - znearPlane)          1
     //    0       0 - znearPlane * zfarPlane / (zfarPlane - znearPlane)  0
+    // h = cot(fieldOfViewY/2)
+    // h = w / aspectRatio
+    // cot(x) = 1 / tan(x)
 
-    const float theta = fovY * 0.5f;
+    const float halfFovY = fovY * 0.5f;
+    const float h = 1.0f / tan(halfFovY);
+    const float w = h * aspectRatio;
     const float range = farPlane - nearPlane;
-    const float invtan = 1.0f / tan(theta);
 
     projectionMatrix.setConstant(0.0f);
-    projectionMatrix(0, 0) = invtan / aspect;
-    projectionMatrix(1, 1) = invtan;
+    projectionMatrix(0, 0) = w;
+    projectionMatrix(1, 1) = h;
     projectionMatrix(2, 2) = farPlane / range;
-    projectionMatrix(2, 3) = 1;
+    projectionMatrix(2, 3) = 1.0f;
+    projectionMatrix(3, 2) = -nearPlane * farPlane / range;
+    projectionMatrix(3, 3) = 0.0f;
+}
+
+void ConstructMatrixPerspectiveFovXLH(FMatrix4x4& projectionMatrix, float fovX, float aspectRatio, float nearPlane, float farPlane)
+{
+    const float halfFovX = fovX * 0.5f;
+    const float w = 1.0f / tan(halfFovX);
+    const float h = w * aspectRatio;
+    const float range = farPlane - nearPlane;
+
+    projectionMatrix.setConstant(0.0f);
+    projectionMatrix(0, 0) = w;
+    projectionMatrix(1, 1) = h;
+    projectionMatrix(2, 2) = farPlane / range;
+    projectionMatrix(2, 3) = 1.0f;
     projectionMatrix(3, 2) = -nearPlane * farPlane / range;
     projectionMatrix(3, 3) = 0;
 }
+
 
 FMatrix4x4 ConstructAffineMatrix(float rotX, float rotY, float rotZ, FVector3 trans)
 {
