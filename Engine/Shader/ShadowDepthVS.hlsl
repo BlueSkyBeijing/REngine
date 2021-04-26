@@ -12,7 +12,7 @@ struct ShadowVertexOut
     float4 Pos : SV_POSITION;
 };
 
-ShadowVertexOut VSMain(VertexIn vertexIn)
+ShadowVertexOut VSMain(VertexShaderInput vertexIn)
 {
     ShadowVertexOut vertexOut;
 	

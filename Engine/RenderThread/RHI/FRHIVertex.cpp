@@ -29,7 +29,7 @@ FScreenVertex::FScreenVertex()
 }
 
 FScreenVertex::FScreenVertex(FVector3 pos, FVector2 uv) : FRHIVertex(pos),
-TexCoord(uv)
+UV(uv)
 {
 }
 

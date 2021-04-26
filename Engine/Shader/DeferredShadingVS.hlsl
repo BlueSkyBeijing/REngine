@@ -5,15 +5,15 @@ cbuffer CBObject : register(b0)
     float4x4 WorldViewProj;
 };
 
-VertexOut VSMain(VertexIn vertexIn)
+VertexShaderOutput VSMain(VertexShaderInput vertexIn)
 {
-    VertexOut VOut;
+    VertexShaderOutput VOut;
 	
     vertexOut.Pos = mul(float4(vertexIn.Pos, 1.0f), WorldViewProj);
 	
     vertexOut.Color = vertexIn.Color;
  
-    vertexOut.TexCoord = vertexIn.TexCoord;
+    vertexOut.UV = vertexIn.UV;
 
     return vertexOut;
 }

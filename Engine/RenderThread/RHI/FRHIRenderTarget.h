@@ -20,6 +20,10 @@ public:
     uint32 Width;
     uint32 Height;
     uint32 NumTarget;
+    int32 PosInHeapDSV;
+    int32 PosInHeapSRV;
+
+
 
 protected:
 

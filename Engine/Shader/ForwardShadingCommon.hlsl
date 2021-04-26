@@ -1,19 +1,19 @@
 #include "ShadingCommon.hlsl"
 
-struct VertexIn
+struct VertexShaderInput
 {
     float3 Pos : POSITION;
     float3 Normal : NORMAL;
-    float2 TexCoord : TEXCOORD;
+    float2 UV : TEXCOORD;
 };
 
-struct VertexOut
+struct VertexShaderOutput
 {
     float4 Pos : SV_POSITION;
     float4 ShadowPosH : POSITION0;
     float4 PosW : POSITION1;
     float3 Normal : NORMAL;
-    float2 TexCoord : TEXCOORD;
+    float2 UV : TEXCOORD;
 };
 
 cbuffer ObjectConstantBuffer : register(b0)

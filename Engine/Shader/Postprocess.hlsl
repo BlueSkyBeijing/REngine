@@ -1,36 +1,32 @@
 
-
-cbuffer cbObject : register(b0)
+struct VertexShaderInput
 {
-    float4 PosScaleBias;
-	float2 InvTargetSize;
+    float3 Pos : POSITION;
+    float2 UV : TEXCOORD;
 };
 
-void DrawRectangle(in float4 InPosition, in float2 InTexCoord, out float4 OutPosition, out float2 OutTexCoord)
+struct VertexShaderOutput
 {
-    OutPosition = InPosition;
-    OutPosition.xy = -1.0f + 2.0f * (PosScaleBias.zw + (InPosition.xy * PosScaleBias.xy)) * InvTargetSize.xy;
-    OutPosition.xy *= float2(1, -1);
+    float4 Pos : SV_POSITION;
+    float2 UV : TEXCOORD;
+};
+
+VertexShaderOutput PostprocessVS(VertexShaderInput input)
+{
+    VertexShaderOutput output;
+    
+    output.Pos = float4(input.Pos, 1.0f);
+    output.UV = input.UV;
+    
+    return output;
 }
 
-void PostprocessVS(
-	in float4 InPosition : ATTRIBUTE0,
-	in float2 InTexCoord : ATTRIBUTE1,
-	out float4 OutUVPos : TEXCOORD0,
-	out float4 OutPosition : SV_POSITION
-	)
-{
-    DrawRectangle(InPosition, InTexCoord, OutPosition, OutUVPos.xy);
-    OutUVPos.zw = OutPosition.xy;
-}
+Texture2D FullScreenTexture : register(t0);
+SamplerState FullScreenTextureSampler : register(s0);
 
-Texture2D PostprocessInput0 : register(t0);
-SamplerState PostprocessInput0Sampler : register(s0);
-
-void PostprocessPS(
-	float4 InUVPos : TEXCOORD0,
-	out half4 OutColor : SV_Target0
-	)
+float4 PostprocessPS(VertexShaderOutput input) : SV_TARGET
 {
-    OutColor = PostprocessInput0.Sample(PostprocessInput0Sampler, InUVPos.xy);
+    float4 color = FullScreenTexture.Sample(FullScreenTextureSampler, input.UV);
+	
+    return color;
 }

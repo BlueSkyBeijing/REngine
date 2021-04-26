@@ -1,15 +1,15 @@
 #include "Common.hlsl"
 
-struct VertexIn
+struct VertexShaderInput
 {
     float3 Pos : POSITION;
     float4 Color : COLOR;
-    float2 TexCoord : TEXCOORD;
+    float2 UV : TEXCOORD;
 };
 
-struct VertexOut
+struct VertexShaderOutput
 {
     float4 Pos : SV_POSITION;
     float4 Color : COLOR;
-    float2 TexCoord : TEXCOORD;
+    float2 UV : TEXCOORD;
 };

@@ -50,13 +50,13 @@ D3D12_CPU_DESCRIPTOR_HANDLE FD3D12RenderTarget::GetRenderTargetView(uint32 index
 {
     return CD3DX12_CPU_DESCRIPTOR_HANDLE(
         mDX12DescriptorHeapRenderTarget->GetCPUDescriptorHandleForHeapStart(),
-        index,
+        PosInHeap + index,
         mRTVDescriptorSize);
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE FD3D12RenderTarget::GetDepthStencilView() const
 {
-    return CD3DX12_CPU_DESCRIPTOR_HANDLE(mDX12DescriptorHeapDepthStencil->GetCPUDescriptorHandleForHeapStart(), 1, mDSVDescriptorSize);
+    return CD3DX12_CPU_DESCRIPTOR_HANDLE(mDX12DescriptorHeapDepthStencil->GetCPUDescriptorHandleForHeapStart(), PosInHeapDSV, mDSVDescriptorSize);
 }
 
 FD3D12RenderWindow::FD3D12RenderWindow(
@@ -102,13 +102,13 @@ D3D12_CPU_DESCRIPTOR_HANDLE FD3D12RenderWindow::GetRenderTargetView(uint32 index
 {
     return CD3DX12_CPU_DESCRIPTOR_HANDLE(
         mDX12DescriptorHeapRenderTarget->GetCPUDescriptorHandleForHeapStart(),
-        index,
+        PosInHeap + index,
         mRTVDescriptorSize);
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE FD3D12RenderWindow::GetDepthStencilView() const
 {
-    return mDX12DescriptorHeapDepthStencil->GetCPUDescriptorHandleForHeapStart();
+    return CD3DX12_CPU_DESCRIPTOR_HANDLE(mDX12DescriptorHeapDepthStencil->GetCPUDescriptorHandleForHeapStart(), PosInHeapDSV, mDSVDescriptorSize);
 }
 
 void FD3D12RenderWindow::Present()

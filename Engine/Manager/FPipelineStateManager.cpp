@@ -23,32 +23,6 @@ FPipelineStateManager::~FPipelineStateManager()
 {
 }
 
-FRHIPipelineState* FPipelineStateManager::CreatePipleLineState(FRenderProxy* renderProxy)
-{
-    if (nullptr == mPipelineState)
-    {
-        FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
-
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
-
-        mPipelineState = rhi->CreatePipelineState(shaderBindings, renderProxy->Material->VertexShader, renderProxy->Material->PixelShader, &renderProxy->VertexLayout);
-
-        mPipelineStateShadow = rhi->CreatePipelineStateShadow(shaderBindings, renderProxy->Material->VertexShaderShadow, nullptr, &renderProxy->VertexLayout);
-    }
-
-    return mPipelineState;
-}
-
-FRHIPipelineState* FPipelineStateManager::GetPipleLineState(FRenderProxy* renderProxy)
-{
-    return mPipelineState;
-}
-
-FRHIPipelineState* FPipelineStateManager::GetPipleLineStateShadow(FRenderProxy* renderProxy)
-{
-    return mPipelineStateShadow;
-}
-
 void FPipelineStateManager::Init()
 {
 }
@@ -67,4 +41,55 @@ void FPipelineStateManager::UnInit()
         mPipelineStateShadow = nullptr;
     }
 
+    if (mPipelineStateFullscreenQuad != nullptr)
+    {
+        delete mPipelineStateFullscreenQuad;
+        mPipelineStateFullscreenQuad = nullptr;
+    }
+}
+
+FRHIPipelineState* FPipelineStateManager::CreatePipleLineState(FRenderProxy* renderProxy)
+{
+    if (nullptr == mPipelineState)
+    {
+        FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
+
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+
+        mPipelineState = rhi->CreatePipelineState(shaderBindings, renderProxy->Material->VertexShader, renderProxy->Material->PixelShader, &renderProxy->VertexLayout);
+
+        mPipelineStateShadow = rhi->CreatePipelineStateShadow(shaderBindings, renderProxy->Material->VertexShaderShadow, nullptr, &renderProxy->VertexLayout);
+    }
+
+    return mPipelineState;
+}
+
+FRHIPipelineState* FPipelineStateManager::CreatePipleLineState(FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout)
+{
+    if (nullptr == mPipelineStateFullscreenQuad)
+    {
+        FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
+
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+
+        mPipelineStateFullscreenQuad = rhi->CreatePipelineStateFullScreenQuad(shaderBindings, vertexShader, pixelShader, vertexLayout);
+    }
+
+    return mPipelineStateFullscreenQuad;
+}
+
+
+FRHIPipelineState* FPipelineStateManager::GetPipleLineState(FRenderProxy* renderProxy)
+{
+    return mPipelineState;
+}
+
+FRHIPipelineState* FPipelineStateManager::GetPipleLineStateShadow(FRenderProxy* renderProxy)
+{
+    return mPipelineStateShadow;
+}
+
+FRHIPipelineState* FPipelineStateManager::GetPipleLineStateFullscreenQuad()
+{
+    return mPipelineStateFullscreenQuad;
 }

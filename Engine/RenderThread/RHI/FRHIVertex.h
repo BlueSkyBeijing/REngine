@@ -33,7 +33,7 @@ public:
     ~FScreenVertex();
 
 public:
-    FVector2 TexCoord;
+    FVector2 UV;
 private:
 
 };
@@ -46,7 +46,7 @@ public:
 
 public:
     FVector3 Normal;
-    FVector2 TexCoord;
+    FVector2 UV;
 private:
 
 };
