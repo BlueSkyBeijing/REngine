@@ -107,25 +107,21 @@ void FRenderer::Init()
 {
     mRHI->FlushCommandQueue();
 
-    createMainPassConstantBuffer();
-    mRHI->FlushCommandQueue();
-
-
-    initShadow();
-
     mFullScreenQuad = new FFullScreenQuad(mRHI);
     mFullScreenQuad->Init();
 
-    mSceneColor = mRHI->CreateRenderTarget(TSingleton<FConfigManager>::GetInstance().WindowWidth,
-        TSingleton<FConfigManager>::GetInstance().WindowHeight, 1, PF_R8G8B8A8_UNORM, PF_D24_UNORM_S8_UINT);
-
+    initShadowPass();
+    initSceneColorPass();
+    initPostProcess();
 }
 
 void FRenderer::UnInit()
 {
     mRHI->FlushCommandQueue();
 
-    unInitShadow();
+    unInitShadowPass();
+    unInitSceneColorPass();
+    unInitPostProcess();
 
     mMainPassConstantBuffer->UnInit();
     delete mMainPassConstantBuffer;
@@ -147,131 +143,37 @@ void FRenderer::UnInit()
 void FRenderer::preRender()
 {
     mRHI->BeginCommmandList();
-
-}
-
-void FRenderer::Render()
-{
-    preRender();
-
-    updateShadow();
-
-    clear();
-
-    initView();
-
-    drawRenderables();
-
-    postProcess();
-
-    postRender();
-}
-
-void FRenderer::clear()
-{
-    //create shadow depth render target
-
-    mRHI->SetRenderTarget(mSceneColor);
-
-    const FRHITransitionInfo info(mSceneColor, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
-    mRHI->Transition(info);
-
-    const FVector4 clearColor(0.5f, 0.5f, 0.5f, 1.0f);
-    mRHI->Clear(true, clearColor, true, 1, true, 0);
-}
-
-void FRenderer::initView()
-{
-    setViewPort();
-    computeVisibility();
-    updateMainPassConstantBuffer();
-}
-
-void FRenderer::computeVisibility()
-{
-}
-
-void FRenderer::setRenderTarget(FRHIRenderTarget* renderTarget)
-{
-    mRHI->SetRenderTarget(renderTarget);
-}
-
-void FRenderer::setViewPort()
-{
-    mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mRenderTarget->Width), static_cast<float>(mRenderTarget->Height), 1.0f);
-    mRHI->SetSetScissor(true, 0.0f, 0.0f, static_cast<float>(mRenderTarget->Width), static_cast<float>(mRenderTarget->Height));
-}
-
-void FRenderer::drawRenderables()
-{
-    mRHI->BeginEvent("Main");
-    const std::vector<FRenderProxy*>& renderProxys = mScene->GetRenderProxys();
-    for (auto it = renderProxys.begin(); it != renderProxys.end(); it++)
-    {
-        FRenderProxy* renderProxy = *it;
-
-        mRHI->BeginEvent(renderProxy->DebugName.c_str());
-
-        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(renderProxy);
-
-        mRHI->SetPipelineState(pipelineState);
-        mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
-        mRHI->SetVertexBuffer(renderProxy->VertexBuffer);
-        mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
-        mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 1);
-        mRHI->SetConstantBuffer(mMainPassConstantBuffer, 3);
-        mRHI->SetTexture2D(renderProxy->Material->BaseColor, 0);
-
-        mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
-
-        mRHI->EndEvent();
-    }
-    mRHI->EndEvent();
-}
-
-void FRenderer::postProcess()
-{
-    const FRHITransitionInfo infoSceneColor(mSceneColor, ACCESS_RENDER_TARGET, ACCESS_PRESENT);
-    mRHI->Transition(infoSceneColor);
-
-    mRHI->SetRenderTarget(mRenderTarget);
-    const FRHITransitionInfo infoRenderTarget(mRenderTarget, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
-    mRHI->Transition(infoRenderTarget);
-
-    FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateFullscreenQuad();
-
-    mRHI->SetPipelineState(pipelineState);
-    mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
-    mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
-    mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
-    //mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 3);
-    mRHI->SetTexture2D(nullptr, 0);
-    mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
 
 void FRenderer::postRender()
 {
-    const FRHITransitionInfo infoRenderTarget(mRenderTarget, ACCESS_RENDER_TARGET, ACCESS_PRESENT);
-    mRHI->Transition(infoRenderTarget);
-
     mRHI->EndCommmandList();
 
     mRHI->ExecuteCommandList();
     mRHI->FlushCommandQueue();
 }
 
-void FRenderer::initShadow()
+void FRenderer::Render()
+{
+    preRender();
+
+    updateShadowPass();
+    updateSceneColorPass();
+    updatePostProcess();
+
+    postRender();
+}
+
+void FRenderer::initShadowPass()
 {
     //create shadow depth render target
     mShadowMap = mRHI->CreateRenderTarget(TSingleton<FConfigManager>::GetInstance().ShadowMapWidth,
         TSingleton<FConfigManager>::GetInstance().ShadowMapHeight, 0, PF_UNKNOWN, PF_R24_UNORM_X8_TYPELESS);
 
-    //mRenderTarget->PosInHeap = mShadowMap->PosInHeap;
-
     creatShadowPassConstantBuffer();
 }
 
-void FRenderer::updateShadow()
+void FRenderer::updateShadowPass()
 {
     mRHI->BeginEvent("ShadowDepth");
     //update light view
@@ -280,7 +182,6 @@ void FRenderer::updateShadow()
     mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mShadowMap->Width), static_cast<float>(mShadowMap->Height), 1.0f);
     mRHI->SetSetScissor(true, 0.0f, 0.0f, static_cast<float>(mShadowMap->Width), static_cast<float>(mShadowMap->Height));
 
-    //update shadow map
     mRHI->SetRenderTarget(mShadowMap);
 
     const FRHITransitionInfo infoBegin(mShadowMap, ACCESS_GENERIC_READ, ACCESS_DEPTH_WRITE);
@@ -302,8 +203,8 @@ void FRenderer::updateShadow()
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(renderProxy->VertexBuffer);
         mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
-        mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 1);
-        mRHI->SetConstantBuffer(mShadowPassConstantBuffer, 3);
+        mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mShadowPassConstantBuffer, 1);
 
         mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
 
@@ -314,26 +215,13 @@ void FRenderer::updateShadow()
     mRHI->Transition(infoEnd);
 
     mRHI->EndEvent();
+
 }
-void FRenderer::unInitShadow()
+
+void FRenderer::unInitShadowPass()
 {
     delete mShadowMap;
     mShadowMap = nullptr;
-}
-
-void FRenderer::createMainPassConstantBuffer()
-{
-    //create pass constant buffer
-    FMainPassConstant mainConstant;
-    _createMainPassConstant(mainConstant);
-    mMainPassConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FMainPassConstant), (uint8*)&mainConstant);
-}
-
-void FRenderer::updateMainPassConstantBuffer()
-{
-    FMainPassConstant mainConstant;
-    _createMainPassConstant(mainConstant);
-    mRHI->UpdateConstantBuffer(mMainPassConstantBuffer, sizeof(FMainPassConstant), (uint8*)&mainConstant);
 }
 
 void FRenderer::creatShadowPassConstantBuffer()
@@ -348,34 +236,6 @@ void FRenderer::updateShadowPassConstantBuffer()
     FShadowPassConstant shadowConstant;
     _createShadowPassConstant(shadowConstant);
     mRHI->UpdateConstantBuffer(mShadowPassConstantBuffer, sizeof(FShadowPassConstant), (uint8*)&shadowConstant);
-}
-
-void FRenderer::_createMainPassConstant(FMainPassConstant& constant)
-{
-    FMatrix4x4 viewMatrix;
-    ConstructMatrixLookRight(viewMatrix, mView->Position, mView->Look, mView->Right);
-
-    FMatrix4x4 projectionMatrix;
-    const float fovX = mView->FOV / 180.0f * 3.1415926f;
-    const float aspectRatio = mView->AspectRatio;
-    const float nearPlane = 1.0f;
-    const float farPlane = 1000000.0f;
-    ConstructMatrixPerspectiveFovXLH(projectionMatrix, fovX, aspectRatio, nearPlane, farPlane);
-
-    constant.View = viewMatrix;
-    constant.Proj = projectionMatrix;
-    constant.ViewProj = viewMatrix * projectionMatrix;
-    constant.ShadowTransform = mShadowTransform;
-    constant.CameraPos = mView->Position;
-    constant.CameraDir = mView->Look;
-
-    FDirectionalLight* light = mScene->GetDirectionalLight();
-    //should use negative value of camera direction in shader
-    constant.DirectionalLightDir = -light->Direction;
-    constant.DirectionalLightColor = FVector3(light->Color.x(), light->Color.y(), light->Color.z());
-    const int32 shadowMapWidth = TSingleton<FConfigManager>::GetInstance().ShadowMapWidth;
-    const int32 shadowMapHeight = TSingleton<FConfigManager>::GetInstance().ShadowMapHeight;
-    constant.InvShadowMapSize = FVector2(1.0f / (shadowMapWidth), 1.0f / (shadowMapHeight));
 }
 
 void FRenderer::_createShadowPassConstant(FShadowPassConstant& constant)
@@ -418,4 +278,152 @@ void FRenderer::_createShadowPassConstant(FShadowPassConstant& constant)
     constant.View = lightView;
     constant.Proj = lightProj;
     constant.ViewProj = lightView * lightProj;
+}
+
+void FRenderer::initSceneColorPass()
+{
+    //create shadow depth render target
+    mSceneColor = mRHI->CreateRenderTarget(TSingleton<FConfigManager>::GetInstance().WindowWidth,
+        TSingleton<FConfigManager>::GetInstance().WindowHeight, 1, PF_R8G8B8A8_UNORM, PF_D24_UNORM_S8_UINT);
+
+    createSceneColorPassConstantBuffer();
+}
+
+void FRenderer::updateSceneColorPass()
+{
+    mRHI->BeginEvent("SceneColorPass");
+
+    mRHI->SetRenderTarget(mSceneColor);
+
+    const FRHITransitionInfo info(mSceneColor, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
+    mRHI->Transition(info);
+
+    const FVector4 clearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    mRHI->Clear(true, clearColor, true, 1, true, 0);
+
+    mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mRenderTarget->Width), static_cast<float>(mRenderTarget->Height), 1.0f);
+    mRHI->SetSetScissor(true, 0.0f, 0.0f, static_cast<float>(mRenderTarget->Width), static_cast<float>(mRenderTarget->Height));
+
+    updateSceneColorPassConstantBuffer();
+
+    const std::vector<FRenderProxy*>& renderProxys = mScene->GetRenderProxys();
+    for (auto it = renderProxys.begin(); it != renderProxys.end(); it++)
+    {
+        FRenderProxy* renderProxy = *it;
+
+        mRHI->BeginEvent(renderProxy->DebugName.c_str());
+
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(renderProxy);
+
+        mRHI->SetPipelineState(pipelineState);
+        mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
+        mRHI->SetVertexBuffer(renderProxy->VertexBuffer);
+        mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
+        mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mMainPassConstantBuffer, 1);
+        mRHI->SetTexture2D(renderProxy->Material->BaseColor, 0);
+        mRHI->SetTexture2D(mShadowMap, 1);
+
+        mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
+
+        mRHI->EndEvent();
+    }
+
+    const FRHITransitionInfo infoSceneColor(mSceneColor, ACCESS_RENDER_TARGET, ACCESS_PRESENT);
+    mRHI->Transition(infoSceneColor);
+
+    mRHI->EndEvent();
+}
+
+void FRenderer::unInitSceneColorPass()
+{
+    mSceneColor->UnInit();
+    delete mSceneColor;
+    mSceneColor = nullptr;
+}
+
+void FRenderer::createSceneColorPassConstantBuffer()
+{
+    //create pass constant buffer
+    FSceneColorPassConstant mainConstant;
+    _createSceneColorPassConstant(mainConstant);
+    mMainPassConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FSceneColorPassConstant), (uint8*)&mainConstant);
+}
+
+void FRenderer::updateSceneColorPassConstantBuffer()
+{
+    FSceneColorPassConstant mainConstant;
+    _createSceneColorPassConstant(mainConstant);
+    mRHI->UpdateConstantBuffer(mMainPassConstantBuffer, sizeof(FSceneColorPassConstant), (uint8*)&mainConstant);
+}
+
+void FRenderer::_createSceneColorPassConstant(FSceneColorPassConstant& constant)
+{
+    FMatrix4x4 viewMatrix;
+    ConstructMatrixLookRight(viewMatrix, mView->Position, mView->Look, mView->Right);
+
+    FMatrix4x4 projectionMatrix;
+    const float fovX = mView->FOV / 180.0f * 3.1415926f;
+    const float aspectRatio = mView->AspectRatio;
+    const float nearPlane = 1.0f;
+    const float farPlane = 1000000.0f;
+    ConstructMatrixPerspectiveFovXLH(projectionMatrix, fovX, aspectRatio, nearPlane, farPlane);
+
+    constant.View = viewMatrix;
+    constant.Proj = projectionMatrix;
+    constant.ViewProj = viewMatrix * projectionMatrix;
+    constant.ShadowTransform = mShadowTransform;
+    constant.CameraPos = mView->Position;
+    constant.CameraDir = mView->Look;
+
+    FDirectionalLight* light = mScene->GetDirectionalLight();
+    //should use negative value of camera direction in shader
+    constant.DirectionalLightDir = -light->Direction;
+    constant.DirectionalLightColor = FVector3(light->Color.x(), light->Color.y(), light->Color.z());
+    const int32 shadowMapWidth = TSingleton<FConfigManager>::GetInstance().ShadowMapWidth;
+    const int32 shadowMapHeight = TSingleton<FConfigManager>::GetInstance().ShadowMapHeight;
+    constant.InvShadowMapSize = FVector2(1.0f / (shadowMapWidth), 1.0f / (shadowMapHeight));
+}
+
+void FRenderer::initPostProcess()
+{
+    creatPostProcessConstantBuffer();
+}
+
+void FRenderer::updatePostProcess()
+{
+    mRHI->BeginEvent("PostProcess");
+
+    mRHI->SetRenderTarget(mRenderTarget);
+
+    const FRHITransitionInfo infoRenderTargetBegin(mRenderTarget, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
+    mRHI->Transition(infoRenderTargetBegin);
+
+    FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateFullscreenQuad();
+
+    mRHI->SetPipelineState(pipelineState);
+    mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
+    mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
+    mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
+    //mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
+    mRHI->SetTexture2D(mSceneColor, 0);
+    mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
+
+    const FRHITransitionInfo infoRenderTargetEnd(mRenderTarget, ACCESS_RENDER_TARGET, ACCESS_PRESENT);
+    mRHI->Transition(infoRenderTargetEnd);
+
+    mRHI->EndEvent();
+
+}
+
+void FRenderer::unInitPostProcess()
+{
+}
+
+void FRenderer::creatPostProcessConstantBuffer()
+{
+}
+
+void FRenderer::updatePostProcessConstantBuffer()
+{
 }

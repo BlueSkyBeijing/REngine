@@ -324,34 +324,33 @@ void FD3D12RHI::SetConstantBuffer(FRHIConstantBuffer* buffer, int32 shaderPos)
     CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
 
     descriptorObject.Offset(buffer->PosInHeap, mCBVSRVVUAVDescriptorSize);
-    mDX12CommandList->SetGraphicsRootDescriptorTable(shaderPos, descriptorObject);
+    mDX12CommandList->SetGraphicsRootDescriptorTable(shaderPos == 0 ? 1 : 3, descriptorObject);
 
 }
 
 void FD3D12RHI::SetTexture2D(FRHITexture2D* texture, int32 shaderPos)
 {
-    if (texture == nullptr)
+    FD3D12RenderTarget* renderTargetDX12 = dynamic_cast<FD3D12RenderTarget*>(texture);
+    int32 posInHeap = texture->PosInHeap;
+    if (renderTargetDX12 != nullptr)
     {
-
-        CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart(), 3, mCBVSRVVUAVDescriptorSize);
-        mDX12CommandList->SetGraphicsRootDescriptorTable(shaderPos, descriptorObject);
+        if (renderTargetDX12->mRenderTargets.size() > 0)
+        {
+            posInHeap = renderTargetDX12->PosInHeapRTSRV;
+        }
+        else
+        {
+            posInHeap = renderTargetDX12->PosInHeapDSSRV;
+        }
     }
-    else
-    {
-        CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
+    CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
 
-        descriptorObject.Offset(texture->PosInHeap, mCBVSRVVUAVDescriptorSize);
-        mDX12CommandList->SetGraphicsRootDescriptorTable(shaderPos, descriptorObject);
-    }
+    descriptorObject.Offset(posInHeap, mCBVSRVVUAVDescriptorSize);
+    mDX12CommandList->SetGraphicsRootDescriptorTable(shaderPos == 0 ? 0 : 2, descriptorObject);
 }
 
 void FD3D12RHI::DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation)
 {
-    CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
-
-    descriptorObject.Offset(mRenderTargetCurrent->PosInHeap, mCBVSRVVUAVDescriptorSize);
-    mDX12CommandList->SetGraphicsRootDescriptorTable(2, descriptorObject);
-
     mDX12CommandList->DrawIndexedInstanced(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
 }
 
@@ -471,7 +470,7 @@ FRHIShader* FD3D12RHI::CreateShader(const std::wstring& filePathName, const std:
     if (errors != nullptr)
     {
         OutputDebugStringA((char*)errors->GetBufferPointer());
-    }
+}
 
     return shader;
 }
@@ -719,11 +718,8 @@ FRHITexture2D* FD3D12RHI::CreateTexture2D(const std::wstring& filePathName)
         mDX12CommandList.Get(), filePathName.c_str(),
         mCurTexture, mCurTextureUploadHeap));
 
-    texture2D->PosInHeap = msCBVSRVUAVCount;
 
-    msCBVSRVUAVCount++;
-
-    CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorObj(mCBVSRVUAVHeap->GetCPUDescriptorHandleForHeapStart(), texture2D->PosInHeap, mCBVSRVVUAVDescriptorSize);
+    CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorObj(mCBVSRVUAVHeap->GetCPUDescriptorHandleForHeapStart(), msCBVSRVUAVCount, mCBVSRVVUAVDescriptorSize);
 
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -734,6 +730,10 @@ FRHITexture2D* FD3D12RHI::CreateTexture2D(const std::wstring& filePathName)
     srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
     mDX12Device->CreateShaderResourceView(mCurTexture.Get(), &srvDesc, descriptorObj);
+
+    texture2D->PosInHeap = msCBVSRVUAVCount;
+
+    msCBVSRVUAVCount++;
 
     mDX12CommandList->Close();
 
@@ -811,7 +811,7 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
             srvDesc.Texture2D.MipLevels = renderTarget->mRenderTargets[i]->GetDesc().MipLevels;
             srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
-            renderTarget->PosInHeapSRV = msCBVSRVUAVCount;
+            renderTarget->PosInHeapRTSRV = msCBVSRVUAVCount;
             mDX12Device->CreateShaderResourceView(renderTarget->mRenderTargets[i].Get(), &srvDesc, descriptorObj);
             msCBVSRVUAVCount++;
 
@@ -859,7 +859,7 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
         renderTarget->PosInHeapDSV = msDSVCount;
         msDSVCount++;
 
-        CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorObj(mCBVSRVUAVHeap->GetCPUDescriptorHandleForHeapStart(), renderTarget->PosInHeap, mCBVSRVVUAVDescriptorSize);
+        CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorObj(mCBVSRVUAVHeap->GetCPUDescriptorHandleForHeapStart(), msCBVSRVUAVCount, mCBVSRVVUAVDescriptorSize);
         D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
         srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
         srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
@@ -869,6 +869,7 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
         srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
         srvDesc.Texture2D.PlaneSlice = 0;
         mDX12Device->CreateShaderResourceView(renderTarget->mDepthStencilBuffer.Get(), &srvDesc, descriptorObj);
+        renderTarget->PosInHeapDSSRV = msCBVSRVUAVCount;
 
         msCBVSRVUAVCount++;
     }

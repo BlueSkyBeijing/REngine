@@ -21,7 +21,7 @@ cbuffer ObjectConstantBuffer : register(b0)
     float4x4 World;
 };
 
-cbuffer MainPassConstantBuffer : register(b1)
+cbuffer SceneColorPassConstantBuffer : register(b1)
 {
     float4x4 View;
     float4x4 Proj;

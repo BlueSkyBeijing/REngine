@@ -3,7 +3,7 @@
 
 #include "FRHIBuffer.h"
 
-struct FMainPassConstant
+struct FSceneColorPassConstant
 {
     FMatrix4x4 View;
     FMatrix4x4 Proj;
@@ -21,6 +21,13 @@ struct FMainPassConstant
 };
 
 struct FShadowPassConstant
+{
+    FMatrix4x4 View;
+    FMatrix4x4 Proj;
+    FMatrix4x4 ViewProj;
+};
+
+struct FPostProcessConstant
 {
     FMatrix4x4 View;
     FMatrix4x4 Proj;
@@ -60,29 +67,30 @@ public:
 
 protected:
     virtual void preRender();
-    virtual void clear();
-    virtual void initView();
-    virtual void computeVisibility();
-    virtual void setRenderTarget(FRHIRenderTarget* renderTarget);
-    virtual void setViewPort();
-    virtual void drawRenderables();
-    virtual void postProcess();
     virtual void postRender();
 
-    void initShadow();
-    void updateShadow();
-    void unInitShadow();
-
-    void createMainPassConstantBuffer();
-    void updateMainPassConstantBuffer();
-
+    void initShadowPass();
+    void updateShadowPass();
+    void unInitShadowPass();
     void creatShadowPassConstantBuffer();
     void updateShadowPassConstantBuffer();
 
+    void initSceneColorPass();
+    void updateSceneColorPass();
+    void unInitSceneColorPass();
+    void createSceneColorPassConstantBuffer();
+    void updateSceneColorPassConstantBuffer();
+
+    void initPostProcess();
+    void updatePostProcess();
+    void unInitPostProcess();
+    void creatPostProcessConstantBuffer();
+    void updatePostProcessConstantBuffer();
 
 private:
-    void _createMainPassConstant(FMainPassConstant& constant);
+    void _createSceneColorPassConstant(FSceneColorPassConstant& constant);
     void _createShadowPassConstant(FShadowPassConstant& constant);
+    void _createPostProcessConstant(FPostProcessConstant& constant);
 
 private:
     FRHI* mRHI;

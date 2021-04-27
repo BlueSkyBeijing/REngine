@@ -1,10 +1,10 @@
 ﻿#pragma once
 #include "Prerequisite.h"
 
-#include "FRHIResource.h"
+#include "FRHITexture.h"
 
 
-class FRHIRenderTarget : public FRHIResource
+class FRHIRenderTarget : public FRHITexture2D
 {
     friend class FRHI;
 
@@ -21,7 +21,8 @@ public:
     uint32 Height;
     uint32 NumTarget;
     int32 PosInHeapDSV;
-    int32 PosInHeapSRV;
+    int32 PosInHeapRTSRV;
+    int32 PosInHeapDSSRV;
 
 
 
