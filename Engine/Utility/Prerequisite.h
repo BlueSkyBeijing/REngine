@@ -49,6 +49,7 @@ class FShaderManager;
 class FShaderBindingsManager;
 class FPipelineStateManager;
 class FRenderCommand;
+class FPostProcessing;
 
 class FRHI;
 class FRHIShader;

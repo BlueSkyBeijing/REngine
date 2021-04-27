@@ -34,26 +34,6 @@ struct FPostProcessConstant
     FMatrix4x4 ViewProj;
 };
 
-class FFullScreenQuad
-{
-public:
-    FFullScreenQuad(FRHI* rhi);
-    ~FFullScreenQuad();
-
-    void Init();
-    void UnInit();
-    void Draw();
-
-public:
-    FRHIVertexBuffer* VertexBuffer;
-    FRHIIndexBuffer* IndexBuffer;
-    FRHIShader* VertexShader;
-    FRHIShader* PixelShader;
-
-private:
-    FRHI* mRHI;
-};
-
 class FRenderer
 {
 public:
@@ -97,11 +77,11 @@ private:
     FRHIRenderTarget* mRenderTarget;
     FScene* mScene;
     FView* mView;
-    FRHIConstantBuffer* mMainPassConstantBuffer;
+    FRHIConstantBuffer* mSceneColorPassConstantBuffer;
     FRHIConstantBuffer* mShadowPassConstantBuffer;
     FRHIConstantBuffer* mPostProcessConstantBuffer;
     FRHIRenderTarget* mSceneColor;
     FRHIRenderTarget* mShadowMap;
     FMatrix4x4 mShadowTransform;
-    FFullScreenQuad* mFullScreenQuad;
+    FPostProcessing* mPostProcessing;
 };

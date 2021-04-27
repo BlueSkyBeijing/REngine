@@ -18,72 +18,7 @@
 #include "FRenderThread.h"
 #include "MathUtility.h"
 #include "FLight.h"
-
-
-FFullScreenQuad::FFullScreenQuad(FRHI* rhi) :
-    mRHI(rhi)
-{
-}
-
-FFullScreenQuad::~FFullScreenQuad()
-{
-}
-
-
-void FFullScreenQuad::Init()
-{
-    const FScreenVertex vertexes[4] = { FScreenVertex(FVector3(-1.f, -1.f, 0.0f), FVector2(0.0f, 1.0f)),
-        FScreenVertex(FVector3(1.f, -1.f, 0.0f), FVector2(1.0f, 1.0f)),
-        FScreenVertex(FVector3(-1.f, 1.f, 0.0f), FVector2(0.0f, 0.0f)),
-        FScreenVertex(FVector3(1.f, 1.f, 0.0f), FVector2(1.0f, 0.0f)) };
-    const uint16 indexes[6] = { 0, 2, 1, 1, 2, 3 };
-
-    FRHIVertexLayout layout;
-    FInputElementDesc inputLayout[] = {
-    { "POSITION", 0, EPixelFormat::PF_R32G32B32_FLOAT, 0, 0,  ICF_PER_VERTEX_DATA, 0 },
-    { "TEXCOORD", 0, EPixelFormat::PF_R32G32_FLOAT, 0, 12, ICF_PER_VERTEX_DATA, 0 } };
-
-    layout.Elements.push_back(inputLayout[0]);
-    layout.Elements.push_back(inputLayout[1]);
-
-    VertexBuffer = mRHI->CreateVertexBuffer(sizeof(FScreenVertex), 4, (uint8*)vertexes);
-    IndexBuffer = mRHI->CreateIndexBuffer(sizeof(uint16), 6, (uint8*)indexes);
-
-    const std::wstring vsFilePathName = L"Engine\\Shader\\Postprocess.hlsl";
-    const std::string vsEnterPoint = "PostprocessVS";
-    const std::string vsTarget = "vs_5_0";
-
-    VertexShader = mRHI->CreateShader(vsFilePathName, vsEnterPoint, vsTarget);
-
-    const std::wstring psFilePathName = L"Engine\\Shader\\Postprocess.hlsl";
-    const std::string psEnterPoint = "PostprocessPS";
-    const std::string psTarget = "ps_5_0";
-
-    PixelShader = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget);
-
-    TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(VertexShader, PixelShader, &layout);
-
-}
-
-void FFullScreenQuad::UnInit()
-{
-    delete VertexBuffer;
-    VertexBuffer = nullptr;
-
-    delete IndexBuffer;
-    IndexBuffer = nullptr;
-
-    delete VertexShader;
-    VertexShader = nullptr;
-
-    delete PixelShader;
-    PixelShader = nullptr;
-
-}
-
-void FFullScreenQuad::Draw()
-{
-}
+#include "FPostProcessing.h"
 
 FRenderer::FRenderer(FRHIRenderWindow* renderWindow, FScene* scene, FView* view) :
     mRHI(TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI()),
@@ -93,9 +28,8 @@ FRenderer::FRenderer(FRHIRenderWindow* renderWindow, FScene* scene, FView* view)
     mShadowMap(nullptr),
     mSceneColor(nullptr),
     mPostProcessConstantBuffer(nullptr),
-    mMainPassConstantBuffer(nullptr),
-    mShadowPassConstantBuffer(nullptr),
-    mFullScreenQuad(nullptr)
+    mSceneColorPassConstantBuffer(nullptr),
+    mShadowPassConstantBuffer(nullptr)
 {
 }
 
@@ -106,9 +40,6 @@ FRenderer::~FRenderer()
 void FRenderer::Init()
 {
     mRHI->FlushCommandQueue();
-
-    mFullScreenQuad = new FFullScreenQuad(mRHI);
-    mFullScreenQuad->Init();
 
     initShadowPass();
     initSceneColorPass();
@@ -122,21 +53,6 @@ void FRenderer::UnInit()
     unInitShadowPass();
     unInitSceneColorPass();
     unInitPostProcess();
-
-    mMainPassConstantBuffer->UnInit();
-    delete mMainPassConstantBuffer;
-    mMainPassConstantBuffer = nullptr;
-
-    mShadowPassConstantBuffer->UnInit();
-    delete mShadowPassConstantBuffer;
-    mShadowPassConstantBuffer = nullptr;
-
-    mFullScreenQuad->UnInit();
-    delete mFullScreenQuad;
-    mFullScreenQuad = nullptr;
-
-    delete mSceneColor;
-    mSceneColor = nullptr;
 
 }
 
@@ -222,6 +138,11 @@ void FRenderer::unInitShadowPass()
 {
     delete mShadowMap;
     mShadowMap = nullptr;
+
+    mShadowPassConstantBuffer->UnInit();
+    delete mShadowPassConstantBuffer;
+    mShadowPassConstantBuffer = nullptr;
+
 }
 
 void FRenderer::creatShadowPassConstantBuffer()
@@ -320,7 +241,7 @@ void FRenderer::updateSceneColorPass()
         mRHI->SetVertexBuffer(renderProxy->VertexBuffer);
         mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
         mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
-        mRHI->SetConstantBuffer(mMainPassConstantBuffer, 1);
+        mRHI->SetConstantBuffer(mSceneColorPassConstantBuffer, 1);
         mRHI->SetTexture2D(renderProxy->Material->BaseColor, 0);
         mRHI->SetTexture2D(mShadowMap, 1);
 
@@ -340,6 +261,10 @@ void FRenderer::unInitSceneColorPass()
     mSceneColor->UnInit();
     delete mSceneColor;
     mSceneColor = nullptr;
+
+    mSceneColorPassConstantBuffer->UnInit();
+    delete mSceneColorPassConstantBuffer;
+    mSceneColorPassConstantBuffer = nullptr;
 }
 
 void FRenderer::createSceneColorPassConstantBuffer()
@@ -347,14 +272,14 @@ void FRenderer::createSceneColorPassConstantBuffer()
     //create pass constant buffer
     FSceneColorPassConstant mainConstant;
     _createSceneColorPassConstant(mainConstant);
-    mMainPassConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FSceneColorPassConstant), (uint8*)&mainConstant);
+    mSceneColorPassConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FSceneColorPassConstant), (uint8*)&mainConstant);
 }
 
 void FRenderer::updateSceneColorPassConstantBuffer()
 {
     FSceneColorPassConstant mainConstant;
     _createSceneColorPassConstant(mainConstant);
-    mRHI->UpdateConstantBuffer(mMainPassConstantBuffer, sizeof(FSceneColorPassConstant), (uint8*)&mainConstant);
+    mRHI->UpdateConstantBuffer(mSceneColorPassConstantBuffer, sizeof(FSceneColorPassConstant), (uint8*)&mainConstant);
 }
 
 void FRenderer::_createSceneColorPassConstant(FSceneColorPassConstant& constant)
@@ -387,37 +312,22 @@ void FRenderer::_createSceneColorPassConstant(FSceneColorPassConstant& constant)
 
 void FRenderer::initPostProcess()
 {
+    mPostProcessing = new FPostProcessing(mRHI, mSceneColor, mRenderTarget);
+    mPostProcessing->Init();
+
     creatPostProcessConstantBuffer();
 }
 
 void FRenderer::updatePostProcess()
 {
-    mRHI->BeginEvent("PostProcess");
-
-    mRHI->SetRenderTarget(mRenderTarget);
-
-    const FRHITransitionInfo infoRenderTargetBegin(mRenderTarget, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
-    mRHI->Transition(infoRenderTargetBegin);
-
-    FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateFullscreenQuad();
-
-    mRHI->SetPipelineState(pipelineState);
-    mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
-    mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
-    mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
-    //mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
-    mRHI->SetTexture2D(mSceneColor, 0);
-    mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
-
-    const FRHITransitionInfo infoRenderTargetEnd(mRenderTarget, ACCESS_RENDER_TARGET, ACCESS_PRESENT);
-    mRHI->Transition(infoRenderTargetEnd);
-
-    mRHI->EndEvent();
-
+    mPostProcessing->Update();
 }
 
 void FRenderer::unInitPostProcess()
 {
+    mPostProcessing->UnInit();
+    delete mPostProcessing;
+    mPostProcessing = nullptr;
 }
 
 void FRenderer::creatPostProcessConstantBuffer()
