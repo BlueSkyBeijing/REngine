@@ -149,6 +149,27 @@ void FPostProcessing::Init()
     mToneMap = mRHI->CreateRenderTarget(sceneColorWidth,
         sceneColorHeight, 1, PF_R8G8B8A8_UNORM, PF_D24_UNORM_S8_UINT);
 
+    const std::wstring vsFilePathName = L"Engine\\Shader\\Postprocess.hlsl";
+    const std::string vsEnterPoint = "PostprocessVS";
+    const std::string vsTarget = "vs_5_0";
+
+    VertexShaderBloomUp = mRHI->CreateShader(vsFilePathName, vsEnterPoint, vsTarget);
+
+    const std::wstring psFilePathName = L"Engine\\Shader\\Bloom.hlsl";
+    const std::string psEnterPoint = "BloomUpPS";
+    const std::string psTarget = "ps_5_0";
+
+    PixelShaderBloomUp = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget);
+
+    FRHIVertexLayout layout;
+    FInputElementDesc inputLayout[] = {
+    { "POSITION", 0, EPixelFormat::PF_R32G32B32_FLOAT, 0, 0,  ICF_PER_VERTEX_DATA, 0 },
+    { "TEXCOORD", 0, EPixelFormat::PF_R32G32_FLOAT, 0, 12, ICF_PER_VERTEX_DATA, 0 } };
+
+    layout.Elements.push_back(inputLayout[0]);
+    layout.Elements.push_back(inputLayout[1]);
+
+    TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineStateBloomUp(VertexShaderBloomUp, PixelShaderBloomUp, &layout);
 }
 
 void FPostProcessing::UnInit()
@@ -196,6 +217,12 @@ void FPostProcessing::UnInit()
     mFullScreenQuad->UnInit();
     delete mFullScreenQuad;
     mFullScreenQuad = nullptr;
+
+    delete VertexShaderBloomUp;
+    VertexShaderBloomUp = nullptr;
+
+    delete PixelShaderBloomUp;
+    PixelShaderBloomUp = nullptr;
 
 }
 
@@ -344,7 +371,7 @@ void FPostProcessing::Update()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomUp0, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->Transition(infoRenderTargetBegin);
 
-        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateFullscreenQuad();
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateBloomUp();
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
@@ -352,6 +379,7 @@ void FPostProcessing::Update()
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         //mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomDown3, 0);
+        mRHI->SetTexture2D(mBloomDown2, 1);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
         const FRHITransitionInfo infoRenderTargetEnd(mBloomUp0, ACCESS_RENDER_TARGET, ACCESS_PRESENT);
@@ -370,7 +398,7 @@ void FPostProcessing::Update()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomUp1, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->Transition(infoRenderTargetBegin);
 
-        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateFullscreenQuad();
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateBloomUp();
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
@@ -378,6 +406,7 @@ void FPostProcessing::Update()
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         //mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomUp0, 0);
+        mRHI->SetTexture2D(mBloomDown1, 1);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
         const FRHITransitionInfo infoRenderTargetEnd(mBloomUp1, ACCESS_RENDER_TARGET, ACCESS_PRESENT);
@@ -397,7 +426,7 @@ void FPostProcessing::Update()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomUp2, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->Transition(infoRenderTargetBegin);
 
-        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateFullscreenQuad();
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateBloomUp();
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
@@ -405,6 +434,7 @@ void FPostProcessing::Update()
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         //mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomUp1, 0);
+        mRHI->SetTexture2D(mBloomDown0, 1);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
         const FRHITransitionInfo infoRenderTargetEnd(mBloomUp2, ACCESS_RENDER_TARGET, ACCESS_PRESENT);
@@ -424,7 +454,7 @@ void FPostProcessing::Update()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomUp3, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->Transition(infoRenderTargetBegin);
 
-        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateFullscreenQuad();
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateBloomUp();
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
@@ -432,6 +462,7 @@ void FPostProcessing::Update()
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         //mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomUp2, 0);
+        mRHI->SetTexture2D(mBloomSetup, 1);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
         const FRHITransitionInfo infoRenderTargetEnd(mBloomUp3, ACCESS_RENDER_TARGET, ACCESS_PRESENT);
@@ -452,14 +483,15 @@ void FPostProcessing::Update()
         const FRHITransitionInfo infoRenderTargetBegin(mRenderTarget, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->Transition(infoRenderTargetBegin);
 
-        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateFullscreenQuad();
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateBloomUp();
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         //mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
-        mRHI->SetTexture2D(mBloomUp3, 0);
+        mRHI->SetTexture2D(mSceneColor, 0);
+        mRHI->SetTexture2D(mBloomUp3, 1);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
         const FRHITransitionInfo infoRenderTargetEnd(mRenderTarget, ACCESS_RENDER_TARGET, ACCESS_PRESENT);

@@ -46,6 +46,12 @@ void FPipelineStateManager::UnInit()
         delete mPipelineStateFullscreenQuad;
         mPipelineStateFullscreenQuad = nullptr;
     }
+
+    if (mPipelineStateBloomUp != nullptr)
+    {
+        delete mPipelineStateBloomUp;
+        mPipelineStateBloomUp = nullptr;
+    }
 }
 
 FRHIPipelineState* FPipelineStateManager::CreatePipleLineState(FRenderProxy* renderProxy)
@@ -78,6 +84,19 @@ FRHIPipelineState* FPipelineStateManager::CreatePipleLineState(FRHIShader* verte
     return mPipelineStateFullscreenQuad;
 }
 
+FRHIPipelineState* FPipelineStateManager::CreatePipleLineStateBloomUp(FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout)
+{
+    if (nullptr == mPipelineStateBloomUp)
+    {
+        FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
+
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+
+        mPipelineStateBloomUp = rhi->CreatePipelineStateFullScreenQuad(shaderBindings, vertexShader, pixelShader, vertexLayout);
+    }
+
+    return mPipelineStateBloomUp;
+}
 
 FRHIPipelineState* FPipelineStateManager::GetPipleLineState(FRenderProxy* renderProxy)
 {
@@ -92,4 +111,9 @@ FRHIPipelineState* FPipelineStateManager::GetPipleLineStateShadow(FRenderProxy* 
 FRHIPipelineState* FPipelineStateManager::GetPipleLineStateFullscreenQuad()
 {
     return mPipelineStateFullscreenQuad;
+}
+
+FRHIPipelineState* FPipelineStateManager::GetPipleLineStateBloomUp()
+{
+    return mPipelineStateBloomUp;
 }

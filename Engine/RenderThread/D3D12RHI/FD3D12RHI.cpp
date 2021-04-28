@@ -324,7 +324,7 @@ void FD3D12RHI::SetConstantBuffer(FRHIConstantBuffer* buffer, int32 shaderPos)
     CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
 
     descriptorObject.Offset(buffer->PosInHeap, mCBVSRVVUAVDescriptorSize);
-    mDX12CommandList->SetGraphicsRootDescriptorTable(shaderPos == 0 ? 1 : 3, descriptorObject);
+    mDX12CommandList->SetGraphicsRootDescriptorTable(shaderPos == 0 ? msObjectCBVTableIndex : msPassCBVTableIndex, descriptorObject);
 
 }
 
@@ -346,7 +346,7 @@ void FD3D12RHI::SetTexture2D(FRHITexture2D* texture, int32 shaderPos)
     CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
 
     descriptorObject.Offset(posInHeap, mCBVSRVVUAVDescriptorSize);
-    mDX12CommandList->SetGraphicsRootDescriptorTable(shaderPos == 0 ? 0 : 2, descriptorObject);
+    mDX12CommandList->SetGraphicsRootDescriptorTable(shaderPos == 0 ? msObjectSRVTableIndex : msPassSRVTableIndex, descriptorObject);
 }
 
 void FD3D12RHI::DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation)
@@ -470,7 +470,7 @@ FRHIShader* FD3D12RHI::CreateShader(const std::wstring& filePathName, const std:
     if (errors != nullptr)
     {
         OutputDebugStringA((char*)errors->GetBufferPointer());
-}
+    }
 
     return shader;
 }

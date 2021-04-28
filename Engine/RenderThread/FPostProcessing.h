@@ -49,4 +49,7 @@ private:
     FRHIRenderTarget* mRenderTarget;
     FFullScreenQuad* mFullScreenQuad;
 
+    FRHIShader* VertexShaderBloomUp;
+    FRHIShader* PixelShaderBloomUp;
+
 };

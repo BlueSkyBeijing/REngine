@@ -53,7 +53,6 @@ void FRenderer::UnInit()
     unInitShadowPass();
     unInitSceneColorPass();
     unInitPostProcess();
-
 }
 
 void FRenderer::preRender()
