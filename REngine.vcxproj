@@ -67,6 +67,7 @@
     <ClCompile Include="Engine\RenderThread\RHI\FRHIShaderBindings.cpp" />
     <ClCompile Include="Engine\RenderThread\RHI\FRHITexture.cpp" />
     <ClCompile Include="Engine\RenderThread\RHI\FRHIVertex.cpp" />
+    <ClCompile Include="Engine\Utility\CityHash.cpp" />
     <ClCompile Include="Engine\Utility\MathUtility.cpp" />
     <ClCompile Include="Engine\Utility\PrecompiledHeader.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -122,6 +123,7 @@
     <ClInclude Include="Engine\RenderThread\RHI\FRHIShaderBindings.h" />
     <ClInclude Include="Engine\RenderThread\RHI\FRHITexture.h" />
     <ClInclude Include="Engine\RenderThread\RHI\FRHIVertex.h" />
+    <ClInclude Include="Engine\Utility\CityHash.h" />
     <ClInclude Include="Engine\Utility\MathUtility.h" />
     <ClInclude Include="Engine\Utility\PrecompiledHeader.h" />
     <ClInclude Include="Engine\Utility\Prerequisite.h" />

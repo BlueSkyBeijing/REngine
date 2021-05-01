@@ -4,7 +4,7 @@
 class FFullScreenQuad
 {
 public:
-    FFullScreenQuad(FRHI* rhi);
+    FFullScreenQuad(FRHI* rhi, FRHIVertexLayout* layout);
     ~FFullScreenQuad();
 
     void Init();
@@ -19,6 +19,8 @@ public:
 
 private:
     FRHI* mRHI;
+    FRHIVertexLayout* mLayout;
+
 };
 
 
@@ -31,7 +33,7 @@ public:
     void Init();
     void UnInit();
 
-    void Update();
+    void Draw();
 private:
     FRHI* mRHI;
     FRHIRenderTarget* mBloomSetup;
@@ -51,5 +53,7 @@ private:
 
     FRHIShader* VertexShaderBloomUp;
     FRHIShader* PixelShaderBloomUp;
+
+    FRHIVertexLayout* mFullScreenLayout;
 
 };

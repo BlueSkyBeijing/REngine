@@ -529,135 +529,20 @@ FRHIShaderBindings* FD3D12RHI::CreateShaderBindings()
     return rootSignature;
 }
 
-FRHIPipelineState* FD3D12RHI::CreatePipelineState(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout)
+FRHIPipelineState* FD3D12RHI::CreatePipelineState(const FPipelineStateInfo& info)
 {
     FD3D12PipelineState* pipelineState = new FD3D12PipelineState;
-    pipelineState->ShaderBindings = shaderBindings;
-    FD3D12Shader* vs = dynamic_cast<FD3D12Shader*>(vertexShader);
-    FD3D12Shader* ps = dynamic_cast<FD3D12Shader*>(pixelShader);
+    pipelineState->ShaderBindings = info.ShaderBindings;
+    FD3D12Shader* vs = dynamic_cast<FD3D12Shader*>(info.VertexShader);
+    FD3D12Shader* ps = dynamic_cast<FD3D12Shader*>(info.PixelShader);
 
-    uint32 numElements = static_cast<uint32>(vertexLayout->Elements.size());
+    uint32 numElements = static_cast<uint32>(info.VertexLayout->Elements.size());
 
     D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc;
     ZeroMemory(&psoDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
-    psoDesc.InputLayout = { (D3D12_INPUT_ELEMENT_DESC*)vertexLayout->Elements.data(), numElements };
-    psoDesc.pRootSignature = dynamic_cast<FD3D12ShaderBindings*>(shaderBindings)->mDX12RootSignature.Get();
-    psoDesc.DepthStencilState.DepthEnable = TRUE;
-    psoDesc.DepthStencilState.StencilEnable = TRUE;
-    psoDesc.VS =
-    {
-        reinterpret_cast<BYTE*>(vs->mShader->GetBufferPointer()),
-        vs->mShader->GetBufferSize()
-    };
-    psoDesc.PS =
-    {
-        reinterpret_cast<BYTE*>(ps->mShader->GetBufferPointer()),
-        ps->mShader->GetBufferSize()
-    };
+    psoDesc.InputLayout = { (D3D12_INPUT_ELEMENT_DESC*)info.VertexLayout->Elements.data(), numElements };
+    psoDesc.pRootSignature = dynamic_cast<FD3D12ShaderBindings*>(info.ShaderBindings)->mDX12RootSignature.Get();
 
-    D3D12_RASTERIZER_DESC RasterizerState;
-    RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
-    RasterizerState.CullMode = D3D12_CULL_MODE_FRONT;
-    RasterizerState.FrontCounterClockwise = FALSE;
-    RasterizerState.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
-    RasterizerState.DepthBiasClamp = D3D12_DEFAULT_DEPTH_BIAS_CLAMP;
-    RasterizerState.SlopeScaledDepthBias = D3D12_DEFAULT_SLOPE_SCALED_DEPTH_BIAS;
-    RasterizerState.DepthClipEnable = TRUE;
-    RasterizerState.MultisampleEnable = FALSE;
-    RasterizerState.AntialiasedLineEnable = FALSE;
-    RasterizerState.ForcedSampleCount = 0;
-    RasterizerState.ConservativeRaster = D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF;
-
-    psoDesc.RasterizerState = RasterizerState;
-    psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-    psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-    psoDesc.SampleMask = UINT_MAX;
-    psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-    psoDesc.NumRenderTargets = 1;
-    psoDesc.RTVFormats[0] = mBackBufferFormat;
-    psoDesc.SampleDesc.Count = 1;
-    psoDesc.SampleDesc.Quality = 0;
-    psoDesc.DSVFormat = mDepthStencilFormat;
-    THROW_IF_FAILED(mDX12Device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState->mDX12PipleLineState)));
-
-    return pipelineState;
-
-}
-
-FRHIPipelineState* FD3D12RHI::CreatePipelineStateFullScreenQuad(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout)
-{
-    FD3D12PipelineState* pipelineState = new FD3D12PipelineState;
-    pipelineState->ShaderBindings = shaderBindings;
-    FD3D12Shader* vs = dynamic_cast<FD3D12Shader*>(vertexShader);
-    FD3D12Shader* ps = dynamic_cast<FD3D12Shader*>(pixelShader);
-
-    uint32 numElements = static_cast<uint32>(vertexLayout->Elements.size());
-
-    D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc;
-    ZeroMemory(&psoDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
-    psoDesc.InputLayout = { (D3D12_INPUT_ELEMENT_DESC*)vertexLayout->Elements.data(), numElements };
-    psoDesc.pRootSignature = dynamic_cast<FD3D12ShaderBindings*>(shaderBindings)->mDX12RootSignature.Get();
-    psoDesc.DepthStencilState.DepthEnable = FALSE;
-    psoDesc.DepthStencilState.StencilEnable = FALSE;
-    psoDesc.VS =
-    {
-        reinterpret_cast<BYTE*>(vs->mShader->GetBufferPointer()),
-        vs->mShader->GetBufferSize()
-    };
-    psoDesc.PS =
-    {
-        reinterpret_cast<BYTE*>(ps->mShader->GetBufferPointer()),
-        ps->mShader->GetBufferSize()
-    };
-
-    D3D12_RASTERIZER_DESC RasterizerState;
-    RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
-    RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
-    RasterizerState.FrontCounterClockwise = FALSE;
-    RasterizerState.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
-    RasterizerState.DepthBiasClamp = D3D12_DEFAULT_DEPTH_BIAS_CLAMP;
-    RasterizerState.SlopeScaledDepthBias = D3D12_DEFAULT_SLOPE_SCALED_DEPTH_BIAS;
-    RasterizerState.DepthClipEnable = FALSE;
-    RasterizerState.MultisampleEnable = FALSE;
-    RasterizerState.AntialiasedLineEnable = FALSE;
-    RasterizerState.ForcedSampleCount = 0;
-    RasterizerState.ConservativeRaster = D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF;
-
-    psoDesc.RasterizerState = RasterizerState;
-    psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-    psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-    psoDesc.DepthStencilState.DepthEnable = FALSE;
-    psoDesc.DepthStencilState.StencilEnable = FALSE;
-    psoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
-
-    psoDesc.SampleMask = UINT_MAX;
-    psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-    psoDesc.NumRenderTargets = 1;
-    psoDesc.RTVFormats[0] = mBackBufferFormat;
-    psoDesc.SampleDesc.Count = 1;
-    psoDesc.SampleDesc.Quality = 0;
-    psoDesc.DSVFormat = mDepthStencilFormat;
-    THROW_IF_FAILED(mDX12Device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState->mDX12PipleLineState)));
-
-    return pipelineState;
-
-}
-
-FRHIPipelineState* FD3D12RHI::CreatePipelineStateShadow(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout)
-{
-    FD3D12PipelineState* pipelineState = new FD3D12PipelineState;
-    pipelineState->ShaderBindings = shaderBindings;
-    FD3D12Shader* vs = dynamic_cast<FD3D12Shader*>(vertexShader);
-    FD3D12Shader* ps = dynamic_cast<FD3D12Shader*>(pixelShader);
-
-    uint32 numElements = static_cast<uint32>(vertexLayout->Elements.size());
-
-    D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc;
-    ZeroMemory(&psoDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
-    psoDesc.InputLayout = { (D3D12_INPUT_ELEMENT_DESC*)vertexLayout->Elements.data(), numElements };
-    psoDesc.pRootSignature = dynamic_cast<FD3D12ShaderBindings*>(shaderBindings)->mDX12RootSignature.Get();
-    psoDesc.DepthStencilState.DepthEnable = TRUE;
-    psoDesc.DepthStencilState.StencilEnable = FALSE;
     psoDesc.VS =
     {
         reinterpret_cast<BYTE*>(vs->mShader->GetBufferPointer()),
@@ -680,25 +565,37 @@ FRHIPipelineState* FD3D12RHI::CreatePipelineStateShadow(FRHIShaderBindings* shad
     RasterizerState.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
     RasterizerState.DepthBiasClamp = D3D12_DEFAULT_DEPTH_BIAS_CLAMP;
     RasterizerState.SlopeScaledDepthBias = D3D12_DEFAULT_SLOPE_SCALED_DEPTH_BIAS;
-    RasterizerState.DepthClipEnable = TRUE;
+    RasterizerState.DepthClipEnable = info.DepthStencilState.bEnableDepthWrite;
     RasterizerState.MultisampleEnable = FALSE;
     RasterizerState.AntialiasedLineEnable = FALSE;
     RasterizerState.ForcedSampleCount = 0;
     RasterizerState.ConservativeRaster = D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF;
 
     psoDesc.RasterizerState = RasterizerState;
-    psoDesc.RasterizerState.DepthBias = 2;
-    psoDesc.RasterizerState.DepthBiasClamp = 0.0f;
-    psoDesc.RasterizerState.SlopeScaledDepthBias = 2.0f;
+    if (ps == nullptr)
+    {
+        psoDesc.RasterizerState.DepthBias = 2;
+        psoDesc.RasterizerState.DepthBiasClamp = 0.0f;
+        psoDesc.RasterizerState.SlopeScaledDepthBias = 2.0f;
+    }
+
     psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
     psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+    psoDesc.DepthStencilState.DepthEnable = info.DepthStencilState.bEnableDepthWrite;
+    psoDesc.DepthStencilState.StencilEnable = info.DepthStencilState.bEnableFrontFaceStencil || info.DepthStencilState.bEnableBackFaceStencil;
+    if (!info.DepthStencilState.bEnableDepthWrite)
+    {
+        psoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+        psoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+
+    }
     psoDesc.SampleMask = UINT_MAX;
     psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-    psoDesc.RTVFormats[0] = DXGI_FORMAT_UNKNOWN;
+    psoDesc.NumRenderTargets = (ps == nullptr) ? 0 : 1;
+    psoDesc.RTVFormats[0] = (ps == nullptr) ? DXGI_FORMAT_UNKNOWN : mBackBufferFormat;
     psoDesc.SampleDesc.Count = 1;
     psoDesc.SampleDesc.Quality = 0;
     psoDesc.DSVFormat = mDepthStencilFormat;
-    psoDesc.NumRenderTargets = 0;
     THROW_IF_FAILED(mDX12Device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState->mDX12PipleLineState)));
 
     return pipelineState;

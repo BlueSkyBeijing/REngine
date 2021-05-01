@@ -203,6 +203,78 @@ enum EDepthStencilTargetActions
     DSTA_ClearStencilDontLoadDepth_StoreStencilNotDepth,
 };
 
+enum ESamplerFilter
+{
+    SF_Point,
+    SF_Bilinear,
+    SF_Trilinear,
+    SF_AnisotropicPoint,
+    SF_AnisotropicLinear,
+};
+
+enum ESamplerAddressMode
+{
+    AM_Wrap,
+    AM_Clamp,
+    AM_Mirror,
+};
+
+enum ESamplerCompareFunction
+{
+    SCF_Never,
+    SCF_Less
+};
+
+enum ERasterizerFillMode
+{
+    FM_Point,
+    FM_Wireframe,
+    FM_Solid,
+};
+
+enum ERasterizerCullMode
+{
+    CM_None,
+    CM_CW,
+    CM_CCW,
+};
+
+enum ECompareFunction
+{
+    CF_Less,
+    CF_LessEqual,
+    CF_Greater,
+    CF_GreaterEqual,
+    CF_Equal,
+    CF_NotEqual,
+    CF_Never,
+    CF_Always,
+};
+
+enum EStencilOp
+{
+    SO_Keep,
+    SO_Zero,
+    SO_Replace,
+    SO_SaturatedIncrement,
+    SO_SaturatedDecrement,
+    SO_Invert,
+    SO_Increment,
+    SO_Decrement,
+};
+
+enum EBlendOperation
+{
+    BO_Add,
+    BO_Subtract,
+    BO_Min,
+    BO_Max,
+    BO_ReverseSubtract,
+
+    EBlendOperation_Num,
+    EBlendOperation_NumBits = 3,
+};
+
 struct FRHITransitionInfo
 {
     FRHIResource* Resource;
@@ -240,6 +312,74 @@ struct FRHIRenderPassInfo
     FDepthStencilEntry DepthStencilRenderTarget;
 };
 
+struct FSamplerStateInfo
+{
+    FSamplerStateInfo() {}
+
+    ESamplerFilter Filter;
+    ESamplerAddressMode AddressU;
+    ESamplerAddressMode AddressV;
+    ESamplerAddressMode AddressW;
+    float MipBias;
+    float MinMipLevel;
+    float MaxMipLevel;
+    int32 MaxAnisotropy;
+    uint32 BorderColor;
+    ESamplerCompareFunction SamplerComparisonFunction;
+};
+
+struct FRasterizerStateInfo
+{
+    ERasterizerFillMode FillMode;
+    ERasterizerCullMode CullMode;
+    float DepthBias;
+    float SlopeScaleDepthBias;
+    bool bAllowMSAA;
+    bool bEnableLineAA;
+};
+
+struct FDepthStencilStateInfo
+{
+    bool bEnableDepthWrite;
+    ECompareFunction DepthTest;
+
+    bool bEnableFrontFaceStencil;
+    ECompareFunction FrontFaceStencilTest;
+    EStencilOp FrontFaceStencilFailStencilOp;
+    EStencilOp FrontFaceDepthFailStencilOp;
+    EStencilOp FrontFacePassStencilOp;
+    bool bEnableBackFaceStencil;
+    ECompareFunction BackFaceStencilTest;
+    EStencilOp BackFaceStencilFailStencilOp;
+    EStencilOp BackFaceDepthFailStencilOp;
+    EStencilOp BackFacePassStencilOp;
+    uint8 StencilReadMask;
+    uint8 StencilWriteMask;
+};
+
+class FBlendStateInfo
+{
+public:
+};
+
+
+class FPipelineStateInfo
+{
+public:
+    FPipelineStateInfo();
+    ~FPipelineStateInfo();
+
+    FRHIShaderBindings* ShaderBindings;
+    FRHIShader* VertexShader;
+    FRHIShader* PixelShader;
+    FRHIVertexLayout* VertexLayout;
+
+    FRasterizerStateInfo RasterizerState;
+    FDepthStencilStateInfo DepthStencilState;
+    FBlendStateInfo FRHIBlendState;
+};
+
+
 class FRHI
 {
 public:
@@ -273,10 +413,12 @@ public:
     virtual FRHIVertexBuffer* CreateVertexBuffer(uint32 structureSize, uint32 vertexCount, uint8* bufferData) = 0;
     virtual FRHIIndexBuffer* CreateIndexBuffer(uint32 structureSize, uint32 indexCount, uint8* bufferData) = 0;
     virtual FRHIShader* CreateShader(const std::wstring& filePathName, const std::string& EnterPoint, const std::string& target) = 0;
+    //virtual FRHISamplerState* CreateSamplerState(const FSamplerStateInfo& info) final override;
+    //virtual FRHIRasterizerState* CreateRasterizerState(const FRasterizerStateInfo& info) final override;
+    //virtual FRHIDepthStencilState* CreateDepthStencilState(const FDepthStencilStateInfo& info) final override;
+    //virtual FRHIBlendState* CreateBlendState(const FBlendStateInfo& info) final override;
     virtual FRHIShaderBindings* CreateShaderBindings() = 0;
-    virtual FRHIPipelineState* CreatePipelineState(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout) = 0;
-    virtual FRHIPipelineState* CreatePipelineStateFullScreenQuad(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout) = 0;
-    virtual FRHIPipelineState* CreatePipelineStateShadow(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout) = 0;
+    virtual FRHIPipelineState* CreatePipelineState(const FPipelineStateInfo& info) = 0;
     virtual FRHITexture2D* CreateTexture2D(const std::wstring& filePathName) = 0;
     virtual FRHIRenderTarget* CreateRenderTarget(uint32 width, uint32 hight, uint32 numTarget, EPixelFormat formatTarget, EPixelFormat formatDepthStencil) = 0;
     virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) = 0;

@@ -86,6 +86,24 @@ void FRenderer::initShadowPass()
         TSingleton<FConfigManager>::GetInstance().ShadowMapHeight, 0, PF_UNKNOWN, PF_R24_UNORM_X8_TYPELESS);
 
     creatShadowPassConstantBuffer();
+
+    const std::vector<FRenderProxy*>& renderProxys = mScene->GetRenderProxys();
+    for (auto it = renderProxys.begin(); it != renderProxys.end(); it++)
+    {
+        FRenderProxy* renderProxy = *it;
+
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FPipelineStateInfo info;
+        info.ShaderBindings = shaderBindings;
+        info.VertexShader = renderProxy->Material->VertexShaderShadow;
+        info.PixelShader = nullptr;
+        info.VertexLayout = &renderProxy->VertexLayout;
+        info.DepthStencilState.bEnableDepthWrite = true;
+
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
+
+    }
+
 }
 
 void FRenderer::updateShadowPass()
@@ -112,7 +130,16 @@ void FRenderer::updateShadowPass()
 
         mRHI->BeginEvent(renderProxy->DebugName.c_str());
 
-        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateShadow(renderProxy);
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FPipelineStateInfo info;
+        info.ShaderBindings = shaderBindings;
+        info.VertexShader = renderProxy->Material->VertexShaderShadow;
+        info.PixelShader = nullptr;
+        info.VertexLayout = &renderProxy->VertexLayout;
+        info.DepthStencilState.bEnableDepthWrite = true;
+
+        TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
@@ -233,7 +260,15 @@ void FRenderer::updateSceneColorPass()
 
         mRHI->BeginEvent(renderProxy->DebugName.c_str());
 
-        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(renderProxy);
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FPipelineStateInfo info;
+        info.ShaderBindings = shaderBindings;
+        info.VertexShader = renderProxy->Material->VertexShader;
+        info.PixelShader = renderProxy->Material->PixelShader;
+        info.VertexLayout = &renderProxy->VertexLayout;
+        info.DepthStencilState.bEnableDepthWrite = true;
+
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
@@ -319,7 +354,7 @@ void FRenderer::initPostProcess()
 
 void FRenderer::updatePostProcess()
 {
-    mPostProcessing->Update();
+    mPostProcessing->Draw();
 }
 
 void FRenderer::unInitPostProcess()

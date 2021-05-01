@@ -11,6 +11,7 @@
 #include "FPipelineStateManager.h"
 #include "FRHIPipelineState.h"
 #include "MathUtility.h"
+#include "FShaderBindingsManager.h"
 
 
 FRenderProxyInitializer::FRenderProxyInitializer()
@@ -78,7 +79,15 @@ void FStaticMeshRenderProxy::CreateRenderResource()
     BaseVertexLocation = 0;
     StartInstanceLocation = 0;
 
-    TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(this);
+    FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+    FPipelineStateInfo info;
+    info.ShaderBindings = shaderBindings;
+    info.VertexShader = Material->VertexShader;
+    info.PixelShader = Material->PixelShader;
+    info.VertexLayout = &VertexLayout;
+    info.DepthStencilState.bEnableDepthWrite = true;
+
+    TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
 
     rhi->FlushCommandQueue();
 }

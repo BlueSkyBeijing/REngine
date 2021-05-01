@@ -14,10 +14,12 @@
 #include "FRHIBuffer.h"
 #include "FEngine.h"
 #include "FRenderThread.h"
+#include "FRHIVertex.h"
 
 
-FFullScreenQuad::FFullScreenQuad(FRHI* rhi) :
-    mRHI(rhi)
+FFullScreenQuad::FFullScreenQuad(FRHI* rhi, FRHIVertexLayout* layout) :
+    mRHI(rhi),
+    mLayout(layout)
 {
 }
 
@@ -34,14 +36,6 @@ void FFullScreenQuad::Init()
         FScreenVertex(FVector3(1.f, 1.f, 0.0f), FVector2(1.0f, 0.0f)) };
     const uint16 indexes[6] = { 0, 2, 1, 1, 2, 3 };
 
-    FRHIVertexLayout layout;
-    FInputElementDesc inputLayout[] = {
-    { "POSITION", 0, EPixelFormat::PF_R32G32B32_FLOAT, 0, 0,  ICF_PER_VERTEX_DATA, 0 },
-    { "TEXCOORD", 0, EPixelFormat::PF_R32G32_FLOAT, 0, 12, ICF_PER_VERTEX_DATA, 0 } };
-
-    layout.Elements.push_back(inputLayout[0]);
-    layout.Elements.push_back(inputLayout[1]);
-
     VertexBuffer = mRHI->CreateVertexBuffer(sizeof(FScreenVertex), 4, (uint8*)vertexes);
     IndexBuffer = mRHI->CreateIndexBuffer(sizeof(uint16), 6, (uint8*)indexes);
 
@@ -57,7 +51,15 @@ void FFullScreenQuad::Init()
 
     PixelShader = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget);
 
-    TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(VertexShader, PixelShader, &layout);
+    FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+    FPipelineStateInfo info;
+    info.ShaderBindings = shaderBindings;
+    info.VertexShader = VertexShader;
+    info.PixelShader = PixelShader;
+    info.VertexLayout = mLayout;
+    info.DepthStencilState.bEnableDepthWrite = false;
+
+    TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
 
 }
 
@@ -94,7 +96,16 @@ FPostProcessing::~FPostProcessing()
 
 void FPostProcessing::Init()
 {
-    mFullScreenQuad = new FFullScreenQuad(mRHI);
+    mFullScreenLayout = new FRHIVertexLayout;
+
+    FInputElementDesc inputLayout[] = {
+        { "POSITION", 0, EPixelFormat::PF_R32G32B32_FLOAT, 0, 0,  ICF_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 0, EPixelFormat::PF_R32G32_FLOAT, 0, 12, ICF_PER_VERTEX_DATA, 0 } };
+
+    mFullScreenLayout->Elements.push_back(inputLayout[0]);
+    mFullScreenLayout->Elements.push_back(inputLayout[1]);
+
+    mFullScreenQuad = new FFullScreenQuad(mRHI, mFullScreenLayout);
     mFullScreenQuad->Init();
 
     const int32 sceneColorWidth = TSingleton<FConfigManager>::GetInstance().WindowWidth;
@@ -161,15 +172,15 @@ void FPostProcessing::Init()
 
     PixelShaderBloomUp = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget);
 
-    FRHIVertexLayout layout;
-    FInputElementDesc inputLayout[] = {
-    { "POSITION", 0, EPixelFormat::PF_R32G32B32_FLOAT, 0, 0,  ICF_PER_VERTEX_DATA, 0 },
-    { "TEXCOORD", 0, EPixelFormat::PF_R32G32_FLOAT, 0, 12, ICF_PER_VERTEX_DATA, 0 } };
+    FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+    FPipelineStateInfo info;
+    info.ShaderBindings = shaderBindings;
+    info.VertexShader = VertexShaderBloomUp;
+    info.PixelShader = PixelShaderBloomUp;
+    info.VertexLayout = mFullScreenLayout;
+    info.DepthStencilState.bEnableDepthWrite = false;
 
-    layout.Elements.push_back(inputLayout[0]);
-    layout.Elements.push_back(inputLayout[1]);
-
-    TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineStateBloomUp(VertexShaderBloomUp, PixelShaderBloomUp, &layout);
+    TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
 }
 
 void FPostProcessing::UnInit()
@@ -224,9 +235,11 @@ void FPostProcessing::UnInit()
     delete PixelShaderBloomUp;
     PixelShaderBloomUp = nullptr;
 
+    delete mFullScreenLayout;
+    mFullScreenLayout = nullptr;
 }
 
-void FPostProcessing::Update()
+void FPostProcessing::Draw()
 {
     mRHI->BeginEvent("PostProcess");
 
@@ -240,7 +253,15 @@ void FPostProcessing::Update()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomSetup, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->Transition(infoRenderTargetBegin);
 
-        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateFullscreenQuad();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FPipelineStateInfo info;
+        info.ShaderBindings = shaderBindings;
+        info.VertexShader = mFullScreenQuad->VertexShader;
+        info.PixelShader = mFullScreenQuad->PixelShader;
+        info.VertexLayout = mFullScreenLayout;
+        info.DepthStencilState.bEnableDepthWrite = false;
+
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
@@ -266,7 +287,15 @@ void FPostProcessing::Update()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomDown0, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->Transition(infoRenderTargetBegin);
 
-        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateFullscreenQuad();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FPipelineStateInfo info;
+        info.ShaderBindings = shaderBindings;
+        info.VertexShader = mFullScreenQuad->VertexShader;
+        info.PixelShader = mFullScreenQuad->PixelShader;
+        info.VertexLayout = mFullScreenLayout;
+        info.DepthStencilState.bEnableDepthWrite = false;
+
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
@@ -292,7 +321,15 @@ void FPostProcessing::Update()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomDown1, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->Transition(infoRenderTargetBegin);
 
-        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateFullscreenQuad();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FPipelineStateInfo info;
+        info.ShaderBindings = shaderBindings;
+        info.VertexShader = mFullScreenQuad->VertexShader;
+        info.PixelShader = mFullScreenQuad->PixelShader;
+        info.VertexLayout = mFullScreenLayout;
+        info.DepthStencilState.bEnableDepthWrite = false;
+
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
@@ -319,7 +356,15 @@ void FPostProcessing::Update()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomDown2, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->Transition(infoRenderTargetBegin);
 
-        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateFullscreenQuad();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FPipelineStateInfo info;
+        info.ShaderBindings = shaderBindings;
+        info.VertexShader = mFullScreenQuad->VertexShader;
+        info.PixelShader = mFullScreenQuad->PixelShader;
+        info.VertexLayout = mFullScreenLayout;
+        info.DepthStencilState.bEnableDepthWrite = false;
+
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
@@ -345,7 +390,15 @@ void FPostProcessing::Update()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomDown3, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->Transition(infoRenderTargetBegin);
 
-        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateFullscreenQuad();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FPipelineStateInfo info;
+        info.ShaderBindings = shaderBindings;
+        info.VertexShader = mFullScreenQuad->VertexShader;
+        info.PixelShader = mFullScreenQuad->PixelShader;
+        info.VertexLayout = mFullScreenLayout;
+        info.DepthStencilState.bEnableDepthWrite = false;
+
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
@@ -371,7 +424,15 @@ void FPostProcessing::Update()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomUp0, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->Transition(infoRenderTargetBegin);
 
-        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateBloomUp();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FPipelineStateInfo info;
+        info.ShaderBindings = shaderBindings;
+        info.VertexShader = VertexShaderBloomUp;
+        info.PixelShader = PixelShaderBloomUp;
+        info.VertexLayout = mFullScreenLayout;
+        info.DepthStencilState.bEnableDepthWrite = false;
+
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
@@ -398,7 +459,15 @@ void FPostProcessing::Update()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomUp1, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->Transition(infoRenderTargetBegin);
 
-        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateBloomUp();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FPipelineStateInfo info;
+        info.ShaderBindings = shaderBindings;
+        info.VertexShader = VertexShaderBloomUp;
+        info.PixelShader = PixelShaderBloomUp;
+        info.VertexLayout = mFullScreenLayout;
+        info.DepthStencilState.bEnableDepthWrite = false;
+
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
@@ -426,7 +495,15 @@ void FPostProcessing::Update()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomUp2, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->Transition(infoRenderTargetBegin);
 
-        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateBloomUp();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FPipelineStateInfo info;
+        info.ShaderBindings = shaderBindings;
+        info.VertexShader = VertexShaderBloomUp;
+        info.PixelShader = PixelShaderBloomUp;
+        info.VertexLayout = mFullScreenLayout;
+        info.DepthStencilState.bEnableDepthWrite = false;
+
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
@@ -454,7 +531,15 @@ void FPostProcessing::Update()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomUp3, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->Transition(infoRenderTargetBegin);
 
-        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateBloomUp();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FPipelineStateInfo info;
+        info.ShaderBindings = shaderBindings;
+        info.VertexShader = VertexShaderBloomUp;
+        info.PixelShader = PixelShaderBloomUp;
+        info.VertexLayout = mFullScreenLayout;
+        info.DepthStencilState.bEnableDepthWrite = false;
+
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
@@ -483,7 +568,15 @@ void FPostProcessing::Update()
         const FRHITransitionInfo infoRenderTargetBegin(mRenderTarget, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->Transition(infoRenderTargetBegin);
 
-        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineStateBloomUp();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FPipelineStateInfo info;
+        info.ShaderBindings = shaderBindings;
+        info.VertexShader = VertexShaderBloomUp;
+        info.PixelShader = PixelShaderBloomUp;
+        info.VertexLayout = mFullScreenLayout;
+        info.DepthStencilState.bEnableDepthWrite = false;
+
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);

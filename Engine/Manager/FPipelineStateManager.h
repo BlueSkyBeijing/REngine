@@ -3,6 +3,7 @@
 
 #include "TSingleton.h"
 
+
 class FPipelineStateManager : TSingleton<FPipelineStateManager>
 {
 public:
@@ -12,17 +13,13 @@ public:
     void Init();
     void UnInit();
 
-    FRHIPipelineState* CreatePipleLineState(FRenderProxy* renderProxy);
-    FRHIPipelineState* CreatePipleLineState(FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout);
-    FRHIPipelineState* CreatePipleLineStateBloomUp(FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout);
-    FRHIPipelineState* GetPipleLineState(FRenderProxy* renderProxy);
-    FRHIPipelineState* GetPipleLineStateShadow(FRenderProxy* renderProxy);
-    FRHIPipelineState* GetPipleLineStateFullscreenQuad();
-    FRHIPipelineState* GetPipleLineStateBloomUp();
+    FRHIPipelineState* CreatePipleLineState(const FPipelineStateInfo& info);
+
+    FRHIPipelineState* GetPipleLineState(const FPipelineStateInfo& info);
+
+protected:
+    uint64 hashPipelineState(const void* Data, int32 NumBytes);
 
 private:
-    FRHIPipelineState* mPipelineState;
-    FRHIPipelineState* mPipelineStateShadow;
-    FRHIPipelineState* mPipelineStateFullscreenQuad;
-    FRHIPipelineState* mPipelineStateBloomUp;
+    std::map<uint64, FRHIPipelineState*> mPipelineStates;
 };

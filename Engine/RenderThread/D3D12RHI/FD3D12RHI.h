@@ -39,9 +39,7 @@ public:
     virtual FRHIIndexBuffer* CreateIndexBuffer(uint32 structureSize, uint32 indexCount, uint8* bufferData) override;
     virtual FRHIShader* CreateShader(const std::wstring& filePathName, const std::string& enterPoint, const std::string& target) override;
     virtual FRHIShaderBindings* CreateShaderBindings() override;
-    virtual FRHIPipelineState* CreatePipelineState(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout) override;
-    virtual FRHIPipelineState* CreatePipelineStateFullScreenQuad(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout) override;
-    virtual FRHIPipelineState* CreatePipelineStateShadow(FRHIShaderBindings* shaderBindings, FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout) override;
+    virtual FRHIPipelineState* CreatePipelineState(const FPipelineStateInfo& info) override;
     virtual FRHITexture2D* CreateTexture2D(const std::wstring& filePathName) override;
     virtual FRHIRenderTarget* CreateRenderTarget(uint32 width, uint32 hight, uint32 numTarget, EPixelFormat formatTarget, EPixelFormat formatDepthStencil) override;
     virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) override;

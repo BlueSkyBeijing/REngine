@@ -14,8 +14,18 @@
 #include "FRHI.h"
 #include "FRenderThread.h"
 
-FPipelineStateManager::FPipelineStateManager() :
-    mPipelineState(nullptr)
+#include "CityHash.h"
+
+
+FPipelineStateInfo::FPipelineStateInfo()
+{
+}
+
+FPipelineStateInfo::~FPipelineStateInfo()
+{
+}
+
+FPipelineStateManager::FPipelineStateManager()
 {
 }
 
@@ -29,91 +39,51 @@ void FPipelineStateManager::Init()
 
 void FPipelineStateManager::UnInit()
 {
-    if (mPipelineState != nullptr)
+    for (auto iter = mPipelineStates.begin(); iter != mPipelineStates.end(); iter++)
     {
-        delete mPipelineState;
-        mPipelineState = nullptr;
+        FRHIPipelineState* pipelineState = iter->second;
+        pipelineState->UnInit();
+        delete pipelineState;
     }
 
-    if (mPipelineStateShadow != nullptr)
-    {
-        delete mPipelineStateShadow;
-        mPipelineStateShadow = nullptr;
-    }
-
-    if (mPipelineStateFullscreenQuad != nullptr)
-    {
-        delete mPipelineStateFullscreenQuad;
-        mPipelineStateFullscreenQuad = nullptr;
-    }
-
-    if (mPipelineStateBloomUp != nullptr)
-    {
-        delete mPipelineStateBloomUp;
-        mPipelineStateBloomUp = nullptr;
-    }
+    mPipelineStates.clear();
 }
 
-FRHIPipelineState* FPipelineStateManager::CreatePipleLineState(FRenderProxy* renderProxy)
+FRHIPipelineState* FPipelineStateManager::CreatePipleLineState(const FPipelineStateInfo& info)
 {
-    if (nullptr == mPipelineState)
+    FRHIPipelineState* pipelineState = nullptr;
+
+    const uint64 hashValue = hashPipelineState((const void*)&info, sizeof(FPipelineStateInfo));
+
+    auto iter = mPipelineStates.find(hashValue);
+    if (iter == mPipelineStates.end())
     {
         FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
 
-        mPipelineState = rhi->CreatePipelineState(shaderBindings, renderProxy->Material->VertexShader, renderProxy->Material->PixelShader, &renderProxy->VertexLayout);
+        pipelineState = rhi->CreatePipelineState(info);
 
-        mPipelineStateShadow = rhi->CreatePipelineStateShadow(shaderBindings, renderProxy->Material->VertexShaderShadow, nullptr, &renderProxy->VertexLayout);
+        mPipelineStates.insert(std::make_pair(hashValue, pipelineState));
     }
 
-    return mPipelineState;
+    return pipelineState;
+
 }
 
-FRHIPipelineState* FPipelineStateManager::CreatePipleLineState(FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout)
+FRHIPipelineState* FPipelineStateManager::GetPipleLineState(const FPipelineStateInfo& info)
 {
-    if (nullptr == mPipelineStateFullscreenQuad)
+    const uint64 hashValue = hashPipelineState((const void*)&info, sizeof(FPipelineStateInfo));
+
+    auto iter = mPipelineStates.find(hashValue);
+    if (iter != mPipelineStates.end())
     {
-        FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
-
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
-
-        mPipelineStateFullscreenQuad = rhi->CreatePipelineStateFullScreenQuad(shaderBindings, vertexShader, pixelShader, vertexLayout);
+        return iter->second;
     }
 
-    return mPipelineStateFullscreenQuad;
+    return nullptr;
 }
 
-FRHIPipelineState* FPipelineStateManager::CreatePipleLineStateBloomUp(FRHIShader* vertexShader, FRHIShader* pixelShader, FRHIVertexLayout* vertexLayout)
+uint64  FPipelineStateManager::hashPipelineState(const void* Data, int32 NumBytes)
 {
-    if (nullptr == mPipelineStateBloomUp)
-    {
-        FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
-
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
-
-        mPipelineStateBloomUp = rhi->CreatePipelineStateFullScreenQuad(shaderBindings, vertexShader, pixelShader, vertexLayout);
-    }
-
-    return mPipelineStateBloomUp;
-}
-
-FRHIPipelineState* FPipelineStateManager::GetPipleLineState(FRenderProxy* renderProxy)
-{
-    return mPipelineState;
-}
-
-FRHIPipelineState* FPipelineStateManager::GetPipleLineStateShadow(FRenderProxy* renderProxy)
-{
-    return mPipelineStateShadow;
-}
-
-FRHIPipelineState* FPipelineStateManager::GetPipleLineStateFullscreenQuad()
-{
-    return mPipelineStateFullscreenQuad;
-}
-
-FRHIPipelineState* FPipelineStateManager::GetPipleLineStateBloomUp()
-{
-    return mPipelineStateBloomUp;
+    return CityHash64((const char*)Data, NumBytes);
 }

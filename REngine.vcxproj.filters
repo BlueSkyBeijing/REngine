@@ -182,6 +182,9 @@
     <ClCompile Include="Engine\RenderThread\FViewPort.cpp">
       <Filter>Engine\RenderThread</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Utility\CityHash.cpp">
+      <Filter>Engine\Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Manager\FInputManager.h">
@@ -345,6 +348,9 @@
     </ClInclude>
     <ClInclude Include="Engine\RenderThread\FViewPort.h">
       <Filter>Engine\RenderThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utility\CityHash.h">
+      <Filter>Engine\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

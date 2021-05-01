@@ -39,6 +39,7 @@ class FViewPort;
 class FRenderProxy;
 class FMaterial;
 class FDirectionalLight;
+class FPipelineStateInfo;
 
 class FSceneManager;
 class FShaderManager;
