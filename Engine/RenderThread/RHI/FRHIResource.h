@@ -17,23 +17,3 @@ public:
 private:
 
 };
-
-class FRHISamplerState
-{
-public:
-};
-
-class FRHIRasterizerState
-{
-public:
-};
-
-class FRHIDepthStencilState
-{
-public:
-};
-
-class FRHIBlendState
-{
-public:
-};

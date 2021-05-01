@@ -117,50 +117,50 @@ void FPostProcessing::Init()
     const int32 bloomSetupWidth = static_cast<int32>(sceneColorWidth * 0.25f);
     const int32 bloomSetupHeight = static_cast<int32>(sceneColorHeight * 0.25f);
     mBloomSetup = mRHI->CreateRenderTarget(bloomSetupWidth,
-        bloomSetupHeight, 1, PF_R8G8B8A8_UNORM, PF_D24_UNORM_S8_UINT);
+        bloomSetupHeight, 1, PF_R8G8B8A8_UNORM, PF_UNKNOWN);
 
     const int32 bloomDown0Width = static_cast<int32>(bloomSetupWidth * 0.5f);
     const int32 bloomDown0Height = static_cast<int32>(bloomSetupHeight * 0.5f);
     mBloomDown0 = mRHI->CreateRenderTarget(bloomDown0Width,
-        bloomDown0Height, 1, PF_R8G8B8A8_UNORM, PF_D24_UNORM_S8_UINT);
+        bloomDown0Height, 1, PF_R8G8B8A8_UNORM, PF_UNKNOWN);
 
     const int32 bloomDown1Width = static_cast<int32>(bloomDown0Width * 0.5f);
     const int32 bloomDown1Height = static_cast<int32>(bloomDown0Height * 0.5f);
     mBloomDown1 = mRHI->CreateRenderTarget(bloomDown1Width,
-        bloomDown1Height, 1, PF_R8G8B8A8_UNORM, PF_D24_UNORM_S8_UINT);
+        bloomDown1Height, 1, PF_R8G8B8A8_UNORM, PF_UNKNOWN);
 
     const int32 bloomDown2Width = static_cast<int32>(bloomDown1Width * 0.5f);
     const int32 bloomDown2Height = static_cast<int32>(bloomDown1Height * 0.5f);
     mBloomDown2 = mRHI->CreateRenderTarget(bloomDown2Width,
-        bloomDown2Height, 1, PF_R8G8B8A8_UNORM, PF_D24_UNORM_S8_UINT);
+        bloomDown2Height, 1, PF_R8G8B8A8_UNORM, PF_UNKNOWN);
 
     const int32 bloomDown3Width = static_cast<int32>(bloomDown2Width * 0.5f);
     const int32 bloomDown3Height = static_cast<int32>(bloomDown2Height * 0.5f);
     mBloomDown3 = mRHI->CreateRenderTarget(bloomDown3Width,
-        bloomDown3Height, 1, PF_R8G8B8A8_UNORM, PF_D24_UNORM_S8_UINT);
+        bloomDown3Height, 1, PF_R8G8B8A8_UNORM, PF_UNKNOWN);
 
     const int32 bloomUp0Width = bloomDown3Width * 2;
     const int32 bloomUp0Height = bloomDown3Width * 2;
     mBloomUp0 = mRHI->CreateRenderTarget(bloomUp0Width,
-        bloomUp0Height, 1, PF_R8G8B8A8_UNORM, PF_D24_UNORM_S8_UINT);
+        bloomUp0Height, 1, PF_R8G8B8A8_UNORM, PF_UNKNOWN);
 
     const int32 bloomUp1Width = bloomUp0Width * 2;
     const int32 bloomUp1Height = bloomUp0Height * 2;
     mBloomUp1 = mRHI->CreateRenderTarget(bloomUp1Width,
-        bloomUp1Height, 1, PF_R8G8B8A8_UNORM, PF_D24_UNORM_S8_UINT);
+        bloomUp1Height, 1, PF_R8G8B8A8_UNORM, PF_UNKNOWN);
 
     const int32 bloomUp2Width = bloomUp1Width * 2;
     const int32 bloomUp2Height = bloomUp1Height * 2;
     mBloomUp2 = mRHI->CreateRenderTarget(bloomUp2Width,
-        bloomUp2Height, 1, PF_R8G8B8A8_UNORM, PF_D24_UNORM_S8_UINT);
+        bloomUp2Height, 1, PF_R8G8B8A8_UNORM, PF_UNKNOWN);
 
     const int32 bloomUp3Width = bloomUp2Width * 2;
     const int32 bloomUp3Height = bloomUp2Height * 2;
     mBloomUp3 = mRHI->CreateRenderTarget(bloomUp3Width,
-        bloomUp3Height, 1, PF_R8G8B8A8_UNORM, PF_D24_UNORM_S8_UINT);
+        bloomUp3Height, 1, PF_R8G8B8A8_UNORM, PF_UNKNOWN);
 
     mToneMap = mRHI->CreateRenderTarget(sceneColorWidth,
-        sceneColorHeight, 1, PF_R8G8B8A8_UNORM, PF_D24_UNORM_S8_UINT);
+        sceneColorHeight, 1, PF_R8G8B8A8_UNORM, PF_UNKNOWN);
 
     creatPostProcessConstantBuffer();
 
