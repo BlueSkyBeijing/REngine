@@ -1,4 +1,4 @@
-#include "PrecompiledHeader.h"
+﻿#include "PrecompiledHeader.h"
 
 #include "FRHIBuffer.h"
 #include "FRHI.h"
@@ -60,5 +60,3 @@ void FRHIConstantBuffer::Init()
 void FRHIConstantBuffer::Uninit()
 {
 }
-
-

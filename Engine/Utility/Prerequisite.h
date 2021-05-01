@@ -51,11 +51,11 @@ class FShaderBindingsManager;
 class FPipelineStateManager;
 class FRenderCommand;
 class FPostProcessing;
+class FScreenVertex;
 
 class FRHI;
 class FRHIShader;
 class FRHITexture;
-class FScreenVertex;
 class FRHITexture2D;
 class FRHIBuffer;
 class FRHIIndexBuffer;
@@ -71,6 +71,7 @@ class FRHITexture2D;
 class FRHIRenderWindow;
 class FRHIRenderTarget;
 class FRHIVertexLayout;
+class FRHIConstantBuffer;
 
 class FD3D12ShaderBindings;
 class FD3D12Shader;

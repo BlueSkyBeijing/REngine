@@ -27,7 +27,6 @@ FRenderer::FRenderer(FRHIRenderWindow* renderWindow, FScene* scene, FView* view)
     mView(view),
     mShadowMap(nullptr),
     mSceneColor(nullptr),
-    mPostProcessConstantBuffer(nullptr),
     mSceneColorPassConstantBuffer(nullptr),
     mShadowPassConstantBuffer(nullptr)
 {
@@ -348,8 +347,6 @@ void FRenderer::initPostProcess()
 {
     mPostProcessing = new FPostProcessing(mRHI, mSceneColor, mRenderTarget);
     mPostProcessing->Init();
-
-    creatPostProcessConstantBuffer();
 }
 
 void FRenderer::updatePostProcess()
@@ -362,12 +359,4 @@ void FRenderer::unInitPostProcess()
     mPostProcessing->UnInit();
     delete mPostProcessing;
     mPostProcessing = nullptr;
-}
-
-void FRenderer::creatPostProcessConstantBuffer()
-{
-}
-
-void FRenderer::updatePostProcessConstantBuffer()
-{
 }

@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "Prerequisite.h"
 
-#include "FRHIBuffer.h"
 
 struct FSceneColorPassConstant
 {
@@ -21,13 +20,6 @@ struct FSceneColorPassConstant
 };
 
 struct FShadowPassConstant
-{
-    FMatrix4x4 View;
-    FMatrix4x4 Proj;
-    FMatrix4x4 ViewProj;
-};
-
-struct FPostProcessConstant
 {
     FMatrix4x4 View;
     FMatrix4x4 Proj;
@@ -64,13 +56,10 @@ protected:
     void initPostProcess();
     void updatePostProcess();
     void unInitPostProcess();
-    void creatPostProcessConstantBuffer();
-    void updatePostProcessConstantBuffer();
 
 private:
     void _createSceneColorPassConstant(FSceneColorPassConstant& constant);
     void _createShadowPassConstant(FShadowPassConstant& constant);
-    void _createPostProcessConstant(FPostProcessConstant& constant);
 
 private:
     FRHI* mRHI;
@@ -79,7 +68,6 @@ private:
     FView* mView;
     FRHIConstantBuffer* mSceneColorPassConstantBuffer;
     FRHIConstantBuffer* mShadowPassConstantBuffer;
-    FRHIConstantBuffer* mPostProcessConstantBuffer;
     FRHIRenderTarget* mSceneColor;
     FRHIRenderTarget* mShadowMap;
     FMatrix4x4 mShadowTransform;

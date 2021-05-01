@@ -413,10 +413,6 @@ public:
     virtual FRHIVertexBuffer* CreateVertexBuffer(uint32 structureSize, uint32 vertexCount, uint8* bufferData) = 0;
     virtual FRHIIndexBuffer* CreateIndexBuffer(uint32 structureSize, uint32 indexCount, uint8* bufferData) = 0;
     virtual FRHIShader* CreateShader(const std::wstring& filePathName, const std::string& EnterPoint, const std::string& target) = 0;
-    //virtual FRHISamplerState* CreateSamplerState(const FSamplerStateInfo& info) final override;
-    //virtual FRHIRasterizerState* CreateRasterizerState(const FRasterizerStateInfo& info) final override;
-    //virtual FRHIDepthStencilState* CreateDepthStencilState(const FDepthStencilStateInfo& info) final override;
-    //virtual FRHIBlendState* CreateBlendState(const FBlendStateInfo& info) final override;
     virtual FRHIShaderBindings* CreateShaderBindings() = 0;
     virtual FRHIPipelineState* CreatePipelineState(const FPipelineStateInfo& info) = 0;
     virtual FRHITexture2D* CreateTexture2D(const std::wstring& filePathName) = 0;

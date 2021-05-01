@@ -15,6 +15,7 @@
 #include "FEngine.h"
 #include "FRenderThread.h"
 #include "FRHIVertex.h"
+#include "FRHIBuffer.h"
 
 
 FFullScreenQuad::FFullScreenQuad(FRHI* rhi, FRHIVertexLayout* layout) :
@@ -86,6 +87,7 @@ void FFullScreenQuad::Draw()
 FPostProcessing::FPostProcessing(FRHI* rhi, FRHIRenderTarget* sceneColor, FRHIRenderTarget* renderTarget) : mRHI(rhi),
 mSceneColor(sceneColor),
 mRenderTarget(renderTarget),
+mPostProcessConstantBuffer(nullptr),
 mFullScreenQuad(nullptr)
 {
 }
@@ -160,27 +162,107 @@ void FPostProcessing::Init()
     mToneMap = mRHI->CreateRenderTarget(sceneColorWidth,
         sceneColorHeight, 1, PF_R8G8B8A8_UNORM, PF_D24_UNORM_S8_UINT);
 
-    const std::wstring vsFilePathName = L"Engine\\Shader\\Postprocess.hlsl";
-    const std::string vsEnterPoint = "PostprocessVS";
-    const std::string vsTarget = "vs_5_0";
+    creatPostProcessConstantBuffer();
 
-    VertexShaderBloomUp = mRHI->CreateShader(vsFilePathName, vsEnterPoint, vsTarget);
+    {
+        const std::wstring vsFilePathName = L"Engine\\Shader\\Bloom.hlsl";
+        const std::string vsEnterPoint = "BloomSetupVS";
+        const std::string vsTarget = "vs_5_0";
 
-    const std::wstring psFilePathName = L"Engine\\Shader\\Bloom.hlsl";
-    const std::string psEnterPoint = "BloomUpPS";
-    const std::string psTarget = "ps_5_0";
+        VertexShaderBloomSetup = mRHI->CreateShader(vsFilePathName, vsEnterPoint, vsTarget);
 
-    PixelShaderBloomUp = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget);
+        const std::wstring psFilePathName = L"Engine\\Shader\\Bloom.hlsl";
+        const std::string psEnterPoint = "BloomSetupPS";
+        const std::string psTarget = "ps_5_0";
 
-    FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
-    FPipelineStateInfo info;
-    info.ShaderBindings = shaderBindings;
-    info.VertexShader = VertexShaderBloomUp;
-    info.PixelShader = PixelShaderBloomUp;
-    info.VertexLayout = mFullScreenLayout;
-    info.DepthStencilState.bEnableDepthWrite = false;
+        PixelShaderBloomSetup = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget);
 
-    TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FPipelineStateInfo info;
+        info.ShaderBindings = shaderBindings;
+        info.VertexShader = VertexShaderBloomSetup;
+        info.PixelShader = PixelShaderBloomSetup;
+        info.VertexLayout = mFullScreenLayout;
+        info.DepthStencilState.bEnableDepthWrite = false;
+
+        TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
+
+    }
+
+    {
+        const std::wstring vsFilePathName = L"Engine\\Shader\\Bloom.hlsl";
+        const std::string vsEnterPoint = "BloomDownVS";
+        const std::string vsTarget = "vs_5_0";
+
+        VertexShaderBloomDown = mRHI->CreateShader(vsFilePathName, vsEnterPoint, vsTarget);
+
+        const std::wstring psFilePathName = L"Engine\\Shader\\Bloom.hlsl";
+        const std::string psEnterPoint = "BloomDownPS";
+        const std::string psTarget = "ps_5_0";
+
+        PixelShaderBloomDown = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget);
+
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FPipelineStateInfo info;
+        info.ShaderBindings = shaderBindings;
+        info.VertexShader = VertexShaderBloomDown;
+        info.PixelShader = PixelShaderBloomDown;
+        info.VertexLayout = mFullScreenLayout;
+        info.DepthStencilState.bEnableDepthWrite = false;
+
+        TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
+
+    }
+
+    {
+        const std::wstring vsFilePathName = L"Engine\\Shader\\Bloom.hlsl";
+        const std::string vsEnterPoint = "BloomUpVS";
+        const std::string vsTarget = "vs_5_0";
+
+        VertexShaderBloomUp = mRHI->CreateShader(vsFilePathName, vsEnterPoint, vsTarget);
+
+        const std::wstring psFilePathName = L"Engine\\Shader\\Bloom.hlsl";
+        const std::string psEnterPoint = "BloomUpPS";
+        const std::string psTarget = "ps_5_0";
+
+        PixelShaderBloomUp = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget);
+
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FPipelineStateInfo info;
+        info.ShaderBindings = shaderBindings;
+        info.VertexShader = VertexShaderBloomUp;
+        info.PixelShader = PixelShaderBloomUp;
+        info.VertexLayout = mFullScreenLayout;
+        info.DepthStencilState.bEnableDepthWrite = false;
+
+        TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
+
+    }
+
+    {
+        const std::wstring vsFilePathName = L"Engine\\Shader\\Bloom.hlsl";
+        const std::string vsEnterPoint = "BloomMergeVS";
+        const std::string vsTarget = "vs_5_0";
+
+        VertexShaderBloomMerge = mRHI->CreateShader(vsFilePathName, vsEnterPoint, vsTarget);
+
+        const std::wstring psFilePathName = L"Engine\\Shader\\Bloom.hlsl";
+        const std::string psEnterPoint = "BloomMergePS";
+        const std::string psTarget = "ps_5_0";
+
+        PixelShaderBloomMerge = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget);
+
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FPipelineStateInfo info;
+        info.ShaderBindings = shaderBindings;
+        info.VertexShader = VertexShaderBloomMerge;
+        info.PixelShader = PixelShaderBloomMerge;
+        info.VertexLayout = mFullScreenLayout;
+        info.DepthStencilState.bEnableDepthWrite = false;
+
+        TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
+
+    }
 }
 
 void FPostProcessing::UnInit()
@@ -229,19 +311,44 @@ void FPostProcessing::UnInit()
     delete mFullScreenQuad;
     mFullScreenQuad = nullptr;
 
+    delete VertexShaderBloomSetup;
+    VertexShaderBloomSetup = nullptr;
+
+    delete PixelShaderBloomSetup;
+    PixelShaderBloomSetup = nullptr;
+
+    delete VertexShaderBloomDown;
+    VertexShaderBloomDown = nullptr;
+
+    delete PixelShaderBloomDown;
+    PixelShaderBloomDown = nullptr;
+
     delete VertexShaderBloomUp;
     VertexShaderBloomUp = nullptr;
 
     delete PixelShaderBloomUp;
     PixelShaderBloomUp = nullptr;
 
+    delete VertexShaderBloomMerge;
+    VertexShaderBloomMerge = nullptr;
+
+    delete PixelShaderBloomMerge;
+    PixelShaderBloomMerge = nullptr;
+
     delete mFullScreenLayout;
     mFullScreenLayout = nullptr;
+
+    mPostProcessConstantBuffer->UnInit();
+    delete mPostProcessConstantBuffer;
+    mPostProcessConstantBuffer = nullptr;
+
 }
 
 void FPostProcessing::Draw()
 {
     mRHI->BeginEvent("PostProcess");
+
+    updatePostProcessConstantBuffer();
 
     mRHI->BeginEvent("BloomSetup");
     {
@@ -256,8 +363,8 @@ void FPostProcessing::Draw()
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = mFullScreenQuad->VertexShader;
-        info.PixelShader = mFullScreenQuad->PixelShader;
+        info.VertexShader = VertexShaderBloomSetup;
+        info.PixelShader = PixelShaderBloomSetup;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
 
@@ -267,7 +374,7 @@ void FPostProcessing::Draw()
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
-        //mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mSceneColor, 0);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
@@ -290,8 +397,8 @@ void FPostProcessing::Draw()
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = mFullScreenQuad->VertexShader;
-        info.PixelShader = mFullScreenQuad->PixelShader;
+        info.VertexShader = VertexShaderBloomDown;
+        info.PixelShader = PixelShaderBloomDown;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
 
@@ -301,7 +408,7 @@ void FPostProcessing::Draw()
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
-        //mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomSetup, 0);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
@@ -324,8 +431,8 @@ void FPostProcessing::Draw()
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = mFullScreenQuad->VertexShader;
-        info.PixelShader = mFullScreenQuad->PixelShader;
+        info.VertexShader = VertexShaderBloomDown;
+        info.PixelShader = PixelShaderBloomDown;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
 
@@ -335,7 +442,7 @@ void FPostProcessing::Draw()
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
-        //mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomDown0, 0);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
@@ -359,8 +466,8 @@ void FPostProcessing::Draw()
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = mFullScreenQuad->VertexShader;
-        info.PixelShader = mFullScreenQuad->PixelShader;
+        info.VertexShader = VertexShaderBloomDown;
+        info.PixelShader = PixelShaderBloomDown;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
 
@@ -370,7 +477,7 @@ void FPostProcessing::Draw()
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
-        //mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomDown1, 0);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
@@ -393,8 +500,8 @@ void FPostProcessing::Draw()
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = mFullScreenQuad->VertexShader;
-        info.PixelShader = mFullScreenQuad->PixelShader;
+        info.VertexShader = VertexShaderBloomDown;
+        info.PixelShader = PixelShaderBloomDown;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
 
@@ -404,7 +511,7 @@ void FPostProcessing::Draw()
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
-        //mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomDown2, 0);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
@@ -438,7 +545,7 @@ void FPostProcessing::Draw()
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
-        //mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomDown3, 0);
         mRHI->SetTexture2D(mBloomDown2, 1);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
@@ -473,7 +580,7 @@ void FPostProcessing::Draw()
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
-        //mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomUp0, 0);
         mRHI->SetTexture2D(mBloomDown1, 1);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
@@ -509,7 +616,7 @@ void FPostProcessing::Draw()
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
-        //mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomUp1, 0);
         mRHI->SetTexture2D(mBloomDown0, 1);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
@@ -545,7 +652,7 @@ void FPostProcessing::Draw()
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
-        //mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomUp2, 0);
         mRHI->SetTexture2D(mBloomSetup, 1);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
@@ -555,7 +662,6 @@ void FPostProcessing::Draw()
 
     }
     mRHI->EndEvent();
-
 
 
     mRHI->BeginEvent("ToneMap");
@@ -571,8 +677,8 @@ void FPostProcessing::Draw()
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = VertexShaderBloomUp;
-        info.PixelShader = PixelShaderBloomUp;
+        info.VertexShader = VertexShaderBloomMerge;
+        info.PixelShader = PixelShaderBloomMerge;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
 
@@ -582,7 +688,7 @@ void FPostProcessing::Draw()
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
-        //mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mSceneColor, 0);
         mRHI->SetTexture2D(mBloomUp3, 1);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
@@ -594,5 +700,34 @@ void FPostProcessing::Draw()
     mRHI->EndEvent();
 
     mRHI->EndEvent();
+
+}
+
+void FPostProcessing::creatPostProcessConstantBuffer()
+{
+    FPostProcessConstant postProcessConstant;
+    _createPostProcessConstant(postProcessConstant);
+    mPostProcessConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FPostProcessConstant), (uint8*)&postProcessConstant);
+}
+
+void FPostProcessing::updatePostProcessConstantBuffer()
+{
+    FPostProcessConstant postProcessConstant;
+    _createPostProcessConstant(postProcessConstant);
+    mRHI->UpdateConstantBuffer(mPostProcessConstantBuffer, sizeof(FPostProcessConstant), (uint8*)&postProcessConstant);
+}
+
+void FPostProcessing::_createPostProcessConstant(FPostProcessConstant& constant)
+{
+    constant.SceneColorInvSize = FVector2(1.0f / mSceneColor->Width, 1.0f / mSceneColor->Height);
+    constant.BloomThreshold = -1.0f;
+    constant.BloomDownScale = 0.5f;
+    constant.BloomUpScales = FVector2(2.0f, 2.0f);
+    constant.BloomLastResaultInvSize = FVector2(1.0f / mBloomUp1->Width, 1.0f / mBloomUp1->Height);
+    constant.BloomDownInvSize = FVector2(1.0f / mBloomDown0->Width, 1.0f / mBloomDown0->Height);
+    constant.BloomUpInvSize = FVector2(1.0f / mBloomUp1->Width, 1.0f / mBloomUp1->Height);
+    constant.BloomTintA = FVector4(1.0f, 1.0f, 1.0f, 1.0f) / 16.0f;
+    constant.BloomTintB = FVector4(1.0f, 1.0f, 1.0f, 1.0f) / 16.0f;
+    constant.BloomColor = FVector3(1.0f, 1.0f, 1.0f);
 
 }

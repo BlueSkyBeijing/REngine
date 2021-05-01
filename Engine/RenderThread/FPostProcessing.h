@@ -1,6 +1,21 @@
 ﻿#pragma once
 #include "Prerequisite.h"
 
+
+struct FPostProcessConstant
+{
+    FVector2 SceneColorInvSize;
+    float BloomThreshold;
+    float BloomDownScale;
+    FVector2 BloomUpScales;
+    FVector2 BloomLastResaultInvSize;
+    FVector2 BloomDownInvSize;
+    FVector2 BloomUpInvSize;
+    FVector4 BloomTintA;
+    FVector4 BloomTintB;
+    FVector3 BloomColor;
+};
+
 class FFullScreenQuad
 {
 public:
@@ -34,6 +49,14 @@ public:
     void UnInit();
 
     void Draw();
+
+protected:
+    void creatPostProcessConstantBuffer();
+    void updatePostProcessConstantBuffer();
+
+private:
+    void _createPostProcessConstant(FPostProcessConstant& constant);
+
 private:
     FRHI* mRHI;
     FRHIRenderTarget* mBloomSetup;
@@ -51,9 +74,19 @@ private:
     FRHIRenderTarget* mRenderTarget;
     FFullScreenQuad* mFullScreenQuad;
 
+    FRHIShader* VertexShaderBloomSetup;
+    FRHIShader* PixelShaderBloomSetup;
+
+    FRHIShader* VertexShaderBloomDown;
+    FRHIShader* PixelShaderBloomDown;
+
     FRHIShader* VertexShaderBloomUp;
     FRHIShader* PixelShaderBloomUp;
 
+    FRHIShader* VertexShaderBloomMerge;
+    FRHIShader* PixelShaderBloomMerge;
+
     FRHIVertexLayout* mFullScreenLayout;
+    FRHIConstantBuffer* mPostProcessConstantBuffer;
 
 };
