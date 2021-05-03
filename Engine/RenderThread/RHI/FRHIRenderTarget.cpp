@@ -10,7 +10,8 @@ FRHIRenderTarget::FRHIRenderTarget(
     uint32 numTarget) :
     Width(width),
     Height(height),
-    NumTarget(numTarget)
+    NumTarget(numTarget),
+    DepthStencilTarget(nullptr)
 {
 }
 
@@ -20,12 +21,23 @@ FRHIRenderTarget::~FRHIRenderTarget()
 
 void FRHIRenderTarget::Init()
 {
-
+    RenderTargets.resize(NumTarget);
+    RenderTargets.shrink_to_fit();
 }
 
 void FRHIRenderTarget::UnInit()
 {
+    for (int32 i = 0; i < RenderTargets.size(); i++)
+    {
+        delete RenderTargets[i];
+    }
+    RenderTargets.clear();
 
+    if (DepthStencilTarget != nullptr)
+    {
+        delete DepthStencilTarget;
+        DepthStencilTarget = nullptr;
+    }
 }
 
 FRHIRenderWindow::FRHIRenderWindow(
@@ -42,12 +54,12 @@ FRHIRenderWindow::~FRHIRenderWindow()
 
 void FRHIRenderWindow::Init()
 {
-
+    FRHIRenderTarget::Init();
 }
 
 void FRHIRenderWindow::UnInit()
 {
-
+    FRHIRenderTarget::UnInit();
 }
 
 void FRHIRenderWindow::Present()

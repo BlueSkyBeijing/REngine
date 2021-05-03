@@ -4,7 +4,7 @@
 #include "FRHITexture.h"
 
 
-class FRHIRenderTarget : public FRHITexture2D
+class FRHIRenderTarget
 {
     friend class FRHI;
 
@@ -16,15 +16,20 @@ public:
     virtual void Init();
     virtual void UnInit();
 
+    uint32 GetRenderTargetIndex() const
+    {
+        return mRenderTargetIndex;
+    }
+
 public:
     uint32 Width;
     uint32 Height;
     uint32 NumTarget;
-    int32 PosInHeapDSV;
-    int32 PosInHeapRTSRV;
-    int32 PosInHeapDSSRV;
 
+    std::vector<FRHITexture2D*> RenderTargets;
+    FRHITexture2D* DepthStencilTarget;
 
+    uint32 mRenderTargetIndex;
 
 protected:
 

@@ -46,7 +46,7 @@ public:
 
     virtual void UpdateConstantBuffer(FRHIConstantBuffer* constantBuffer, uint32 structureSize, uint8* bufferData) override;
 
-    virtual void Transition(const FRHITransitionInfo& info) override;
+    virtual void TransitionResource(const FRHITransitionInfo& info) override;
 
     virtual void BeginEvent(const char* eventName) override;
     virtual void EndEvent() override;

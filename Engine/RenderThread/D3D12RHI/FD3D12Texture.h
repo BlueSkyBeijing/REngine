@@ -5,24 +5,24 @@
 #include "FRHITexture.h"
 
 
-class FD3D12Texture : public FD3D12Resource
+class FD3D12TextureInterface : public FD3D12ResourceInterface
 {
 public:
-    FD3D12Texture();
-    virtual ~FD3D12Texture();
+    FD3D12TextureInterface();
+    virtual ~FD3D12TextureInterface();
 public:
     std::wstring FilePathName;
     int32 PosInShader;
+    DXGI_FORMAT Format;
 
 public:
     virtual void Init();
     virtual void Uninit();
 
 private:
-
 };
 
-class FD3D12Texture2D : public FRHITexture2D
+class FD3D12Texture2D : public FRHITexture2D, public FD3D12TextureInterface
 {
 public:
     FD3D12Texture2D();

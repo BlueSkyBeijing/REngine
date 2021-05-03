@@ -421,7 +421,7 @@ public:
 
     virtual void UpdateConstantBuffer(FRHIConstantBuffer* constantBuffer, uint32 structureSize, uint8* bufferData) = 0;
 
-    virtual void Transition(const FRHITransitionInfo& info) = 0;
+    virtual void TransitionResource(const FRHITransitionInfo& info) = 0;
 
     virtual void BeginEvent(const char* eventName) = 0;
     virtual void EndEvent() = 0;

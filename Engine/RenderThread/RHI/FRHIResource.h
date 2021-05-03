@@ -12,7 +12,6 @@ public:
     virtual void UnInit() {}
 
 public:
-    int32 PosInHeap;
 
 private:
 

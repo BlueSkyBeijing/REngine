@@ -1,22 +1,25 @@
-#include "PrecompiledHeader.h"
+﻿#include "PrecompiledHeader.h"
 
 #include "FD3D12Texture.h"
 #include "FD3D12RHI.h"
 
-FD3D12Texture::FD3D12Texture()
+FD3D12TextureInterface::FD3D12TextureInterface()
 {
 }
 
-FD3D12Texture::~FD3D12Texture()
-{
-}
-void FD3D12Texture::Init()
+FD3D12TextureInterface::~FD3D12TextureInterface()
 {
 }
 
-void FD3D12Texture::Uninit()
+
+void FD3D12TextureInterface::Init()
 {
 }
+
+void FD3D12TextureInterface::Uninit()
+{
+}
+
 
 FD3D12Texture2D::FD3D12Texture2D()
 {

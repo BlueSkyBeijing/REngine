@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 #include "FD3D12Resource.h"
@@ -6,20 +6,8 @@
 #include "FD3D12Vertex.h"
 #include "FRHIBuffer.h"
 
-class FD3D12Buffer : public FD3D12Resource
-{
-public:
-	FD3D12Buffer();
-    virtual ~FD3D12Buffer() override;
 
-    virtual void Init() {}
-    virtual void Uninit() {}
-
-private:
-
-};
-
-class FD3D12VertexBuffer : public FRHIVertexBuffer
+class FD3D12VertexBuffer : public FRHIVertexBuffer, public FD3D12ResourceInterface
 {
     friend class FD3D12RHI;
 public:
@@ -36,7 +24,7 @@ private:
     Microsoft::WRL::ComPtr <ID3D12Resource> mVertexBuffer;
 };
 
-class FD3D12IndexBuffer : public FRHIIndexBuffer
+class FD3D12IndexBuffer : public FRHIIndexBuffer, public FD3D12ResourceInterface
 {
     friend class FD3D12RHI;
 
@@ -54,7 +42,7 @@ private:
 
 };
 
-class FD3D12ConstantBuffer : public FRHIConstantBuffer
+class FD3D12ConstantBuffer : public FRHIConstantBuffer, public FD3D12ResourceInterface
 {
     friend class FD3D12RHI;
 

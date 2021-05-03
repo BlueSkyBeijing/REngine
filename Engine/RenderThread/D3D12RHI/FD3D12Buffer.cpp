@@ -1,16 +1,8 @@
-#include "PrecompiledHeader.h"
+﻿#include "PrecompiledHeader.h"
 
 #include "FD3D12Buffer.h"
 #include "FD3D12RHI.h"
 
-
-FD3D12Buffer::FD3D12Buffer()
-{
-}
-
-FD3D12Buffer::~FD3D12Buffer()
-{
-}
 
 FD3D12VertexBuffer::FD3D12VertexBuffer()
 {

@@ -357,8 +357,8 @@ void FPostProcessing::Draw()
         mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mBloomSetup->Width), static_cast<float>(mBloomSetup->Height), 1.0f);
         mRHI->SetSetScissor(true, 0.0f, 0.0f, static_cast<float>(mBloomSetup->Width), static_cast<float>(mBloomSetup->Height));
 
-        const FRHITransitionInfo infoRenderTargetBegin(mBloomSetup, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
-        mRHI->Transition(infoRenderTargetBegin);
+        const FRHITransitionInfo infoRenderTargetBegin(mBloomSetup->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
+        mRHI->TransitionResource(infoRenderTargetBegin);
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
         FPipelineStateInfo info;
@@ -375,11 +375,11 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
-        mRHI->SetTexture2D(mSceneColor, 0);
+        mRHI->SetTexture2D(mSceneColor->RenderTargets[0], 0);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
-        const FRHITransitionInfo infoRenderTargetEnd(mBloomSetup, ACCESS_RENDER_TARGET, ACCESS_PRESENT);
-        mRHI->Transition(infoRenderTargetEnd);
+        const FRHITransitionInfo infoRenderTargetEnd(mBloomSetup->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
+        mRHI->TransitionResource(infoRenderTargetEnd);
 
     }
     mRHI->EndEvent();
@@ -391,8 +391,8 @@ void FPostProcessing::Draw()
         mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mBloomDown0->Width), static_cast<float>(mBloomDown0->Height), 1.0f);
         mRHI->SetSetScissor(true, 0.0f, 0.0f, static_cast<float>(mBloomDown0->Width), static_cast<float>(mBloomDown0->Height));
 
-        const FRHITransitionInfo infoRenderTargetBegin(mBloomDown0, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
-        mRHI->Transition(infoRenderTargetBegin);
+        const FRHITransitionInfo infoRenderTargetBegin(mBloomDown0->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
+        mRHI->TransitionResource(infoRenderTargetBegin);
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
         FPipelineStateInfo info;
@@ -409,11 +409,11 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
-        mRHI->SetTexture2D(mBloomSetup, 0);
+        mRHI->SetTexture2D(mBloomSetup->RenderTargets[0], 0);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
-        const FRHITransitionInfo infoRenderTargetEnd(mBloomDown0, ACCESS_RENDER_TARGET, ACCESS_PRESENT);
-        mRHI->Transition(infoRenderTargetEnd);
+        const FRHITransitionInfo infoRenderTargetEnd(mBloomDown0->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
+        mRHI->TransitionResource(infoRenderTargetEnd);
 
     }
     mRHI->EndEvent();
@@ -425,8 +425,8 @@ void FPostProcessing::Draw()
         mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mBloomDown1->Width), static_cast<float>(mBloomDown1->Height), 1.0f);
         mRHI->SetSetScissor(true, 0.0f, 0.0f, static_cast<float>(mBloomDown1->Width), static_cast<float>(mBloomDown1->Height));
 
-        const FRHITransitionInfo infoRenderTargetBegin(mBloomDown1, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
-        mRHI->Transition(infoRenderTargetBegin);
+        const FRHITransitionInfo infoRenderTargetBegin(mBloomDown1->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
+        mRHI->TransitionResource(infoRenderTargetBegin);
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
         FPipelineStateInfo info;
@@ -443,11 +443,11 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
-        mRHI->SetTexture2D(mBloomDown0, 0);
+        mRHI->SetTexture2D(mBloomDown0->RenderTargets[0], 0);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
-        const FRHITransitionInfo infoRenderTargetEnd(mBloomDown1, ACCESS_RENDER_TARGET, ACCESS_PRESENT);
-        mRHI->Transition(infoRenderTargetEnd);
+        const FRHITransitionInfo infoRenderTargetEnd(mBloomDown1->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
+        mRHI->TransitionResource(infoRenderTargetEnd);
 
     }
     mRHI->EndEvent();
@@ -460,8 +460,8 @@ void FPostProcessing::Draw()
         mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mBloomDown2->Width), static_cast<float>(mBloomDown2->Height), 1.0f);
         mRHI->SetSetScissor(true, 0.0f, 0.0f, static_cast<float>(mBloomDown2->Width), static_cast<float>(mBloomDown2->Height));
 
-        const FRHITransitionInfo infoRenderTargetBegin(mBloomDown2, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
-        mRHI->Transition(infoRenderTargetBegin);
+        const FRHITransitionInfo infoRenderTargetBegin(mBloomDown2->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
+        mRHI->TransitionResource(infoRenderTargetBegin);
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
         FPipelineStateInfo info;
@@ -478,11 +478,11 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
-        mRHI->SetTexture2D(mBloomDown1, 0);
+        mRHI->SetTexture2D(mBloomDown1->RenderTargets[0], 0);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
-        const FRHITransitionInfo infoRenderTargetEnd(mBloomDown2, ACCESS_RENDER_TARGET, ACCESS_PRESENT);
-        mRHI->Transition(infoRenderTargetEnd);
+        const FRHITransitionInfo infoRenderTargetEnd(mBloomDown2->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
+        mRHI->TransitionResource(infoRenderTargetEnd);
 
     }
     mRHI->EndEvent();
@@ -494,8 +494,8 @@ void FPostProcessing::Draw()
         mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mBloomDown3->Width), static_cast<float>(mBloomDown3->Height), 1.0f);
         mRHI->SetSetScissor(true, 0.0f, 0.0f, static_cast<float>(mBloomDown3->Width), static_cast<float>(mBloomDown3->Height));
 
-        const FRHITransitionInfo infoRenderTargetBegin(mBloomDown3, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
-        mRHI->Transition(infoRenderTargetBegin);
+        const FRHITransitionInfo infoRenderTargetBegin(mBloomDown3->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
+        mRHI->TransitionResource(infoRenderTargetBegin);
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
         FPipelineStateInfo info;
@@ -512,11 +512,11 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
-        mRHI->SetTexture2D(mBloomDown2, 0);
+        mRHI->SetTexture2D(mBloomDown2->RenderTargets[0], 0);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
-        const FRHITransitionInfo infoRenderTargetEnd(mBloomDown3, ACCESS_RENDER_TARGET, ACCESS_PRESENT);
-        mRHI->Transition(infoRenderTargetEnd);
+        const FRHITransitionInfo infoRenderTargetEnd(mBloomDown3->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
+        mRHI->TransitionResource(infoRenderTargetEnd);
 
     }
     mRHI->EndEvent();
@@ -528,8 +528,8 @@ void FPostProcessing::Draw()
         mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mBloomUp0->Width), static_cast<float>(mBloomUp0->Height), 1.0f);
         mRHI->SetSetScissor(true, 0.0f, 0.0f, static_cast<float>(mBloomUp0->Width), static_cast<float>(mBloomUp0->Height));
 
-        const FRHITransitionInfo infoRenderTargetBegin(mBloomUp0, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
-        mRHI->Transition(infoRenderTargetBegin);
+        const FRHITransitionInfo infoRenderTargetBegin(mBloomUp0->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
+        mRHI->TransitionResource(infoRenderTargetBegin);
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
         FPipelineStateInfo info;
@@ -546,12 +546,12 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
-        mRHI->SetTexture2D(mBloomDown3, 0);
-        mRHI->SetTexture2D(mBloomDown2, 1);
+        mRHI->SetTexture2D(mBloomDown3->RenderTargets[0], 0);
+        mRHI->SetTexture2D(mBloomDown2->RenderTargets[0], 1);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
-        const FRHITransitionInfo infoRenderTargetEnd(mBloomUp0, ACCESS_RENDER_TARGET, ACCESS_PRESENT);
-        mRHI->Transition(infoRenderTargetEnd);
+        const FRHITransitionInfo infoRenderTargetEnd(mBloomUp0->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
+        mRHI->TransitionResource(infoRenderTargetEnd);
 
     }
     mRHI->EndEvent();
@@ -563,8 +563,8 @@ void FPostProcessing::Draw()
         mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mBloomUp1->Width), static_cast<float>(mBloomUp1->Height), 1.0f);
         mRHI->SetSetScissor(true, 0.0f, 0.0f, static_cast<float>(mBloomUp1->Width), static_cast<float>(mBloomUp1->Height));
 
-        const FRHITransitionInfo infoRenderTargetBegin(mBloomUp1, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
-        mRHI->Transition(infoRenderTargetBegin);
+        const FRHITransitionInfo infoRenderTargetBegin(mBloomUp1->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
+        mRHI->TransitionResource(infoRenderTargetBegin);
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
         FPipelineStateInfo info;
@@ -581,12 +581,12 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
-        mRHI->SetTexture2D(mBloomUp0, 0);
-        mRHI->SetTexture2D(mBloomDown1, 1);
+        mRHI->SetTexture2D(mBloomUp0->RenderTargets[0], 0);
+        mRHI->SetTexture2D(mBloomDown1->RenderTargets[0], 1);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
-        const FRHITransitionInfo infoRenderTargetEnd(mBloomUp1, ACCESS_RENDER_TARGET, ACCESS_PRESENT);
-        mRHI->Transition(infoRenderTargetEnd);
+        const FRHITransitionInfo infoRenderTargetEnd(mBloomUp1->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
+        mRHI->TransitionResource(infoRenderTargetEnd);
 
     }
     mRHI->EndEvent();
@@ -599,8 +599,8 @@ void FPostProcessing::Draw()
         mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mBloomUp2->Width), static_cast<float>(mBloomUp2->Height), 1.0f);
         mRHI->SetSetScissor(true, 0.0f, 0.0f, static_cast<float>(mBloomUp2->Width), static_cast<float>(mBloomUp2->Height));
 
-        const FRHITransitionInfo infoRenderTargetBegin(mBloomUp2, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
-        mRHI->Transition(infoRenderTargetBegin);
+        const FRHITransitionInfo infoRenderTargetBegin(mBloomUp2->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
+        mRHI->TransitionResource(infoRenderTargetBegin);
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
         FPipelineStateInfo info;
@@ -617,12 +617,12 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
-        mRHI->SetTexture2D(mBloomUp1, 0);
-        mRHI->SetTexture2D(mBloomDown0, 1);
+        mRHI->SetTexture2D(mBloomUp1->RenderTargets[0], 0);
+        mRHI->SetTexture2D(mBloomDown0->RenderTargets[0], 1);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
-        const FRHITransitionInfo infoRenderTargetEnd(mBloomUp2, ACCESS_RENDER_TARGET, ACCESS_PRESENT);
-        mRHI->Transition(infoRenderTargetEnd);
+        const FRHITransitionInfo infoRenderTargetEnd(mBloomUp2->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
+        mRHI->TransitionResource(infoRenderTargetEnd);
 
     }
     mRHI->EndEvent();
@@ -635,8 +635,8 @@ void FPostProcessing::Draw()
         mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mBloomUp3->Width), static_cast<float>(mBloomUp3->Height), 1.0f);
         mRHI->SetSetScissor(true, 0.0f, 0.0f, static_cast<float>(mBloomUp3->Width), static_cast<float>(mBloomUp3->Height));
 
-        const FRHITransitionInfo infoRenderTargetBegin(mBloomUp3, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
-        mRHI->Transition(infoRenderTargetBegin);
+        const FRHITransitionInfo infoRenderTargetBegin(mBloomUp3->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
+        mRHI->TransitionResource(infoRenderTargetBegin);
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
         FPipelineStateInfo info;
@@ -653,12 +653,12 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
-        mRHI->SetTexture2D(mBloomUp2, 0);
-        mRHI->SetTexture2D(mBloomSetup, 1);
+        mRHI->SetTexture2D(mBloomUp2->RenderTargets[0], 0);
+        mRHI->SetTexture2D(mBloomSetup->RenderTargets[0], 1);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
-        const FRHITransitionInfo infoRenderTargetEnd(mBloomUp3, ACCESS_RENDER_TARGET, ACCESS_PRESENT);
-        mRHI->Transition(infoRenderTargetEnd);
+        const FRHITransitionInfo infoRenderTargetEnd(mBloomUp3->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
+        mRHI->TransitionResource(infoRenderTargetEnd);
 
     }
     mRHI->EndEvent();
@@ -671,8 +671,10 @@ void FPostProcessing::Draw()
         mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mRenderTarget->Width), static_cast<float>(mRenderTarget->Height), 1.0f);
         mRHI->SetSetScissor(true, 0.0f, 0.0f, static_cast<float>(mRenderTarget->Width), static_cast<float>(mRenderTarget->Height));
 
-        const FRHITransitionInfo infoRenderTargetBegin(mRenderTarget, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
-        mRHI->Transition(infoRenderTargetBegin);
+        const FRHITransitionInfo infoRenderTargetBegin(mRenderTarget->RenderTargets[mRenderTarget->GetRenderTargetIndex()], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
+        mRHI->TransitionResource(infoRenderTargetBegin);
+        const FRHITransitionInfo infoDS(mRenderTarget->DepthStencilTarget, ACCESS_COMMON, ACCESS_DEPTH_WRITE);
+        mRHI->TransitionResource(infoDS);
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
         FPipelineStateInfo info;
@@ -689,12 +691,14 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
-        mRHI->SetTexture2D(mSceneColor, 0);
-        mRHI->SetTexture2D(mBloomUp3, 1);
+        mRHI->SetTexture2D(mSceneColor->RenderTargets[0], 0);
+        mRHI->SetTexture2D(mBloomUp3->RenderTargets[0], 1);
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
-        const FRHITransitionInfo infoRenderTargetEnd(mRenderTarget, ACCESS_RENDER_TARGET, ACCESS_PRESENT);
-        mRHI->Transition(infoRenderTargetEnd);
+        const FRHITransitionInfo infoRenderTargetEnd(mRenderTarget->RenderTargets[mRenderTarget->GetRenderTargetIndex()], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
+        mRHI->TransitionResource(infoRenderTargetEnd);
+        const FRHITransitionInfo infoDS2(mRenderTarget->DepthStencilTarget, ACCESS_DEPTH_WRITE, ACCESS_COMMON);
+        mRHI->TransitionResource(infoDS2);
 
     }
     mRHI->EndEvent();

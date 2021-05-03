@@ -116,8 +116,8 @@ void FRenderer::updateShadowPass()
 
     mRHI->SetRenderTarget(mShadowMap);
 
-    const FRHITransitionInfo infoBegin(mShadowMap, ACCESS_GENERIC_READ, ACCESS_DEPTH_WRITE);
-    mRHI->Transition(infoBegin);
+    const FRHITransitionInfo infoBegin(mShadowMap->DepthStencilTarget, ACCESS_GENERIC_READ, ACCESS_DEPTH_WRITE);
+    mRHI->TransitionResource(infoBegin);
 
     const FVector4 clearColor(0.5f, 0.5f, 0.5f, 1.0f);
     mRHI->Clear(false, clearColor, true, 1, true, 0);
@@ -152,8 +152,8 @@ void FRenderer::updateShadowPass()
         mRHI->EndEvent();
     }
 
-    const FRHITransitionInfo infoEnd(mShadowMap, ACCESS_DEPTH_WRITE, ACCESS_GENERIC_READ);
-    mRHI->Transition(infoEnd);
+    const FRHITransitionInfo infoEnd(mShadowMap->DepthStencilTarget, ACCESS_DEPTH_WRITE, ACCESS_GENERIC_READ);
+    mRHI->TransitionResource(infoEnd);
 
     mRHI->EndEvent();
 
@@ -241,8 +241,10 @@ void FRenderer::updateSceneColorPass()
 
     mRHI->SetRenderTarget(mSceneColor);
 
-    const FRHITransitionInfo info(mSceneColor, ACCESS_PRESENT, ACCESS_RENDER_TARGET);
-    mRHI->Transition(info);
+    const FRHITransitionInfo info(mSceneColor->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
+    mRHI->TransitionResource(info);
+    const FRHITransitionInfo infoDS(mSceneColor->DepthStencilTarget, ACCESS_GENERIC_READ, ACCESS_DEPTH_WRITE);
+    mRHI->TransitionResource(infoDS);
 
     const FVector4 clearColor(0.5f, 0.5f, 0.5f, 1.0f);
     mRHI->Clear(true, clearColor, true, 1, true, 0);
@@ -276,15 +278,17 @@ void FRenderer::updateSceneColorPass()
         mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
         mRHI->SetConstantBuffer(mSceneColorPassConstantBuffer, 1);
         mRHI->SetTexture2D(renderProxy->Material->BaseColor, 0);
-        mRHI->SetTexture2D(mShadowMap, 1);
+        mRHI->SetTexture2D(mShadowMap->DepthStencilTarget, 1);
 
         mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
 
         mRHI->EndEvent();
     }
 
-    const FRHITransitionInfo infoSceneColor(mSceneColor, ACCESS_RENDER_TARGET, ACCESS_PRESENT);
-    mRHI->Transition(infoSceneColor);
+    const FRHITransitionInfo infoSceneColor(mSceneColor->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
+    mRHI->TransitionResource(infoSceneColor);
+    const FRHITransitionInfo infoDS2(mSceneColor->DepthStencilTarget, ACCESS_DEPTH_WRITE, ACCESS_GENERIC_READ);
+    mRHI->TransitionResource(infoDS2);
 
     mRHI->EndEvent();
 }
