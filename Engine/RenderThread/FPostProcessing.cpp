@@ -52,13 +52,14 @@ void FFullScreenQuad::Init()
 
     PixelShader = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget);
 
-    FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+    FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
     FPipelineStateInfo info;
     info.ShaderBindings = shaderBindings;
     info.VertexShader = VertexShader;
     info.PixelShader = PixelShader;
     info.VertexLayout = mLayout;
     info.DepthStencilState.bEnableDepthWrite = false;
+    info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
     TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
 
@@ -117,50 +118,50 @@ void FPostProcessing::Init()
     const int32 bloomSetupWidth = static_cast<int32>(sceneColorWidth * 0.25f);
     const int32 bloomSetupHeight = static_cast<int32>(sceneColorHeight * 0.25f);
     mBloomSetup = mRHI->CreateRenderTarget(bloomSetupWidth,
-        bloomSetupHeight, 1, PF_R8G8B8A8_UNORM, PF_UNKNOWN);
+        bloomSetupHeight, 1, PF_R16G16B16A16_FLOAT, PF_UNKNOWN);
 
     const int32 bloomDown0Width = static_cast<int32>(bloomSetupWidth * 0.5f);
     const int32 bloomDown0Height = static_cast<int32>(bloomSetupHeight * 0.5f);
     mBloomDown0 = mRHI->CreateRenderTarget(bloomDown0Width,
-        bloomDown0Height, 1, PF_R8G8B8A8_UNORM, PF_UNKNOWN);
+        bloomDown0Height, 1, PF_R16G16B16A16_FLOAT, PF_UNKNOWN);
 
     const int32 bloomDown1Width = static_cast<int32>(bloomDown0Width * 0.5f);
     const int32 bloomDown1Height = static_cast<int32>(bloomDown0Height * 0.5f);
     mBloomDown1 = mRHI->CreateRenderTarget(bloomDown1Width,
-        bloomDown1Height, 1, PF_R8G8B8A8_UNORM, PF_UNKNOWN);
+        bloomDown1Height, 1, PF_R16G16B16A16_FLOAT, PF_UNKNOWN);
 
     const int32 bloomDown2Width = static_cast<int32>(bloomDown1Width * 0.5f);
     const int32 bloomDown2Height = static_cast<int32>(bloomDown1Height * 0.5f);
     mBloomDown2 = mRHI->CreateRenderTarget(bloomDown2Width,
-        bloomDown2Height, 1, PF_R8G8B8A8_UNORM, PF_UNKNOWN);
+        bloomDown2Height, 1, PF_R16G16B16A16_FLOAT, PF_UNKNOWN);
 
     const int32 bloomDown3Width = static_cast<int32>(bloomDown2Width * 0.5f);
     const int32 bloomDown3Height = static_cast<int32>(bloomDown2Height * 0.5f);
     mBloomDown3 = mRHI->CreateRenderTarget(bloomDown3Width,
-        bloomDown3Height, 1, PF_R8G8B8A8_UNORM, PF_UNKNOWN);
+        bloomDown3Height, 1, PF_R16G16B16A16_FLOAT, PF_UNKNOWN);
 
     const int32 bloomUp0Width = bloomDown3Width * 2;
     const int32 bloomUp0Height = bloomDown3Width * 2;
     mBloomUp0 = mRHI->CreateRenderTarget(bloomUp0Width,
-        bloomUp0Height, 1, PF_R8G8B8A8_UNORM, PF_UNKNOWN);
+        bloomUp0Height, 1, PF_R16G16B16A16_FLOAT, PF_UNKNOWN);
 
     const int32 bloomUp1Width = bloomUp0Width * 2;
     const int32 bloomUp1Height = bloomUp0Height * 2;
     mBloomUp1 = mRHI->CreateRenderTarget(bloomUp1Width,
-        bloomUp1Height, 1, PF_R8G8B8A8_UNORM, PF_UNKNOWN);
+        bloomUp1Height, 1, PF_R16G16B16A16_FLOAT, PF_UNKNOWN);
 
     const int32 bloomUp2Width = bloomUp1Width * 2;
     const int32 bloomUp2Height = bloomUp1Height * 2;
     mBloomUp2 = mRHI->CreateRenderTarget(bloomUp2Width,
-        bloomUp2Height, 1, PF_R8G8B8A8_UNORM, PF_UNKNOWN);
+        bloomUp2Height, 1, PF_R16G16B16A16_FLOAT, PF_UNKNOWN);
 
     const int32 bloomUp3Width = bloomUp2Width * 2;
     const int32 bloomUp3Height = bloomUp2Height * 2;
     mBloomUp3 = mRHI->CreateRenderTarget(bloomUp3Width,
-        bloomUp3Height, 1, PF_R8G8B8A8_UNORM, PF_UNKNOWN);
+        bloomUp3Height, 1, PF_R16G16B16A16_FLOAT, PF_UNKNOWN);
 
     mToneMap = mRHI->CreateRenderTarget(sceneColorWidth,
-        sceneColorHeight, 1, PF_R8G8B8A8_UNORM, PF_UNKNOWN);
+        sceneColorHeight, 1, PF_R16G16B16A16_FLOAT, PF_UNKNOWN);
 
     creatPostProcessConstantBuffer();
 
@@ -177,13 +178,14 @@ void FPostProcessing::Init()
 
         PixelShaderBloomSetup = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = VertexShaderBloomSetup;
         info.PixelShader = PixelShaderBloomSetup;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
 
@@ -202,13 +204,14 @@ void FPostProcessing::Init()
 
         PixelShaderBloomDown = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = VertexShaderBloomDown;
         info.PixelShader = PixelShaderBloomDown;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
 
@@ -227,38 +230,40 @@ void FPostProcessing::Init()
 
         PixelShaderBloomUp = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = VertexShaderBloomUp;
         info.PixelShader = PixelShaderBloomUp;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
 
     }
 
     {
-        const std::wstring vsFilePathName = L"Engine\\Shader\\Bloom.hlsl";
-        const std::string vsEnterPoint = "BloomMergeVS";
+        const std::wstring vsFilePathName = L"Engine\\Shader\\Tonemap.hlsl";
+        const std::string vsEnterPoint = "TonemapVS";
         const std::string vsTarget = "vs_5_0";
 
-        VertexShaderBloomMerge = mRHI->CreateShader(vsFilePathName, vsEnterPoint, vsTarget);
+        VertexShaderTonemap = mRHI->CreateShader(vsFilePathName, vsEnterPoint, vsTarget);
 
-        const std::wstring psFilePathName = L"Engine\\Shader\\Bloom.hlsl";
-        const std::string psEnterPoint = "BloomMergePS";
+        const std::wstring psFilePathName = L"Engine\\Shader\\Tonemap.hlsl";
+        const std::string psEnterPoint = "TonemapPS";
         const std::string psTarget = "ps_5_0";
 
-        PixelShaderBloomMerge = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget);
+        PixelShaderTonemap = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = VertexShaderBloomMerge;
-        info.PixelShader = PixelShaderBloomMerge;
+        info.VertexShader = VertexShaderTonemap;
+        info.PixelShader = PixelShaderTonemap;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.RenderTargetFormat = EPixelFormat::PF_R8G8B8A8_UNORM;
 
         TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
 
@@ -329,11 +334,11 @@ void FPostProcessing::UnInit()
     delete PixelShaderBloomUp;
     PixelShaderBloomUp = nullptr;
 
-    delete VertexShaderBloomMerge;
-    VertexShaderBloomMerge = nullptr;
+    delete VertexShaderTonemap;
+    VertexShaderTonemap = nullptr;
 
-    delete PixelShaderBloomMerge;
-    PixelShaderBloomMerge = nullptr;
+    delete PixelShaderTonemap;
+    PixelShaderTonemap = nullptr;
 
     delete mFullScreenLayout;
     mFullScreenLayout = nullptr;
@@ -360,13 +365,14 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomSetup->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = VertexShaderBloomSetup;
         info.PixelShader = PixelShaderBloomSetup;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
@@ -395,13 +401,14 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomDown0->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = VertexShaderBloomDown;
         info.PixelShader = PixelShaderBloomDown;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
@@ -430,7 +437,7 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomDown1->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
 
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
@@ -438,6 +445,7 @@ void FPostProcessing::Draw()
         info.PixelShader = PixelShaderBloomDown;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
@@ -467,7 +475,7 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomDown2->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
 
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
@@ -475,6 +483,7 @@ void FPostProcessing::Draw()
         info.PixelShader = PixelShaderBloomDown;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
@@ -503,7 +512,7 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomDown3->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
 
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
@@ -511,6 +520,7 @@ void FPostProcessing::Draw()
         info.PixelShader = PixelShaderBloomDown;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
@@ -539,7 +549,7 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomUp0->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
 
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
@@ -547,6 +557,7 @@ void FPostProcessing::Draw()
         info.PixelShader = PixelShaderBloomUp;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
@@ -576,7 +587,7 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomUp1->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
 
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
@@ -584,6 +595,7 @@ void FPostProcessing::Draw()
         info.PixelShader = PixelShaderBloomUp;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
@@ -614,7 +626,7 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomUp2->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
 
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
@@ -622,6 +634,7 @@ void FPostProcessing::Draw()
         info.PixelShader = PixelShaderBloomUp;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
@@ -652,7 +665,7 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomUp3->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
 
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
@@ -660,6 +673,7 @@ void FPostProcessing::Draw()
         info.PixelShader = PixelShaderBloomUp;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
@@ -692,14 +706,15 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoDepthStencilBegin(mRenderTarget->DepthStencilTarget, ACCESS_COMMON, ACCESS_DEPTH_WRITE);
         mRHI->TransitionResource(infoDepthStencilBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
 
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = VertexShaderBloomMerge;
-        info.PixelShader = PixelShaderBloomMerge;
+        info.VertexShader = VertexShaderTonemap;
+        info.PixelShader = PixelShaderTonemap;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.RenderTargetFormat = EPixelFormat::PF_R8G8B8A8_UNORM;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 

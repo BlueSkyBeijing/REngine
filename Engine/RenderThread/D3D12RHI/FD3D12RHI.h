@@ -62,6 +62,7 @@ protected:
 
     D3D_PRIMITIVE_TOPOLOGY translatePrimitiveType(EPrimitiveType primitiveType);
     D3D12_RESOURCE_STATES translateResourceTransitionAccess(EResourceTransitionAccess access);
+    DXGI_FORMAT translatePixelFormat(EPixelFormat format);
 
 private:
     FRHIRenderTarget* mRenderTargetCurrent;

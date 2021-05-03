@@ -83,8 +83,8 @@ private:
     FRHIShader* VertexShaderBloomUp;
     FRHIShader* PixelShaderBloomUp;
 
-    FRHIShader* VertexShaderBloomMerge;
-    FRHIShader* PixelShaderBloomMerge;
+    FRHIShader* VertexShaderTonemap;
+    FRHIShader* PixelShaderTonemap;
 
     FRHIVertexLayout* mFullScreenLayout;
     FRHIConstantBuffer* mPostProcessConstantBuffer;

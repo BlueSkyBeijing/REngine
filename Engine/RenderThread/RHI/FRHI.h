@@ -378,6 +378,8 @@ public:
     FRasterizerStateInfo RasterizerState;
     FDepthStencilStateInfo DepthStencilState;
     FBlendStateInfo FRHIBlendState;
+    EPixelFormat RenderTargetFormat;
+    EPixelFormat DepthStencilFormat;
 };
 
 

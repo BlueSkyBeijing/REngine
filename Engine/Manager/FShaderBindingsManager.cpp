@@ -14,7 +14,7 @@ FShaderBindingsManager::FShaderBindingsManager()
 FShaderBindingsManager::~FShaderBindingsManager()
 {
 }
-FRHIShaderBindings* FShaderBindingsManager::GetRootSignature()
+FRHIShaderBindings* FShaderBindingsManager::GetShaderBindings()
 {
     std::map<int32, FRHIShaderBindings*>::iterator it = mRootSignatures.begin();
     if (it != mRootSignatures.end())

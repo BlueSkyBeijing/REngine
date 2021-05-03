@@ -20,7 +20,7 @@ public:
     void Init();
     void UnInit();
 
-    FRHIShaderBindings* GetRootSignature();
+    FRHIShaderBindings* GetShaderBindings();
 
 private:
     std::map<int32, FRHIShaderBindings*> mRootSignatures;

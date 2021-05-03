@@ -79,13 +79,14 @@ void FStaticMeshRenderProxy::CreateRenderResource()
     BaseVertexLocation = 0;
     StartInstanceLocation = 0;
 
-    FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+    FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
     FPipelineStateInfo info;
     info.ShaderBindings = shaderBindings;
     info.VertexShader = Material->VertexShader;
     info.PixelShader = Material->PixelShader;
     info.VertexLayout = &VertexLayout;
     info.DepthStencilState.bEnableDepthWrite = true;
+    info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
     TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
 

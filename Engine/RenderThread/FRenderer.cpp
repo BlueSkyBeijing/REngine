@@ -111,7 +111,7 @@ void FRenderer::updateShadowPass()
 
         mRHI->BeginEvent(renderProxy->DebugName.c_str());
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = renderProxy->Material->VertexShaderShadow;
@@ -212,7 +212,7 @@ void FRenderer::initSceneColorPass()
 {
     //create shadow depth render target
     mSceneColor = mRHI->CreateRenderTarget(TSingleton<FConfigManager>::GetInstance().WindowWidth,
-        TSingleton<FConfigManager>::GetInstance().WindowHeight, 1, PF_R8G8B8A8_UNORM, PF_D24_UNORM_S8_UINT);
+        TSingleton<FConfigManager>::GetInstance().WindowHeight, 1, PF_R16G16B16A16_FLOAT, PF_D24_UNORM_S8_UINT);
 
     createSceneColorPassConstantBuffer();
 }
@@ -243,13 +243,14 @@ void FRenderer::updateSceneColorPass()
 
         mRHI->BeginEvent(renderProxy->DebugName.c_str());
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = renderProxy->Material->VertexShader;
         info.PixelShader = renderProxy->Material->PixelShader;
         info.VertexLayout = &renderProxy->VertexLayout;
         info.DepthStencilState.bEnableDepthWrite = true;
+        info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 

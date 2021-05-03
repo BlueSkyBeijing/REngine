@@ -570,7 +570,7 @@ FRHIPipelineState* FD3D12RHI::CreatePipelineState(const FPipelineStateInfo& info
     psoDesc.SampleMask = UINT_MAX;
     psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
     psoDesc.NumRenderTargets = (ps == nullptr) ? 0 : 1;
-    psoDesc.RTVFormats[0] = (ps == nullptr) ? DXGI_FORMAT_UNKNOWN : mBackBufferFormat;
+    psoDesc.RTVFormats[0] = (ps == nullptr) ? DXGI_FORMAT_UNKNOWN : translatePixelFormat(info.RenderTargetFormat);
     psoDesc.SampleDesc.Count = 1;
     psoDesc.SampleDesc.Quality = 0;
     psoDesc.DSVFormat = mDepthStencilFormat;
@@ -634,6 +634,7 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
 
             renderTarget->RenderTargets[i] = renderTexture;
 
+            DXGI_FORMAT pixelFormat = translatePixelFormat(formatTarget);
             //create render view
             CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorHandle(mDX12DescriptorHeapRenderTarget->GetCPUDescriptorHandleForHeapStart(), msRTVCount, mRTVDescriptorSize);
             D3D12_RESOURCE_DESC renderTargetDesc;
@@ -643,7 +644,7 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
             renderTargetDesc.Height = renderTarget->Height;
             renderTargetDesc.DepthOrArraySize = 1;
             renderTargetDesc.MipLevels = 1;
-            renderTargetDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+            renderTargetDesc.Format = pixelFormat;
             renderTargetDesc.SampleDesc.Count = 1;
             renderTargetDesc.SampleDesc.Quality = 0;
             renderTargetDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
@@ -658,7 +659,7 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
             clearValue.Color[1] = 0.5f;
             clearValue.Color[2] = 0.5f;
             clearValue.Color[3] = 1.0f;
-            clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+            clearValue.Format = pixelFormat;
             CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_DEFAULT);
 
             THROW_IF_FAILED(mDX12Device->CreateCommittedResource(
@@ -927,4 +928,8 @@ D3D12_RESOURCE_STATES FD3D12RHI::translateResourceTransitionAccess(EResourceTran
 {
     return (D3D12_RESOURCE_STATES)access;
 
+}
+DXGI_FORMAT FD3D12RHI::translatePixelFormat(EPixelFormat format)
+{
+    return (DXGI_FORMAT)format;
 }
