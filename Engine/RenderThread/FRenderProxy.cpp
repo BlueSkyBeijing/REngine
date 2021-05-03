@@ -79,7 +79,7 @@ void FStaticMeshRenderProxy::CreateRenderResource()
     BaseVertexLocation = 0;
     StartInstanceLocation = 0;
 
-    FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+    FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
     FPipelineStateInfo info;
     info.ShaderBindings = shaderBindings;
     info.VertexShader = Material->VertexShader;
@@ -88,6 +88,15 @@ void FStaticMeshRenderProxy::CreateRenderResource()
     info.DepthStencilState.bEnableDepthWrite = true;
 
     TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
+
+    FPipelineStateInfo infoShadow;
+    infoShadow.ShaderBindings = shaderBindings;
+    infoShadow.VertexShader = Material->VertexShaderShadow;
+    infoShadow.PixelShader = nullptr;
+    infoShadow.VertexLayout = &VertexLayout;
+    infoShadow.DepthStencilState.bEnableDepthWrite = true;
+
+    TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(infoShadow);
 
     rhi->FlushCommandQueue();
 }

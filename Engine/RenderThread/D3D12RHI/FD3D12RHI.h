@@ -32,6 +32,7 @@ public:
     virtual void SetIndexBuffer(FRHIIndexBuffer* buffer) override;
     virtual void SetConstantBuffer(FRHIConstantBuffer* buffer, int32 shaderPos) override;
     virtual void SetTexture2D(FRHITexture2D* texture, int32 shaderPos) override;
+
     virtual void DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation) override;
 
     virtual FRHIConstantBuffer* CreateConstantBuffer(uint32 structureSize, uint8* bufferData) override;
@@ -58,7 +59,9 @@ public:
 
 protected:
     void createHeaps();
+
     D3D_PRIMITIVE_TOPOLOGY translatePrimitiveType(EPrimitiveType primitiveType);
+    D3D12_RESOURCE_STATES translateResourceTransitionAccess(EResourceTransitionAccess access);
 
 private:
     FRHIRenderTarget* mRenderTargetCurrent;

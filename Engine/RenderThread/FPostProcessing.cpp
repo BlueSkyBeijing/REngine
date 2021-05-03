@@ -52,7 +52,7 @@ void FFullScreenQuad::Init()
 
     PixelShader = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget);
 
-    FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+    FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
     FPipelineStateInfo info;
     info.ShaderBindings = shaderBindings;
     info.VertexShader = VertexShader;
@@ -101,8 +101,8 @@ void FPostProcessing::Init()
     mFullScreenLayout = new FRHIVertexLayout;
 
     FInputElementDesc inputLayout[] = {
-        { "POSITION", 0, EPixelFormat::PF_R32G32B32_FLOAT, 0, 0,  ICF_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD", 0, EPixelFormat::PF_R32G32_FLOAT, 0, 12, ICF_PER_VERTEX_DATA, 0 } };
+        { "POSITION", 0, EPixelFormat::PF_R32G32B32_FLOAT, 0, 0,  ICF_PerVertexData, 0 },
+        { "TEXCOORD", 0, EPixelFormat::PF_R32G32_FLOAT, 0, 12, ICF_PerVertexData, 0 } };
 
     mFullScreenLayout->Elements.push_back(inputLayout[0]);
     mFullScreenLayout->Elements.push_back(inputLayout[1]);
@@ -177,7 +177,7 @@ void FPostProcessing::Init()
 
         PixelShaderBloomSetup = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = VertexShaderBloomSetup;
@@ -202,7 +202,7 @@ void FPostProcessing::Init()
 
         PixelShaderBloomDown = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = VertexShaderBloomDown;
@@ -227,7 +227,7 @@ void FPostProcessing::Init()
 
         PixelShaderBloomUp = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = VertexShaderBloomUp;
@@ -252,7 +252,7 @@ void FPostProcessing::Init()
 
         PixelShaderBloomMerge = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = VertexShaderBloomMerge;
@@ -360,7 +360,7 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomSetup->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = VertexShaderBloomSetup;
@@ -376,6 +376,7 @@ void FPostProcessing::Draw()
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mSceneColor->RenderTargets[0], 0);
+
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
         const FRHITransitionInfo infoRenderTargetEnd(mBloomSetup->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
@@ -394,7 +395,7 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomDown0->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = VertexShaderBloomDown;
@@ -410,6 +411,7 @@ void FPostProcessing::Draw()
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomSetup->RenderTargets[0], 0);
+
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
         const FRHITransitionInfo infoRenderTargetEnd(mBloomDown0->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
@@ -428,7 +430,8 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomDown1->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = VertexShaderBloomDown;
@@ -444,6 +447,7 @@ void FPostProcessing::Draw()
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomDown0->RenderTargets[0], 0);
+
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
         const FRHITransitionInfo infoRenderTargetEnd(mBloomDown1->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
@@ -463,7 +467,8 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomDown2->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = VertexShaderBloomDown;
@@ -479,6 +484,7 @@ void FPostProcessing::Draw()
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomDown1->RenderTargets[0], 0);
+
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
         const FRHITransitionInfo infoRenderTargetEnd(mBloomDown2->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
@@ -497,7 +503,8 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomDown3->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = VertexShaderBloomDown;
@@ -513,6 +520,7 @@ void FPostProcessing::Draw()
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomDown2->RenderTargets[0], 0);
+
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
         const FRHITransitionInfo infoRenderTargetEnd(mBloomDown3->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
@@ -531,7 +539,8 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomUp0->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = VertexShaderBloomUp;
@@ -548,6 +557,7 @@ void FPostProcessing::Draw()
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomDown3->RenderTargets[0], 0);
         mRHI->SetTexture2D(mBloomDown2->RenderTargets[0], 1);
+
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
         const FRHITransitionInfo infoRenderTargetEnd(mBloomUp0->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
@@ -566,7 +576,8 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomUp1->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = VertexShaderBloomUp;
@@ -583,6 +594,7 @@ void FPostProcessing::Draw()
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomUp0->RenderTargets[0], 0);
         mRHI->SetTexture2D(mBloomDown1->RenderTargets[0], 1);
+
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
         const FRHITransitionInfo infoRenderTargetEnd(mBloomUp1->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
@@ -602,7 +614,8 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomUp2->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = VertexShaderBloomUp;
@@ -619,6 +632,7 @@ void FPostProcessing::Draw()
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomUp1->RenderTargets[0], 0);
         mRHI->SetTexture2D(mBloomDown0->RenderTargets[0], 1);
+
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
         const FRHITransitionInfo infoRenderTargetEnd(mBloomUp2->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
@@ -638,7 +652,8 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomUp3->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = VertexShaderBloomUp;
@@ -655,6 +670,7 @@ void FPostProcessing::Draw()
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomUp2->RenderTargets[0], 0);
         mRHI->SetTexture2D(mBloomSetup->RenderTargets[0], 1);
+
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
         const FRHITransitionInfo infoRenderTargetEnd(mBloomUp3->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
@@ -673,10 +689,11 @@ void FPostProcessing::Draw()
 
         const FRHITransitionInfo infoRenderTargetBegin(mRenderTarget->RenderTargets[mRenderTarget->GetRenderTargetIndex()], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
-        const FRHITransitionInfo infoDS(mRenderTarget->DepthStencilTarget, ACCESS_COMMON, ACCESS_DEPTH_WRITE);
-        mRHI->TransitionResource(infoDS);
+        const FRHITransitionInfo infoDepthStencilBegin(mRenderTarget->DepthStencilTarget, ACCESS_COMMON, ACCESS_DEPTH_WRITE);
+        mRHI->TransitionResource(infoDepthStencilBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
+
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = VertexShaderBloomMerge;
@@ -693,12 +710,13 @@ void FPostProcessing::Draw()
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
         mRHI->SetTexture2D(mSceneColor->RenderTargets[0], 0);
         mRHI->SetTexture2D(mBloomUp3->RenderTargets[0], 1);
+
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
         const FRHITransitionInfo infoRenderTargetEnd(mRenderTarget->RenderTargets[mRenderTarget->GetRenderTargetIndex()], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
         mRHI->TransitionResource(infoRenderTargetEnd);
-        const FRHITransitionInfo infoDS2(mRenderTarget->DepthStencilTarget, ACCESS_DEPTH_WRITE, ACCESS_COMMON);
-        mRHI->TransitionResource(infoDS2);
+        const FRHITransitionInfo infoDepthStencilEnd(mRenderTarget->DepthStencilTarget, ACCESS_DEPTH_WRITE, ACCESS_COMMON);
+        mRHI->TransitionResource(infoDepthStencilEnd);
 
     }
     mRHI->EndEvent();
@@ -711,6 +729,7 @@ void FPostProcessing::creatPostProcessConstantBuffer()
 {
     FPostProcessConstant postProcessConstant;
     _createPostProcessConstant(postProcessConstant);
+
     mPostProcessConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FPostProcessConstant), (uint8*)&postProcessConstant);
 }
 
@@ -718,6 +737,7 @@ void FPostProcessing::updatePostProcessConstantBuffer()
 {
     FPostProcessConstant postProcessConstant;
     _createPostProcessConstant(postProcessConstant);
+
     mRHI->UpdateConstantBuffer(mPostProcessConstantBuffer, sizeof(FPostProcessConstant), (uint8*)&postProcessConstant);
 }
 
@@ -733,5 +753,4 @@ void FPostProcessing::_createPostProcessConstant(FPostProcessConstant& constant)
     constant.BloomTintA = FVector4(1.0f, 1.0f, 1.0f, 1.0f) / 16.0f;
     constant.BloomTintB = FVector4(1.0f, 1.0f, 1.0f, 1.0f) / 16.0f;
     constant.BloomColor = FVector3(1.0f, 1.0f, 1.0f);
-
 }

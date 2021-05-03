@@ -85,24 +85,6 @@ void FRenderer::initShadowPass()
         TSingleton<FConfigManager>::GetInstance().ShadowMapHeight, 0, PF_UNKNOWN, PF_R24_UNORM_X8_TYPELESS);
 
     creatShadowPassConstantBuffer();
-
-    const std::vector<FRenderProxy*>& renderProxys = mScene->GetRenderProxys();
-    for (auto it = renderProxys.begin(); it != renderProxys.end(); it++)
-    {
-        FRenderProxy* renderProxy = *it;
-
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
-        FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
-        info.VertexShader = renderProxy->Material->VertexShaderShadow;
-        info.PixelShader = nullptr;
-        info.VertexLayout = &renderProxy->VertexLayout;
-        info.DepthStencilState.bEnableDepthWrite = true;
-
-        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
-
-    }
-
 }
 
 void FRenderer::updateShadowPass()
@@ -116,8 +98,8 @@ void FRenderer::updateShadowPass()
 
     mRHI->SetRenderTarget(mShadowMap);
 
-    const FRHITransitionInfo infoBegin(mShadowMap->DepthStencilTarget, ACCESS_GENERIC_READ, ACCESS_DEPTH_WRITE);
-    mRHI->TransitionResource(infoBegin);
+    const FRHITransitionInfo infoDepthBegin(mShadowMap->DepthStencilTarget, ACCESS_GENERIC_READ, ACCESS_DEPTH_WRITE);
+    mRHI->TransitionResource(infoDepthBegin);
 
     const FVector4 clearColor(0.5f, 0.5f, 0.5f, 1.0f);
     mRHI->Clear(false, clearColor, true, 1, true, 0);
@@ -129,7 +111,7 @@ void FRenderer::updateShadowPass()
 
         mRHI->BeginEvent(renderProxy->DebugName.c_str());
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = renderProxy->Material->VertexShaderShadow;
@@ -137,7 +119,6 @@ void FRenderer::updateShadowPass()
         info.VertexLayout = &renderProxy->VertexLayout;
         info.DepthStencilState.bEnableDepthWrite = true;
 
-        TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
         mRHI->SetPipelineState(pipelineState);
@@ -152,8 +133,8 @@ void FRenderer::updateShadowPass()
         mRHI->EndEvent();
     }
 
-    const FRHITransitionInfo infoEnd(mShadowMap->DepthStencilTarget, ACCESS_DEPTH_WRITE, ACCESS_GENERIC_READ);
-    mRHI->TransitionResource(infoEnd);
+    const FRHITransitionInfo infoDepthEnd(mShadowMap->DepthStencilTarget, ACCESS_DEPTH_WRITE, ACCESS_GENERIC_READ);
+    mRHI->TransitionResource(infoDepthEnd);
 
     mRHI->EndEvent();
 
@@ -161,6 +142,7 @@ void FRenderer::updateShadowPass()
 
 void FRenderer::unInitShadowPass()
 {
+    mShadowMap->UnInit();
     delete mShadowMap;
     mShadowMap = nullptr;
 
@@ -241,10 +223,10 @@ void FRenderer::updateSceneColorPass()
 
     mRHI->SetRenderTarget(mSceneColor);
 
-    const FRHITransitionInfo info(mSceneColor->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
-    mRHI->TransitionResource(info);
-    const FRHITransitionInfo infoDS(mSceneColor->DepthStencilTarget, ACCESS_GENERIC_READ, ACCESS_DEPTH_WRITE);
-    mRHI->TransitionResource(infoDS);
+    const FRHITransitionInfo infoRenderTargetBegin(mSceneColor->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
+    mRHI->TransitionResource(infoRenderTargetBegin);
+    const FRHITransitionInfo infoDepthStencilBegin(mSceneColor->DepthStencilTarget, ACCESS_GENERIC_READ, ACCESS_DEPTH_WRITE);
+    mRHI->TransitionResource(infoDepthStencilBegin);
 
     const FVector4 clearColor(0.5f, 0.5f, 0.5f, 1.0f);
     mRHI->Clear(true, clearColor, true, 1, true, 0);
@@ -261,7 +243,7 @@ void FRenderer::updateSceneColorPass()
 
         mRHI->BeginEvent(renderProxy->DebugName.c_str());
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetOrCreateRootSignature();
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetRootSignature();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = renderProxy->Material->VertexShader;
@@ -285,10 +267,10 @@ void FRenderer::updateSceneColorPass()
         mRHI->EndEvent();
     }
 
-    const FRHITransitionInfo infoSceneColor(mSceneColor->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
-    mRHI->TransitionResource(infoSceneColor);
-    const FRHITransitionInfo infoDS2(mSceneColor->DepthStencilTarget, ACCESS_DEPTH_WRITE, ACCESS_GENERIC_READ);
-    mRHI->TransitionResource(infoDS2);
+    const FRHITransitionInfo infoRederTargetEnd(mSceneColor->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
+    mRHI->TransitionResource(infoRederTargetEnd);
+    const FRHITransitionInfo infoDepthStencilEnd(mSceneColor->DepthStencilTarget, ACCESS_DEPTH_WRITE, ACCESS_GENERIC_READ);
+    mRHI->TransitionResource(infoDepthStencilEnd);
 
     mRHI->EndEvent();
 }
@@ -350,6 +332,7 @@ void FRenderer::_createSceneColorPassConstant(FSceneColorPassConstant& constant)
 void FRenderer::initPostProcess()
 {
     mPostProcessing = new FPostProcessing(mRHI, mSceneColor, mRenderTarget);
+
     mPostProcessing->Init();
 }
 

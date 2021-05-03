@@ -1,4 +1,4 @@
-#include "PrecompiledHeader.h"
+﻿#include "PrecompiledHeader.h"
 
 #include "FShaderBindingsManager.h"
 #include "FRHI.h"
@@ -14,7 +14,7 @@ FShaderBindingsManager::FShaderBindingsManager()
 FShaderBindingsManager::~FShaderBindingsManager()
 {
 }
-FRHIShaderBindings* FShaderBindingsManager::GetOrCreateRootSignature()
+FRHIShaderBindings* FShaderBindingsManager::GetRootSignature()
 {
     std::map<int32, FRHIShaderBindings*>::iterator it = mRootSignatures.begin();
     if (it != mRootSignatures.end())
@@ -22,19 +22,19 @@ FRHIShaderBindings* FShaderBindingsManager::GetOrCreateRootSignature()
         return it->second;
     }
 
-    FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
-
-    FRHIShaderBindings* rootSignature = rhi->CreateShaderBindings();
-
-    mRootSignatures.insert(std::make_pair(0, rootSignature));
-
-    return rootSignature;
+    return nullptr;
 }
 
 
 void FShaderBindingsManager::Init()
 {
+    FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
+
+    FRHIShaderBindings* rootSignature = rhi->CreateShaderBindings();
+
+    mRootSignatures.insert(std::make_pair(0, rootSignature));
 }
+
 
 void FShaderBindingsManager::UnInit()
 {

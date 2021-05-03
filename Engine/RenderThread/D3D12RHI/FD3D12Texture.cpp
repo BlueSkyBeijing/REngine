@@ -3,20 +3,20 @@
 #include "FD3D12Texture.h"
 #include "FD3D12RHI.h"
 
-FD3D12TextureInterface::FD3D12TextureInterface()
+FD3D12Texture::FD3D12Texture()
 {
 }
 
-FD3D12TextureInterface::~FD3D12TextureInterface()
+FD3D12Texture::~FD3D12Texture()
 {
 }
 
 
-void FD3D12TextureInterface::Init()
+void FD3D12Texture::Init()
 {
 }
 
-void FD3D12TextureInterface::Uninit()
+void FD3D12Texture::Uninit()
 {
 }
 

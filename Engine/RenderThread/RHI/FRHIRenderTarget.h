@@ -6,8 +6,6 @@
 
 class FRHIRenderTarget
 {
-    friend class FRHI;
-
 public:
     FRHIRenderTarget(uint32 width, uint32 hight,
         uint32 numTarget);
@@ -37,8 +35,6 @@ protected:
 
 class FRHIRenderWindow : public FRHIRenderTarget
 {
-    friend class FRHI;
-
 public:
     FRHIRenderWindow(uint32 width, uint32 hight, uint32 numTarget);
     virtual ~FRHIRenderWindow();

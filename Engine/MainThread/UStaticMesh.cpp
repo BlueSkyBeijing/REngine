@@ -17,9 +17,9 @@ void UStaticMesh::Load()
 {
     FRHIVertexLayout layout;
     FInputElementDesc inputLayout[] = {
-    { "POSITION", 0, EPixelFormat::PF_R32G32B32_FLOAT, 0, 0,  ICF_PER_VERTEX_DATA, 0 },
-    { "NORMAL", 0, EPixelFormat::PF_R32G32B32_FLOAT, 0, 12, ICF_PER_VERTEX_DATA, 0 },
-    { "TEXCOORD", 0, EPixelFormat::PF_R32G32_FLOAT, 0, 24, ICF_PER_VERTEX_DATA, 0 } };
+    { "POSITION", 0, EPixelFormat::PF_R32G32B32_FLOAT, 0, 0,  ICF_PerVertexData, 0 },
+    { "NORMAL", 0, EPixelFormat::PF_R32G32B32_FLOAT, 0, 12, ICF_PerVertexData, 0 },
+    { "TEXCOORD", 0, EPixelFormat::PF_R32G32_FLOAT, 0, 24, ICF_PerVertexData, 0 } };
 
     layout.Elements.push_back(inputLayout[0]);
     layout.Elements.push_back(inputLayout[1]);

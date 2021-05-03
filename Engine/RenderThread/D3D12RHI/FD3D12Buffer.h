@@ -7,7 +7,7 @@
 #include "FRHIBuffer.h"
 
 
-class FD3D12VertexBuffer : public FRHIVertexBuffer, public FD3D12ResourceInterface
+class FD3D12VertexBuffer : public FRHIVertexBuffer, public FD3D12Resource
 {
     friend class FD3D12RHI;
 public:
@@ -24,7 +24,7 @@ private:
     Microsoft::WRL::ComPtr <ID3D12Resource> mVertexBuffer;
 };
 
-class FD3D12IndexBuffer : public FRHIIndexBuffer, public FD3D12ResourceInterface
+class FD3D12IndexBuffer : public FRHIIndexBuffer, public FD3D12Resource
 {
     friend class FD3D12RHI;
 
@@ -42,7 +42,7 @@ private:
 
 };
 
-class FD3D12ConstantBuffer : public FRHIConstantBuffer, public FD3D12ResourceInterface
+class FD3D12ConstantBuffer : public FRHIConstantBuffer, public FD3D12Resource
 {
     friend class FD3D12RHI;
 

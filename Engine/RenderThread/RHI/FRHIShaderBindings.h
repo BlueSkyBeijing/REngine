@@ -1,13 +1,11 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 class FRHIShaderBindings
 {
-    friend class FRHI;
-
 public:
-	FRHIShaderBindings();
-	virtual~FRHIShaderBindings();
+    FRHIShaderBindings();
+    virtual~FRHIShaderBindings();
 
     void Init();
     void UnInit();

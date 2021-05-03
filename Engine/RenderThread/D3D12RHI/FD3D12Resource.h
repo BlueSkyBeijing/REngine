@@ -3,13 +3,13 @@
 
 #include "FRHIResource.h"
 
-class FD3D12ResourceInterface
+class FD3D12Resource
 {
     friend class FD3D12RHI;
 
 public:
-    FD3D12ResourceInterface();
-    ~FD3D12ResourceInterface();
+    FD3D12Resource();
+    ~FD3D12Resource();
 
 public:
     int32 PosInHeapCBVSRVUAV;

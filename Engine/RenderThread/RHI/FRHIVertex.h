@@ -53,8 +53,8 @@ private:
 
 enum EInputClassification
 {
-    ICF_PER_VERTEX_DATA = 0,
-    ICF_PER_INSTANCE_DATA = 1
+    ICF_PerVertexData = 0,
+    ICF_PerInstanceData = 1
 };
 
 struct FInputElementDesc

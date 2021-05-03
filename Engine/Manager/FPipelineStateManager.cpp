@@ -60,7 +60,6 @@ FRHIPipelineState* FPipelineStateManager::CreatePipleLineState(const FPipelineSt
     {
         FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
 
-
         pipelineState = rhi->CreatePipelineState(info);
 
         mPipelineStates.insert(std::make_pair(hashValue, pipelineState));

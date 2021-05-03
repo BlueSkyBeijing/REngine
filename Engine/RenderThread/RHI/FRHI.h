@@ -141,7 +141,7 @@ enum EPixelFormat
     PF_FORCE_UINT = 0xffffffff
 };
 
-enum ERHIAccess
+enum EResourceTransitionAccess
 {
     ACCESS_COMMON = 0,
     ACCESS_VERTEX_AND_CONSTANT_BUFFER = 0x1,
@@ -164,6 +164,7 @@ enum ERHIAccess
     ACCESS_PRESENT = 0,
     ACCESS_PREDICATION = 0x200,
 };
+
 enum ERenderTargetActions
 {
     RTA_LoadOpMask = 2,
@@ -278,13 +279,13 @@ enum EBlendOperation
 struct FRHITransitionInfo
 {
     FRHIResource* Resource;
-    ERHIAccess AccessBefore;
-    ERHIAccess AccessAfter;
+    EResourceTransitionAccess AccessBefore;
+    EResourceTransitionAccess AccessAfter;
 
     FRHITransitionInfo(
         FRHIResource* InResource,
-        ERHIAccess InPreviousState,
-        ERHIAccess InNewState)
+        EResourceTransitionAccess InPreviousState,
+        EResourceTransitionAccess InNewState)
         : Resource(InResource)
         , AccessBefore(InPreviousState)
         , AccessAfter(InNewState)
@@ -407,6 +408,7 @@ public:
     virtual void SetIndexBuffer(FRHIIndexBuffer* buffer) = 0;
     virtual void SetConstantBuffer(FRHIConstantBuffer* buffer, int32 shaderPos) = 0;
     virtual void SetTexture2D(FRHITexture2D* texture, int32 shaderPos) = 0;
+
     virtual void DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation) = 0;
 
     virtual FRHIConstantBuffer* CreateConstantBuffer(uint32 structureSize, uint8* bufferData) = 0;

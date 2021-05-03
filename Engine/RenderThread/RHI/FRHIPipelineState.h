@@ -1,14 +1,12 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 
 class FRHIPipelineState
 {
-    friend class FRHI;
-
 public:
-	FRHIPipelineState();
-	virtual ~FRHIPipelineState();
+    FRHIPipelineState();
+    virtual ~FRHIPipelineState();
 
     void Init();
     void UnInit();

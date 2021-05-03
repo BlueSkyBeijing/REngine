@@ -151,6 +151,7 @@ void FD3D12RHI::ExecuteCommandList()
 {
     //execute command list
     ID3D12CommandList* CommandLists[] = { mDX12CommandList.Get() };
+
     mDX12CommandQueue->ExecuteCommandLists(1, CommandLists);
 
 }
@@ -158,12 +159,15 @@ void FD3D12RHI::ExecuteCommandList()
 void FD3D12RHI::FlushCommandQueue()
 {
     const uint64 cmdFence = mFenceValue;
+
     mDX12CommandQueue->Signal(mDX12Fence.Get(), cmdFence);
+
     mFenceValue++;
 
     if (mDX12Fence->GetCompletedValue() < cmdFence)
     {
         mDX12Fence->SetEventOnCompletion(cmdFence, mEventHandle);
+
         WaitForSingleObject(mEventHandle, INFINITE);
     }
 }
@@ -171,12 +175,14 @@ void FD3D12RHI::FlushCommandQueue()
 void FD3D12RHI::Clear(bool clearColor, const FVector4& color, bool clearDepth, float depth, bool clearStencil, uint32 stencil)
 {
     FD3D12RenderTarget* renderTargetDX12 = dynamic_cast<FD3D12RenderTarget*>(mRenderTargetCurrent);
+
     //clear color and depth stencil
     if (clearColor)
     {
         const float ClearColor[] = { color.x(), color.y(), color.z(), color.w() };
 
-        FD3D12TextureInterface* ti2 = dynamic_cast<FD3D12TextureInterface*>(renderTargetDX12->RenderTargets[renderTargetDX12->GetRenderTargetIndex()]);
+        FD3D12Texture* ti2 = dynamic_cast<FD3D12Texture*>(renderTargetDX12->RenderTargets[renderTargetDX12->GetRenderTargetIndex()]);
+
         D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandleDS2 = CD3DX12_CPU_DESCRIPTOR_HANDLE(
             mDX12DescriptorHeapRenderTarget->GetCPUDescriptorHandleForHeapStart(), ti2->PosInHeapRTVDSV, mRTVDescriptorSize);
 
@@ -196,9 +202,10 @@ void FD3D12RHI::Clear(bool clearColor, const FVector4& color, bool clearDepth, f
 
     if (clearFlags != 0)
     {
-        FD3D12TextureInterface* ti = dynamic_cast<FD3D12TextureInterface*>(renderTargetDX12->DepthStencilTarget);
+        FD3D12Texture* depthStencil = dynamic_cast<FD3D12Texture*>(renderTargetDX12->DepthStencilTarget);
+
         D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandleDS = CD3DX12_CPU_DESCRIPTOR_HANDLE(
-            mDX12DescriptorHeapDepthStencil->GetCPUDescriptorHandleForHeapStart(), ti->PosInHeapRTVDSV, mDSVDescriptorSize);
+            mDX12DescriptorHeapDepthStencil->GetCPUDescriptorHandleForHeapStart(), depthStencil->PosInHeapRTVDSV, mDSVDescriptorSize);
 
         mDX12CommandList->ClearDepthStencilView(descriptorHandleDS, (D3D12_CLEAR_FLAGS)clearFlags, depth, stencil, 0, nullptr);
     }
@@ -236,17 +243,22 @@ void FD3D12RHI::SetRenderTarget(FRHIRenderTarget* renderTarget)
 
     if (renderTarget->RenderTargets.size() > 0)
     {
-        FD3D12TextureInterface* ti = dynamic_cast<FD3D12TextureInterface*>(renderTarget->RenderTargets[renderTarget->GetRenderTargetIndex()]);
+        FD3D12Texture* renderTexutre = dynamic_cast<FD3D12Texture*>(renderTarget->RenderTargets[renderTarget->GetRenderTargetIndex()]);
+
         D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandleDS = CD3DX12_CPU_DESCRIPTOR_HANDLE(
-            mDX12DescriptorHeapRenderTarget->GetCPUDescriptorHandleForHeapStart(), ti->PosInHeapRTVDSV, mRTVDescriptorSize);
+            mDX12DescriptorHeapRenderTarget->GetCPUDescriptorHandleForHeapStart(), renderTexutre->PosInHeapRTVDSV, mRTVDescriptorSize);
+
         rtView = &descriptorHandleDS;
     }
+
     if (renderTarget->DepthStencilTarget != nullptr)
     {
-        FD3D12TextureInterface* ti2 = dynamic_cast<FD3D12TextureInterface*>(renderTarget->DepthStencilTarget);
-        D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandleDS2 = CD3DX12_CPU_DESCRIPTOR_HANDLE(
-            mDX12DescriptorHeapDepthStencil->GetCPUDescriptorHandleForHeapStart(), ti2->PosInHeapRTVDSV, mDSVDescriptorSize);
-        dsView = &descriptorHandleDS2;
+        FD3D12Texture* depthStencil = dynamic_cast<FD3D12Texture*>(renderTarget->DepthStencilTarget);
+
+        D3D12_CPU_DESCRIPTOR_HANDLE descriptorHandleDS = CD3DX12_CPU_DESCRIPTOR_HANDLE(
+            mDX12DescriptorHeapDepthStencil->GetCPUDescriptorHandleForHeapStart(), depthStencil->PosInHeapRTVDSV, mDSVDescriptorSize);
+
+        dsView = &descriptorHandleDS;
     }
 
     mDX12CommandList->OMSetRenderTargets(numRT, rtView, numRT > 0, dsView);
@@ -255,12 +267,14 @@ void FD3D12RHI::SetRenderTarget(FRHIRenderTarget* renderTarget)
 void FD3D12RHI::SetViewPort(float minX, float minY, float minZ, float maxX, float maxY, float maxZ)
 {
     const D3D12_VIEWPORT viewport = { minX, minY, (maxX - minX), (maxY - minY), minZ, maxZ };
+
     mDX12CommandList->RSSetViewports(1, &viewport);
 }
 
 void FD3D12RHI::SetSetScissor(bool enable, float minX, float minY, float maxX, float maxY)
 {
     const D3D12_RECT rect = { static_cast<LONG>(minX), static_cast<LONG>(minY), static_cast<LONG>(maxX), static_cast<LONG>(maxY) };
+
     mDX12CommandList->RSSetScissorRects(1, &rect);
 }
 
@@ -270,13 +284,13 @@ void FD3D12RHI::SetPipelineState(FRHIPipelineState* pipelineState)
     FD3D12ShaderBindings* bindings = dynamic_cast<FD3D12ShaderBindings*>(state->ShaderBindings);
 
     mDX12CommandList->SetGraphicsRootSignature(bindings->mDX12RootSignature.Get());
-
     mDX12CommandList->SetPipelineState(state->mDX12PipleLineState.Get());
 }
 
 void FD3D12RHI::SetPrimitiveType(EPrimitiveType primitiveType)
 {
     D3D_PRIMITIVE_TOPOLOGY dxToplogy = translatePrimitiveType(primitiveType);
+
     mDX12CommandList->IASetPrimitiveTopology(dxToplogy);
 }
 
@@ -298,11 +312,10 @@ void FD3D12RHI::SetConstantBuffer(FRHIConstantBuffer* buffer, int32 shaderPos)
 {
     CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
 
-    FD3D12ResourceInterface* resourceDX12 = dynamic_cast<FD3D12ResourceInterface*>(buffer);
+    FD3D12Resource* resourceDX12 = dynamic_cast<FD3D12Resource*>(buffer);
 
     descriptorObject.Offset(resourceDX12->PosInHeapCBVSRVUAV, mCBVSRVVUAVDescriptorSize);
     mDX12CommandList->SetGraphicsRootDescriptorTable(shaderPos == 0 ? msObjectCBVTableIndex : msPassCBVTableIndex, descriptorObject);
-
 }
 
 void FD3D12RHI::SetTexture2D(FRHITexture2D* texture, int32 shaderPos)
@@ -617,8 +630,9 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
     {
         for (uint32 i = 0; i < numTarget; i++)
         {
-            FD3D12Texture2D* texture2D = new FD3D12Texture2D;
-            renderTarget->RenderTargets[i] = texture2D;
+            FD3D12Texture2D* renderTexture = new FD3D12Texture2D;
+
+            renderTarget->RenderTargets[i] = renderTexture;
 
             //create render view
             CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorHandle(mDX12DescriptorHeapRenderTarget->GetCPUDescriptorHandleForHeapStart(), msRTVCount, mRTVDescriptorSize);
@@ -635,7 +649,7 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
             renderTargetDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
             renderTargetDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 
-            texture2D->PosInHeapRTVDSV = msRTVCount;
+            renderTexture->PosInHeapRTVDSV = msRTVCount;
 
             msRTVCount++;
 
@@ -653,22 +667,22 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
                 &renderTargetDesc,
                 D3D12_RESOURCE_STATE_COMMON,
                 &clearValue,
-                IID_PPV_ARGS(&texture2D->mDX12Resource)));
+                IID_PPV_ARGS(&renderTexture->mDX12Resource)));
 
-            mDX12Device->CreateRenderTargetView(texture2D->GetDX12Resource().Get(), nullptr, descriptorHandle);
+            mDX12Device->CreateRenderTargetView(renderTexture->GetDX12Resource().Get(), nullptr, descriptorHandle);
 
             CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorObj(mCBVSRVUAVHeap->GetCPUDescriptorHandleForHeapStart(), msCBVSRVUAVCount, mCBVSRVVUAVDescriptorSize);
 
             D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
             srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-            srvDesc.Format = texture2D->GetDX12Resource()->GetDesc().Format;
+            srvDesc.Format = renderTexture->GetDX12Resource()->GetDesc().Format;
             srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
             srvDesc.Texture2D.MostDetailedMip = 0;
-            srvDesc.Texture2D.MipLevels = texture2D->GetDX12Resource()->GetDesc().MipLevels;
+            srvDesc.Texture2D.MipLevels = renderTexture->GetDX12Resource()->GetDesc().MipLevels;
             srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
-            texture2D->PosInHeapCBVSRVUAV = msCBVSRVUAVCount;
-            mDX12Device->CreateShaderResourceView(texture2D->GetDX12Resource().Get(), &srvDesc, descriptorObj);
+            renderTexture->PosInHeapCBVSRVUAV = msCBVSRVUAVCount;
+            mDX12Device->CreateShaderResourceView(renderTexture->GetDX12Resource().Get(), &srvDesc, descriptorObj);
             msCBVSRVUAVCount++;
 
         }
@@ -715,7 +729,9 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
         dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
         dsvDesc.Texture2D.MipSlice = 0;
         mDX12Device->CreateDepthStencilView(depthStencil->GetDX12Resource().Get(), &dsvDesc, descriptorHandleDS);
+
         depthStencil->PosInHeapRTVDSV = msDSVCount;
+
         msDSVCount++;
 
         CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorObj(mCBVSRVUAVHeap->GetCPUDescriptorHandleForHeapStart(), msCBVSRVUAVCount, mCBVSRVVUAVDescriptorSize);
@@ -728,8 +744,8 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
         srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
         srvDesc.Texture2D.PlaneSlice = 0;
         mDX12Device->CreateShaderResourceView(depthStencil->GetDX12Resource().Get(), &srvDesc, descriptorObj);
-        depthStencil->PosInHeapCBVSRVUAV = msCBVSRVUAVCount;
 
+        depthStencil->PosInHeapCBVSRVUAV = msCBVSRVUAVCount;
 
         msCBVSRVUAVCount++;
     }
@@ -770,18 +786,21 @@ FRHIRenderWindow* FD3D12RHI::CreateRenderWindow(uint32 width, uint32 hight)
 
     for (uint32 i = 0; i < renderTarget->NumTarget; i++)
     {
-        FD3D12Texture2D* texture2D = new FD3D12Texture2D;
-        renderTarget->RenderTargets[i] = texture2D;
+        FD3D12Texture2D* renderTexture = new FD3D12Texture2D;
 
-        renderTarget->mDXGISwapChain->GetBuffer(i, IID_PPV_ARGS(&texture2D->mDX12Resource));
-        mDX12Device->CreateRenderTargetView(texture2D->GetDX12Resource().Get(), nullptr, descriptorHandle);
+        renderTarget->RenderTargets[i] = renderTexture;
+
+        renderTarget->mDXGISwapChain->GetBuffer(i, IID_PPV_ARGS(&renderTexture->mDX12Resource));
+        mDX12Device->CreateRenderTargetView(renderTexture->GetDX12Resource().Get(), nullptr, descriptorHandle);
         descriptorHandle.Offset(1, mRTVDescriptorSize);
-        texture2D->PosInHeapRTVDSV = msRTVCount;
+
+        renderTexture->PosInHeapRTVDSV = msRTVCount;
 
         msRTVCount++;
     }
 
     FD3D12Texture2D* depthStencil = new FD3D12Texture2D;
+
     renderTarget->DepthStencilTarget = depthStencil;
 
     //create the depth/stencil buffer and view.
@@ -821,7 +840,9 @@ FRHIRenderWindow* FD3D12RHI::CreateRenderWindow(uint32 width, uint32 hight)
     dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
     dsvDesc.Texture2D.MipSlice = 0;
     mDX12Device->CreateDepthStencilView(depthStencil->GetDX12Resource().Get(), &dsvDesc, descriptorHandleDS);
+
     depthStencil->PosInHeapRTVDSV = msDSVCount;
+
     msDSVCount++;
 
     ID3D12CommandList* cmdsLists[] = { mDX12CommandList.Get() };
@@ -844,14 +865,14 @@ void FD3D12RHI::UpdateConstantBuffer(FRHIConstantBuffer* constantBuffer, uint32 
 
 void FD3D12RHI::TransitionResource(const FRHITransitionInfo& info)
 {
-    FD3D12ResourceInterface* renderTargetDX12 = dynamic_cast<FD3D12ResourceInterface*>(info.Resource);
+    FD3D12Resource* resource = dynamic_cast<FD3D12Resource*>(info.Resource);
 
-    if (renderTargetDX12 != nullptr)
+    if (resource != nullptr)
     {
-        const D3D12_RESOURCE_STATES before = (D3D12_RESOURCE_STATES)info.AccessBefore;
-        const D3D12_RESOURCE_STATES after = (D3D12_RESOURCE_STATES)info.AccessAfter;
+        const D3D12_RESOURCE_STATES before = translateResourceTransitionAccess(info.AccessBefore);
+        const D3D12_RESOURCE_STATES after = translateResourceTransitionAccess(info.AccessAfter);
 
-        CD3DX12_RESOURCE_BARRIER resourceBarries = CD3DX12_RESOURCE_BARRIER::Transition(renderTargetDX12->GetDX12Resource().Get(), before, after);
+        CD3DX12_RESOURCE_BARRIER resourceBarries = CD3DX12_RESOURCE_BARRIER::Transition(resource->GetDX12Resource().Get(), before, after);
         mDX12CommandList->ResourceBarrier(1, &resourceBarries);
     }
 }
@@ -900,4 +921,10 @@ D3D_PRIMITIVE_TOPOLOGY FD3D12RHI::translatePrimitiveType(EPrimitiveType primitiv
     }
 
     return D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
+}
+
+D3D12_RESOURCE_STATES FD3D12RHI::translateResourceTransitionAccess(EResourceTransitionAccess access)
+{
+    return (D3D12_RESOURCE_STATES)access;
+
 }
