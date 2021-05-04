@@ -9,12 +9,13 @@
 #include "UCamera.h"
 
 
-FEngine::FEngine() :mHeartbeat(true),
-mInited(false),
-mRenderThread(nullptr),
-mWorld(nullptr),
-mWindowWidth(1366),
-mWindowHeight(768)
+FEngine::FEngine() :
+    mHeartbeat(true),
+    mInited(false),
+    mRenderThread(nullptr),
+    mWorld(nullptr),
+    mWindowWidth(1366),
+    mWindowHeight(768)
 {
 }
 

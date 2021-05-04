@@ -7,11 +7,12 @@ public:
     FRHIShader();
     virtual ~FRHIShader();
 
+public:
     void Init();
     void UnInit();
 
 public:
-    std::wstring FilePathName;
+    std::wstring FullFilePathName;
     std::string EnterPoint;
     std::string Target;
 

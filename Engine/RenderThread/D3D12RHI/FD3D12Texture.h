@@ -10,8 +10,8 @@ class FD3D12Texture : public FD3D12Resource
 public:
     FD3D12Texture();
     virtual ~FD3D12Texture();
+
 public:
-    std::wstring FilePathName;
     int32 PosInShader;
     DXGI_FORMAT Format;
 

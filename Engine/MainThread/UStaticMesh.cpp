@@ -6,7 +6,7 @@
 
 UStaticMesh::UStaticMesh()
 {
-    FilePathName = "Content\\StaticMesh\\SM_Rock.stm";
+    FullFilePathName = "Content\\StaticMesh\\SM_Rock.stm";
 }
 
 UStaticMesh::~UStaticMesh()
@@ -27,7 +27,7 @@ void UStaticMesh::Load()
 
     mVertexLayout = layout;
 
-    std::ifstream staticMeshFile(FilePathName, std::ios::in | std::ios::binary);
+    std::ifstream staticMeshFile(FullFilePathName, std::ios::in | std::ios::binary);
     if (!staticMeshFile)
     {
         //print error

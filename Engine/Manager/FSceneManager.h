@@ -1,13 +1,15 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 #include "TSingleton.h"
 
-class FSceneManager : TSingleton<FSceneManager>
+class FSceneManager
 {
+    friend class TSingleton<FSceneManager>;
+
 public:
-	FSceneManager();
-	~FSceneManager();
+    FSceneManager();
+    virtual ~FSceneManager();
 
     void Init();
     void UnInit();

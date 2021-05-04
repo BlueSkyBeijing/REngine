@@ -11,17 +11,20 @@ struct FRHIShaderRegisterCounts
     char UnorderedAccessCount;
 };
 
-class FShaderBindingsManager : TSingleton<FShaderBindingsManager>
+class FShaderBindingsManager
 {
-public:
-    FShaderBindingsManager();
-    ~FShaderBindingsManager();
+    friend class TSingleton<FShaderBindingsManager>;
 
+public:
     void Init();
     void UnInit();
 
     FRHIShaderBindings* GetShaderBindings();
 
 private:
-    std::map<int32, FRHIShaderBindings*> mRootSignatures;
+    FShaderBindingsManager();
+    virtual ~FShaderBindingsManager();
+
+private:
+    std::map<int32, FRHIShaderBindings*> mShaderBindingss;
 };

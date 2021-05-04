@@ -19,15 +19,15 @@ UMaterial::~UMaterial()
 void UMaterial::Load()
 {
     mBaseColor = new UTexture2D();
-    mBaseColor->FilePathName = "Content\\Texture\\T_Default_Material_Gray_C.dds";
+    mBaseColor->FullFilePathName = "Content\\Texture\\T_Default_Material_Gray_C.dds";
     mBaseColor->Load();
 
     //mMetallicSpecularRoughness = new UTexture2D();
-    //mMetallicSpecularRoughness->FilePathName = "Content\\Texture\\T_Default_Material_Gray_C.dds";
+    //mMetallicSpecularRoughness->FullFilePathName = "Content\\Texture\\T_Default_Material_Gray_C.dds";
     //mMetallicSpecularRoughness->Load();
 
     //mEmissiveColor = new UTexture2D();
-    //mMetallicSpecularRoughness->FilePathName = "Content\\Texture\\T_Default_Material_Gray_C.dds";
+    //mMetallicSpecularRoughness->FullFilePathName = "Content\\Texture\\T_Default_Material_Gray_C.dds";
     //mEmissiveColor->Load();
 
     Material = new FMaterial;

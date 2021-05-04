@@ -11,16 +11,19 @@ enum ELogLevel
     LL_Error,
 };
 
-class FLogManager : TSingleton<FLogManager>
+class FLogManager
 {
-public:
-    FLogManager();
-    ~FLogManager();
+    friend class TSingleton<FLogManager>;
 
+public:
     void LogMessage(ELogLevel level, const char* loginfo);
 
     void Init();
     void UnInit();
+
+private:
+    FLogManager();
+    virtual ~FLogManager();
 
 private:
     spdlog::logger* mLogFile;

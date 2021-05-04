@@ -9,6 +9,7 @@ public:
     FRenderThread(FEngine* engine);
     ~FRenderThread();
 
+public:
     void Start();
 
     void Exit();
@@ -44,6 +45,7 @@ public:
     {
         return mFrameSyncSignal;
     }
+
 protected:
     void start();
 

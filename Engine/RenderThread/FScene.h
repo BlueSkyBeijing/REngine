@@ -7,6 +7,7 @@ public:
     FScene();
     ~FScene();
 
+public:
     void Init();
     void UnInit();
 

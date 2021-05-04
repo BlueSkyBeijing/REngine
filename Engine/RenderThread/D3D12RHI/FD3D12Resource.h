@@ -9,12 +9,13 @@ class FD3D12Resource
 
 public:
     FD3D12Resource();
-    ~FD3D12Resource();
+    virtual ~FD3D12Resource();
 
 public:
     int32 PosInHeapCBVSRVUAV;
     int32 PosInHeapRTVDSV;
 
+public:
     virtual void Init() {}
     virtual void UnInit() {}
 

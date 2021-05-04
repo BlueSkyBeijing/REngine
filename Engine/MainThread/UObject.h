@@ -26,7 +26,7 @@ public:
     virtual ~UResource();
 
 public:
-    std::string FilePathName;
+    std::string FullFilePathName;
 
 public:
     virtual void Load() {};

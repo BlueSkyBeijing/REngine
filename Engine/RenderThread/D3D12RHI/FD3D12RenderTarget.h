@@ -26,6 +26,7 @@ public:
     FD3D12RenderWindow(uint32 width, uint32 hight, DXGI_FORMAT format, uint32 numTarget);
     ~FD3D12RenderWindow();
 
+public:
     virtual void Init() override;
     virtual void UnInit() override;
 

@@ -1,5 +1,7 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
+
+#include "TSingleton.h"
 
 enum EResourceType
 {
@@ -12,15 +14,16 @@ enum EResourceType
 
 class FResourceManager
 {
-public:
-	FResourceManager();
-	~FResourceManager();
+    friend class TSingleton<FResourceManager>;
 
+public:
     void Init();
     void UnInit();
 
     UObject* GetOrLoad();
 
 private:
+    FResourceManager();
+    virtual ~FResourceManager();
 
 };

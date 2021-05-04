@@ -20,11 +20,11 @@ UWorld::~UWorld()
 
 void UWorld::Load()
 {
-    FilePathName = TSingleton<FConfigManager>::GetInstance().DefaultMapPath +
+    FullFilePathName = TSingleton<FConfigManager>::GetInstance().DefaultMapPath +
         TSingleton<FConfigManager>::GetInstance().DefaultMap;
 
     //load from file
-    std::ifstream mapFile(FilePathName, std::ios::in | std::ios::binary);
+    std::ifstream mapFile(FullFilePathName, std::ios::in | std::ios::binary);
     if (!mapFile)
     {
         //print error

@@ -11,6 +11,7 @@ public:
     FRHIBuffer();
     virtual~FRHIBuffer() override;
 
+public:
     virtual void Init() {}
     virtual void Uninit() {}
 
@@ -20,7 +21,6 @@ private:
 
 class FRHIVertexBuffer : public FRHIBuffer
 {
-    friend class FRHI;
 public:
     FRHIVertexBuffer();
     virtual ~FRHIVertexBuffer() override;
@@ -38,8 +38,6 @@ private:
 
 class FRHIIndexBuffer : public FRHIBuffer
 {
-    friend class FRHI;
-
 public:
     FRHIIndexBuffer();
     virtual ~FRHIIndexBuffer() override;

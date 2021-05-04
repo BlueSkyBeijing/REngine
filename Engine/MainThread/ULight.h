@@ -24,6 +24,7 @@ public:
     UDirectionalLight();
     virtual~UDirectionalLight() override;
 
+public:
     virtual void Load() override;
 
 public:

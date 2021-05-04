@@ -8,8 +8,9 @@ class FMaterial : public FRHIResource
 {
 public:
     FMaterial();
-    ~FMaterial();
+    virtual ~FMaterial();
 
+public:
     void Init();
     void UnInit();
 

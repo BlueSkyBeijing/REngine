@@ -3,12 +3,11 @@
 
 #include "TSingleton.h"
 
-class FConfigManager : TSingleton<FConfigManager>
+class FConfigManager
 {
-public:
-    FConfigManager();
-    ~FConfigManager();
+    friend class TSingleton<FConfigManager>;
 
+public:
     void Init();
     void UnInit();
 
@@ -33,5 +32,7 @@ public:
     static int32 ShadowMapHeight;
 
 private:
+    FConfigManager();
+    virtual ~FConfigManager();
 
 };

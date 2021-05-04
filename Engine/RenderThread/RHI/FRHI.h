@@ -271,9 +271,6 @@ enum EBlendOperation
     BO_Min,
     BO_Max,
     BO_ReverseSubtract,
-
-    EBlendOperation_Num,
-    EBlendOperation_NumBits = 3,
 };
 
 struct FRHITransitionInfo

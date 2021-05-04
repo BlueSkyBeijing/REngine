@@ -1,11 +1,11 @@
-#include "PrecompiledHeader.h"
+﻿#include "PrecompiledHeader.h"
 
 #include "FRHIShader.h"
 #include "FRHI.h"
 
 
 FRHIShader::FRHIShader() :
-    FilePathName(),
+    FullFilePathName(),
     EnterPoint(),
     Target()
 {
@@ -22,4 +22,3 @@ void FRHIShader::Init()
 void FRHIShader::UnInit()
 {
 }
-

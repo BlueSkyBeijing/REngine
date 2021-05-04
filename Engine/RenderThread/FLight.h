@@ -5,7 +5,7 @@ class FLight
 {
 public:
     FLight();
-    ~FLight();
+    virtual ~FLight();
 
 public:
     FVector4 Color;
@@ -19,7 +19,7 @@ class FDirectionalLight : public FLight
 {
 public:
     FDirectionalLight();
-    ~FDirectionalLight();
+    virtual ~FDirectionalLight();
 
 public:
     FVector3 Direction;

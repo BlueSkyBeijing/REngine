@@ -11,10 +11,11 @@ public:
         uint32 numTarget);
     virtual ~FRHIRenderTarget();
 
+public:
     virtual void Init();
     virtual void UnInit();
 
-    uint32 GetRenderTargetIndex() const
+    inline uint32 GetRenderTargetIndex() const
     {
         return mRenderTargetIndex;
     }
@@ -27,9 +28,8 @@ public:
     std::vector<FRHITexture2D*> RenderTargets;
     FRHITexture2D* DepthStencilTarget;
 
-    uint32 mRenderTargetIndex;
-
 protected:
+    uint32 mRenderTargetIndex;
 
 };
 

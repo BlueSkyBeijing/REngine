@@ -8,9 +8,11 @@ public:
     FRHIPipelineState();
     virtual ~FRHIPipelineState();
 
+public:
     void Init();
     void UnInit();
 
+public:
     FRHIShaderBindings* ShaderBindings;
     FRHIShader* VertexShader;
     FRHIShader* PixelShader;

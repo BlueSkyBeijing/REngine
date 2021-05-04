@@ -23,7 +23,7 @@ UStaticMeshObject::~UStaticMeshObject()
 void UStaticMeshObject::Load()
 {
     mStaticMesh = new UStaticMesh();
-    mStaticMesh->FilePathName = FullStaticMeshPath;
+    mStaticMesh->FullFilePathName = FullStaticMeshPath;
     mStaticMesh->Load();
 
     mMaterial = new UMaterial();

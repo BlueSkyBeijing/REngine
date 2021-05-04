@@ -9,8 +9,9 @@ class FRHITexture : public FRHIResource
 public:
     FRHITexture();
     virtual ~FRHITexture();
+
 public:
-    std::wstring FilePathName;
+    std::wstring FullFilePathName;
 
 public:
     virtual void Init();
@@ -25,7 +26,6 @@ class FRHITexture2D : public FRHITexture
 public:
     FRHITexture2D();
     virtual ~FRHITexture2D() override;
-
 
 public:
     virtual void Init() override;

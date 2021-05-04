@@ -30,8 +30,9 @@ class FRenderer
 {
 public:
     FRenderer(FRHIRenderWindow* renderWindow, FScene* scene, FView* view);
-    ~FRenderer();
+    virtual ~FRenderer();
 
+public:
     virtual void Init();
     virtual void UnInit();
 
@@ -42,19 +43,19 @@ protected:
     virtual void postRender();
 
     void initShadowPass();
-    void updateShadowPass();
+    void drawShadowPass();
     void unInitShadowPass();
     void creatShadowPassConstantBuffer();
     void updateShadowPassConstantBuffer();
 
     void initSceneColorPass();
-    void updateSceneColorPass();
+    void drawSceneColorPass();
     void unInitSceneColorPass();
     void createSceneColorPassConstantBuffer();
     void updateSceneColorPassConstantBuffer();
 
     void initPostProcess();
-    void updatePostProcess();
+    void drawPostProcess();
     void unInitPostProcess();
 
 private:

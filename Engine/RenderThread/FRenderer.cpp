@@ -71,9 +71,9 @@ void FRenderer::Render()
 {
     preRender();
 
-    updateShadowPass();
-    updateSceneColorPass();
-    updatePostProcess();
+    drawShadowPass();
+    drawSceneColorPass();
+    drawPostProcess();
 
     postRender();
 }
@@ -87,7 +87,7 @@ void FRenderer::initShadowPass()
     creatShadowPassConstantBuffer();
 }
 
-void FRenderer::updateShadowPass()
+void FRenderer::drawShadowPass()
 {
     mRHI->BeginEvent("ShadowDepth");
     //update light view
@@ -217,9 +217,9 @@ void FRenderer::initSceneColorPass()
     createSceneColorPassConstantBuffer();
 }
 
-void FRenderer::updateSceneColorPass()
+void FRenderer::drawSceneColorPass()
 {
-    mRHI->BeginEvent("SceneColorPass");
+    mRHI->BeginEvent("SceneColor");
 
     mRHI->SetRenderTarget(mSceneColor);
 
@@ -337,7 +337,7 @@ void FRenderer::initPostProcess()
     mPostProcessing->Init();
 }
 
-void FRenderer::updatePostProcess()
+void FRenderer::drawPostProcess()
 {
     mPostProcessing->Draw();
 }

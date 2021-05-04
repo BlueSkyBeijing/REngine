@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Prerequisite.h"
 
 #include "FRHIShaderBindings.h"
@@ -8,9 +8,10 @@ class FD3D12ShaderBindings : public FRHIShaderBindings
     friend class FD3D12RHI;
 
 public:
-	FD3D12ShaderBindings();
-	virtual ~FD3D12ShaderBindings();
+    FD3D12ShaderBindings();
+    virtual ~FD3D12ShaderBindings();
 
+public:
     void Init();
     void UnInit();
 

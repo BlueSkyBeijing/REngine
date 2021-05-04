@@ -5,12 +5,11 @@
 
 class FRenderThread;
 
-class FInputManager : TSingleton<FInputManager>
+class FInputManager
 {
-public:
-    FInputManager();
-    ~FInputManager();
+    friend class TSingleton<FInputManager>;
 
+public:
     void Init();
     void UnInit();
 
@@ -25,6 +24,10 @@ public:
     void OnResize(LPARAM lParam);
 
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+private:
+    FInputManager();
+    virtual ~FInputManager();
 
 private:
     FVector2i mLastMousePos;

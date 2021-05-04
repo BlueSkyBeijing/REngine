@@ -64,6 +64,7 @@ public:
     FStaticMeshRenderProxy(const FRenderProxyInitializer& initializer);
     virtual ~FStaticMeshRenderProxy() override;
 
+public:
     virtual void CreateRenderResource() override;
     virtual void ReleaseRenderResource() override;
 

@@ -4,12 +4,11 @@
 #include "TSingleton.h"
 
 
-class FPipelineStateManager : TSingleton<FPipelineStateManager>
+class FPipelineStateManager
 {
-public:
-    FPipelineStateManager();
-    ~FPipelineStateManager();
+    friend class TSingleton<FPipelineStateManager>;
 
+public:
     void Init();
     void UnInit();
 
@@ -19,6 +18,10 @@ public:
 
 protected:
     uint64 hashPipelineState(const void* Data, int32 NumBytes);
+
+private:
+    FPipelineStateManager();
+    virtual ~FPipelineStateManager();
 
 private:
     std::map<uint64, FRHIPipelineState*> mPipelineStates;

@@ -8,6 +8,7 @@ public:
     FRHIVertex();
     FRHIVertex(FVector3 pos);
     ~FRHIVertex();
+
 public:
     FVector3 Position;
 

@@ -11,6 +11,7 @@ public:
     FD3D12RHI();
     virtual ~FD3D12RHI() override;
 
+public:
     virtual void Init() override;
     virtual void UnInit() override;
 

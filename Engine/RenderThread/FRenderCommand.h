@@ -21,6 +21,7 @@ public:
     TRenderCommand(Lambda&& inLambda) : mLambda(std::forward<Lambda>(inLambda)) {}
     virtual ~TRenderCommand() override {}
 
+public:
     virtual void Excecute() override
     {
         mLambda();

@@ -1,27 +1,21 @@
-#pragma once
+﻿#pragma once
 
 template<typename T>
 class TSingleton
 {
 public:
-    static T& GetInstance() {
-        static T singletonValue;
-        return singletonValue;
+    static T& GetInstance()
+    {
+        static T singletonInstance;
+        return singletonInstance;
     }
 
+    TSingleton(T&&) = delete;
+    TSingleton(const T&) = delete;
+
+    void operator= (const T&) = delete;
+
 private:
-    //TSingleton()
-    //{
-
-    //}
-    //~TSingleton()
-    //{}
-    //TSingleton(const TSingleton&)
-    //{
-
-    //}
-    //TSingleton& operator=(const TSingleton&)
-    //{
-
-    //}
+    TSingleton() = default;
+    virtual ~TSingleton() = default;
 };

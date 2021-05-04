@@ -4,12 +4,10 @@
 #include "TSingleton.h"
 
 
-class FEngine : TSingleton<FEngine>
+class FEngine
 {
+    friend class TSingleton<FEngine>;
 public:
-    FEngine();
-    ~FEngine();
-
     virtual void Launch();
     virtual void Exit();
 
@@ -59,6 +57,10 @@ protected:
     void waitRenderThreadUninited();
 
     void syncRenderThread();
+
+private:
+    FEngine();
+    virtual ~FEngine();
 
 private:
     bool mHeartbeat;

@@ -45,6 +45,7 @@ public:
     FPostProcessing(FRHI* rhi, FRHIRenderTarget* sceneColor, FRHIRenderTarget* renderTarget);
     ~FPostProcessing();
 
+public:
     void Init();
     void UnInit();
 

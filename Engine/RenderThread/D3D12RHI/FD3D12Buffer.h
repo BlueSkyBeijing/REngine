@@ -19,7 +19,6 @@ public:
     virtual void Uninit() override;
 
 private:
-
     D3D12_VERTEX_BUFFER_VIEW mVertexBufferView;
     Microsoft::WRL::ComPtr <ID3D12Resource> mVertexBuffer;
 };
