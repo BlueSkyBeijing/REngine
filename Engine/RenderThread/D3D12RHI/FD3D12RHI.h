@@ -71,7 +71,7 @@ private:
     Microsoft::WRL::ComPtr <IDXGISwapChain> mDXGISwapChain;
     Microsoft::WRL::ComPtr <ID3D12Device> mDX12Device;
     Microsoft::WRL::ComPtr <ID3D12CommandQueue> mDX12CommandQueue;
-    Microsoft::WRL::ComPtr <ID3D12CommandAllocator> mDX12CommandAllocator;
+    Microsoft::WRL::ComPtr <ID3D12CommandAllocator> mDX12CommandAllocator[FRAME_BUFFER_NUM];
     Microsoft::WRL::ComPtr <ID3D12GraphicsCommandList> mDX12CommandList;
     Microsoft::WRL::ComPtr <ID3D12Fence> mDX12Fence;
 
@@ -93,9 +93,10 @@ private:
     uint32 mCBVSRVVUAVDescriptorSize;
 
     HANDLE mEventHandle;
-    uint64 mFenceValue;
+    uint64 mFenceValue[FRAME_BUFFER_NUM];
     D3D12_RECT mScissorRect;
     D3D12_VIEWPORT mViewPort;
+    uint32 mFrameIndex;
 
     static int32 msPassSRVTableIndex;
     static int32 msPassCBVTableIndex;

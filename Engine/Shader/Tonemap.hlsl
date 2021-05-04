@@ -30,8 +30,6 @@ SamplerState BloomUpTextureSampler : register(s1);
 
 float4 TonemapPS(VertexShaderOutput input) : SV_TARGET
 {
-    float scale2 = 1.0f / 6.0f;
-
     float4 sceneColor = SceneColorTexture.Sample(SceneColorTextureSampler, input.UV.xy).rgba;
 
     float4 color = BloomUpTexture.Sample(BloomUpTextureSampler, input.UV.xy);

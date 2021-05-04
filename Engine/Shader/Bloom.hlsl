@@ -5,6 +5,13 @@ struct VertexShaderInput
     float2 UV : TEXCOORD;
 };
 
+struct BloomSetupVertexShaderOutput
+{
+    float4 Pos : SV_POSITION;
+    float2 UV : TEXCOORD;
+    float2 SampleUV[4] : TEXCOORD1;
+};
+
 struct VertexShaderOutput
 {
     float4 Pos : SV_POSITION;
@@ -37,12 +44,13 @@ float2 Circle(float start, float Points, float Point)
     return float2(sin(rad), cos(rad));
 }
 
-VertexShaderOutput BloomSetupVS(VertexShaderInput input)
+BloomSetupVertexShaderOutput BloomSetupVS(VertexShaderInput input)
 {
-    VertexShaderOutput output;
+    BloomSetupVertexShaderOutput output;
     
     output.Pos = float4(input.Pos, 1.0f);
     output.UV = input.UV;
+    
     output.SampleUV[0].xy = output.UV + SceneColorInvSize.xy * float2(-1, -1);
     output.SampleUV[1].xy = output.UV + SceneColorInvSize.xy * float2(1, -1);
     output.SampleUV[2].xy = output.UV + SceneColorInvSize.xy * float2(-1, 1);
@@ -54,7 +62,7 @@ VertexShaderOutput BloomSetupVS(VertexShaderInput input)
 Texture2D SceneColorTexture : register(t0);
 SamplerState SceneColorTextureSampler : register(s0);
 
-float4 BloomSetupPS(VertexShaderOutput input) : SV_TARGET
+float4 BloomSetupPS(BloomSetupVertexShaderOutput input) : SV_TARGET
 { 
     float4 bloomSample0 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[0].xy);
     float4 bloomSample1 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[1].xy);
@@ -82,7 +90,7 @@ VertexShaderOutput BloomDownVS(VertexShaderInput input)
     output.Pos = float4(input.Pos, 1.0f);
     output.UV = input.UV;
    
-    float start = 2.0 / 14.0;
+    float start = 2.0f / 14.0f;
     float scale = BloomDownScale;
 
     output.SampleUV[0].xy = input.UV.xy;
@@ -123,7 +131,7 @@ float4 BloomDownPS(VertexShaderOutput input) : SV_TARGET
     float4 nearby13 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[6].zw).rgba;
     float4 nearby14 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[7].xy).rgba;
     
-    float weight = 1.0 / 15.0; 
+    float weight = 1.0f / 15.0f; 
     float4 color = 1.0f;
     
     color.rgba =
@@ -149,14 +157,12 @@ float4 BloomDownPS(VertexShaderOutput input) : SV_TARGET
 VertexShaderOutput BloomUpVS(VertexShaderInput input)
 {
     VertexShaderOutput output;
-    float start;
-    float scale;
 
     output.Pos = float4(input.Pos, 1.0f);
     output.UV = input.UV;
 
-    start = 2.0 / 7.0;
-    scale = BloomUpScales.x;
+    float start = 2.0 / 7.0;
+    float scale = BloomUpScales.x;
 
     output.SampleUV[0].xy = input.UV.xy + Circle(start, 7.0, 0.0) * scale * BloomLastResaultInvSize;
     output.SampleUV[0].zw = input.UV.xy + Circle(start, 7.0, 1.0) * scale * BloomLastResaultInvSize;
@@ -233,59 +239,3 @@ float4 BloomUpPS(VertexShaderOutput input) : SV_TARGET
         
     return color;
 }
-
-VertexShaderOutput BloomMergeVS(VertexShaderInput input)
-{
-    VertexShaderOutput output;
-    
-    output.Pos = float4(input.Pos, 1.0f);
-    output.UV = input.UV;
-
-    float start;
-    float scale;
-
-    start = 2.0 / 6.0;
-    scale = 0.66 / 2.0;
-
-    output.SampleUV[0].xy = input.UV.xy + Circle(start, 6.0, 0.0) * scale * BloomUpInvSize;
-    output.SampleUV[1].xy = input.UV.xy + Circle(start, 6.0, 1.0) * scale * BloomUpInvSize;
-    output.SampleUV[2].xy = input.UV.xy + Circle(start, 6.0, 2.0) * scale * BloomUpInvSize;
-    output.SampleUV[3].xy = input.UV.xy + Circle(start, 6.0, 3.0) * scale * BloomUpInvSize;
-    output.SampleUV[4].xy = input.UV.xy + Circle(start, 6.0, 4.0) * scale * BloomUpInvSize;
-    output.SampleUV[5].xy = input.UV.xy + Circle(start, 6.0, 5.0) * scale * BloomUpInvSize;
-    
-    return output;
-
-}
-
-Texture2D BloomUpTexture : register(t1);
-SamplerState BloomUpTextureSampler : register(s1);
-
-float4 BloomMergePS(VertexShaderOutput input) : SV_TARGET
-{
-    float scale2 = 1.0 / 6.0;
-
-    float4 bloom2 = (
-			SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[0].xy).rgba * scale2 +
-			SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[1].xy).rgba * scale2 +
-			SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[2].xy).rgba * scale2 +
-			SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[3].xy).rgba * scale2 +
-			SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[4].xy).rgba * scale2 +
-			SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[5].xy).rgba * scale2);
-
-    float4 color = 1.0f;
-    color.rgb = BloomUpTexture.Sample(BloomUpTextureSampler, input.UV.xy).rgb;
-
-    float scale3 = 1.0 / 5.0;
-
-    color.rgb *= scale3;
-
-    color.rgb += (bloom2.rgb * scale3 * BloomColor);
-    
-    return color;
-}
-
-
-
-
-

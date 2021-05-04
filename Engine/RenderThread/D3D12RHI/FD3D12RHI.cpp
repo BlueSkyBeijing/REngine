@@ -27,7 +27,8 @@ int32 FD3D12RHI::msCBVSRVUAVCount = 0;
 FD3D12RHI::FD3D12RHI() :
     mDX12Device(nullptr),
     mEventHandle(0),
-    mFenceValue(0),
+    mFenceValue(),
+    mFrameIndex(0),
     mDepthStencilFormat(DXGI_FORMAT_D24_UNORM_S8_UINT),
     mBackBufferFormat(DXGI_FORMAT_R8G8B8A8_UNORM),
     mRTVDescriptorSize(0),
@@ -94,10 +95,13 @@ void FD3D12RHI::Init()
     queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
     THROW_IF_FAILED(mDX12Device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&mDX12CommandQueue)));
 
-    //creAte fence
+    //create fence
     THROW_IF_FAILED(mDX12Device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&mDX12Fence)));
 
-    mFenceValue = 1;
+    for (uint32 i = 0; i < FRAME_BUFFER_NUM; i++)
+    {
+        mFenceValue[i] = 1;
+    }
 
     //create event
     mEventHandle = CreateEventEx(nullptr, FALSE, FALSE, EVENT_ALL_ACCESS);
@@ -110,10 +114,10 @@ void FD3D12RHI::Init()
     mCBVSRVVUAVDescriptorSize = mDX12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
     //create command allocator
-    THROW_IF_FAILED(mDX12Device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&mDX12CommandAllocator)));
+    THROW_IF_FAILED(mDX12Device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&mDX12CommandAllocator[mFrameIndex])));
 
     //create command list
-    THROW_IF_FAILED(mDX12Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, mDX12CommandAllocator.Get(), mDX12PipleLineState.Get(), IID_PPV_ARGS(&mDX12CommandList)));
+    THROW_IF_FAILED(mDX12Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, mDX12CommandAllocator[mFrameIndex].Get(), mDX12PipleLineState.Get(), IID_PPV_ARGS(&mDX12CommandList)));
 
     createHeaps();
 
@@ -133,10 +137,10 @@ void FD3D12RHI::UnInit()
 
 void FD3D12RHI::BeginCommmandList()
 {
-    THROW_IF_FAILED(mDX12CommandAllocator->Reset());
+    THROW_IF_FAILED(mDX12CommandAllocator[mFrameIndex]->Reset());
 
     //reset command list
-    THROW_IF_FAILED(mDX12CommandList->Reset(mDX12CommandAllocator.Get(), NULL));
+    THROW_IF_FAILED(mDX12CommandList->Reset(mDX12CommandAllocator[mFrameIndex].Get(), NULL));
 
     ID3D12DescriptorHeap* descriptorHeaps[] = { mCBVSRVUAVHeap.Get() };
     mDX12CommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
@@ -158,11 +162,11 @@ void FD3D12RHI::ExecuteCommandList()
 
 void FD3D12RHI::FlushCommandQueue()
 {
-    const uint64 cmdFence = mFenceValue;
+    const uint64 cmdFence = mFenceValue[mFrameIndex];
 
     mDX12CommandQueue->Signal(mDX12Fence.Get(), cmdFence);
 
-    mFenceValue++;
+    mFenceValue[mFrameIndex]++;
 
     if (mDX12Fence->GetCompletedValue() < cmdFence)
     {
@@ -587,7 +591,7 @@ FRHITexture2D* FD3D12RHI::CreateTexture2D(const std::wstring& filePathName)
     FlushCommandQueue();
 
     //reset command list
-    THROW_IF_FAILED(mDX12CommandList->Reset(mDX12CommandAllocator.Get(), NULL));
+    THROW_IF_FAILED(mDX12CommandList->Reset(mDX12CommandAllocator[mFrameIndex].Get(), NULL));
 
     THROW_IF_FAILED(DirectX::CreateDDSTextureFromFile12(mDX12Device.Get(),
         mDX12CommandList.Get(), filePathName.c_str(),
@@ -881,6 +885,8 @@ void FD3D12RHI::TransitionResource(const FRHITransitionInfo& info)
 void FD3D12RHI::Present(FRHIRenderWindow* window)
 {
     window->Present();
+
+    mFrameIndex = window->GetRenderTargetIndex();
 }
 
 void FD3D12RHI::createHeaps()
