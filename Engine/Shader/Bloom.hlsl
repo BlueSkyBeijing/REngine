@@ -60,7 +60,7 @@ BloomSetupVertexShaderOutput BloomSetupVS(VertexShaderInput input)
 }
 
 Texture2D SceneColorTexture : register(t0);
-SamplerState SceneColorTextureSampler : register(s0);
+SamplerState SceneColorTextureSampler : register(s2);
 
 float4 BloomSetupPS(BloomSetupVertexShaderOutput input) : SV_TARGET
 { 
@@ -190,30 +190,29 @@ VertexShaderOutput BloomUpVS(VertexShaderInput input)
 
 
 Texture2D BloomLastResaultTexture : register(t0);
-SamplerState BloomLastResaultTextureSampler : register(s0);
+SamplerState LinearClampTextureSampler : register(s2);
 
 Texture2D BloomDownTexture : register(t1);
-SamplerState BloomDownTextureSampler : register(s1);
 
 float4 BloomUpPS(VertexShaderOutput input) : SV_TARGET
 {   
-    float3 aNearby0 = BloomLastResaultTexture.Sample(BloomLastResaultTextureSampler, input.SampleUV[0].xy).rgb;
-    float3 aNearby1 = BloomLastResaultTexture.Sample(BloomLastResaultTextureSampler, input.SampleUV[0].zw).rgb;
-    float3 aNearby2 = BloomLastResaultTexture.Sample(BloomLastResaultTextureSampler, input.SampleUV[1].xy).rgb;
-    float3 aNearby3 = BloomLastResaultTexture.Sample(BloomLastResaultTextureSampler, input.SampleUV[1].zw).rgb;
-    float3 aNearby4 = BloomLastResaultTexture.Sample(BloomLastResaultTextureSampler, input.SampleUV[2].xy).rgb;
-    float3 aNearby5 = BloomLastResaultTexture.Sample(BloomLastResaultTextureSampler, input.SampleUV[2].zw).rgb;
-    float3 aNearby6 = BloomLastResaultTexture.Sample(BloomLastResaultTextureSampler, input.SampleUV[3].xy).rgb;
-    float3 aNearby7 = BloomLastResaultTexture.Sample(BloomLastResaultTextureSampler, input.SampleUV[3].zw).rgb;
+    float3 aNearby0 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[0].xy).rgb;
+    float3 aNearby1 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[0].zw).rgb;
+    float3 aNearby2 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[1].xy).rgb;
+    float3 aNearby3 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[1].zw).rgb;
+    float3 aNearby4 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[2].xy).rgb;
+    float3 aNearby5 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[2].zw).rgb;
+    float3 aNearby6 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[3].xy).rgb;
+    float3 aNearby7 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[3].zw).rgb;
 
-    float3 bNearby0 = BloomDownTexture.Sample(BloomDownTextureSampler, input.SampleUV[3].zw).rgb;
-    float3 bNearby1 = BloomDownTexture.Sample(BloomDownTextureSampler, input.SampleUV[4].xy).rgb;
-    float3 bNearby2 = BloomDownTexture.Sample(BloomDownTextureSampler, input.SampleUV[4].zw).rgb;
-    float3 bNearby3 = BloomDownTexture.Sample(BloomDownTextureSampler, input.SampleUV[5].xy).rgb;
-    float3 bNearby4 = BloomDownTexture.Sample(BloomDownTextureSampler, input.SampleUV[5].zw).rgb;
-    float3 bNearby5 = BloomDownTexture.Sample(BloomDownTextureSampler, input.SampleUV[6].xy).rgb;
-    float3 bNearby6 = BloomDownTexture.Sample(BloomDownTextureSampler, input.SampleUV[6].zw).rgb;
-    float3 bNearby7 = BloomDownTexture.Sample(BloomDownTextureSampler, input.SampleUV[7].xy).rgb;
+    float3 bNearby0 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[3].zw).rgb;
+    float3 bNearby1 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[4].xy).rgb;
+    float3 bNearby2 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[4].zw).rgb;
+    float3 bNearby3 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[5].xy).rgb;
+    float3 bNearby4 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[5].zw).rgb;
+    float3 bNearby5 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[6].xy).rgb;
+    float3 bNearby6 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[6].zw).rgb;
+    float3 bNearby7 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[7].xy).rgb;
 
     float3 weightA = BloomTintA.rgb;
     float3 weightB = BloomTintB.rgb;

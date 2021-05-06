@@ -1,3 +1,14 @@
+// ACES
+// https://knarkowicz.wordpress.com/2016/01/06/aces-filmic-tone-mapping-curve/
+float3 ACESFilm(float3 x)
+{
+    float a = 2.51f;
+    float b = 0.03f;
+    float c = 2.43f;
+    float d = 0.59f;
+    float e = 0.14f;
+    return saturate((x * (a * x + b)) / (x * (c * x + d) + e));
+}
 
 struct VertexShaderInput
 {
@@ -23,20 +34,18 @@ VertexShaderOutput TonemapVS(VertexShaderInput input)
 }
 
 Texture2D SceneColorTexture : register(t0);
-SamplerState SceneColorTextureSampler : register(s0);
+SamplerState LinearClampTextureSampler : register(s2);
 
 Texture2D BloomUpTexture : register(t1);
-SamplerState BloomUpTextureSampler : register(s1);
 
 float4 TonemapPS(VertexShaderOutput input) : SV_TARGET
 {
-    float4 sceneColor = SceneColorTexture.Sample(SceneColorTextureSampler, input.UV.xy).rgba;
+    float4 sceneColor = SceneColorTexture.Sample(LinearClampTextureSampler, input.UV.xy).rgba;
 
-    float4 color = BloomUpTexture.Sample(BloomUpTextureSampler, input.UV.xy);
+    float4 color = BloomUpTexture.Sample(LinearClampTextureSampler, input.UV.xy);
 
-    color += lerp(sceneColor, color, 0.2f);
+    color = lerp(sceneColor, color, 0.8f);
     
-    color = color / (1.0f + color);
-    
+    color.rgb = ACESFilm(color.rgb);
     return color;
 }

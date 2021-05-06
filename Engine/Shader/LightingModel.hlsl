@@ -3,7 +3,7 @@
 // from: https://en.wikipedia.org/wiki/Blinn%E2%80%93Phong_reflection_model
 float3 BlinnPhong(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float shadow)
 {
-    const float3 ambientColor = float3(0.2f, 0.2f, 0.2f);
+    const float3 ambientColor = float3(0.3f, 0.3f, 0.3f);
     const float3 specularColor = float3(1.0f, 1.0f, 1.0f);
     const float shininess = 16.0;
     
