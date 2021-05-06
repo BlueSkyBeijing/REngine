@@ -44,8 +44,9 @@ float4 TonemapPS(VertexShaderOutput input) : SV_TARGET
 
     float4 color = BloomUpTexture.Sample(LinearClampTextureSampler, input.UV.xy);
 
-    color = lerp(sceneColor, color, 0.8f);
+    color += sceneColor;
     
     color.rgb = ACESFilm(color.rgb);
+    
     return color;
 }
