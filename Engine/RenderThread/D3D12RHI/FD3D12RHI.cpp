@@ -912,12 +912,12 @@ void FD3D12RHI::createHeaps()
     D3D12_DESCRIPTOR_HEAP_DESC rtDescriptorHeapDesc;
     rtDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
     rtDescriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    rtDescriptorHeapDesc.NumDescriptors = 64;
+    rtDescriptorHeapDesc.NumDescriptors = 256;
     rtDescriptorHeapDesc.NodeMask = 0;
     THROW_IF_FAILED(mDX12Device->CreateDescriptorHeap(&rtDescriptorHeapDesc, IID_PPV_ARGS(&mDX12DescriptorHeapRenderTarget)));
 
     D3D12_DESCRIPTOR_HEAP_DESC dsDescriptorHeapDesc;
-    dsDescriptorHeapDesc.NumDescriptors = 64;
+    dsDescriptorHeapDesc.NumDescriptors = 256;
     dsDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
     dsDescriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
     dsDescriptorHeapDesc.NodeMask = 0;

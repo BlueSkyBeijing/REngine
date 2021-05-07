@@ -163,6 +163,10 @@ void FPostProcessing::Init()
     mToneMap = mRHI->CreateRenderTarget(sceneColorWidth,
         sceneColorHeight, 1, PF_R16G16B16A16_FLOAT, PF_UNKNOWN);
 
+    mBloomLastResault = mBloomDown3;
+    mBloomDown = mBloomDown3;
+    mBloomUp = mBloomUp0;
+
     creatPostProcessConstantBuffer();
 
     {
@@ -541,6 +545,13 @@ void FPostProcessing::Draw()
 
     mRHI->BeginEvent("BloomUp0");
     {
+        mBloomLastResault = mBloomDown3;
+        mBloomDown = mBloomDown2;
+
+        mBloomUp = mBloomUp0;
+
+        updatePostProcessConstantBuffer();
+
         mRHI->SetRenderTarget(mBloomUp0);
 
         mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mBloomUp0->Width), static_cast<float>(mBloomUp0->Height), 1.0f);
@@ -566,8 +577,8 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
-        mRHI->SetTexture2D(mBloomDown3->RenderTargets[0], 0);
-        mRHI->SetTexture2D(mBloomDown2->RenderTargets[0], 1);
+        mRHI->SetTexture2D(mBloomDown2->RenderTargets[0], 0);
+        mRHI->SetTexture2D(mBloomDown3->RenderTargets[0], 1);
 
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
@@ -579,6 +590,13 @@ void FPostProcessing::Draw()
 
     mRHI->BeginEvent("BloomUp1");
     {
+        mBloomLastResault = mBloomUp0;
+        mBloomDown = mBloomDown1;
+
+        mBloomUp = mBloomUp1;
+
+        updatePostProcessConstantBuffer();
+
         mRHI->SetRenderTarget(mBloomUp1);
 
         mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mBloomUp1->Width), static_cast<float>(mBloomUp1->Height), 1.0f);
@@ -604,8 +622,8 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
-        mRHI->SetTexture2D(mBloomUp0->RenderTargets[0], 0);
-        mRHI->SetTexture2D(mBloomDown1->RenderTargets[0], 1);
+        mRHI->SetTexture2D(mBloomDown1->RenderTargets[0], 0);
+        mRHI->SetTexture2D(mBloomUp0->RenderTargets[0], 1);
 
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
@@ -618,6 +636,13 @@ void FPostProcessing::Draw()
 
     mRHI->BeginEvent("BloomUp2");
     {
+        mBloomLastResault = mBloomUp1;
+        mBloomDown = mBloomDown0;
+
+        mBloomUp = mBloomUp2;
+
+        updatePostProcessConstantBuffer();
+
         mRHI->SetRenderTarget(mBloomUp2);
 
         mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mBloomUp2->Width), static_cast<float>(mBloomUp2->Height), 1.0f);
@@ -643,8 +668,8 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
-        mRHI->SetTexture2D(mBloomUp1->RenderTargets[0], 0);
-        mRHI->SetTexture2D(mBloomDown0->RenderTargets[0], 1);
+        mRHI->SetTexture2D(mBloomDown0->RenderTargets[0], 0);
+        mRHI->SetTexture2D(mBloomUp1->RenderTargets[0], 1);
 
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
@@ -657,6 +682,13 @@ void FPostProcessing::Draw()
 
     mRHI->BeginEvent("BloomUp3");
     {
+        mBloomLastResault = mBloomUp2;
+        mBloomDown = mBloomSetup;
+
+        mBloomUp = mBloomUp3;
+
+        updatePostProcessConstantBuffer();
+
         mRHI->SetRenderTarget(mBloomUp3);
 
         mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mBloomUp3->Width), static_cast<float>(mBloomUp3->Height), 1.0f);
@@ -682,8 +714,8 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
-        mRHI->SetTexture2D(mBloomUp2->RenderTargets[0], 0);
-        mRHI->SetTexture2D(mBloomSetup->RenderTargets[0], 1);
+        mRHI->SetTexture2D(mBloomSetup->RenderTargets[0], 0);
+        mRHI->SetTexture2D(mBloomUp2->RenderTargets[0], 1);
 
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
@@ -760,12 +792,12 @@ void FPostProcessing::_createPostProcessConstant(FPostProcessConstant& constant)
 {
     constant.SceneColorInvSize = FVector2(1.0f / mSceneColor->Width, 1.0f / mSceneColor->Height);
     constant.BloomThreshold = -1.0f;
-    constant.BloomDownScale = 0.5f;
-    constant.BloomUpScales = FVector2(2.0f, 2.0f);
-    constant.BloomLastResaultInvSize = FVector2(1.0f / mBloomUp1->Width, 1.0f / mBloomUp1->Height);
-    constant.BloomDownInvSize = FVector2(1.0f / mBloomDown0->Width, 1.0f / mBloomDown0->Height);
-    constant.BloomUpInvSize = FVector2(1.0f / mBloomUp1->Width, 1.0f / mBloomUp1->Height);
-    constant.BloomTintA = FVector4(1.0f, 1.0f, 1.0f, 1.0f) / 16.0f;
-    constant.BloomTintB = FVector4(1.0f, 1.0f, 1.0f, 1.0f) / 16.0f;
+    constant.BloomDownScale = 2.64f;
+    constant.BloomUpScales = FVector2(1.32f, 1.32f);
+    constant.BloomLastResaultInvSize = FVector2(1.0f / mBloomLastResault->Width, 1.0f / mBloomLastResault->Height);
+    constant.BloomDownInvSize = FVector2(1.0f / mBloomDown->Width, 1.0f / mBloomDown->Height);
+    constant.BloomUpInvSize = FVector2(1.0f / mBloomUp->Width, 1.0f / mBloomUp->Height);
+    constant.BloomTintA = FVector4(0.00992f, 0.00992f, 0.00992f, 1.0f);
+    constant.BloomTintB = FVector4(0.125f, 0.125f, 0.125f, 1.0f);
     constant.BloomColor = FVector3(1.0f, 1.0f, 1.0f);
 }

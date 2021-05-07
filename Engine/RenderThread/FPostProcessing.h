@@ -90,4 +90,8 @@ private:
     FRHIVertexLayout* mFullScreenLayout;
     FRHIConstantBuffer* mPostProcessConstantBuffer;
 
+    FRHIRenderTarget* mBloomLastResault;
+    FRHIRenderTarget* mBloomDown;
+    FRHIRenderTarget* mBloomUp;
+
 };

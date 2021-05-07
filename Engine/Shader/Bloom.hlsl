@@ -60,14 +60,14 @@ BloomSetupVertexShaderOutput BloomSetupVS(VertexShaderInput input)
 }
 
 Texture2D SceneColorTexture : register(t0);
-SamplerState SceneColorTextureSampler : register(s2);
+SamplerState LinearClampTextureSampler : register(s2);
 
 float4 BloomSetupPS(BloomSetupVertexShaderOutput input) : SV_TARGET
 { 
-    float4 bloomSample0 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[0].xy);
-    float4 bloomSample1 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[1].xy);
-    float4 bloomSample2 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[2].xy);
-    float4 bloomSample3 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[3].xy);
+    float4 bloomSample0 = SceneColorTexture.Sample(LinearClampTextureSampler, input.SampleUV[0].xy);
+    float4 bloomSample1 = SceneColorTexture.Sample(LinearClampTextureSampler, input.SampleUV[1].xy);
+    float4 bloomSample2 = SceneColorTexture.Sample(LinearClampTextureSampler, input.SampleUV[2].xy);
+    float4 bloomSample3 = SceneColorTexture.Sample(LinearClampTextureSampler, input.SampleUV[3].xy);
  
     float4 averageColor = 1.0f;
     averageColor.rgb = (bloomSample0.rgb * 0.25f) + (bloomSample1.rgb * 0.25f) + (bloomSample2.rgb * 0.25f) + (bloomSample3.rgb * 0.25f);
@@ -94,42 +94,44 @@ VertexShaderOutput BloomDownVS(VertexShaderInput input)
     float scale = BloomDownScale;
 
     output.SampleUV[0].xy = input.UV.xy;
-    output.SampleUV[0].zw = input.UV.xy + Circle(start, 14.0, 0.0) * scale * SceneColorInvSize;
-    output.SampleUV[1].xy = input.UV.xy + Circle(start, 14.0, 1.0) * scale * SceneColorInvSize;
-    output.SampleUV[1].zw = input.UV.xy + Circle(start, 14.0, 2.0) * scale * SceneColorInvSize;
-    output.SampleUV[2].xy = input.UV.xy + Circle(start, 14.0, 3.0) * scale * SceneColorInvSize;
-    output.SampleUV[2].zw = input.UV.xy + Circle(start, 14.0, 4.0) * scale * SceneColorInvSize;
-    output.SampleUV[3].xy = input.UV.xy + Circle(start, 14.0, 5.0) * scale * SceneColorInvSize;
-    output.SampleUV[3].zw = input.UV.xy + Circle(start, 14.0, 6.0) * scale * SceneColorInvSize;
-    output.SampleUV[4].xy = input.UV.xy + Circle(start, 14.0, 7.0) * scale * SceneColorInvSize;
-    output.SampleUV[4].zw = input.UV.xy + Circle(start, 14.0, 8.0) * scale * SceneColorInvSize;
-    output.SampleUV[5].xy = input.UV.xy + Circle(start, 14.0, 9.0) * scale * SceneColorInvSize;
-    output.SampleUV[5].zw = input.UV.xy + Circle(start, 14.0, 10.0) * scale * SceneColorInvSize;
-    output.SampleUV[6].xy = input.UV.xy + Circle(start, 14.0, 11.0) * scale * SceneColorInvSize;
-    output.SampleUV[6].zw = input.UV.xy + Circle(start, 14.0, 12.0) * scale * SceneColorInvSize;
-    output.SampleUV[7].xy = input.UV.xy + Circle(start, 14.0, 13.0) * scale * SceneColorInvSize;
+    output.SampleUV[0].zw = input.UV.xy + Circle(start, 14.0, 0.0) * scale * BloomDownInvSize;
+    output.SampleUV[1].xy = input.UV.xy + Circle(start, 14.0, 1.0) * scale * BloomDownInvSize;
+    output.SampleUV[1].zw = input.UV.xy + Circle(start, 14.0, 2.0) * scale * BloomDownInvSize;
+    output.SampleUV[2].xy = input.UV.xy + Circle(start, 14.0, 3.0) * scale * BloomDownInvSize;
+    output.SampleUV[2].zw = input.UV.xy + Circle(start, 14.0, 4.0) * scale * BloomDownInvSize;
+    output.SampleUV[3].xy = input.UV.xy + Circle(start, 14.0, 5.0) * scale * BloomDownInvSize;
+    output.SampleUV[3].zw = input.UV.xy + Circle(start, 14.0, 6.0) * scale * BloomDownInvSize;
+    output.SampleUV[4].xy = input.UV.xy + Circle(start, 14.0, 7.0) * scale * BloomDownInvSize;
+    output.SampleUV[4].zw = input.UV.xy + Circle(start, 14.0, 8.0) * scale * BloomDownInvSize;
+    output.SampleUV[5].xy = input.UV.xy + Circle(start, 14.0, 9.0) * scale * BloomDownInvSize;
+    output.SampleUV[5].zw = input.UV.xy + Circle(start, 14.0, 10.0) * scale * BloomDownInvSize;
+    output.SampleUV[6].xy = input.UV.xy + Circle(start, 14.0, 11.0) * scale * BloomDownInvSize;
+    output.SampleUV[6].zw = input.UV.xy + Circle(start, 14.0, 12.0) * scale * BloomDownInvSize;
+    output.SampleUV[7].xy = input.UV.xy + Circle(start, 14.0, 13.0) * scale * BloomDownInvSize;
     output.SampleUV[7].zw = float2(0.0, 0.0);
     
     return output;
 }
 
+Texture2D BloomDownSource : register(t0);
+
 float4 BloomDownPS(VertexShaderOutput input) : SV_TARGET
 {
-    float4 nearby0 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[0].xy).rgba;
-    float4 nearby1 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[0].zw).rgba;
-    float4 nearby2 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[1].xy).rgba;
-    float4 nearby3 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[1].zw).rgba;
-    float4 nearby4 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[2].xy).rgba;
-    float4 nearby5 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[2].zw).rgba;
-    float4 nearby6 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[3].xy).rgba;
-    float4 nearby7 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[3].zw).rgba;
-    float4 nearby8 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[4].xy).rgba;
-    float4 nearby9 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[4].zw).rgba;
-    float4 nearby10 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[5].xy).rgba;
-    float4 nearby11 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[5].zw).rgba;
-    float4 nearby12 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[6].xy).rgba;
-    float4 nearby13 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[6].zw).rgba;
-    float4 nearby14 = SceneColorTexture.Sample(SceneColorTextureSampler, input.SampleUV[7].xy).rgba;
+    float4 nearby0 = BloomDownSource.Sample(LinearClampTextureSampler, input.SampleUV[0].xy).rgba;
+    float4 nearby1 = BloomDownSource.Sample(LinearClampTextureSampler, input.SampleUV[0].zw).rgba;
+    float4 nearby2 = BloomDownSource.Sample(LinearClampTextureSampler, input.SampleUV[1].xy).rgba;
+    float4 nearby3 = BloomDownSource.Sample(LinearClampTextureSampler, input.SampleUV[1].zw).rgba;
+    float4 nearby4 = BloomDownSource.Sample(LinearClampTextureSampler, input.SampleUV[2].xy).rgba;
+    float4 nearby5 = BloomDownSource.Sample(LinearClampTextureSampler, input.SampleUV[2].zw).rgba;
+    float4 nearby6 = BloomDownSource.Sample(LinearClampTextureSampler, input.SampleUV[3].xy).rgba;
+    float4 nearby7 = BloomDownSource.Sample(LinearClampTextureSampler, input.SampleUV[3].zw).rgba;
+    float4 nearby8 = BloomDownSource.Sample(LinearClampTextureSampler, input.SampleUV[4].xy).rgba;
+    float4 nearby9 = BloomDownSource.Sample(LinearClampTextureSampler, input.SampleUV[4].zw).rgba;
+    float4 nearby10 = BloomDownSource.Sample(LinearClampTextureSampler, input.SampleUV[5].xy).rgba;
+    float4 nearby11 = BloomDownSource.Sample(LinearClampTextureSampler, input.SampleUV[5].zw).rgba;
+    float4 nearby12 = BloomDownSource.Sample(LinearClampTextureSampler, input.SampleUV[6].xy).rgba;
+    float4 nearby13 = BloomDownSource.Sample(LinearClampTextureSampler, input.SampleUV[6].zw).rgba;
+    float4 nearby14 = BloomDownSource.Sample(LinearClampTextureSampler, input.SampleUV[7].xy).rgba;
     
     float weight = 1.0f / 15.0f; 
     float4 color = 1.0f;
@@ -190,29 +192,27 @@ VertexShaderOutput BloomUpVS(VertexShaderInput input)
 
 
 Texture2D BloomLastResaultTexture : register(t0);
-SamplerState LinearClampTextureSampler : register(s2);
-
 Texture2D BloomDownTexture : register(t1);
 
 float4 BloomUpPS(VertexShaderOutput input) : SV_TARGET
 {   
-    float3 aNearby0 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[0].xy).rgb;
-    float3 aNearby1 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[0].zw).rgb;
-    float3 aNearby2 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[1].xy).rgb;
-    float3 aNearby3 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[1].zw).rgb;
-    float3 aNearby4 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[2].xy).rgb;
-    float3 aNearby5 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[2].zw).rgb;
-    float3 aNearby6 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[3].xy).rgb;
-    float3 aNearby7 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[3].zw).rgb;
+    float3 aNearby0 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[0].xy).rgb;
+    float3 aNearby1 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[0].zw).rgb;
+    float3 aNearby2 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[1].xy).rgb;
+    float3 aNearby3 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[1].zw).rgb;
+    float3 aNearby4 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[2].xy).rgb;
+    float3 aNearby5 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[2].zw).rgb;
+    float3 aNearby6 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[3].xy).rgb;
+    float3 aNearby7 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[3].zw).rgb;
 
-    float3 bNearby0 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[3].zw).rgb;
-    float3 bNearby1 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[4].xy).rgb;
-    float3 bNearby2 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[4].zw).rgb;
-    float3 bNearby3 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[5].xy).rgb;
-    float3 bNearby4 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[5].zw).rgb;
-    float3 bNearby5 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[6].xy).rgb;
-    float3 bNearby6 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[6].zw).rgb;
-    float3 bNearby7 = BloomDownTexture.Sample(LinearClampTextureSampler, input.SampleUV[7].xy).rgb;
+    float3 bNearby0 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[3].zw).rgb;
+    float3 bNearby1 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[4].xy).rgb;
+    float3 bNearby2 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[4].zw).rgb;
+    float3 bNearby3 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[5].xy).rgb;
+    float3 bNearby4 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[5].zw).rgb;
+    float3 bNearby5 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[6].xy).rgb;
+    float3 bNearby6 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[6].zw).rgb;
+    float3 bNearby7 = BloomLastResaultTexture.Sample(LinearClampTextureSampler, input.SampleUV[7].xy).rgb;
 
     float3 weightA = BloomTintA.rgb;
     float3 weightB = BloomTintB.rgb;
