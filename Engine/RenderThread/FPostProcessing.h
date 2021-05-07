@@ -1,20 +1,31 @@
 ﻿#pragma once
 #include "Prerequisite.h"
 
-
 struct FPostProcessConstant
 {
-    FVector2 SceneColorInvSize;
+    FVector3 BloomColor;
     float BloomThreshold;
-    float BloomDownScale;
-    FVector2 BloomUpScales;
-    FVector2 BloomLastResaultInvSize;
+    FVector2 SceneColorInvSize;
+    FVector2 _Placeholder0;
+};
+
+struct FBloomDownConstant
+{
     FVector2 BloomDownInvSize;
-    FVector2 BloomUpInvSize;
+    float BloomDownScale;
+    float _Placeholder1;
+};
+
+struct FBloomUpConstant
+{
     FVector4 BloomTintA;
     FVector4 BloomTintB;
-    FVector3 BloomColor;
+    FVector2 BloomLastResaultInvSize;
+    FVector2 BloomUpSourceInvSize;
+    FVector2 BloomUpScales;
+    FVector2 _Placeholder2;
 };
+
 
 class FFullScreenQuad
 {
@@ -57,6 +68,8 @@ protected:
 
 private:
     void _createPostProcessConstant(FPostProcessConstant& constant);
+    void _createBloomDownConstant(FBloomDownConstant& constant);
+    void _createBloomUpConstant(FBloomUpConstant& constant);
 
 private:
     FRHI* mRHI;
@@ -90,8 +103,18 @@ private:
     FRHIVertexLayout* mFullScreenLayout;
     FRHIConstantBuffer* mPostProcessConstantBuffer;
 
-    FRHIRenderTarget* mBloomLastResault;
-    FRHIRenderTarget* mBloomDown;
-    FRHIRenderTarget* mBloomUp;
+    FRHIConstantBuffer* mBloomDown0ConstantBuffer;
+    FRHIConstantBuffer* mBloomDown1ConstantBuffer;
+    FRHIConstantBuffer* mBloomDown2ConstantBuffer;
+    FRHIConstantBuffer* mBloomDown3ConstantBuffer;
+
+    FRHIConstantBuffer* mBloomUp0ConstantBuffer;
+    FRHIConstantBuffer* mBloomUp1ConstantBuffer;
+    FRHIConstantBuffer* mBloomUp2ConstantBuffer;
+    FRHIConstantBuffer* mBloomUp3ConstantBuffer;
+
+    FRHIRenderTarget* mBloomUpLastResault;
+    FRHIRenderTarget* mBloomUpSource;
+    FRHIRenderTarget* mBloomDownSource;
 
 };

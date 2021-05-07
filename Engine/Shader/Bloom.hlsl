@@ -19,19 +19,31 @@ struct VertexShaderOutput
     float4 SampleUV[8] : TEXCOORD1;
 };
 
-cbuffer BloomConstantBuffer : register(b0)
+cbuffer PostProcessingConstantBuffer : register(b0)
 {
-    float2 SceneColorInvSize;
+    float3 BloomColor;
     float BloomThreshold;
-    float BloomDownScale;
-    float2 BloomUpScales;
-    float2 BloomLastResaultInvSize;
+    float2 SceneColorInvSize;
+    float2 _Placeholder0;
+};
+
+cbuffer FBloomDownConstant : register(b0)
+{
     float2 BloomDownInvSize;
-    float2 BloomUpInvSize;
+    float BloomDownScale;
+    float _Placeholder1;
+};
+
+cbuffer FBloomUpConstant : register(b0)
+{
     float4 BloomTintA;
     float4 BloomTintB;
-    float3 BloomColor;
+    float2 BloomLastResaultInvSize;
+    float2 BloomUpSourceInvSize;
+    float2 BloomUpScales;
+    float2 _Placeholder2;
 };
+
 
 float Luminance(float3 linearColor)
 {
@@ -178,13 +190,13 @@ VertexShaderOutput BloomUpVS(VertexShaderInput input)
     start = 2.0 / 7.0;
     scale = BloomUpScales.y;
 
-    output.SampleUV[4].xy = input.UV.xy + Circle(start, 7.0, 0.0) * scale * BloomDownInvSize;
-    output.SampleUV[4].zw = input.UV.xy + Circle(start, 7.0, 1.0) * scale * BloomDownInvSize;
-    output.SampleUV[5].xy = input.UV.xy + Circle(start, 7.0, 2.0) * scale * BloomDownInvSize;
-    output.SampleUV[5].zw = input.UV.xy + Circle(start, 7.0, 3.0) * scale * BloomDownInvSize;
-    output.SampleUV[6].xy = input.UV.xy + Circle(start, 7.0, 4.0) * scale * BloomDownInvSize;
-    output.SampleUV[6].zw = input.UV.xy + Circle(start, 7.0, 5.0) * scale * BloomDownInvSize;
-    output.SampleUV[7].xy = input.UV.xy + Circle(start, 7.0, 6.0) * scale * BloomDownInvSize;
+    output.SampleUV[4].xy = input.UV.xy + Circle(start, 7.0, 0.0) * scale * BloomUpSourceInvSize;
+    output.SampleUV[4].zw = input.UV.xy + Circle(start, 7.0, 1.0) * scale * BloomUpSourceInvSize;
+    output.SampleUV[5].xy = input.UV.xy + Circle(start, 7.0, 2.0) * scale * BloomUpSourceInvSize;
+    output.SampleUV[5].zw = input.UV.xy + Circle(start, 7.0, 3.0) * scale * BloomUpSourceInvSize;
+    output.SampleUV[6].xy = input.UV.xy + Circle(start, 7.0, 4.0) * scale * BloomUpSourceInvSize;
+    output.SampleUV[6].zw = input.UV.xy + Circle(start, 7.0, 5.0) * scale * BloomUpSourceInvSize;
+    output.SampleUV[7].xy = input.UV.xy + Circle(start, 7.0, 6.0) * scale * BloomUpSourceInvSize;
     output.SampleUV[7].zw = float2(0.0, 0.0);
     
     return output;

@@ -141,7 +141,7 @@ void FPostProcessing::Init()
         bloomDown3Height, 1, PF_R16G16B16A16_FLOAT, PF_UNKNOWN);
 
     const int32 bloomUp0Width = bloomDown3Width * 2;
-    const int32 bloomUp0Height = bloomDown3Width * 2;
+    const int32 bloomUp0Height = bloomDown3Height * 2;
     mBloomUp0 = mRHI->CreateRenderTarget(bloomUp0Width,
         bloomUp0Height, 1, PF_R16G16B16A16_FLOAT, PF_UNKNOWN);
 
@@ -163,9 +163,9 @@ void FPostProcessing::Init()
     mToneMap = mRHI->CreateRenderTarget(sceneColorWidth,
         sceneColorHeight, 1, PF_R16G16B16A16_FLOAT, PF_UNKNOWN);
 
-    mBloomLastResault = mBloomDown3;
-    mBloomDown = mBloomDown3;
-    mBloomUp = mBloomUp0;
+    mBloomUpLastResault = mBloomDown3;
+    mBloomUpSource = mBloomDown3;
+    mBloomDownSource = mBloomUp0;
 
     creatPostProcessConstantBuffer();
 
@@ -351,6 +351,41 @@ void FPostProcessing::UnInit()
     delete mPostProcessConstantBuffer;
     mPostProcessConstantBuffer = nullptr;
 
+    mBloomDown0ConstantBuffer->UnInit();
+    delete mBloomDown0ConstantBuffer;
+    mBloomDown0ConstantBuffer = nullptr;
+
+    mBloomDown1ConstantBuffer->UnInit();
+    delete mBloomDown1ConstantBuffer;
+    mBloomDown1ConstantBuffer = nullptr;
+
+    mBloomDown2ConstantBuffer->UnInit();
+    delete mBloomDown2ConstantBuffer;
+    mBloomDown2ConstantBuffer = nullptr;
+
+    mBloomDown3ConstantBuffer->UnInit();
+    delete mBloomDown3ConstantBuffer;
+    mBloomDown3ConstantBuffer = nullptr;
+
+    mBloomUp0ConstantBuffer->UnInit();
+    delete mBloomUp0ConstantBuffer;
+    mBloomUp0ConstantBuffer = nullptr;
+
+    mBloomUp1ConstantBuffer->UnInit();
+    delete mBloomUp1ConstantBuffer;
+    mBloomUp1ConstantBuffer = nullptr;
+
+    mBloomUp2ConstantBuffer->UnInit();
+    delete mBloomUp2ConstantBuffer;
+    mBloomUp2ConstantBuffer = nullptr;
+
+    mBloomUp3ConstantBuffer->UnInit();
+    delete mBloomUp3ConstantBuffer;
+    mBloomUp3ConstantBuffer = nullptr;
+
+    mBloomUpLastResault = nullptr;
+    mBloomUpSource = nullptr;
+    mBloomDownSource = nullptr;
 }
 
 void FPostProcessing::Draw()
@@ -420,7 +455,7 @@ void FPostProcessing::Draw()
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
-        mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mBloomDown0ConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomSetup->RenderTargets[0], 0);
 
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
@@ -457,7 +492,7 @@ void FPostProcessing::Draw()
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
-        mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mBloomDown1ConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomDown0->RenderTargets[0], 0);
 
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
@@ -495,7 +530,7 @@ void FPostProcessing::Draw()
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
-        mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mBloomDown2ConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomDown1->RenderTargets[0], 0);
 
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
@@ -532,7 +567,7 @@ void FPostProcessing::Draw()
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
-        mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mBloomDown3ConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomDown2->RenderTargets[0], 0);
 
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
@@ -545,13 +580,6 @@ void FPostProcessing::Draw()
 
     mRHI->BeginEvent("BloomUp0");
     {
-        mBloomLastResault = mBloomDown3;
-        mBloomDown = mBloomDown2;
-
-        mBloomUp = mBloomUp0;
-
-        updatePostProcessConstantBuffer();
-
         mRHI->SetRenderTarget(mBloomUp0);
 
         mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mBloomUp0->Width), static_cast<float>(mBloomUp0->Height), 1.0f);
@@ -576,7 +604,7 @@ void FPostProcessing::Draw()
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
-        mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mBloomUp0ConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomDown2->RenderTargets[0], 0);
         mRHI->SetTexture2D(mBloomDown3->RenderTargets[0], 1);
 
@@ -590,13 +618,6 @@ void FPostProcessing::Draw()
 
     mRHI->BeginEvent("BloomUp1");
     {
-        mBloomLastResault = mBloomUp0;
-        mBloomDown = mBloomDown1;
-
-        mBloomUp = mBloomUp1;
-
-        updatePostProcessConstantBuffer();
-
         mRHI->SetRenderTarget(mBloomUp1);
 
         mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mBloomUp1->Width), static_cast<float>(mBloomUp1->Height), 1.0f);
@@ -621,7 +642,7 @@ void FPostProcessing::Draw()
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
-        mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mBloomUp1ConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomDown1->RenderTargets[0], 0);
         mRHI->SetTexture2D(mBloomUp0->RenderTargets[0], 1);
 
@@ -636,13 +657,6 @@ void FPostProcessing::Draw()
 
     mRHI->BeginEvent("BloomUp2");
     {
-        mBloomLastResault = mBloomUp1;
-        mBloomDown = mBloomDown0;
-
-        mBloomUp = mBloomUp2;
-
-        updatePostProcessConstantBuffer();
-
         mRHI->SetRenderTarget(mBloomUp2);
 
         mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mBloomUp2->Width), static_cast<float>(mBloomUp2->Height), 1.0f);
@@ -667,7 +681,7 @@ void FPostProcessing::Draw()
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
-        mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mBloomUp2ConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomDown0->RenderTargets[0], 0);
         mRHI->SetTexture2D(mBloomUp1->RenderTargets[0], 1);
 
@@ -682,13 +696,6 @@ void FPostProcessing::Draw()
 
     mRHI->BeginEvent("BloomUp3");
     {
-        mBloomLastResault = mBloomUp2;
-        mBloomDown = mBloomSetup;
-
-        mBloomUp = mBloomUp3;
-
-        updatePostProcessConstantBuffer();
-
         mRHI->SetRenderTarget(mBloomUp3);
 
         mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mBloomUp3->Width), static_cast<float>(mBloomUp3->Height), 1.0f);
@@ -713,7 +720,7 @@ void FPostProcessing::Draw()
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
-        mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mBloomUp3ConstantBuffer, 0);
         mRHI->SetTexture2D(mBloomSetup->RenderTargets[0], 0);
         mRHI->SetTexture2D(mBloomUp2->RenderTargets[0], 1);
 
@@ -778,6 +785,51 @@ void FPostProcessing::creatPostProcessConstantBuffer()
     _createPostProcessConstant(postProcessConstant);
 
     mPostProcessConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FPostProcessConstant), (uint8*)&postProcessConstant);
+
+    FBloomDownConstant bloomDownConstant0;
+    mBloomDownSource = mBloomSetup;
+    _createBloomDownConstant(bloomDownConstant0);
+    mBloomDown0ConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FBloomDownConstant), (uint8*)&bloomDownConstant0);
+
+    FBloomDownConstant bloomDownConstant1;
+    mBloomDownSource = mBloomDown0;
+    _createBloomDownConstant(bloomDownConstant1);
+    mBloomDown1ConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FBloomDownConstant), (uint8*)&bloomDownConstant1);
+
+    FBloomDownConstant bloomDownConstant2;
+    mBloomDownSource = mBloomDown1;
+    _createBloomDownConstant(bloomDownConstant2);
+    mBloomDown2ConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FBloomDownConstant), (uint8*)&bloomDownConstant2);
+
+    FBloomDownConstant bloomDownConstant3;
+    mBloomDownSource = mBloomDown2;
+    _createBloomDownConstant(bloomDownConstant3);
+    mBloomDown3ConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FBloomDownConstant), (uint8*)&bloomDownConstant3);
+
+    FBloomUpConstant bloomUpConstant0;
+    mBloomUpLastResault = mBloomDown3;
+    mBloomUpSource = mBloomDown2;
+    _createBloomUpConstant(bloomUpConstant0);
+    mBloomUp0ConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FBloomUpConstant), (uint8*)&bloomUpConstant0);
+
+    FBloomUpConstant bloomUpConstant1;
+    mBloomUpLastResault = mBloomUp0;
+    mBloomUpSource = mBloomDown1;
+    _createBloomUpConstant(bloomUpConstant1);
+    mBloomUp1ConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FBloomUpConstant), (uint8*)&bloomUpConstant1);
+
+    FBloomUpConstant bloomUpConstant2;
+    mBloomUpLastResault = mBloomUp1;
+    mBloomUpSource = mBloomDown0;
+    _createBloomUpConstant(bloomUpConstant2);
+    mBloomUp2ConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FBloomUpConstant), (uint8*)&bloomUpConstant2);
+
+    FBloomUpConstant bloomUpConstant3;
+    mBloomUpLastResault = mBloomUp2;
+    mBloomUpSource = mBloomSetup;
+    _createBloomUpConstant(bloomUpConstant3);
+    mBloomUp3ConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FBloomUpConstant), (uint8*)&bloomUpConstant3);
+
 }
 
 void FPostProcessing::updatePostProcessConstantBuffer()
@@ -792,12 +844,21 @@ void FPostProcessing::_createPostProcessConstant(FPostProcessConstant& constant)
 {
     constant.SceneColorInvSize = FVector2(1.0f / mSceneColor->Width, 1.0f / mSceneColor->Height);
     constant.BloomThreshold = -1.0f;
+    constant.BloomColor = FVector3(1.0f, 1.0f, 1.0f);
+}
+
+void FPostProcessing::_createBloomDownConstant(FBloomDownConstant& constant)
+{
+    constant.BloomDownInvSize = FVector2(1.0f / mBloomDownSource->Width, 1.0f / mBloomDownSource->Height);
     constant.BloomDownScale = 2.64f;
-    constant.BloomUpScales = FVector2(1.32f, 1.32f);
-    constant.BloomLastResaultInvSize = FVector2(1.0f / mBloomLastResault->Width, 1.0f / mBloomLastResault->Height);
-    constant.BloomDownInvSize = FVector2(1.0f / mBloomDown->Width, 1.0f / mBloomDown->Height);
-    constant.BloomUpInvSize = FVector2(1.0f / mBloomUp->Width, 1.0f / mBloomUp->Height);
+}
+
+void FPostProcessing::_createBloomUpConstant(FBloomUpConstant& constant)
+{
     constant.BloomTintA = FVector4(0.00992f, 0.00992f, 0.00992f, 1.0f);
     constant.BloomTintB = FVector4(0.125f, 0.125f, 0.125f, 1.0f);
-    constant.BloomColor = FVector3(1.0f, 1.0f, 1.0f);
+    constant.BloomLastResaultInvSize = FVector2(1.0f / mBloomUpLastResault->Width, 1.0f / mBloomUpLastResault->Height);
+    constant.BloomUpSourceInvSize = FVector2(1.0f / mBloomUpSource->Width, 1.0f / mBloomUpSource->Height);
+    constant.BloomUpScales = FVector2(1.32f, 1.32f);
+
 }
