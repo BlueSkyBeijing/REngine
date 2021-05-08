@@ -34,13 +34,14 @@ VertexShaderOutput TonemapVS(VertexShaderInput input)
 }
 
 Texture2D SceneColorTexture : register(t0);
+SamplerState PointClampTextureSampler : register(s3);
 SamplerState LinearClampTextureSampler : register(s2);
 
 Texture2D BloomTexture : register(t1);
 
 float4 TonemapPS(VertexShaderOutput input) : SV_TARGET
 {
-    float4 sceneColor = SceneColorTexture.Sample(LinearClampTextureSampler, input.UV.xy).rgba;
+    float4 sceneColor = SceneColorTexture.Sample(PointClampTextureSampler, input.UV.xy).rgba;
 
     float4 color = sceneColor;
 

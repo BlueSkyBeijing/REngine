@@ -22,7 +22,7 @@ VertexShaderOutput PostprocessVS(VertexShaderInput input)
 }
 
 Texture2D FullScreenTexture : register(t0);
-SamplerState FullScreenTextureSampler : register(s0);
+SamplerState FullScreenTextureSampler : register(s3);
 
 float4 PostprocessPS(VertexShaderOutput input) : SV_TARGET
 {

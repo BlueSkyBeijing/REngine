@@ -505,9 +505,16 @@ FRHIShaderBindings* FD3D12RHI::CreateShaderBindings()
         D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressV
         D3D12_TEXTURE_ADDRESS_MODE_CLAMP); // addressW
 
-    std::array<const CD3DX12_STATIC_SAMPLER_DESC, 3> sampler = { linearWrap , shadow, linearClamp };
+    const CD3DX12_STATIC_SAMPLER_DESC pointClamp(
+        3, // shaderRegister
+        D3D12_FILTER_MIN_MAG_MIP_POINT, // filter
+        D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressU
+        D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressV
+        D3D12_TEXTURE_ADDRESS_MODE_CLAMP); // addressW
 
-    CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc(4, slotRootParameter, 3, sampler.data(),
+    std::array<const CD3DX12_STATIC_SAMPLER_DESC, 4> sampler = { linearWrap , shadow, linearClamp, pointClamp };
+
+    CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc(4, slotRootParameter, 4, sampler.data(),
         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
     Microsoft::WRL::ComPtr <ID3DBlob> signature;
