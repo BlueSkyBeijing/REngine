@@ -24,8 +24,9 @@ public:
     }
 
 private:
-    std::vector<UStaticMeshObject*> mStaticMeshObjects;
     std::vector<UCamera*> mCameras;
     std::vector<UDirectionalLight*> mDirectionalLights;
+    std::vector<UStaticMeshObject*> mStaticMeshObjects;
+    std::vector<USkeletalMeshObject*> mSkeletalMeshObjects;
     FEngine* mEngine;
 };

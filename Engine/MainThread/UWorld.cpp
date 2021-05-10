@@ -4,10 +4,12 @@
 #include "FEngine.h"
 #include "FRenderThread.h"
 #include "UStaticMeshObject.h"
+#include "USkeletalMeshObject.h"
 #include "UCamera.h"
 #include "ULight.h"
 #include "Utility.h"
 #include "FConfigManager.h"
+#include "FRenderCommand.h"
 
 UWorld::UWorld(FEngine* engine) :
     mEngine(engine)
@@ -57,6 +59,22 @@ void UWorld::Load()
 
         staticMeshObjectDatas.push_back(data);
     }
+
+    int32 numSkeletalMeshObject;
+    std::vector<FSkeletalMeshObjectData> skeletalMeshObjectDatas;
+    mapFile.read((char*)&numSkeletalMeshObject, sizeof(int32));
+    for (int32 i = 0; i < numSkeletalMeshObject; i++)
+    {
+        FSkeletalMeshObjectData data;
+        mapFile.read((char*)&data.Rotation, sizeof(FQuat));
+        mapFile.read((char*)data.Location.data(), sizeof(FVector3));
+        int32 stringSize;
+        mapFile.read((char*)&stringSize, sizeof(int32));
+        mapFile.read((char*)data.ResourceName.data(), stringSize);
+
+        skeletalMeshObjectDatas.push_back(data);
+    }
+
     mapFile.close();
 
     //init from import data
@@ -103,7 +121,7 @@ void UWorld::Load()
 
         staticMeshObject->Position = staticMeshObjectDatas[staticMeshObjectDataIndex].Location;
         staticMeshObject->Rotation = staticMeshObjectDatas[staticMeshObjectDataIndex].Rotation;
-        staticMeshObject->FullStaticMeshPath = FConfigManager::DefaultStaticMeshPath +
+        staticMeshObject->FullResourcePath = FConfigManager::DefaultStaticMeshPath +
             std::string(staticMeshObjectDatas[staticMeshObjectDataIndex].ResourceName.c_str()) +
             FConfigManager::DefaultStaticMeshFileSuffix;
         staticMeshObject->Name = std::string(staticMeshObjectDatas[staticMeshObjectDataIndex].ResourceName.c_str());
@@ -114,8 +132,34 @@ void UWorld::Load()
         staticMeshObjectDataIndex++;
     }
 
+    mSkeletalMeshObjects.resize(numSkeletalMeshObject);
+    int32 skeletalMeshObjectDataIndex = 0;
+    for (auto it = mSkeletalMeshObjects.begin(); it != mSkeletalMeshObjects.end(); it++)
+    {
+        USkeletalMeshObject* skeletalMeshObject = new USkeletalMeshObject();
+
+        skeletalMeshObject->Position = skeletalMeshObjectDatas[skeletalMeshObjectDataIndex].Location;
+        skeletalMeshObject->Rotation = skeletalMeshObjectDatas[skeletalMeshObjectDataIndex].Rotation;
+        skeletalMeshObject->FullResourcePath = FConfigManager::DefaultSkeletalMeshPath +
+            std::string(skeletalMeshObjectDatas[skeletalMeshObjectDataIndex].ResourceName.c_str()) +
+            FConfigManager::DefaultSkeletalMeshFileSuffix;
+        skeletalMeshObject->Name = std::string(skeletalMeshObjectDatas[skeletalMeshObjectDataIndex].ResourceName.c_str());
+        skeletalMeshObject->Load();
+
+        *it = skeletalMeshObject;
+
+        skeletalMeshObjectDataIndex++;
+    }
+
     //tell render thread load completed
     mEngine->GetRenderThread()->MarkLoadCompleted();
+    //FRenderThread* renderThread = TSingleton<FEngine>::GetInstance().GetRenderThread();
+
+    //ENQUEUE_RENDER_COMMAND([renderThread]
+    //{
+    //    renderThread->MarkLoadCompleted();
+    //});
+
 }
 
 void UWorld::Unload()
@@ -128,6 +172,14 @@ void UWorld::Unload()
     }
     mCameras.clear();
 
+    for (auto it = mDirectionalLights.begin(); it != mDirectionalLights.end(); it++)
+    {
+        UDirectionalLight* directionalLight = *it;
+        directionalLight->Unload();
+        delete directionalLight;
+    }
+    mDirectionalLights.clear();
+
     for (auto it = mStaticMeshObjects.begin(); it != mStaticMeshObjects.end(); it++)
     {
         UStaticMeshObject* staticMeshObject = *it;
@@ -136,11 +188,12 @@ void UWorld::Unload()
     }
     mStaticMeshObjects.clear();
 
-    for (auto it = mDirectionalLights.begin(); it != mDirectionalLights.end(); it++)
+    for (auto it = mSkeletalMeshObjects.begin(); it != mSkeletalMeshObjects.end(); it++)
     {
-        UDirectionalLight* directionalLight = *it;
-        directionalLight->Unload();
-        delete directionalLight;
+        USkeletalMeshObject* skeletalMeshObject = *it;
+        skeletalMeshObject->Unload();
+        delete skeletalMeshObject;
     }
-    mDirectionalLights.clear();
+    mSkeletalMeshObjects.clear();
+
 }

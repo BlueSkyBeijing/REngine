@@ -29,6 +29,8 @@ struct FInputElementDesc;
 class UObject;
 class UWorld;
 class UTexture2D;
+class UStaticMeshObject;
+class USkeletalMeshObject;
 
 class FEngine;
 class FRenderThread;

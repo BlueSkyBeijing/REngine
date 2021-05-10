@@ -44,3 +44,12 @@ FStaticMeshVertex::FStaticMeshVertex()
 FStaticMeshVertex::~FStaticMeshVertex()
 {
 }
+
+
+FSkeletalMeshVertex::FSkeletalMeshVertex()
+{
+}
+
+FSkeletalMeshVertex::~FSkeletalMeshVertex()
+{
+}

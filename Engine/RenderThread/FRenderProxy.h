@@ -12,11 +12,11 @@ struct FObjectConstant
     FMatrix4x4 World;
 };
 
-struct FRenderProxyInitializer
+struct FStaticMeshRenderProxyInitializer
 {
 public:
-    FRenderProxyInitializer();
-    ~FRenderProxyInitializer();
+    FStaticMeshRenderProxyInitializer();
+    ~FStaticMeshRenderProxyInitializer();
 
     std::vector<FStaticMeshVertex> Vertexes;
     std::vector<uint16> Indexes;
@@ -26,6 +26,22 @@ public:
     FVector3 Scale;
     FMaterial* Material;
 };
+
+struct FSkeletalMeshRenderProxyInitializer
+{
+public:
+    FSkeletalMeshRenderProxyInitializer();
+    ~FSkeletalMeshRenderProxyInitializer();
+
+    std::vector<FSkeletalMeshVertex> Vertexes;
+    std::vector<uint16> Indexes;
+    FRHIVertexLayout VertexLayout;
+    FVector3 Position;
+    FQuat Rotation;
+    FVector3 Scale;
+    FMaterial* Material;
+};
+
 
 class FRenderProxy
 {
@@ -61,7 +77,7 @@ protected:
 class FStaticMeshRenderProxy : public FRenderProxy
 {
 public:
-    FStaticMeshRenderProxy(const FRenderProxyInitializer& initializer);
+    FStaticMeshRenderProxy(const FStaticMeshRenderProxyInitializer& initializer);
     virtual ~FStaticMeshRenderProxy() override;
 
 public:
@@ -72,5 +88,22 @@ private:
     FObjectConstant mObjectConstants;
 
     std::vector<FStaticMeshVertex> mVertexes;
+    std::vector<uint16> mIndexes;
+};
+
+class FSkeletalMeshRenderProxy : public FRenderProxy
+{
+public:
+    FSkeletalMeshRenderProxy(const FSkeletalMeshRenderProxyInitializer& initializer);
+    virtual ~FSkeletalMeshRenderProxy() override;
+
+public:
+    virtual void CreateRenderResource() override;
+    virtual void ReleaseRenderResource() override;
+
+private:
+    FObjectConstant mObjectConstants;
+
+    std::vector<FSkeletalMeshVertex> mVertexes;
     std::vector<uint16> mIndexes;
 };

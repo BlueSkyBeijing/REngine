@@ -25,6 +25,8 @@
     <ClCompile Include="Engine\MainThread\ULight.cpp" />
     <ClCompile Include="Engine\MainThread\UMaterial.cpp" />
     <ClCompile Include="Engine\MainThread\UObject.cpp" />
+    <ClCompile Include="Engine\MainThread\USkeletalMesh.cpp" />
+    <ClCompile Include="Engine\MainThread\USkeletalMeshObject.cpp" />
     <ClCompile Include="Engine\MainThread\UStaticMesh.cpp" />
     <ClCompile Include="Engine\MainThread\UStaticMeshObject.cpp" />
     <ClCompile Include="Engine\MainThread\UTexture.cpp" />
@@ -79,6 +81,8 @@
     <ClInclude Include="Engine\MainThread\ULight.h" />
     <ClInclude Include="Engine\MainThread\UMaterial.h" />
     <ClInclude Include="Engine\MainThread\UObject.h" />
+    <ClInclude Include="Engine\MainThread\USkeletalMesh.h" />
+    <ClInclude Include="Engine\MainThread\USkeletalMeshObject.h" />
     <ClInclude Include="Engine\MainThread\UStaticMesh.h" />
     <ClInclude Include="Engine\MainThread\UStaticMeshObject.h" />
     <ClInclude Include="Engine\MainThread\UTexture.h" />

@@ -5,16 +5,16 @@
 
 #include <string>
 
-class UStaticMesh;
+class USkeletalMesh;
 class UMaterial;
 class FRenderProxy;
 class FEngine;
 
-class UStaticMeshObject : public UPrimitiveObject
+class USkeletalMeshObject : public UPrimitiveObject
 {
 public:
-    UStaticMeshObject();
-    virtual ~UStaticMeshObject() override;
+    USkeletalMeshObject();
+    virtual ~USkeletalMeshObject() override;
 
 public:
     std::string FullResourcePath;
@@ -28,16 +28,16 @@ protected:
 
 private:
 
-    UStaticMesh* mStaticMesh;
+    USkeletalMesh* mSkeletalMesh;
     UMaterial* mMaterial;
 
     FRenderProxy* mRenderProxy;
 };
 
-struct FStaticMeshObjectData
+struct FSkeletalMeshObjectData
 {
-    FStaticMeshObjectData() {}
-    ~FStaticMeshObjectData() {}
+    FSkeletalMeshObjectData() {}
+    ~FSkeletalMeshObjectData() {}
 
     FQuat Rotation;
     FVector3 Location;

@@ -1,7 +1,7 @@
 ﻿#include "PrecompiledHeader.h"
 
-#include "UStaticMeshObject.h"
-#include "UStaticMesh.h"
+#include "USkeletalMeshObject.h"
+#include "USkeletalMesh.h"
 #include "UMaterial.h"
 #include "FEngine.h"
 #include "FRenderThread.h"
@@ -10,21 +10,21 @@
 #include "TSingleton.h"
 #include "FRenderCommand.h"
 
-UStaticMeshObject::UStaticMeshObject() :
+USkeletalMeshObject::USkeletalMeshObject() :
     mMaterial(nullptr),
-    mStaticMesh(nullptr)
+    mSkeletalMesh(nullptr)
 {
 }
 
-UStaticMeshObject::~UStaticMeshObject()
+USkeletalMeshObject::~USkeletalMeshObject()
 {
 }
 
-void UStaticMeshObject::Load()
+void USkeletalMeshObject::Load()
 {
-    mStaticMesh = new UStaticMesh();
-    mStaticMesh->FullFilePathName = FullResourcePath;
-    mStaticMesh->Load();
+    mSkeletalMesh = new USkeletalMesh();
+    mSkeletalMesh->FullFilePathName = FullResourcePath;
+    mSkeletalMesh->Load();
 
     mMaterial = new UMaterial();
     mMaterial->Load();
@@ -33,31 +33,31 @@ void UStaticMeshObject::Load()
     createRenderProxy();
 }
 
-void UStaticMeshObject::Unload()
+void USkeletalMeshObject::Unload()
 {
-    mStaticMesh->Unload();
-    delete mStaticMesh;
-    mStaticMesh = nullptr;
+    mSkeletalMesh->Unload();
+    delete mSkeletalMesh;
+    mSkeletalMesh = nullptr;
 
     mMaterial->Unload();
     delete mMaterial;
     mMaterial = nullptr;
 }
 
-void UStaticMeshObject::createRenderProxy()
+void USkeletalMeshObject::createRenderProxy()
 {
     //new in main thread and release in render thread
-    FStaticMeshRenderProxyInitializer initializer;
-    initializer.VertexLayout = mStaticMesh->GetVertexLayout();
-    initializer.Vertexes = mStaticMesh->GetVertexes();
-    initializer.Indexes = mStaticMesh->GetIndexes();
-    initializer.VertexLayout = mStaticMesh->GetVertexLayout();
+    FSkeletalMeshRenderProxyInitializer initializer;
+    initializer.VertexLayout = mSkeletalMesh->GetVertexLayout();
+    initializer.Vertexes = mSkeletalMesh->GetVertexes();
+    initializer.Indexes = mSkeletalMesh->GetIndexes();
+    initializer.VertexLayout = mSkeletalMesh->GetVertexLayout();
     initializer.Material = mMaterial->Material;
     initializer.Position = Position;
     initializer.Rotation = Rotation;
     initializer.Scale = Scale;
 
-    mRenderProxy = new FStaticMeshRenderProxy(initializer);
+    mRenderProxy = new FSkeletalMeshRenderProxy(initializer);
     mRenderProxy->DebugName = Name;
 
     //add to scene

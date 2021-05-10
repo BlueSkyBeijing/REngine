@@ -52,6 +52,19 @@ private:
 
 };
 
+class FSkeletalMeshVertex : public FRHIVertex
+{
+public:
+    FSkeletalMeshVertex();
+    ~FSkeletalMeshVertex();
+
+public:
+    FVector3 Normal;
+    FVector2 UV;
+private:
+
+};
+
 enum EInputClassification
 {
     ICF_PerVertexData = 0,
