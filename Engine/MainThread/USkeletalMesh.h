@@ -35,3 +35,30 @@ private:
     std::vector<uint16> mIndexes;
     FRHIVertexLayout mVertexLayout;
 };
+
+
+class USkeleton : public UResource
+{
+public:
+    USkeleton();
+    virtual ~USkeleton() override;
+
+public:
+    virtual void Load() override;
+    virtual void Unload() override;
+
+private:
+};
+
+class UAnimSequence : public UResource
+{
+public:
+    UAnimSequence();
+    virtual ~UAnimSequence() override;
+
+public:
+    virtual void Load() override;
+    virtual void Unload() override;
+
+private:
+};

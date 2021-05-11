@@ -53,3 +53,37 @@ void USkeletalMesh::Unload()
     mIndexes.clear();
     mVertexLayout.Elements.clear();
 }
+
+
+USkeleton::USkeleton()
+{
+}
+
+USkeleton::~USkeleton()
+{
+}
+
+void USkeleton::Load()
+{
+}
+
+void USkeleton::Unload()
+{
+}
+
+UAnimSequence::UAnimSequence()
+{
+}
+
+UAnimSequence::~UAnimSequence()
+{
+}
+
+void UAnimSequence::Load()
+{
+}
+
+void UAnimSequence::Unload()
+{
+}
+
