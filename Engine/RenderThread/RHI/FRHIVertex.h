@@ -61,6 +61,8 @@ public:
 public:
     FVector3 Normal;
     FVector2 UV;
+    FVector4 BoneWeights;
+    FVector2 BoneIndices;
 private:
 
 };

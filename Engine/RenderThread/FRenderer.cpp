@@ -115,6 +115,10 @@ void FRenderer::drawShadowPass()
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = renderProxy->Material->VertexShaderShadow;
+        if (dynamic_cast<FSkeletalMeshRenderProxy*>(renderProxy))
+        {
+            info.VertexShader = renderProxy->Material->VertexShaderShadowGPUSkin;
+        }
         info.PixelShader = nullptr;
         info.VertexLayout = &renderProxy->VertexLayout;
         info.DepthStencilState.bEnableDepthWrite = true;
@@ -247,6 +251,10 @@ void FRenderer::drawSceneColorPass()
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = renderProxy->Material->VertexShader;
+        if (dynamic_cast<FSkeletalMeshRenderProxy*>(renderProxy))
+        {
+            info.VertexShader = renderProxy->Material->VertexShaderGPUSkin;
+        }
         info.PixelShader = renderProxy->Material->PixelShader;
         info.VertexLayout = &renderProxy->VertexLayout;
         info.DepthStencilState.bEnableDepthWrite = true;

@@ -5,6 +5,10 @@ struct VertexShaderInput
     float3 Pos : POSITION;
     float3 Normal : NORMAL;
     float2 UV : TEXCOORD;
+#ifdef GPU_SKIN
+    float4 BoneWeights : WEIGHTS;
+    uint4 BoneIndices  : BONEINDICES;
+#endif
 };
 
 struct VertexShaderOutput

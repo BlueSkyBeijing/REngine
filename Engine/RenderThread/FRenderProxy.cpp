@@ -174,6 +174,16 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
 
     TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
 
+    FPipelineStateInfo infoGPUSkin;
+    infoGPUSkin.ShaderBindings = shaderBindings;
+    infoGPUSkin.VertexShader = Material->VertexShaderGPUSkin;
+    infoGPUSkin.PixelShader = Material->PixelShader;
+    infoGPUSkin.VertexLayout = &VertexLayout;
+    infoGPUSkin.DepthStencilState.bEnableDepthWrite = true;
+    infoGPUSkin.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
+
+    TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(infoGPUSkin);
+
     FPipelineStateInfo infoShadow;
     infoShadow.ShaderBindings = shaderBindings;
     infoShadow.VertexShader = Material->VertexShaderShadow;
@@ -182,6 +192,15 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
     infoShadow.DepthStencilState.bEnableDepthWrite = true;
 
     TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(infoShadow);
+
+    FPipelineStateInfo infoGPUSkinShadow;
+    infoGPUSkinShadow.ShaderBindings = shaderBindings;
+    infoGPUSkinShadow.VertexShader = Material->VertexShaderShadowGPUSkin;
+    infoGPUSkinShadow.PixelShader = nullptr;
+    infoGPUSkinShadow.VertexLayout = &VertexLayout;
+    infoGPUSkinShadow.DepthStencilState.bEnableDepthWrite = true;
+
+    TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(infoGPUSkinShadow);
 
     rhi->FlushCommandQueue();
 }
