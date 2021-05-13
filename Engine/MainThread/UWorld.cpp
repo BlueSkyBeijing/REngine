@@ -71,6 +71,9 @@ void UWorld::Load()
         int32 stringSize;
         mapFile.read((char*)&stringSize, sizeof(int32));
         mapFile.read((char*)data.ResourceName.data(), stringSize);
+        int32 stringSizeAnim;
+        mapFile.read((char*)&stringSizeAnim, sizeof(int32));
+        mapFile.read((char*)data.AnimationName.data(), stringSizeAnim);
 
         skeletalMeshObjectDatas.push_back(data);
     }
@@ -144,6 +147,11 @@ void UWorld::Load()
             std::string(skeletalMeshObjectDatas[skeletalMeshObjectDataIndex].ResourceName.c_str()) +
             FConfigManager::DefaultSkeletalMeshFileSuffix;
         skeletalMeshObject->Name = std::string(skeletalMeshObjectDatas[skeletalMeshObjectDataIndex].ResourceName.c_str());
+        skeletalMeshObject->FullAnimSequencePath = FConfigManager::DefaultAnimSequencePath +
+            std::string(skeletalMeshObjectDatas[skeletalMeshObjectDataIndex].AnimationName.c_str()) +
+            FConfigManager::DefaultAnimSequenceFileSuffix;
+
+        
         skeletalMeshObject->Load();
 
         *it = skeletalMeshObject;
@@ -196,4 +204,15 @@ void UWorld::Unload()
     }
     mSkeletalMeshObjects.clear();
 
+}
+
+void UWorld::Update(float deltaSeconds)
+{
+    GetCamera()->Update();
+
+    for (auto it = mSkeletalMeshObjects.begin(); it != mSkeletalMeshObjects.end(); it++)
+    {
+        USkeletalMeshObject* skeletalMeshObject = *it;
+        skeletalMeshObject->Update(deltaSeconds);
+    }
 }

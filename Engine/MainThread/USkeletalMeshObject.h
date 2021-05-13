@@ -18,10 +18,12 @@ public:
 
 public:
     std::string FullResourcePath;
+    std::string FullAnimSequencePath;
 
 public:
     virtual void Load() override;
     virtual void Unload() override;
+    void Update(float deltaSeconds);
 
 protected:
     virtual void createRenderProxy() override;
@@ -30,6 +32,7 @@ private:
 
     USkeletalMesh* mSkeletalMesh;
     UMaterial* mMaterial;
+    UAnimSequence* mAnimSequence;
 
     FRenderProxy* mRenderProxy;
 };
@@ -42,4 +45,5 @@ struct FSkeletalMeshObjectData
     FQuat Rotation;
     FVector3 Location;
     std::string ResourceName;
+    std::string AnimationName;
 };

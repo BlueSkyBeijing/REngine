@@ -110,7 +110,7 @@ void FEngine::update()
     mDeltaSeconds = std::chrono::duration_cast<std::chrono::duration<float, std::milli>>(mCurFrameTime - mLastFrameTime).count() / 1000.0f;
     mLastFrameTime = mCurFrameTime;
 
-    mWorld->GetCamera()->Update();
+    mWorld->Update(mDeltaSeconds);
 
     mRenderThread->OnProduceOneFrame();
 }

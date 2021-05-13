@@ -12,6 +12,9 @@ public:
     virtual ~USkeletalMesh() override;
 
 public:
+    std::string FullSkeletonPath;
+
+public:
     virtual void Load() override;
     virtual void Unload() override;
 
@@ -34,6 +37,7 @@ private:
     std::vector<FSkeletalMeshVertex> mVertexes;
     std::vector<uint16> mIndexes;
     FRHIVertexLayout mVertexLayout;
+    USkeleton* mSkeleton;
 };
 
 
@@ -59,6 +63,12 @@ public:
 public:
     virtual void Load() override;
     virtual void Unload() override;
+    void Update(float deltaSeconds);
 
 private:
+    int32 NumberOfFrames;
+    std::vector<FVector3> PosKeys;
+    std::vector<FQuat> RotKeys;
+    std::vector<FVector3> ScaleKeys;
+
 };

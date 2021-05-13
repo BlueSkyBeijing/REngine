@@ -16,12 +16,16 @@ public:
     const static std::string DefaultMapPath;
     const static std::string DefaultStaticMeshPath;
     const static std::string DefaultSkeletalMeshPath;
+    const static std::string DefaultSkeletonPath;
+    const static std::string DefaultAnimSequencePath;
     const static std::string DefaultMaterialPath;
     const static std::string DefaultTexturePath;
 
     const static std::string DefaultMapFileSuffix;
     const static std::string DefaultStaticMeshFileSuffix;
     const static std::string DefaultSkeletalMeshFileSuffix;
+    const static std::string DefaultSkeletonFileSuffix;
+    const static std::string DefaultAnimSequenceFileSuffix;
     const static std::string DefaultMaterialFileSuffix;
     const static std::string DefaultTextureFileSuffix;
 

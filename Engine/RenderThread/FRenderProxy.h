@@ -12,6 +12,12 @@ struct FObjectConstant
     FMatrix4x4 World;
 };
 
+struct SkeletonMeshConstant
+{
+    FMatrix4x4 World;
+    FMatrix4x4 BoneTransforms[75];
+};
+
 struct FStaticMeshRenderProxyInitializer
 {
 public:
@@ -102,7 +108,7 @@ public:
     virtual void ReleaseRenderResource() override;
 
 private:
-    FObjectConstant mObjectConstants;
+    SkeletonMeshConstant mObjectConstants;
 
     std::vector<FSkeletalMeshVertex> mVertexes;
     std::vector<uint16> mIndexes;

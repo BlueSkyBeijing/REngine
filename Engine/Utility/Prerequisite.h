@@ -31,6 +31,8 @@ class UWorld;
 class UTexture2D;
 class UStaticMeshObject;
 class USkeletalMeshObject;
+class UAnimSequence;
+class USkeleton;
 
 class FEngine;
 class FRenderThread;

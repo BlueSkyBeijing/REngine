@@ -17,6 +17,7 @@ public:
 public:
     virtual void Load() override;
     virtual void Unload() override;
+    void Update(float deltaSeconds);
 
     inline UCamera* GetCamera() const
     {

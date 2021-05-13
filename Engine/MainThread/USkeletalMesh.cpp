@@ -2,7 +2,7 @@
 
 #include "USkeletalMesh.h"
 #include "FRHI.h"
-
+#include "FConfigManager.h"
 
 USkeletalMesh::USkeletalMesh()
 {
@@ -42,13 +42,21 @@ void USkeletalMesh::Load()
     int32 numVertexes;
     skeletalMeshFile.read((char*)&numVertexes, sizeof(int32));
     mVertexes.resize(numVertexes);
-    skeletalMeshFile.read((char*)mVertexes.data(), numVertexes * sizeof(FStaticMeshVertex));
+    skeletalMeshFile.read((char*)mVertexes.data(), numVertexes * sizeof(FSkeletalMeshVertex));
 
     int32 numIndexes;
     skeletalMeshFile.read((char*)&numIndexes, sizeof(int32));
     mIndexes.resize(numIndexes);
     skeletalMeshFile.read((char*)mIndexes.data(), numIndexes * sizeof(uint16));
 
+    std::string ResourceName;
+    int32 stringSize;
+    skeletalMeshFile.read((char*)&stringSize, sizeof(int32));
+    skeletalMeshFile.read((char*)ResourceName.data(), stringSize);
+
+    FullSkeletonPath = FConfigManager::DefaultStaticMeshPath +
+        std::string(ResourceName.c_str()) +
+        FConfigManager::DefaultSkeletalMeshFileSuffix;
     skeletalMeshFile.close();
 }
 
@@ -86,9 +94,29 @@ UAnimSequence::~UAnimSequence()
 
 void UAnimSequence::Load()
 {
+    std::ifstream animSequenceFile(FullFilePathName, std::ios::in | std::ios::binary);
+    if (!animSequenceFile)
+    {
+        //print error
+        return;
+    }
+
+    animSequenceFile.read((char*)&NumberOfFrames, sizeof(int32));
+    PosKeys.resize(NumberOfFrames);
+    RotKeys.resize(NumberOfFrames);
+    ScaleKeys.resize(NumberOfFrames);
+
+    animSequenceFile.close();
+
 }
 
 void UAnimSequence::Unload()
 {
 }
 
+void UAnimSequence::Update(float deltaSeconds)
+{
+    //get 2 frame
+
+    //interpolate
+}

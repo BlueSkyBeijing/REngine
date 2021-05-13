@@ -29,6 +29,10 @@ void USkeletalMeshObject::Load()
     mMaterial = new UMaterial();
     mMaterial->Load();
 
+    mAnimSequence = new UAnimSequence();
+    mAnimSequence->FullFilePathName = FullAnimSequencePath;
+    mAnimSequence->Load();
+
     //create render proxy
     createRenderProxy();
 }
@@ -42,6 +46,15 @@ void USkeletalMeshObject::Unload()
     mMaterial->Unload();
     delete mMaterial;
     mMaterial = nullptr;
+
+    mAnimSequence->Unload();
+    delete mAnimSequence;
+    mAnimSequence = nullptr;
+}
+
+void USkeletalMeshObject::Update(float deltaSeconds)
+{
+    mAnimSequence->Update(deltaSeconds);
 }
 
 void USkeletalMeshObject::createRenderProxy()
