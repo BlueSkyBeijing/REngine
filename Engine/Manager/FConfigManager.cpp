@@ -8,7 +8,7 @@ const std::string FConfigManager::DefaultMapPath = "Content\\Map\\";
 const std::string FConfigManager::DefaultStaticMeshPath = "Content\\StaticMesh\\";
 const std::string FConfigManager::DefaultSkeletalMeshPath = "Content\\SkeletalMesh\\";
 const std::string FConfigManager::DefaultSkeletonPath = "Content\\SkeletalMesh\\Skeleton\\";
-const std::string FConfigManager::DefaultAnimSequencePath = "Content\\SkeletalMesh\\AnimSequence\\";
+const std::string FConfigManager::DefaultAnimSequencePath = "Content\\SkeletalMesh\\Animation\\";
 const std::string FConfigManager::DefaultMaterialPath = "Content\\Material\\";
 const std::string FConfigManager::DefaultTexturePath = "Content\\Texture\\";
 
