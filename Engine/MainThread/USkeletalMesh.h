@@ -40,6 +40,18 @@ private:
     USkeleton* mSkeleton;
 };
 
+struct FBoneInfo
+{
+    std::string Name;
+    int32 ParentIndex;
+};
+
+struct FTransform
+{
+    FQuat Rotation;
+    FVector3 Translation;
+    FVector3 Scale3D;
+};
 
 class USkeleton : public UResource
 {
@@ -52,6 +64,8 @@ public:
     virtual void Unload() override;
 
 private:
+    std::vector<FBoneInfo> BoneInfos;
+    std::vector<FTransform> BonePose;
 };
 
 class UAnimSequence : public UResource

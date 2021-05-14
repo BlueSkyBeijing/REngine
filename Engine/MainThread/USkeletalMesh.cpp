@@ -57,7 +57,12 @@ void USkeletalMesh::Load()
     FullSkeletonPath = FConfigManager::DefaultStaticMeshPath +
         std::string(ResourceName.c_str()) +
         FConfigManager::DefaultSkeletalMeshFileSuffix;
+
     skeletalMeshFile.close();
+
+    mSkeleton = new USkeleton();
+    mSkeleton->FullFilePathName = FullSkeletonPath;
+    mSkeleton->Load();
 }
 
 void USkeletalMesh::Unload()
@@ -65,6 +70,10 @@ void USkeletalMesh::Unload()
     mVertexes.clear();
     mIndexes.clear();
     mVertexLayout.Elements.clear();
+
+    mSkeleton->Unload();
+    delete mSkeleton;
+    mSkeleton = nullptr;
 }
 
 
@@ -78,6 +87,30 @@ USkeleton::~USkeleton()
 
 void USkeleton::Load()
 {
+    std::ifstream skeletonFile(FullFilePathName, std::ios::in | std::ios::binary);
+    if (!skeletonFile)
+    {
+        //print error
+        return;
+    }
+
+    int32 numBoneInfos;
+    int32 numPosBones;
+
+    skeletonFile.read((char*)&numBoneInfos, sizeof(int32));
+
+    BoneInfos.resize(numBoneInfos);
+
+    skeletonFile.read((char*)BoneInfos.data(), numBoneInfos * sizeof(FBoneInfo));
+
+    skeletonFile.read((char*)&numPosBones, sizeof(int32));
+
+    BonePose.resize(numPosBones);
+
+    skeletonFile.read((char*)BonePose.data(), numPosBones * sizeof(FTransform));
+
+    skeletonFile.close();
+
 }
 
 void USkeleton::Unload()
@@ -102,9 +135,19 @@ void UAnimSequence::Load()
     }
 
     animSequenceFile.read((char*)&NumberOfFrames, sizeof(int32));
+
     PosKeys.resize(NumberOfFrames);
+
+    animSequenceFile.read((char*)PosKeys.data(), NumberOfFrames * sizeof(FVector3));
+
     RotKeys.resize(NumberOfFrames);
+
+    animSequenceFile.read((char*)RotKeys.data(), NumberOfFrames * sizeof(FQuat));
+
     ScaleKeys.resize(NumberOfFrames);
+
+    animSequenceFile.read((char*)ScaleKeys.data(), NumberOfFrames * sizeof(FVector3));
+
 
     animSequenceFile.close();
 
