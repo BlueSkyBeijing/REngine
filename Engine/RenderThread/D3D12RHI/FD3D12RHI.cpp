@@ -342,7 +342,7 @@ FRHIVertexBuffer* FD3D12RHI::CreateVertexBuffer(uint32 structureSize, uint32 ver
 
     //create vertex buffer
     CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_UPLOAD);
-    CD3DX12_RESOURCE_DESC vertexResourceDesc = CD3DX12_RESOURCE_DESC::Buffer(vertexCount * sizeof(FStaticMeshVertex));
+    CD3DX12_RESOURCE_DESC vertexResourceDesc = CD3DX12_RESOURCE_DESC::Buffer(vertexCount * structureSize);
 
     THROW_IF_FAILED(mDX12Device->CreateCommittedResource(
         &heapProperties,
@@ -466,7 +466,7 @@ FRHIShader* FD3D12RHI::CreateShader(const std::wstring& filePathName, const std:
         defineEnd.Name = NULL;
         defineEnd.Definition = NULL;
 
-        shaderDefines[index] = defineEnd;
+        shaderDefines[index + 1] = defineEnd;
     }
 
     D3DCompileFromFile(filePathName.c_str(), shaderDefines, D3D_COMPILE_STANDARD_FILE_INCLUDE, enterPoint.c_str(), target.c_str(), compileFlags, 0, &shader->mShader, &errors);

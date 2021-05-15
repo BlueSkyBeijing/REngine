@@ -12,7 +12,7 @@ struct FObjectConstant
     FMatrix4x4 World;
 };
 
-struct SkeletonMeshConstant
+struct FSkeletonMeshConstant
 {
     FMatrix4x4 World;
     FMatrix4x4 BoneTransforms[75];
@@ -108,7 +108,7 @@ public:
     virtual void ReleaseRenderResource() override;
 
 private:
-    SkeletonMeshConstant mObjectConstants;
+    FSkeletonMeshConstant mObjectConstants;
 
     std::vector<FSkeletalMeshVertex> mVertexes;
     std::vector<uint16> mIndexes;

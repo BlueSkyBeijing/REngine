@@ -23,6 +23,9 @@ struct VertexShaderOutput
 cbuffer ObjectConstantBuffer : register(b0)
 {
     float4x4 World;
+#ifdef GPU_SKIN
+    float4x4 BoneTransforms[75];
+#endif
 };
 
 cbuffer SceneColorPassConstantBuffer : register(b1)

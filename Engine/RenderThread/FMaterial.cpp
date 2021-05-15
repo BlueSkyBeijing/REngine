@@ -56,7 +56,7 @@ void FMaterial::Init()
     const std::string vsGPUSkinShadowEnterPoint = "VSMain";
     const std::string vsGPUSkinShadowTarget = "vs_5_0";
 
-    VertexShaderGPUSkin = rhi->CreateShader(vsGPUSkinShadowFilePathName, vsGPUSkinShadowEnterPoint, vsGPUSkinShadowTarget, defines);
+    VertexShaderShadowGPUSkin = rhi->CreateShader(vsGPUSkinShadowFilePathName, vsGPUSkinShadowEnterPoint, vsGPUSkinShadowTarget, defines);
 
     const std::wstring textureFilePathName = L"Content\\Texture\\T_Default_Material_Gray_C.dds";
 
