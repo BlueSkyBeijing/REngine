@@ -44,6 +44,11 @@ void FRenderProxy::CreateRenderResource()
 
 }
 
+void FRenderProxy::UpdateRenderResource()
+{
+
+}
+
 void FRenderProxy::ReleaseRenderResource()
 {
 
@@ -203,6 +208,31 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
     TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(infoGPUSkinShadow);
 
     rhi->FlushCommandQueue();
+}
+
+void FSkeletalMeshRenderProxy::UpdateRenderResource()
+{
+    FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
+    mObjectConstants.World.setIdentity();
+    FMatrix3x3 rotation = Rotation.toRotationMatrix();
+    mObjectConstants.World.block<3, 3>(0, 0) = rotation;
+    mObjectConstants.World.block<1, 3>(3, 0) = Position;
+
+    int32 boneIndex = 0;
+    for (FMatrix4x4& BoneTransform : mObjectConstants.BoneTransforms)
+    {
+        if (boneIndex < BoneFinalTransforms.size())
+        {
+            BoneTransform = BoneFinalTransforms[boneIndex];
+            boneIndex++;
+        }
+    }
+    
+    if (ConstantBuffer != nullptr)
+    {
+        rhi->UpdateConstantBuffer(ConstantBuffer, sizeof(mObjectConstants), (uint8*)&mObjectConstants);
+    }
+
 }
 
 void FSkeletalMeshRenderProxy::ReleaseRenderResource()

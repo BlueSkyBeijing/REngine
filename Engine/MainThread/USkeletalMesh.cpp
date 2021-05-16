@@ -20,8 +20,8 @@ void USkeletalMesh::Load()
     { "POSITION", 0, EPixelFormat::PF_R32G32B32_FLOAT, 0, 0,  ICF_PerVertexData, 0 },
     { "NORMAL", 0, EPixelFormat::PF_R32G32B32_FLOAT, 0, 12, ICF_PerVertexData, 0 },
     { "TEXCOORD", 0, EPixelFormat::PF_R32G32_FLOAT, 0, 24, ICF_PerVertexData, 0 },
-    { "WEIGHTS", 0, EPixelFormat::PF_R32G32B32A32_FLOAT, 0, 32, ICF_PerVertexData, 0 },
-    { "BONEINDICES", 0, EPixelFormat::PF_R8G8B8A8_UINT, 0, 48, ICF_PerVertexData, 0 }};
+    { "WEIGHTS", 0, EPixelFormat::PF_R16G16B16A16_FLOAT, 0, 32, ICF_PerVertexData, 0 },
+    { "BONEINDICES", 0, EPixelFormat::PF_R8G8B8A8_UINT, 0, 40, ICF_PerVertexData, 0 }};
 
 
     layout.Elements.push_back(inputLayout[0]);
@@ -54,9 +54,9 @@ void USkeletalMesh::Load()
     skeletalMeshFile.read((char*)&stringSize, sizeof(int32));
     skeletalMeshFile.read((char*)ResourceName.data(), stringSize);
 
-    FullSkeletonPath = FConfigManager::DefaultStaticMeshPath +
+    FullSkeletonPath = FConfigManager::DefaultSkeletonPath +
         std::string(ResourceName.c_str()) +
-        FConfigManager::DefaultSkeletalMeshFileSuffix;
+        FConfigManager::DefaultSkeletonFileSuffix;
 
     skeletalMeshFile.close();
 
@@ -99,15 +99,27 @@ void USkeleton::Load()
 
     skeletonFile.read((char*)&numBoneInfos, sizeof(int32));
 
-    BoneInfos.resize(numBoneInfos);
+    mBoneInfos.resize(numBoneInfos);
 
-    skeletonFile.read((char*)BoneInfos.data(), numBoneInfos * sizeof(FBoneInfo));
+    for (int32 i = 0; i < numBoneInfos; i++)
+    {
+        FBoneInfo data;
+        //int32 stringSize;
+        //skeletonFile.read((char*)&stringSize, sizeof(int32));
+        //skeletonFile.read((char*)data.Name.data(), stringSize);
+
+        skeletonFile.read((char*)&data.ParentIndex, sizeof(int32));
+
+        mBoneInfos[i] = data;
+    }
+
+    //skeletonFile.read((char*)mBoneInfos.data(), numBoneInfos * sizeof(FBoneInfo));
 
     skeletonFile.read((char*)&numPosBones, sizeof(int32));
 
-    BonePose.resize(numPosBones);
+    mBonePose.resize(numPosBones);
 
-    skeletonFile.read((char*)BonePose.data(), numPosBones * sizeof(FTransform));
+    skeletonFile.read((char*)mBonePose.data(), numPosBones * sizeof(FTransform));
 
     skeletonFile.close();
 
@@ -117,7 +129,7 @@ void USkeleton::Unload()
 {
 }
 
-UAnimSequence::UAnimSequence()
+UAnimSequence::UAnimSequence(const USkeleton * skeleton): mSkeleton(skeleton)
 {
 }
 
@@ -136,20 +148,38 @@ void UAnimSequence::Load()
 
     animSequenceFile.read((char*)&NumberOfFrames, sizeof(int32));
 
-    PosKeys.resize(NumberOfFrames);
+    mAnimSequenceTracks.resize(NumberOfFrames);
 
-    animSequenceFile.read((char*)PosKeys.data(), NumberOfFrames * sizeof(FVector3));
 
-    RotKeys.resize(NumberOfFrames);
+    for (int32 i = 0; i < NumberOfFrames; i++)
+    {
+        int32 numPosKeys;
+        animSequenceFile.read((char*)&numPosKeys, sizeof(int32));
+        mAnimSequenceTracks[i].PosKeys.resize(numPosKeys);
+        animSequenceFile.read((char*)&numPosKeys, sizeof(int32));
 
-    animSequenceFile.read((char*)RotKeys.data(), NumberOfFrames * sizeof(FQuat));
+        animSequenceFile.read((char*)mAnimSequenceTracks[i].PosKeys.data(), numPosKeys * sizeof(FVector3));
 
-    ScaleKeys.resize(NumberOfFrames);
+        int32 numRotKeys;
+        animSequenceFile.read((char*)&numRotKeys, sizeof(int32));
 
-    animSequenceFile.read((char*)ScaleKeys.data(), NumberOfFrames * sizeof(FVector3));
+        mAnimSequenceTracks[i].RotKeys.resize(numRotKeys);
+        animSequenceFile.read((char*)&numPosKeys, sizeof(int32));
 
+        animSequenceFile.read((char*)mAnimSequenceTracks[i].RotKeys.data(), numRotKeys * sizeof(FQuat));
+
+        int32 numScaleKeys;
+        animSequenceFile.read((char*)&numScaleKeys, sizeof(int32));
+
+        mAnimSequenceTracks[i].ScaleKeys.resize(numScaleKeys);
+        animSequenceFile.read((char*)&numPosKeys, sizeof(int32));
+
+        animSequenceFile.read((char*)mAnimSequenceTracks[i].ScaleKeys.data(), numScaleKeys * sizeof(FVector3));
+    }
 
     animSequenceFile.close();
+
+    BoneFinalTransforms.resize(mSkeleton->GetBoneInfos().size());
 
 }
 
@@ -162,4 +192,36 @@ void UAnimSequence::Update(float deltaSeconds)
     //get 2 frame
 
     //interpolate
+
+    static int32 frameIndex = 0;
+
+    // The root bone has index 0.  The root bone has no parent, so its toRootTransform
+    // is just its local bone transform.
+    BoneFinalTransforms[0].setIdentity();
+    BoneFinalTransforms[0].block<3, 3>(0, 0) = mAnimSequenceTracks[0].RotKeys[frameIndex].toRotationMatrix();
+    BoneFinalTransforms[0].block<1, 3>(3, 0) = mAnimSequenceTracks[0].PosKeys[frameIndex];
+
+    // Now find the toRootTransform of the children.
+    for (uint32 i = 1; i < mSkeleton->GetBoneInfos().size(); ++i)
+    {
+        FQuat toParentRot = mAnimSequenceTracks[i].RotKeys[frameIndex];
+        //FVector3 toParentScale = mAnimSequenceTracks[i].ScaleKeys[frameIndex];
+        FVector3 toParentTranslation = mAnimSequenceTracks[i].PosKeys[frameIndex];
+
+        FMatrix4x4 toParent;
+        toParent.setIdentity();
+        toParent.block<3, 3>(0, 0) = toParentRot.toRotationMatrix();
+        toParent.block<1, 3>(3, 0) = toParentTranslation;
+
+        int32 parentIndex = mSkeleton->GetBoneInfos()[i].ParentIndex;
+        FMatrix4x4& parentToRoot = BoneFinalTransforms[parentIndex];
+
+        BoneFinalTransforms[i] = toParent * parentToRoot;
+    }
+    frameIndex++;
+
+    //if (frameIndex >= mAnimSequenceTracks[0].RotKeys.size())
+    //{
+    //    frameIndex = frameIndex % mAnimSequenceTracks[0].RotKeys.size();
+    //}
 }

@@ -56,6 +56,7 @@ public:
     virtual ~FRenderProxy();
 
     virtual void CreateRenderResource();
+    virtual void UpdateRenderResource();
     virtual void ReleaseRenderResource();
 
 public:
@@ -105,7 +106,10 @@ public:
 
 public:
     virtual void CreateRenderResource() override;
+    virtual void UpdateRenderResource() override;
     virtual void ReleaseRenderResource() override;
+
+    std::vector<FMatrix4x4> BoneFinalTransforms;
 
 private:
     FSkeletonMeshConstant mObjectConstants;

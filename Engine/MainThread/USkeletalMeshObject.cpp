@@ -29,7 +29,7 @@ void USkeletalMeshObject::Load()
     mMaterial = new UMaterial();
     mMaterial->Load();
 
-    mAnimSequence = new UAnimSequence();
+    mAnimSequence = new UAnimSequence(mSkeletalMesh->GetSkeleton());
     mAnimSequence->FullFilePathName = FullAnimSequencePath;
     mAnimSequence->Load();
 
@@ -55,6 +55,15 @@ void USkeletalMeshObject::Unload()
 void USkeletalMeshObject::Update(float deltaSeconds)
 {
     mAnimSequence->Update(deltaSeconds);
+
+    dynamic_cast<FSkeletalMeshRenderProxy*>(mRenderProxy)->BoneFinalTransforms = mAnimSequence->BoneFinalTransforms;
+
+    FRenderThread* renderThread = TSingleton<FEngine>::GetInstance().GetRenderThread();
+    FRenderProxy* renderProxy = mRenderProxy;
+    ENQUEUE_RENDER_COMMAND([renderThread, renderProxy]
+    {
+        renderProxy->UpdateRenderResource();
+    });
 }
 
 void USkeletalMeshObject::createRenderProxy()

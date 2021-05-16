@@ -25,6 +25,7 @@ enum ELogLevel;
 
 struct FRect;
 struct FInputElementDesc;
+struct FTransform;
 
 class UObject;
 class UWorld;

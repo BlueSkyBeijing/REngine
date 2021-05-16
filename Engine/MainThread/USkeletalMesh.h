@@ -33,6 +33,10 @@ public:
         return mVertexLayout;
     }
 
+    inline const USkeleton* GetSkeleton() const
+    {
+        return mSkeleton;
+    }
 private:
     std::vector<FSkeletalMeshVertex> mVertexes;
     std::vector<uint16> mIndexes;
@@ -53,6 +57,13 @@ struct FTransform
     FVector3 Scale3D;
 };
 
+struct FAnimSequenceTrack
+{
+    std::vector<FVector3> PosKeys;
+    std::vector<FQuat> RotKeys;
+    std::vector<FVector3> ScaleKeys;
+};
+
 class USkeleton : public UResource
 {
 public:
@@ -63,15 +74,25 @@ public:
     virtual void Load() override;
     virtual void Unload() override;
 
+    inline const std::vector<FBoneInfo>& GetBoneInfos() const
+    {
+        return mBoneInfos;
+    }
+
+    inline const std::vector<FTransform>& GetBonePose() const
+    {
+        return mBonePose;
+    }
+
 private:
-    std::vector<FBoneInfo> BoneInfos;
-    std::vector<FTransform> BonePose;
+    std::vector<FBoneInfo> mBoneInfos;
+    std::vector<FTransform> mBonePose;
 };
 
 class UAnimSequence : public UResource
 {
 public:
-    UAnimSequence();
+    UAnimSequence(const USkeleton* skeleton);
     virtual ~UAnimSequence() override;
 
 public:
@@ -79,10 +100,10 @@ public:
     virtual void Unload() override;
     void Update(float deltaSeconds);
 
+    std::vector<FMatrix4x4> BoneFinalTransforms;
+
 private:
     int32 NumberOfFrames;
-    std::vector<FVector3> PosKeys;
-    std::vector<FQuat> RotKeys;
-    std::vector<FVector3> ScaleKeys;
-
+    std::vector<FAnimSequenceTrack> mAnimSequenceTracks;
+    const USkeleton* mSkeleton;
 };
