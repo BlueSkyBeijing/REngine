@@ -100,6 +100,11 @@ void FRenderThread::EnqueueRenderCommand(FRenderCommand* renderCommand)
 
 void FRenderThread::init()
 {
+    for (int i = 0; i < FRAME_BUFFER_NUM; i++)
+    {
+        mRenderCommands[i].clear();
+    }
+
     mRHI = new FD3D12RHI;
     mRHI->Init();
 

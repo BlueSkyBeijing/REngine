@@ -39,8 +39,8 @@ public:
     virtual void Render();
 
 protected:
-    virtual void preRender();
-    virtual void postRender();
+    virtual void prePass();
+    virtual void postPass();
 
     void initShadowPass();
     void drawShadowPass();

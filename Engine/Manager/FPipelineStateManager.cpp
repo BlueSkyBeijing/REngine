@@ -14,10 +14,19 @@
 #include "FRHI.h"
 #include "FRenderThread.h"
 
-#include "CityHash.h"
+#include "Utility.h"
 
 
-FPipelineStateInfo::FPipelineStateInfo()
+FPipelineStateInfo::FPipelineStateInfo():
+    ShaderBindings(nullptr),
+    VertexShader(nullptr),
+    PixelShader(nullptr),
+    VertexLayout(nullptr),
+    RasterizerState(),
+    DepthStencilState(),
+    FRHIBlendState(),
+    RenderTargetFormat(),
+    DepthStencilFormat()
 {
 }
 
@@ -53,7 +62,7 @@ FRHIPipelineState* FPipelineStateManager::CreatePipleLineState(const FPipelineSt
 {
     FRHIPipelineState* pipelineState = nullptr;
 
-    const uint64 hashValue = hashPipelineState((const void*)&info, sizeof(FPipelineStateInfo));
+    const uint64 hashValue = HashMemory((const void*)&info, sizeof(FPipelineStateInfo));
 
     auto iter = mPipelineStates.find(hashValue);
     if (iter == mPipelineStates.end())
@@ -71,7 +80,7 @@ FRHIPipelineState* FPipelineStateManager::CreatePipleLineState(const FPipelineSt
 
 FRHIPipelineState* FPipelineStateManager::GetPipleLineState(const FPipelineStateInfo& info)
 {
-    const uint64 hashValue = hashPipelineState((const void*)&info, sizeof(FPipelineStateInfo));
+    const uint64 hashValue = HashMemory((const void*)&info, sizeof(FPipelineStateInfo));
 
     auto iter = mPipelineStates.find(hashValue);
     if (iter != mPipelineStates.end())
@@ -80,9 +89,4 @@ FRHIPipelineState* FPipelineStateManager::GetPipleLineState(const FPipelineState
     }
 
     return nullptr;
-}
-
-uint64  FPipelineStateManager::hashPipelineState(const void* Data, int32 NumBytes)
-{
-    return CityHash64((const char*)Data, NumBytes);
 }

@@ -22,3 +22,5 @@ inline std::string WStringToString(const std::wstring& wstr)
     delete[] buffer;
     return result;
 }
+
+uint64 HashMemory(const void* Data, int32 NumBytes);

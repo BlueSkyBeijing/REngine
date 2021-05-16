@@ -39,7 +39,7 @@ public:
     virtual FRHIConstantBuffer* CreateConstantBuffer(uint32 structureSize, uint8* bufferData) override;
     virtual FRHIVertexBuffer* CreateVertexBuffer(uint32 structureSize, uint32 vertexCount, uint8* bufferData) override;
     virtual FRHIIndexBuffer* CreateIndexBuffer(uint32 structureSize, uint32 indexCount, uint8* bufferData) override;
-    virtual FRHIShader* CreateShader(const std::wstring& filePathName, const std::string& enterPoint, const std::string& target, const std::map<std::string, std::string>& defines) override;
+    virtual FRHIShader* CreateShader(const FShaderInfo& shaderInfo) override;
     virtual FRHIShaderBindings* CreateShaderBindings() override;
     virtual FRHIPipelineState* CreatePipelineState(const FPipelineStateInfo& info) override;
     virtual FRHITexture2D* CreateTexture2D(const std::wstring& filePathName) override;

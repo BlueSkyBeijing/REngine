@@ -3,6 +3,10 @@
 #include "FShaderManager.h"
 #include "FRHI.h"
 #include "FRHIShader.h"
+#include "Utility.h"
+#include "FEngine.h"
+#include "TSingleton.h"
+#include "FRenderThread.h"
 
 FShaderManager::FShaderManager()
 {
@@ -27,18 +31,33 @@ void FShaderManager::UnInit()
     mShader.clear();
 }
 
-FRHIShader* FShaderManager::CreateShader(std::string& fileName, std::string& enterPoint, std::string& target)
+FRHIShader* FShaderManager::CreateShader(const FShaderInfo& shaderInfo)
 {
+    FRHIShader* shader = nullptr;
 
-    return nullptr;
+    const uint64 hashValue = HashMemory((const void*)&shaderInfo, sizeof(FShaderInfo));
+
+    auto iter = mShader.find(hashValue);
+    if (iter == mShader.end())
+    {
+        FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
+
+        shader = rhi->CreateShader(shaderInfo);
+
+        mShader.insert(std::make_pair(hashValue, shader));
+    }
+
+    return shader;
 }
 
-FRHIShader* FShaderManager::GetShader(std::string& fileName, std::string& enterPoint, std::string& target)
+FRHIShader* FShaderManager::GetShader(const FShaderInfo& shaderInfo)
 {
-    std::map<std::string, FRHIShader*>::iterator it = mShader.find(fileName);
-    if (it != mShader.end())
+    const uint64 hashValue = HashMemory((const void*)&shaderInfo, sizeof(FShaderInfo));
+
+    auto iter = mShader.find(hashValue);
+    if (iter != mShader.end())
     {
-        return it->second;
+        return iter->second;
     }
 
     return nullptr;

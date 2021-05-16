@@ -16,9 +16,6 @@ public:
 
     FRHIPipelineState* GetPipleLineState(const FPipelineStateInfo& info);
 
-protected:
-    uint64 hashPipelineState(const void* Data, int32 NumBytes);
-
 private:
     FPipelineStateManager();
     virtual ~FPipelineStateManager();

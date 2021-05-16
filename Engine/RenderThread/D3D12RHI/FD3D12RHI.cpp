@@ -93,6 +93,7 @@ void FD3D12RHI::Init()
     //create command queue
     D3D12_COMMAND_QUEUE_DESC queueDesc = {};
     queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+    queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_DISABLE_GPU_TIMEOUT;
     THROW_IF_FAILED(mDX12Device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&mDX12CommandQueue)));
 
     //create fence
@@ -436,7 +437,7 @@ FRHIConstantBuffer* FD3D12RHI::CreateConstantBuffer(uint32 structureSize, uint8*
     return constantBuffer;
 }
 
-FRHIShader* FD3D12RHI::CreateShader(const std::wstring& filePathName, const std::string& enterPoint, const std::string& target, const std::map<std::string, std::string>& defines)
+FRHIShader* FD3D12RHI::CreateShader(const FShaderInfo& shaderInfo)
 {
     FD3D12Shader* shader = new FD3D12Shader;
 
@@ -448,13 +449,13 @@ FRHIShader* FD3D12RHI::CreateShader(const std::wstring& filePathName, const std:
     UINT compileFlags = 0;
 #endif
     D3D_SHADER_MACRO* shaderDefines = nullptr;
-    if (defines.size() > 0)
+    if (shaderInfo.Defines.size() > 0)
     {
-        shaderDefines = new D3D_SHADER_MACRO[defines.size() + 1];
+        shaderDefines = new D3D_SHADER_MACRO[shaderInfo.Defines.size() + 1];
         
-        std::map<std::string, std::string>::const_iterator it = defines.begin();
+        std::map<std::string, std::string>::const_iterator it = shaderInfo.Defines.begin();
         int32 index = 0;
-        for (; it != defines.end(); it++)
+        for (; it != shaderInfo.Defines.end(); it++)
         {
             D3D_SHADER_MACRO define;
             define.Name = it->first.c_str();
@@ -469,7 +470,7 @@ FRHIShader* FD3D12RHI::CreateShader(const std::wstring& filePathName, const std:
         shaderDefines[index + 1] = defineEnd;
     }
 
-    D3DCompileFromFile(filePathName.c_str(), shaderDefines, D3D_COMPILE_STANDARD_FILE_INCLUDE, enterPoint.c_str(), target.c_str(), compileFlags, 0, &shader->mShader, &errors);
+    D3DCompileFromFile(shaderInfo.FilePathName.c_str(), shaderDefines, D3D_COMPILE_STANDARD_FILE_INCLUDE, shaderInfo.EnterPoint.c_str(), shaderInfo.Target.c_str(), compileFlags, 0, &shader->mShader, &errors);
     if (errors != nullptr)
     {
         OutputDebugStringA((char*)errors->GetBufferPointer());

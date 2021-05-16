@@ -19,14 +19,21 @@ void FScene::Init()
 
 void FScene::UnInit()
 {
-    for (auto it = mRenderProxys.begin(); it != mRenderProxys.end(); it++)
+    for (auto it = mStaticRenderProxys.begin(); it != mStaticRenderProxys.end(); it++)
     {
         FRenderProxy* renderProxy = *it;
         renderProxy->ReleaseRenderResource();
         delete renderProxy;
     }
+    mStaticRenderProxys.clear();
 
-    mRenderProxys.clear();
+    for (auto it = mDynamicRenderProxys.begin(); it != mDynamicRenderProxys.end(); it++)
+    {
+        FRenderProxy* renderProxy = *it;
+        renderProxy->ReleaseRenderResource();
+        delete renderProxy;
+    }
+    mDynamicRenderProxys.clear();
 
     if (mDirectionalLight != nullptr)
     {
@@ -38,7 +45,17 @@ void FScene::UnInit()
 void FScene::AddRenderable(FRenderProxy* renderProxy)
 {
     assert(renderProxy != nullptr);
-    mRenderProxys.push_back(renderProxy);
+    FStaticMeshRenderProxy* staticRenderProxy = dynamic_cast<FStaticMeshRenderProxy*>(renderProxy);
+    if (staticRenderProxy != nullptr)
+    {
+        mStaticRenderProxys.push_back(staticRenderProxy);
+    }
+    else
+    {
+        FSkeletalMeshRenderProxy* dynamicRenderProxy = dynamic_cast<FSkeletalMeshRenderProxy*>(renderProxy);
+        assert(dynamicRenderProxy != nullptr);
+        mDynamicRenderProxys.push_back(dynamicRenderProxy);
+    }
 }
 
 void FScene::SetDirectionalLight(FDirectionalLight* light)

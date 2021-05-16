@@ -7,10 +7,13 @@
 #include "TSingleton.h"
 #include "FRHI.h"
 #include "FRenderThread.h"
+#include "FShaderManager.h"
 
 FMaterial::FMaterial() :
     VertexShader(nullptr),
     PixelShader(nullptr),
+    VertexShaderGPUSkin(nullptr),
+    VertexShaderShadowGPUSkin(nullptr),
     BaseColor(nullptr),
     MetallicSpecularRoughness(nullptr),
     NormalMap(nullptr),
@@ -24,42 +27,46 @@ FMaterial::~FMaterial()
 
 void FMaterial::Init()
 {
-    FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
+    FShaderInfo vertexShaderInfo;
+    vertexShaderInfo.FilePathName = L"Engine\\Shader\\ForwardShadingVS.hlsl";
+    vertexShaderInfo.EnterPoint = "VSMain";
+    vertexShaderInfo.Target = "vs_5_0";
 
-    const std::wstring vsFilePathName = L"Engine\\Shader\\ForwardShadingVS.hlsl";
-    const std::string vsEnterPoint = "VSMain";
-    const std::string vsTarget = "vs_5_0";
-    std::map<std::string, std::string> defines;
+    VertexShader = TSingleton<FShaderManager>::GetInstance().CreateShader(vertexShaderInfo);
 
-    VertexShader = rhi->CreateShader(vsFilePathName, vsEnterPoint, vsTarget, defines);
+    FShaderInfo pixelShaderInfo;
+    pixelShaderInfo.FilePathName = L"Engine\\Shader\\ForwardShadingPS.hlsl";
+    pixelShaderInfo.EnterPoint = "PSMain";
+    pixelShaderInfo.Target = "ps_5_0";
 
-    const std::wstring psFilePathName = L"Engine\\Shader\\ForwardShadingPS.hlsl";
-    const std::string psEnterPoint = "PSMain";
-    const std::string psTarget = "ps_5_0";
+    PixelShader = TSingleton<FShaderManager>::GetInstance().CreateShader(pixelShaderInfo);
 
-    PixelShader = rhi->CreateShader(psFilePathName, psEnterPoint, psTarget, defines);
+    FShaderInfo vertexShaderShadowInfo;
+    vertexShaderShadowInfo.FilePathName = L"Engine\\Shader\\ShadowDepthVS.hlsl";
+    vertexShaderShadowInfo.EnterPoint = "VSMain";
+    vertexShaderShadowInfo.Target = "vs_5_0";
 
-    const std::wstring vsShadowFilePathName = L"Engine\\Shader\\ShadowDepthVS.hlsl";
-    const std::string vsShadowEnterPoint = "VSMain";
-    const std::string vsShadowTarget = "vs_5_0";
+    VertexShaderShadow = TSingleton<FShaderManager>::GetInstance().CreateShader(vertexShaderShadowInfo);
 
-    VertexShaderShadow = rhi->CreateShader(vsShadowFilePathName, vsShadowEnterPoint, vsShadowTarget, defines);
+    FShaderInfo vertexShaderGPUSkinInfo;
+    vertexShaderGPUSkinInfo.FilePathName = L"Engine\\Shader\\ForwardShadingVS.hlsl";
+    vertexShaderGPUSkinInfo.EnterPoint = "VSMain";
+    vertexShaderGPUSkinInfo.Target = "vs_5_0";
+    vertexShaderGPUSkinInfo.Defines.insert(std::make_pair("GPU_SKIN", "1"));
 
-    const std::wstring vsGPUSkinFilePathName = L"Engine\\Shader\\ForwardShadingVS.hlsl";
-    const std::string vsGPUSkinEnterPoint = "VSMain";
-    const std::string vsGPUSkinTarget = "vs_5_0";
-    defines.insert(std::make_pair("GPU_SKIN", "1"));
+    VertexShaderGPUSkin = TSingleton<FShaderManager>::GetInstance().CreateShader(vertexShaderGPUSkinInfo);
 
-    VertexShaderGPUSkin = rhi->CreateShader(vsGPUSkinFilePathName, vsGPUSkinEnterPoint, vsGPUSkinTarget, defines);
+    FShaderInfo vertexShaderShadowGPUSkinInfo;
+    vertexShaderShadowGPUSkinInfo.FilePathName = L"Engine\\Shader\\ShadowDepthVS.hlsl";
+    vertexShaderShadowGPUSkinInfo.EnterPoint = "VSMain";
+    vertexShaderShadowGPUSkinInfo.Target = "vs_5_0";
+    vertexShaderShadowGPUSkinInfo.Defines.insert(std::make_pair("GPU_SKIN", "1"));
 
-    const std::wstring vsGPUSkinShadowFilePathName = L"Engine\\Shader\\ShadowDepthVS.hlsl";
-    const std::string vsGPUSkinShadowEnterPoint = "VSMain";
-    const std::string vsGPUSkinShadowTarget = "vs_5_0";
-
-    VertexShaderShadowGPUSkin = rhi->CreateShader(vsGPUSkinShadowFilePathName, vsGPUSkinShadowEnterPoint, vsGPUSkinShadowTarget, defines);
+    VertexShaderShadowGPUSkin = TSingleton<FShaderManager>::GetInstance().CreateShader(vertexShaderShadowGPUSkinInfo);
 
     const std::wstring textureFilePathName = L"Content\\Texture\\T_Default_Material_Gray_C.dds";
 
+    FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
     BaseColor = rhi->CreateTexture2D(textureFilePathName);
 
     //MetallicSpecularRoughness->Init();
@@ -77,6 +84,12 @@ void FMaterial::UnInit()
 
     delete VertexShaderShadow;
     VertexShader = nullptr;
+
+    delete VertexShaderGPUSkin;
+    VertexShaderGPUSkin = nullptr;
+
+    delete VertexShaderShadowGPUSkin;
+    VertexShaderShadowGPUSkin = nullptr;
 
     delete BaseColor;
     BaseColor = nullptr;

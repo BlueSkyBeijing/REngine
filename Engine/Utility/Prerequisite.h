@@ -44,7 +44,10 @@ class FViewPort;
 class FRenderProxy;
 class FMaterial;
 class FDirectionalLight;
+class FShaderInfo;
 class FPipelineStateInfo;
+class FStaticMeshRenderProxy;
+class FSkeletalMeshRenderProxy;
 
 class FSceneManager;
 class FShaderManager;

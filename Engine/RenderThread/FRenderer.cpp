@@ -54,12 +54,12 @@ void FRenderer::UnInit()
     unInitPostProcess();
 }
 
-void FRenderer::preRender()
+void FRenderer::prePass()
 {
     mRHI->BeginCommmandList();
 }
 
-void FRenderer::postRender()
+void FRenderer::postPass()
 {
     mRHI->EndCommmandList();
 
@@ -69,13 +69,17 @@ void FRenderer::postRender()
 
 void FRenderer::Render()
 {
-    preRender();
-
+    prePass();
     drawShadowPass();
-    drawSceneColorPass();
-    drawPostProcess();
+    postPass();
 
-    postRender();
+    prePass();
+    drawSceneColorPass();
+    postPass();
+
+    prePass();
+    drawPostProcess();
+    postPass();
 }
 
 void FRenderer::initShadowPass()
@@ -104,8 +108,9 @@ void FRenderer::drawShadowPass()
     const FVector4 clearColor(0.5f, 0.5f, 0.5f, 1.0f);
     mRHI->Clear(false, clearColor, true, 1, true, 0);
 
-    const std::vector<FRenderProxy*>& renderProxys = mScene->GetRenderProxys();
-    for (auto it = renderProxys.begin(); it != renderProxys.end(); it++)
+    //static
+    const std::vector<FStaticMeshRenderProxy*>& staticRenderProxys = mScene->GetStaticRenderProxys();
+    for (auto it = staticRenderProxys.begin(); it != staticRenderProxys.end(); it++)
     {
         FRenderProxy* renderProxy = *it;
 
@@ -115,12 +120,38 @@ void FRenderer::drawShadowPass()
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = renderProxy->Material->VertexShaderShadow;
-        if (dynamic_cast<FSkeletalMeshRenderProxy*>(renderProxy))
-        {
-            info.VertexShader = renderProxy->Material->VertexShaderShadowGPUSkin;
-        }
         info.PixelShader = nullptr;
-        info.VertexLayout = &renderProxy->VertexLayout;
+        info.VertexLayout = &(renderProxy->VertexLayout);
+        info.DepthStencilState.bEnableDepthWrite = true;
+
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
+
+        mRHI->SetPipelineState(pipelineState);
+        mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
+        mRHI->SetVertexBuffer(renderProxy->VertexBuffer);
+        mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
+        mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mShadowPassConstantBuffer, 1);
+
+        mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
+
+        mRHI->EndEvent();
+    }
+
+    //dyamic
+    const std::vector<FSkeletalMeshRenderProxy*>& dynamicRenderProxys = mScene->GetDynamicRenderProxys();
+    for (auto it = dynamicRenderProxys.begin(); it != dynamicRenderProxys.end(); it++)
+    {
+        FRenderProxy* renderProxy = *it;
+
+        mRHI->BeginEvent(renderProxy->DebugName.c_str());
+
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        FPipelineStateInfo info;
+        info.ShaderBindings = shaderBindings;
+        info.VertexShader = renderProxy->Material->VertexShaderShadowGPUSkin;
+        info.PixelShader = nullptr;
+        info.VertexLayout = &(renderProxy->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = true;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
@@ -240,8 +271,8 @@ void FRenderer::drawSceneColorPass()
 
     updateSceneColorPassConstantBuffer();
 
-    const std::vector<FRenderProxy*>& renderProxys = mScene->GetRenderProxys();
-    for (auto it = renderProxys.begin(); it != renderProxys.end(); it++)
+    const std::vector<FStaticMeshRenderProxy*>& staticRenderProxys = mScene->GetStaticRenderProxys();
+    for (auto it = staticRenderProxys.begin(); it != staticRenderProxys.end(); it++)
     {
         FRenderProxy* renderProxy = *it;
 
@@ -251,12 +282,8 @@ void FRenderer::drawSceneColorPass()
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = renderProxy->Material->VertexShader;
-        if (dynamic_cast<FSkeletalMeshRenderProxy*>(renderProxy))
-        {
-            info.VertexShader = renderProxy->Material->VertexShaderGPUSkin;
-        }
         info.PixelShader = renderProxy->Material->PixelShader;
-        info.VertexLayout = &renderProxy->VertexLayout;
+        info.VertexLayout = &(renderProxy->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = true;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
@@ -275,6 +302,39 @@ void FRenderer::drawSceneColorPass()
 
         mRHI->EndEvent();
     }
+
+    const std::vector<FSkeletalMeshRenderProxy*>& dynamicRenderProxys = mScene->GetDynamicRenderProxys();
+    for (auto it = dynamicRenderProxys.begin(); it != dynamicRenderProxys.end(); it++)
+    {
+        FRenderProxy* renderProxy = *it;
+
+        mRHI->BeginEvent(renderProxy->DebugName.c_str());
+
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        FPipelineStateInfo info;
+        info.ShaderBindings = shaderBindings;
+        info.VertexShader = renderProxy->Material->VertexShaderGPUSkin;
+        info.PixelShader = renderProxy->Material->PixelShader;
+        info.VertexLayout = &(renderProxy->VertexLayout);
+        info.DepthStencilState.bEnableDepthWrite = true;
+        info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
+
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
+
+        mRHI->SetPipelineState(pipelineState);
+        mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
+        mRHI->SetVertexBuffer(renderProxy->VertexBuffer);
+        mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
+        mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mSceneColorPassConstantBuffer, 1);
+        mRHI->SetTexture2D(renderProxy->Material->BaseColor, 0);
+        mRHI->SetTexture2D(mShadowMap->DepthStencilTarget, 1);
+
+        mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
+
+        mRHI->EndEvent();
+    }
+
 
     const FRHITransitionInfo infoRederTargetEnd(mSceneColor->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
     mRHI->TransitionResource(infoRederTargetEnd);

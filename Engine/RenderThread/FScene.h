@@ -15,9 +15,14 @@ public:
 
     void SetDirectionalLight(FDirectionalLight* light);
 
-    std::vector<FRenderProxy*>& GetRenderProxys()
+    std::vector<FStaticMeshRenderProxy*>& GetStaticRenderProxys()
     {
-        return mRenderProxys;
+        return mStaticRenderProxys;
+    }
+
+    std::vector<FSkeletalMeshRenderProxy*>& GetDynamicRenderProxys()
+    {
+        return mDynamicRenderProxys;
     }
 
     FDirectionalLight* GetDirectionalLight() const
@@ -26,6 +31,7 @@ public:
     }
 
 private:
-    std::vector<FRenderProxy*> mRenderProxys;
+    std::vector<FStaticMeshRenderProxy*> mStaticRenderProxys;
+    std::vector<FSkeletalMeshRenderProxy*> mDynamicRenderProxys;
     FDirectionalLight* mDirectionalLight;
 };

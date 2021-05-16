@@ -16,6 +16,7 @@
 #include "FRenderThread.h"
 #include "FRHIVertex.h"
 #include "FRHIBuffer.h"
+#include "FShaderManager.h"
 
 
 FFullScreenQuad::FFullScreenQuad(FRHI* rhi, FRHIVertexLayout* layout) :
@@ -40,18 +41,19 @@ void FFullScreenQuad::Init()
     VertexBuffer = mRHI->CreateVertexBuffer(sizeof(FScreenVertex), 4, (uint8*)vertexes);
     IndexBuffer = mRHI->CreateIndexBuffer(sizeof(uint16), 6, (uint8*)indexes);
 
-    const std::wstring vsFilePathName = L"Engine\\Shader\\Postprocess.hlsl";
-    const std::string vsEnterPoint = "PostprocessVS";
-    const std::string vsTarget = "vs_5_0";
-    std::map<std::string, std::string> defines;
+    FShaderInfo vertexShaderInfo;
+    vertexShaderInfo.FilePathName = L"Engine\\Shader\\Postprocess.hlsl";
+    vertexShaderInfo.EnterPoint = "PostprocessVS";
+    vertexShaderInfo.Target = "vs_5_0";
 
-    VertexShader = mRHI->CreateShader(vsFilePathName, vsEnterPoint, vsTarget, defines);
+    VertexShader = TSingleton<FShaderManager>::GetInstance().CreateShader(vertexShaderInfo);
 
-    const std::wstring psFilePathName = L"Engine\\Shader\\Postprocess.hlsl";
-    const std::string psEnterPoint = "PostprocessPS";
-    const std::string psTarget = "ps_5_0";
+    FShaderInfo pixelShaderInfo;
+    pixelShaderInfo.FilePathName = L"Engine\\Shader\\Postprocess.hlsl";
+    pixelShaderInfo.EnterPoint = "PostprocessPS";
+    pixelShaderInfo.Target = "ps_5_0";
 
-    PixelShader = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget, defines);
+    PixelShader = TSingleton<FShaderManager>::GetInstance().CreateShader(pixelShaderInfo);
 
     FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
     FPipelineStateInfo info;
@@ -172,17 +174,19 @@ void FPostProcessing::Init()
 
     std::map<std::string, std::string> defines;
     {
-        const std::wstring vsFilePathName = L"Engine\\Shader\\Bloom.hlsl";
-        const std::string vsEnterPoint = "BloomSetupVS";
-        const std::string vsTarget = "vs_5_0";
+        FShaderInfo vertexShaderBloomSetupInfo;
+        vertexShaderBloomSetupInfo.FilePathName = L"Engine\\Shader\\Bloom.hlsl";
+        vertexShaderBloomSetupInfo.EnterPoint = "BloomSetupVS";
+        vertexShaderBloomSetupInfo.Target = "vs_5_0";
 
-        VertexShaderBloomSetup = mRHI->CreateShader(vsFilePathName, vsEnterPoint, vsTarget, defines);
+        VertexShaderBloomSetup = TSingleton<FShaderManager>::GetInstance().CreateShader(vertexShaderBloomSetupInfo);
 
-        const std::wstring psFilePathName = L"Engine\\Shader\\Bloom.hlsl";
-        const std::string psEnterPoint = "BloomSetupPS";
-        const std::string psTarget = "ps_5_0";
+        FShaderInfo pixelShaderBloomSetupInfo;
+        pixelShaderBloomSetupInfo.FilePathName = L"Engine\\Shader\\Bloom.hlsl";
+        pixelShaderBloomSetupInfo.EnterPoint = "BloomSetupPS";
+        pixelShaderBloomSetupInfo.Target = "ps_5_0";
 
-        PixelShaderBloomSetup = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget, defines);
+        PixelShaderBloomSetup = TSingleton<FShaderManager>::GetInstance().CreateShader(pixelShaderBloomSetupInfo);
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
@@ -198,17 +202,19 @@ void FPostProcessing::Init()
     }
 
     {
-        const std::wstring vsFilePathName = L"Engine\\Shader\\Bloom.hlsl";
-        const std::string vsEnterPoint = "BloomDownVS";
-        const std::string vsTarget = "vs_5_0";
+        FShaderInfo vertexShaderBloomDownInfo;
+        vertexShaderBloomDownInfo.FilePathName = L"Engine\\Shader\\Bloom.hlsl";
+        vertexShaderBloomDownInfo.EnterPoint = "BloomDownVS";
+        vertexShaderBloomDownInfo.Target = "vs_5_0";
 
-        VertexShaderBloomDown = mRHI->CreateShader(vsFilePathName, vsEnterPoint, vsTarget, defines);
+        VertexShaderBloomDown = TSingleton<FShaderManager>::GetInstance().CreateShader(vertexShaderBloomDownInfo);
 
-        const std::wstring psFilePathName = L"Engine\\Shader\\Bloom.hlsl";
-        const std::string psEnterPoint = "BloomDownPS";
-        const std::string psTarget = "ps_5_0";
+        FShaderInfo pixelShaderBloomDownInfo;
+        pixelShaderBloomDownInfo.FilePathName = L"Engine\\Shader\\Bloom.hlsl";
+        pixelShaderBloomDownInfo.EnterPoint = "BloomDownPS";
+        pixelShaderBloomDownInfo.Target = "ps_5_0";
 
-        PixelShaderBloomDown = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget, defines);
+        PixelShaderBloomDown = TSingleton<FShaderManager>::GetInstance().CreateShader(pixelShaderBloomDownInfo);
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
@@ -224,17 +230,19 @@ void FPostProcessing::Init()
     }
 
     {
-        const std::wstring vsFilePathName = L"Engine\\Shader\\Bloom.hlsl";
-        const std::string vsEnterPoint = "BloomUpVS";
-        const std::string vsTarget = "vs_5_0";
+        FShaderInfo vertexShaderBloomUpInfo;
+        vertexShaderBloomUpInfo.FilePathName = L"Engine\\Shader\\Bloom.hlsl";
+        vertexShaderBloomUpInfo.EnterPoint = "BloomUpVS";
+        vertexShaderBloomUpInfo.Target = "vs_5_0";
 
-        VertexShaderBloomUp = mRHI->CreateShader(vsFilePathName, vsEnterPoint, vsTarget, defines);
+        VertexShaderBloomUp = TSingleton<FShaderManager>::GetInstance().CreateShader(vertexShaderBloomUpInfo);
 
-        const std::wstring psFilePathName = L"Engine\\Shader\\Bloom.hlsl";
-        const std::string psEnterPoint = "BloomUpPS";
-        const std::string psTarget = "ps_5_0";
+        FShaderInfo PixelShaderBloomUpInfo;
+        PixelShaderBloomUpInfo.FilePathName = L"Engine\\Shader\\Bloom.hlsl";
+        PixelShaderBloomUpInfo.EnterPoint = "BloomUpPS";
+        PixelShaderBloomUpInfo.Target = "ps_5_0";
 
-        PixelShaderBloomUp = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget, defines);
+        PixelShaderBloomUp = TSingleton<FShaderManager>::GetInstance().CreateShader(PixelShaderBloomUpInfo);
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
@@ -250,17 +258,19 @@ void FPostProcessing::Init()
     }
 
     {
-        const std::wstring vsFilePathName = L"Engine\\Shader\\Tonemap.hlsl";
-        const std::string vsEnterPoint = "TonemapVS";
-        const std::string vsTarget = "vs_5_0";
+        FShaderInfo vertexShaderTonemapInfo;
+        vertexShaderTonemapInfo.FilePathName = L"Engine\\Shader\\Tonemap.hlsl";
+        vertexShaderTonemapInfo.EnterPoint = "TonemapVS";
+        vertexShaderTonemapInfo.Target = "vs_5_0";
 
-        VertexShaderTonemap = mRHI->CreateShader(vsFilePathName, vsEnterPoint, vsTarget, defines);
+        VertexShaderTonemap = TSingleton<FShaderManager>::GetInstance().CreateShader(vertexShaderTonemapInfo);
 
-        const std::wstring psFilePathName = L"Engine\\Shader\\Tonemap.hlsl";
-        const std::string psEnterPoint = "TonemapPS";
-        const std::string psTarget = "ps_5_0";
+        FShaderInfo pixelShaderTonemapInfo;
+        pixelShaderTonemapInfo.FilePathName = L"Engine\\Shader\\Tonemap.hlsl";
+        pixelShaderTonemapInfo.EnterPoint = "TonemapPS";
+        pixelShaderTonemapInfo.Target = "ps_5_0";
 
-        PixelShaderTonemap = mRHI->CreateShader(psFilePathName, psEnterPoint, psTarget, defines);
+        PixelShaderTonemap = TSingleton<FShaderManager>::GetInstance().CreateShader(pixelShaderTonemapInfo);
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;

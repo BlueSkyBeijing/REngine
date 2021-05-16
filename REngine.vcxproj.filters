@@ -188,6 +188,9 @@
     <ClCompile Include="Engine\MainThread\USkeletalMeshObject.cpp">
       <Filter>Engine\MainThread</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Utility\Utility.cpp">
+      <Filter>Engine\Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Manager\FInputManager.h">
