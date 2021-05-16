@@ -76,19 +76,14 @@ void FMaterial::Init()
 
 void FMaterial::UnInit()
 {
-    delete VertexShader;
     VertexShader = nullptr;
 
-    delete PixelShader;
     PixelShader = nullptr;
 
-    delete VertexShaderShadow;
     VertexShader = nullptr;
 
-    delete VertexShaderGPUSkin;
     VertexShaderGPUSkin = nullptr;
 
-    delete VertexShaderShadowGPUSkin;
     VertexShaderShadowGPUSkin = nullptr;
 
     delete BaseColor;

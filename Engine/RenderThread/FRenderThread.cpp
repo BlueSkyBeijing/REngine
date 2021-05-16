@@ -12,6 +12,7 @@
 #include "FInputManager.h"
 #include "FShaderBindingsManager.h"
 #include "FPipelineStateManager.h"
+#include "FShaderManager.h"
 #include "FLight.h"
 
 
@@ -108,6 +109,7 @@ void FRenderThread::init()
     mRHI = new FD3D12RHI;
     mRHI->Init();
 
+    TSingleton<FShaderManager>::GetInstance().Init();
     TSingleton<FPipelineStateManager>::GetInstance().Init();
     TSingleton<FShaderBindingsManager>::GetInstance().Init();
 
@@ -145,6 +147,7 @@ void FRenderThread::unInit()
 
     TSingleton<FShaderBindingsManager>::GetInstance().UnInit();
     TSingleton<FPipelineStateManager>::GetInstance().UnInit();
+    TSingleton<FShaderManager>::GetInstance().UnInit();
 
     mRHI->UnInit();
     delete mRHI;

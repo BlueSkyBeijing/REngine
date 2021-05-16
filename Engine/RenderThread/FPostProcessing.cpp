@@ -76,10 +76,8 @@ void FFullScreenQuad::UnInit()
     delete IndexBuffer;
     IndexBuffer = nullptr;
 
-    delete VertexShader;
     VertexShader = nullptr;
 
-    delete PixelShader;
     PixelShader = nullptr;
 
 }
@@ -332,28 +330,20 @@ void FPostProcessing::UnInit()
     delete mFullScreenQuad;
     mFullScreenQuad = nullptr;
 
-    delete VertexShaderBloomSetup;
     VertexShaderBloomSetup = nullptr;
 
-    delete PixelShaderBloomSetup;
     PixelShaderBloomSetup = nullptr;
 
-    delete VertexShaderBloomDown;
     VertexShaderBloomDown = nullptr;
 
-    delete PixelShaderBloomDown;
     PixelShaderBloomDown = nullptr;
 
-    delete VertexShaderBloomUp;
     VertexShaderBloomUp = nullptr;
 
-    delete PixelShaderBloomUp;
     PixelShaderBloomUp = nullptr;
 
-    delete VertexShaderTonemap;
     VertexShaderTonemap = nullptr;
 
-    delete PixelShaderTonemap;
     PixelShaderTonemap = nullptr;
 
     delete mFullScreenLayout;
