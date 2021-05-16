@@ -6,8 +6,8 @@ struct VertexShaderInput
     float3 Normal : NORMAL;
     float2 UV : TEXCOORD;
 #ifdef GPU_SKIN
-    float4 BoneWeights : WEIGHTS;
     uint4 BoneIndices  : BONEINDICES;
+    float4 BoneWeights : WEIGHTS;
 #endif
 };
 

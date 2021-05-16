@@ -59,6 +59,7 @@ struct FTransform
 
 struct FAnimSequenceTrack
 {
+    int32 BoneIndex;
     std::vector<FVector3> PosKeys;
     std::vector<FQuat> RotKeys;
     std::vector<FVector3> ScaleKeys;
@@ -104,6 +105,10 @@ public:
 
 private:
     int32 NumberOfFrames;
+    float SequenceLength;
     std::vector<FAnimSequenceTrack> mAnimSequenceTracks;
     const USkeleton* mSkeleton;
+
+    std::vector<FMatrix4x4> mBoneTransforms;
+    float mElapsedSeconds;
 };

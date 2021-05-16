@@ -61,8 +61,8 @@ public:
 public:
     FVector3 Normal;
     FVector2 UV;
-    uint8 BoneIndices[4];
-    uint16 BoneWeights[4];
+    uint16 BoneIndices[4];
+    float BoneWeights[4];
 private:
 
 };

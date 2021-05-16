@@ -160,13 +160,12 @@ void UWorld::Load()
     }
 
     //tell render thread load completed
-    mEngine->GetRenderThread()->MarkLoadCompleted();
-    //FRenderThread* renderThread = TSingleton<FEngine>::GetInstance().GetRenderThread();
+    FRenderThread* renderThread = TSingleton<FEngine>::GetInstance().GetRenderThread();
 
-    //ENQUEUE_RENDER_COMMAND([renderThread]
-    //{
-    //    renderThread->MarkLoadCompleted();
-    //});
+    ENQUEUE_RENDER_COMMAND([renderThread]
+    {
+        renderThread->MarkLoadCompleted();
+    });
 
 }
 
