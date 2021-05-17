@@ -78,6 +78,8 @@ private:
     std::condition_variable mRenderCondition;
     std::atomic_int32_t mFrameSyncSignal;
 
+    std::mutex mRenderCommandMutex;
+
     std::thread* mRenderThread;
     std::vector<FRenderCommand*> mRenderCommands[FRAME_BUFFER_NUM];
 };

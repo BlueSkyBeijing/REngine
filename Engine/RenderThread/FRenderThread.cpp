@@ -94,6 +94,8 @@ void FRenderThread::OnWindowResize(int32 newWidth, int32 newHeight)
 
 void FRenderThread::EnqueueRenderCommand(FRenderCommand* renderCommand)
 {
+    std::unique_lock<std::mutex> RenderCommandLock(mRenderCommandMutex);
+
     const int32 frameIndexMainThread = mFrameCount % FRAME_BUFFER_NUM;
 
     mRenderCommands[frameIndexMainThread].push_back(renderCommand);
@@ -181,9 +183,11 @@ void FRenderThread::loop()
 
 void FRenderThread::processRenderCommand()
 {
+    std::unique_lock<std::mutex> RenderCommandLock(mRenderCommandMutex);
+
     assert(mFrameCount > 0);
     const int32 renderThreadDelayFrameNum = FRAME_BUFFER_NUM - 1;
-    const int32 frameIndexRenderThread = (mFrameCount - 1 - renderThreadDelayFrameNum) % FRAME_BUFFER_NUM;
+    const int32 frameIndexRenderThread = (mFrameCount - renderThreadDelayFrameNum) % FRAME_BUFFER_NUM;
 
     for (auto it = mRenderCommands[frameIndexRenderThread].begin(); it != mRenderCommands[frameIndexRenderThread].end(); it++)
     {
@@ -198,6 +202,8 @@ void FRenderThread::processRenderCommand()
 
 void FRenderThread::processRemainRenderCommand()
 {
+    std::unique_lock<std::mutex> RenderCommandLock(mRenderCommandMutex);
+
     assert(mFrameCount > 0);
     for (int32 frameRemianIndex = 1; frameRemianIndex < FRAME_BUFFER_NUM; frameRemianIndex++)
     {
