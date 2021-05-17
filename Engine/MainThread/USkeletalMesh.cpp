@@ -113,8 +113,16 @@ void USkeleton::Load()
     skeletonFile.read((char*)&numPosBones, sizeof(int32));
 
     mBonePose.resize(numPosBones);
+    for (int32 i = 0; i < numBoneInfos; i++)
+    {
+        FTransform data;
 
-    skeletonFile.read((char*)mBonePose.data(), numPosBones * sizeof(FTransform));
+        skeletonFile.read((char*)&data.Rotation, sizeof(FQuat));
+        skeletonFile.read((char*)&data.Translation, sizeof(FVector3));
+        skeletonFile.read((char*)&data.Scale3D, sizeof(FVector3));
+
+        mBonePose[i] = data;
+    }
 
     skeletonFile.close();
 
@@ -213,7 +221,7 @@ void UAnimSequence::Update(float deltaSeconds)
 
             if (rotKeyNum > 1)
             {
-                rotKeyFrame0 = static_cast<int32>(std::ceilf(percentTime * rotKeyNum));
+                rotKeyFrame1 = static_cast<int32>(std::ceilf(percentTime * rotKeyNum));
              
                 toParentRot = toParentRot.slerp(lerpFrames, mAnimSequenceTracks[i].RotKeys[rotKeyFrame1]);
             }
@@ -230,7 +238,7 @@ void UAnimSequence::Update(float deltaSeconds)
             {
                 posKeyFrame1 = static_cast<int32>(std::ceilf(percentTime * posKeyNum));
 
-                toParentTranslation = toParentTranslation * lerpFrames +  mAnimSequenceTracks[i].PosKeys[rotKeyFrame1] * (1.0f - lerpFrames);
+                toParentTranslation = toParentTranslation * lerpFrames +  mAnimSequenceTracks[i].PosKeys[posKeyFrame1] * (1.0f - lerpFrames);
             }
         }
 
@@ -238,12 +246,12 @@ void UAnimSequence::Update(float deltaSeconds)
         BoneFinalTransforms[i].block<3, 3>(0, 0) = toParentRot.toRotationMatrix();
         BoneFinalTransforms[i].block<1, 3>(3, 0) = toParentTranslation;
 
-        if (0 < i)
+        if (i > 0)
         {
             int32 parentIndex = mSkeleton->GetBoneInfos()[i].ParentIndex;
-            FMatrix4x4& rootToParent = BoneFinalTransforms[parentIndex];
+            FMatrix4x4& parentToRoot = BoneFinalTransforms[parentIndex];
 
-            BoneFinalTransforms[i] = rootToParent * BoneFinalTransforms[i];
+            BoneFinalTransforms[i] = BoneFinalTransforms[i] * parentToRoot;
         }
     }
 
