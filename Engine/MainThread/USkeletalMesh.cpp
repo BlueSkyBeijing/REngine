@@ -196,9 +196,6 @@ void UAnimSequence::Update(float deltaSeconds)
     const float oneFrameTime = SequenceLength / NumberOfFrames;
     const float lerpFrames = (sequenceTime - oneFrameTime * keyFrame0) / oneFrameTime;
 
-    //get 2 frame
-    //interpolate
-
     for (uint32 i = 0; i < mSkeleton->GetBoneInfos().size(); ++i)
     {
         int32 rotKeyFrame0 = 0;
@@ -212,17 +209,18 @@ void UAnimSequence::Update(float deltaSeconds)
         FVector3 toParentTranslation;
         toParentTranslation.setZero();
 
+        //get 2 frame and interpolate
         const int32 rotKeyNum = static_cast<int32>(mAnimSequenceTracks[i].RotKeys.size());
         if (rotKeyNum > 0)
         {
-            rotKeyFrame0 = static_cast<int32>(std::floorf(percentTime * rotKeyNum));
+            rotKeyFrame0 = static_cast<int32>(std::floorf(percentTime * (rotKeyNum -1)));
 
             toParentRot = mAnimSequenceTracks[i].RotKeys[rotKeyFrame0];
 
             if (rotKeyNum > 1)
             {
-                rotKeyFrame1 = static_cast<int32>(std::ceilf(percentTime * rotKeyNum));
-             
+                rotKeyFrame1 = static_cast<int32>(std::ceilf(percentTime * (rotKeyNum - 1)));
+
                 toParentRot = toParentRot.slerp(lerpFrames, mAnimSequenceTracks[i].RotKeys[rotKeyFrame1]);
             }
         }
@@ -230,15 +228,15 @@ void UAnimSequence::Update(float deltaSeconds)
         const int32 posKeyNum = static_cast<int32>(mAnimSequenceTracks[i].PosKeys.size());
         if (posKeyNum > 0)
         {
-            posKeyFrame0 = static_cast<int32>(std::floorf(percentTime * posKeyNum));
+            posKeyFrame0 = static_cast<int32>(std::floorf(percentTime * (posKeyNum - 1)));
 
             toParentTranslation = mAnimSequenceTracks[i].PosKeys[posKeyFrame0];
 
             if (posKeyNum > 1)
             {
-                posKeyFrame1 = static_cast<int32>(std::ceilf(percentTime * posKeyNum));
+                posKeyFrame1 = static_cast<int32>(std::ceilf(percentTime * (posKeyNum - 1)));
 
-                toParentTranslation = toParentTranslation * lerpFrames +  mAnimSequenceTracks[i].PosKeys[posKeyFrame1] * (1.0f - lerpFrames);
+                toParentTranslation = toParentTranslation * lerpFrames + mAnimSequenceTracks[i].PosKeys[posKeyFrame1] * (1.0f - lerpFrames);
             }
         }
 
@@ -257,11 +255,29 @@ void UAnimSequence::Update(float deltaSeconds)
 
     for (uint32 i = 0; i < mSkeleton->GetBoneInfos().size(); ++i)
     {
-        FMatrix4x4 bonePose;
-        bonePose.setIdentity();
-        bonePose.block<3, 3>(0, 0) = mSkeleton->GetBonePose()[i].Rotation.toRotationMatrix();
-        bonePose.block<1, 3>(3, 0) = mSkeleton->GetBonePose()[i].Translation;
+        mBoneTransforms[i].setIdentity();
+        mBoneTransforms[i].block<3, 3>(0, 0) = mSkeleton->GetBonePose()[i].Rotation.toRotationMatrix();
+        mBoneTransforms[i].block<1, 3>(3, 0) = mSkeleton->GetBonePose()[i].Translation;
 
-        BoneFinalTransforms[i] = bonePose * BoneFinalTransforms[i];
+        if (i > 0)
+        {
+            int32 parentIndex = mSkeleton->GetBoneInfos()[i].ParentIndex;
+            FMatrix4x4 parentToRoot;
+            parentToRoot.setIdentity();
+            parentToRoot.block<3, 3>(0, 0) = mSkeleton->GetBonePose()[parentIndex].Rotation.toRotationMatrix();
+            parentToRoot.block<1, 3>(3, 0) = mSkeleton->GetBonePose()[parentIndex].Translation;
+
+            mBoneTransforms[i] = mBoneTransforms[i] * parentToRoot;
+        }
+    }
+
+    for (uint32 i = 0; i < mSkeleton->GetBoneInfos().size(); ++i)
+    {
+        //FMatrix4x4 bonePose;
+        //bonePose.setIdentity();
+        //bonePose.block<3, 3>(0, 0) = mSkeleton->GetBonePose()[i].Rotation.toRotationMatrix();
+        //bonePose.block<1, 3>(3, 0) = mSkeleton->GetBonePose()[i].Translation;
+
+        BoneFinalTransforms[i] = mBoneTransforms[i].inverse() * BoneFinalTransforms[i];
     }
 }
