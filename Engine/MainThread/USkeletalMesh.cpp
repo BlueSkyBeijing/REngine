@@ -189,14 +189,17 @@ void UAnimSequence::Update(float deltaSeconds)
 {
     mElapsedSeconds += deltaSeconds;
 
-    float sequenceTime = std::fmodf(mElapsedSeconds, SequenceLength);
-    float percentTime = sequenceTime / SequenceLength;
+    const float sequenceTime = std::fmodf(mElapsedSeconds, SequenceLength);
+    const float percentTime = sequenceTime / SequenceLength;
     const int32 keyFrame0 = static_cast<int32>(std::floorf(percentTime * (NumberOfFrames - 1)));
     const int32 keyFrame1 = static_cast<int32>(std::ceilf(percentTime * (NumberOfFrames - 1)));
     const float oneFrameTime = SequenceLength / NumberOfFrames;
     const float lerpFrames = (sequenceTime - oneFrameTime * keyFrame0) / oneFrameTime;
 
-    for (uint32 i = 0; i < mSkeleton->GetBoneInfos().size(); ++i)
+    const std::vector<FBoneInfo>& boneInfos = mSkeleton->GetBoneInfos();
+    const std::vector<FTransform>& bonePose = mSkeleton->GetBonePose();
+
+    for (uint32 i = 0; i < boneInfos.size(); ++i)
     {
         int32 rotKeyFrame0 = 0;
         int32 rotKeyFrame1 = 0;
@@ -246,27 +249,27 @@ void UAnimSequence::Update(float deltaSeconds)
 
         if (i > 0)
         {
-            const int32 parentIndex = mSkeleton->GetBoneInfos()[i].ParentIndex;
+            const int32 parentIndex = boneInfos[i].ParentIndex;
             FMatrix4x4& parentToRoot = BoneFinalTransforms[parentIndex];
 
             BoneFinalTransforms[i] = parentToRoot * BoneFinalTransforms[i];
         }
     }
 
-    for (uint32 i = 0; i < mSkeleton->GetBoneInfos().size(); ++i)
+    for (uint32 i = 0; i < boneInfos.size(); ++i)
     {
         mBoneTransforms[i].setIdentity();
-        mBoneTransforms[i].block<3, 3>(0, 0) = mSkeleton->GetBonePose()[i].Rotation.toRotationMatrix();
-        mBoneTransforms[i].block<3, 1>(0, 3) = mSkeleton->GetBonePose()[i].Translation;
+        mBoneTransforms[i].block<3, 3>(0, 0) = bonePose[i].Rotation.toRotationMatrix();
+        mBoneTransforms[i].block<3, 1>(0, 3) = bonePose[i].Translation;
 
         if (i > 0)
         {
-            const int32 parentIndex = mSkeleton->GetBoneInfos()[i].ParentIndex;
+            const int32 parentIndex = boneInfos[i].ParentIndex;
             mBoneTransforms[i] = mBoneTransforms[parentIndex] * mBoneTransforms[i];
         }
     }
 
-    for (uint32 i = 0; i < mSkeleton->GetBoneInfos().size(); ++i)
+    for (uint32 i = 0; i < boneInfos.size(); ++i)
     {
         BoneFinalTransforms[i] = (BoneFinalTransforms[i] * mBoneTransforms[i].inverse()).transpose();
     }

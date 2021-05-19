@@ -191,6 +191,12 @@
     <ClCompile Include="Engine\Utility\Utility.cpp">
       <Filter>Engine\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Manager\FPlayerController.cpp">
+      <Filter>Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\MainThread\UPlayer.cpp">
+      <Filter>Engine\MainThread</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Manager\FInputManager.h">
@@ -359,6 +365,12 @@
       <Filter>Engine\MainThread</Filter>
     </ClInclude>
     <ClInclude Include="Engine\MainThread\USkeletalMeshObject.h">
+      <Filter>Engine\MainThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Manager\FPlayerController.h">
+      <Filter>Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\MainThread\UPlayer.h">
       <Filter>Engine\MainThread</Filter>
     </ClInclude>
   </ItemGroup>

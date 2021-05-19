@@ -101,6 +101,16 @@ public:
     virtual void Unload() override;
     void Update(float deltaSeconds);
 
+    inline void ResetTime()
+    {
+        mElapsedSeconds = 0.0f;
+    }
+
+    inline const std::vector<FAnimSequenceTrack>& Get() const
+    {
+        return mAnimSequenceTracks;
+    }
+
     std::vector<FMatrix4x4> BoneFinalTransforms;
 
 private:

@@ -25,11 +25,14 @@ public:
     virtual void Unload() override;
     void Update(float deltaSeconds);
 
+    inline const USkeletalMesh* GetSkeletalMesh() const
+    {
+        return mSkeletalMesh;
+    }
 protected:
     virtual void createRenderProxy() override;
 
 private:
-
     USkeletalMesh* mSkeletalMesh;
     UMaterial* mMaterial;
     UAnimSequence* mAnimSequence;

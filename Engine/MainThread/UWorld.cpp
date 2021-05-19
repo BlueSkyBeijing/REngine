@@ -10,6 +10,8 @@
 #include "Utility.h"
 #include "FConfigManager.h"
 #include "FRenderCommand.h"
+#include "FPlayerController.h"
+#include "UPlayer.h"
 
 UWorld::UWorld(FEngine* engine) :
     mEngine(engine)
@@ -167,6 +169,11 @@ void UWorld::Load()
         renderThread->MarkLoadCompleted();
     });
 
+    mPlayer = new UPlayer();
+    mPlayer->SetSkeletalMeshObject(*mSkeletalMeshObjects.begin());
+    mPlayer->Load();
+    TSingleton<FPlayerController>::GetInstance().SetPlayer(mPlayer);
+    TSingleton<FPlayerController>::GetInstance().SetCamera(GetCamera());
 }
 
 void UWorld::Unload()
@@ -203,6 +210,9 @@ void UWorld::Unload()
     }
     mSkeletalMeshObjects.clear();
 
+    mPlayer->Unload();
+    delete mPlayer;
+    mPlayer = nullptr;
 }
 
 void UWorld::Update(float deltaSeconds)

@@ -25,6 +25,7 @@
     <ClCompile Include="Engine\MainThread\ULight.cpp" />
     <ClCompile Include="Engine\MainThread\UMaterial.cpp" />
     <ClCompile Include="Engine\MainThread\UObject.cpp" />
+    <ClCompile Include="Engine\MainThread\UPlayer.cpp" />
     <ClCompile Include="Engine\MainThread\USkeletalMesh.cpp" />
     <ClCompile Include="Engine\MainThread\USkeletalMeshObject.cpp" />
     <ClCompile Include="Engine\MainThread\UStaticMesh.cpp" />
@@ -35,6 +36,7 @@
     <ClCompile Include="Engine\Manager\FInputManager.cpp" />
     <ClCompile Include="Engine\Manager\FLogManager.cpp" />
     <ClCompile Include="Engine\Manager\FPipelineStateManager.cpp" />
+    <ClCompile Include="Engine\Manager\FPlayerController.cpp" />
     <ClCompile Include="Engine\Manager\FResourceManager.cpp" />
     <ClCompile Include="Engine\Manager\FShaderBindingsManager.cpp" />
     <ClCompile Include="Engine\Manager\FSceneManager.cpp" />
@@ -82,6 +84,7 @@
     <ClInclude Include="Engine\MainThread\ULight.h" />
     <ClInclude Include="Engine\MainThread\UMaterial.h" />
     <ClInclude Include="Engine\MainThread\UObject.h" />
+    <ClInclude Include="Engine\MainThread\UPlayer.h" />
     <ClInclude Include="Engine\MainThread\USkeletalMesh.h" />
     <ClInclude Include="Engine\MainThread\USkeletalMeshObject.h" />
     <ClInclude Include="Engine\MainThread\UStaticMesh.h" />
@@ -92,6 +95,7 @@
     <ClInclude Include="Engine\Manager\FInputManager.h" />
     <ClInclude Include="Engine\Manager\FLogManager.h" />
     <ClInclude Include="Engine\Manager\FPipelineStateManager.h" />
+    <ClInclude Include="Engine\Manager\FPlayerController.h" />
     <ClInclude Include="Engine\Manager\FResourceManager.h" />
     <ClInclude Include="Engine\Manager\FShaderBindingsManager.h" />
     <ClInclude Include="Engine\Manager\FSceneManager.h" />

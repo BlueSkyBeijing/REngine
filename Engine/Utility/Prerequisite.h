@@ -34,6 +34,9 @@ class UStaticMeshObject;
 class USkeletalMeshObject;
 class UAnimSequence;
 class USkeleton;
+class UPlayer;
+class UCamera;
+class USkeletalMeshObject;
 
 class FEngine;
 class FRenderThread;
@@ -60,6 +63,7 @@ class FPipelineStateManager;
 class FRenderCommand;
 class FPostProcessing;
 class FScreenVertex;
+class FPlayerController;
 
 class FRHI;
 class FRHIShader;

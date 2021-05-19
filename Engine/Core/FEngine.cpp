@@ -5,6 +5,7 @@
 #include "FInputManager.h"
 #include "FLogManager.h"
 #include "FConfigManager.h"
+#include "FPlayerController.h"
 #include "UWorld.h"
 #include "UCamera.h"
 
@@ -35,6 +36,7 @@ void FEngine::init()
     TSingleton<FLogManager>::GetInstance().Init();
     TSingleton<FConfigManager>::GetInstance().Init();
     TSingleton<FInputManager>::GetInstance().Init();
+    TSingleton<FPlayerController>::GetInstance().Init();
 
     createWindow();
 
@@ -68,6 +70,7 @@ void FEngine::unInit()
     TSingleton<FInputManager>::GetInstance().UnInit();
     TSingleton<FConfigManager>::GetInstance().UnInit();
     TSingleton<FLogManager>::GetInstance().UnInit();
+    TSingleton<FPlayerController>::GetInstance().UnInit();
 
     mInited = false;
 }
@@ -103,7 +106,7 @@ void FEngine::Exit()
 void FEngine::update()
 {
     TSingleton<FInputManager>::GetInstance().Update(mDeltaSeconds);
-
+    TSingleton<FPlayerController>::GetInstance().Update(mDeltaSeconds);
     syncRenderThread();
 
     mCurFrameTime = mTimer.now();

@@ -30,4 +30,5 @@ private:
     std::vector<UStaticMeshObject*> mStaticMeshObjects;
     std::vector<USkeletalMeshObject*> mSkeletalMeshObjects;
     FEngine* mEngine;
+    UPlayer* mPlayer;
 };
