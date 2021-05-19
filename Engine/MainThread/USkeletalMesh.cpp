@@ -152,9 +152,9 @@ void UAnimSequence::Load()
     animSequenceFile.read((char*)&NumberOfFrames, sizeof(int32));
     animSequenceFile.read((char*)&SequenceLength, sizeof(float));
     
-    mAnimSequenceTracks.resize(NumberOfFrames);
+    mAnimSequenceTracks.resize(mSkeleton->GetBoneInfos().size());
 
-    for (int32 i = 0; i < NumberOfFrames; i++)
+    for (int32 i = 0; i < mSkeleton->GetBoneInfos().size(); i++)
     { 
         animSequenceFile.read((char*)&mAnimSequenceTracks[i].BoneIndex, sizeof(int32));
 
