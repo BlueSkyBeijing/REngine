@@ -242,14 +242,14 @@ void UAnimSequence::Update(float deltaSeconds)
 
         BoneFinalTransforms[i].setIdentity();
         BoneFinalTransforms[i].block<3, 3>(0, 0) = toParentRot.toRotationMatrix();
-        BoneFinalTransforms[i].block<1, 3>(3, 0) = toParentTranslation;
+        BoneFinalTransforms[i].block<3, 1>(0, 3) = toParentTranslation;
 
         if (i > 0)
         {
-            int32 parentIndex = mSkeleton->GetBoneInfos()[i].ParentIndex;
+            const int32 parentIndex = mSkeleton->GetBoneInfos()[i].ParentIndex;
             FMatrix4x4& parentToRoot = BoneFinalTransforms[parentIndex];
 
-            BoneFinalTransforms[i] = BoneFinalTransforms[i] * parentToRoot;
+            BoneFinalTransforms[i] = parentToRoot * BoneFinalTransforms[i];
         }
     }
 
@@ -257,27 +257,17 @@ void UAnimSequence::Update(float deltaSeconds)
     {
         mBoneTransforms[i].setIdentity();
         mBoneTransforms[i].block<3, 3>(0, 0) = mSkeleton->GetBonePose()[i].Rotation.toRotationMatrix();
-        mBoneTransforms[i].block<1, 3>(3, 0) = mSkeleton->GetBonePose()[i].Translation;
+        mBoneTransforms[i].block<3, 1>(0, 3) = mSkeleton->GetBonePose()[i].Translation;
 
         if (i > 0)
         {
-            int32 parentIndex = mSkeleton->GetBoneInfos()[i].ParentIndex;
-            FMatrix4x4 parentToRoot;
-            parentToRoot.setIdentity();
-            parentToRoot.block<3, 3>(0, 0) = mSkeleton->GetBonePose()[parentIndex].Rotation.toRotationMatrix();
-            parentToRoot.block<1, 3>(3, 0) = mSkeleton->GetBonePose()[parentIndex].Translation;
-
-            mBoneTransforms[i] = mBoneTransforms[i] * parentToRoot;
+            const int32 parentIndex = mSkeleton->GetBoneInfos()[i].ParentIndex;
+            mBoneTransforms[i] = mBoneTransforms[parentIndex] * mBoneTransforms[i];
         }
     }
 
     for (uint32 i = 0; i < mSkeleton->GetBoneInfos().size(); ++i)
     {
-        //FMatrix4x4 bonePose;
-        //bonePose.setIdentity();
-        //bonePose.block<3, 3>(0, 0) = mSkeleton->GetBonePose()[i].Rotation.toRotationMatrix();
-        //bonePose.block<1, 3>(3, 0) = mSkeleton->GetBonePose()[i].Translation;
-
-        BoneFinalTransforms[i] = mBoneTransforms[i].inverse() * BoneFinalTransforms[i];
+        BoneFinalTransforms[i] = (BoneFinalTransforms[i] * mBoneTransforms[i].inverse()).transpose();
     }
 }
