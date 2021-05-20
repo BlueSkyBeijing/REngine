@@ -22,6 +22,7 @@ UPlayer::~UPlayer()
 
 void UPlayer::Load()
 {
+    Name = "Player";
     mStateAnimMap.insert(std::make_pair(EPlayerState::PS_Stand, std::string("Tutorial_Idle")));
     mStateAnimMap.insert(std::make_pair(EPlayerState::PS_Walk, std::string("Tutorial_Walk_Fwd")));
 
@@ -83,6 +84,13 @@ void UPlayer::Unload()
 
 }
 
+void UPlayer::SetState(EPlayerState state)
+{
+    mSrcState = mState;
+    mState = state;
+    mDestState = state;
+}
+
 void UPlayer::Update(float deltaSeconds)
 {
     //update state
@@ -91,7 +99,7 @@ void UPlayer::Update(float deltaSeconds)
     {
         mStateBlendTime += deltaSeconds;
 
-        if (mStateBlendTime > lerpTime)
+        if (mStateBlendTime >= lerpTime)
         {
             mAnimTimeRing[mSrcState] = mAnimTimeRing[mDestState];
             mAnimWeightRing[mSrcState] = mAnimWeightRing[mDestState];
@@ -125,9 +133,10 @@ void UPlayer::Update(float deltaSeconds)
     mAnimSequenceBlender->SetAnimSequence(mAnimRing[mSrcState], mAnimRing[mDestState]);
     mAnimSequenceBlender->Blend(mAnimTimeRing[mSrcState], mAnimWeightRing[mSrcState], mAnimTimeRing[mDestState], mAnimWeightRing[mDestState]);
 
-    dynamic_cast<FSkeletalMeshRenderProxy*>(mRenderProxy)->BoneFinalTransforms = mAnimSequenceBlender->BoneFinalTransforms;
-    dynamic_cast<FSkeletalMeshRenderProxy*>(mRenderProxy)->Position = Position;
-    dynamic_cast<FSkeletalMeshRenderProxy*>(mRenderProxy)->Rotation = Rotation;
+    FSkeletalMeshRenderProxy* proxy = dynamic_cast<FSkeletalMeshRenderProxy*>(mRenderProxy);
+    proxy->BoneFinalTransforms = mAnimSequenceBlender->BoneFinalTransforms;
+    proxy->Position = Position;
+    proxy->Rotation = Rotation;
 
     FRenderThread* renderThread = TSingleton<FEngine>::GetInstance().GetRenderThread();
     FRenderProxy* renderProxy = mRenderProxy;

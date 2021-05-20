@@ -23,7 +23,7 @@ FInputManager::~FInputManager()
 void FInputManager::Init()
 {
     mKeyDown = false;
-    mKeyDownLast = false;
+    mTriggerMove = false;
 }
 
 void FInputManager::UnInit()
@@ -85,25 +85,12 @@ LRESULT CALLBACK FInputManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
 
 void FInputManager::OnKeyDown(WPARAM btnState)
 {
-    mKeyDownLast = mKeyDown;
     mKeyDown = true;
-    if ((GetAsyncKeyState('W') & 0x8000) || (GetAsyncKeyState('S') & 0x8000))
-    {
-        if (mKeyDownLast != mKeyDown)
-        {
-            TSingleton<FPlayerController>::GetInstance().EnterMoveState();
-        }
-    }
 }
 
 void FInputManager::OnKeyUp(WPARAM btnState)
 {
     mKeyDown = false;
-
-    //if ((GetKeyState('W') & 0x8000) || (GetAsyncKeyState('S') & 0x8000))
-    {
-        TSingleton<FPlayerController>::GetInstance().EnterStandState();
-    }
 }
 
 void FInputManager::OnMouseDown(WPARAM btnState, int32 x, int32 y)
@@ -151,6 +138,25 @@ void FInputManager::OnKeyInput(float deltaSeconds)
     if ((GetAsyncKeyState('S') & 0x8000))
     {
         TSingleton<FPlayerController>::GetInstance().MoveStraight(-deltaSeconds * deltaScalePlayerMove);
+    }
+
+    if ((GetAsyncKeyState('W') & 0x8000) || (GetAsyncKeyState('S') & 0x8000))
+    {
+        if (!mTriggerMove)
+        {
+            TSingleton<FPlayerController>::GetInstance().EnterMoveState();
+
+            mTriggerMove = true;
+        }
+    }
+    else
+    {
+        if (mTriggerMove)
+        {
+            TSingleton<FPlayerController>::GetInstance().EnterStandState();
+
+            mTriggerMove = false;
+        }
     }
 
     if (GetAsyncKeyState('A') & 0x8000)

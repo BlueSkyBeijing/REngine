@@ -416,7 +416,6 @@ void FAnimSequenceBlender::Blend(float time0, float weight0, float time1, float 
         }
     }
 
-
     for (uint32 i = 0; i < boneInfos.size(); ++i)
     {
         mBoneTransforms[i].setIdentity();
