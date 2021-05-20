@@ -8,7 +8,6 @@
 #include "FRenderProxy.h"
 #include "FRenderCommand.h"
 #include "UMaterial.h"
-#include "FLogManager.h"
 
 UPlayer::UPlayer(): mRingIndex(0)
 {
@@ -52,7 +51,7 @@ void UPlayer::Load()
     mSrcState = EPlayerState::PS_Stand;
     mDestState = EPlayerState::PS_Stand;
 
-    mOrientation = FVector3(1.0f, 0.0f, 0.0f);
+    mOrientation = FVector3(0.0f, 1.0f, 0.0f);
     Position = FVector3(0.0f, 0.0f, 0.0f);
     Rotation = FQuat::Identity();
 
@@ -78,6 +77,9 @@ void UPlayer::Unload()
     mMaterial->Unload();
     delete mMaterial;
     mMaterial = nullptr;
+
+    delete mAnimSequenceBlender;
+    mAnimSequenceBlender = nullptr;
 
 }
 
@@ -117,31 +119,6 @@ void UPlayer::Update(float deltaSeconds)
         }
     }
 
-    std::stringstream ss;
-    ss << "mStateBlendTime ";
-    ss << mStateBlendTime;
-    ss << std::endl;
-    ss << "mDestState ";
-    ss << mDestState;
-    ss << std::endl;
-    ss << "mSrcState ";
-    ss << mSrcState;
-    ss << std::endl;
-    ss << "mAnimTimeRing[mSrcState] ";
-    ss << mAnimTimeRing[mSrcState];
-    ss << std::endl;
-    ss << "mAnimTimeRing[mDestState] ";
-    ss << mAnimTimeRing[mDestState];
-    ss << std::endl;
-    ss << "mAnimWeightRing[mSrcState] ";
-    ss << mAnimWeightRing[mSrcState];
-    ss << std::endl;
-    ss << "mAnimWeightRing[mDestState] ";
-    ss << mAnimWeightRing[mDestState];
-    ss << std::endl;
-
-    TSingleton<FLogManager>::GetInstance().LogMessage(LL_Info, ss.str().c_str());
-
     mAnimWeightRing[mDestState] = mStateBlendTime / lerpTime;
     mAnimWeightRing[mSrcState] = 1.0f - mAnimWeightRing[mDestState];
 
@@ -172,7 +149,11 @@ void UPlayer::Turn(float deltaAngle)
     FMatrix3x3 rotationMatrix;
     rotationMatrix = Eigen::AngleAxisf(deltaAngle, FVector3(0.0f, 0.0f, 1.0f));
 
-    mOrientation = rotationMatrix * mOrientation;
+    mOrientation = rotationMatrix.inverse() * mOrientation;
+    mOrientation.normalize();
+
+    Rotation = Rotation * rotationMatrix;
+    Rotation.normalize();
 }
 
 void UPlayer::createRenderProxy()

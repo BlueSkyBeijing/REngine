@@ -3,7 +3,6 @@
 #include "USkeletalMesh.h"
 #include "FRHI.h"
 #include "FConfigManager.h"
-#include "FLogManager.h"
 
 USkeletalMesh::USkeletalMesh()
 {
@@ -407,14 +406,6 @@ void FAnimSequenceBlender::Blend(float time0, float weight0, float time1, float 
         BoneFinalTransforms[i].setIdentity();
         BoneFinalTransforms[i].block<3, 3>(0, 0) = toParentRot.toRotationMatrix();
         BoneFinalTransforms[i].block<3, 1>(0, 3) = toParentTranslation;
-
-        std::stringstream ss;
-        ss << "weight0 ";
-        ss << weight0;
-        ss << std::endl;
-
-        TSingleton<FLogManager>::GetInstance().LogMessage(LL_Info, ss.str().c_str());
-
 
         if (i > 0)
         {

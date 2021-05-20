@@ -155,12 +155,12 @@ void FInputManager::OnKeyInput(float deltaSeconds)
 
     if (GetAsyncKeyState('A') & 0x8000)
     {
-        TSingleton<FPlayerController>::GetInstance().Turn(-deltaSeconds * deltaScaleTurn);
+        TSingleton<FPlayerController>::GetInstance().Turn(deltaSeconds * deltaScaleTurn);
     }
 
     if (GetAsyncKeyState('D') & 0x8000)
     {
-        TSingleton<FPlayerController>::GetInstance().Turn(deltaSeconds * deltaScaleTurn);
+        TSingleton<FPlayerController>::GetInstance().Turn(-deltaSeconds * deltaScaleTurn);
     }
 
     if (GetAsyncKeyState(VK_UP) & 0x8000)
