@@ -10,6 +10,7 @@
 #include "TSingleton.h"
 #include "FView.h"
 #include "FRenderCommand.h"
+#include "FPlayerController.h"
 
 FInputManager::FInputManager()
 {
@@ -21,6 +22,8 @@ FInputManager::~FInputManager()
 
 void FInputManager::Init()
 {
+    mKeyDown = false;
+    mKeyDownLast = false;
 }
 
 void FInputManager::UnInit()
@@ -67,10 +70,40 @@ LRESULT CALLBACK FInputManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
     case WM_SIZE:
         inputManager->OnResize(lParam);
         break;
+    case WM_KEYDOWN:
+        inputManager->OnKeyDown(lParam);
+        break;
+    case WM_KEYUP:
+        inputManager->OnKeyUp(lParam);
+        break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
     return 0;
+}
+
+
+void FInputManager::OnKeyDown(WPARAM btnState)
+{
+    mKeyDownLast = mKeyDown;
+    mKeyDown = true;
+    if ((GetAsyncKeyState('W') & 0x8000) || (GetAsyncKeyState('S') & 0x8000))
+    {
+        if (mKeyDownLast != mKeyDown)
+        {
+            TSingleton<FPlayerController>::GetInstance().EnterMoveState();
+        }
+    }
+}
+
+void FInputManager::OnKeyUp(WPARAM btnState)
+{
+    mKeyDown = false;
+
+    //if ((GetKeyState('W') & 0x8000) || (GetAsyncKeyState('S') & 0x8000))
+    {
+        TSingleton<FPlayerController>::GetInstance().EnterStandState();
+    }
 }
 
 void FInputManager::OnMouseDown(WPARAM btnState, int32 x, int32 y)
@@ -107,25 +140,37 @@ void FInputManager::OnKeyInput(float deltaSeconds)
 {
     FEngine& engine = TSingleton<FEngine>::GetInstance();
     const float deltaScale = 1000.0f;
+    const float deltaScalePlayerMove = 100.0f;
+    const float deltaScaleTurn = 2.0f;
 
-    if ((GetAsyncKeyState('W') & 0x8000) || (GetAsyncKeyState(VK_UP) & 0x8000))
+    if ((GetAsyncKeyState('W') & 0x8000))
     {
-        engine.GetWorld()->GetCamera()->AdjustMoveStraight(deltaSeconds * deltaScale);
+        TSingleton<FPlayerController>::GetInstance().MoveStraight(deltaSeconds * deltaScalePlayerMove);
     }
 
-    if ((GetAsyncKeyState('S') & 0x8000) || (GetAsyncKeyState(VK_DOWN) & 0x8000))
+    if ((GetAsyncKeyState('S') & 0x8000))
     {
-        engine.GetWorld()->GetCamera()->AdjustMoveStraight(-deltaSeconds * deltaScale);
+        TSingleton<FPlayerController>::GetInstance().MoveStraight(-deltaSeconds * deltaScalePlayerMove);
     }
 
     if (GetAsyncKeyState('A') & 0x8000)
     {
-        engine.GetWorld()->GetCamera()->AdjustMoveLaterally(-deltaSeconds * deltaScale);
+        TSingleton<FPlayerController>::GetInstance().Turn(-deltaSeconds * deltaScaleTurn);
     }
 
     if (GetAsyncKeyState('D') & 0x8000)
     {
-        engine.GetWorld()->GetCamera()->AdjustMoveLaterally(deltaSeconds * deltaScale);
+        TSingleton<FPlayerController>::GetInstance().Turn(deltaSeconds * deltaScaleTurn);
+    }
+
+    if (GetAsyncKeyState(VK_UP) & 0x8000)
+    {
+        engine.GetWorld()->GetCamera()->AdjustMoveStraight(deltaSeconds * deltaScale);
+    }
+
+    if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+    {
+        engine.GetWorld()->GetCamera()->AdjustMoveStraight(-deltaSeconds * deltaScale);
     }
 
     if (GetAsyncKeyState(VK_LEFT) & 0x8000)

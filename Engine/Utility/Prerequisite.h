@@ -37,6 +37,8 @@ class USkeleton;
 class UPlayer;
 class UCamera;
 class USkeletalMeshObject;
+class USkeletalMesh;
+class UMaterial;
 
 class FEngine;
 class FRenderThread;
@@ -51,6 +53,7 @@ class FShaderInfo;
 class FPipelineStateInfo;
 class FStaticMeshRenderProxy;
 class FSkeletalMeshRenderProxy;
+class FAnimSequenceBlender;
 
 class FSceneManager;
 class FShaderManager;

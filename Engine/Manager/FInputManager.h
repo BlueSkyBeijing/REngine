@@ -17,6 +17,9 @@ public:
 
     void ProcessQuit();
 
+    void OnKeyDown(WPARAM btnState);
+    void OnKeyUp(WPARAM btnState);
+
     void OnMouseDown(WPARAM btnState, int32 x, int32 y);
     void OnMouseUp(WPARAM btnState, int32 x, int32 y);
     void OnMouseMove(WPARAM btnState, int32 x, int32 y);
@@ -31,5 +34,7 @@ private:
 
 private:
     FVector2i mLastMousePos;
+    bool mKeyDown;
+    bool mKeyDownLast;
 
 };

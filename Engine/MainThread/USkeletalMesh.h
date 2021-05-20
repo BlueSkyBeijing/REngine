@@ -106,19 +106,61 @@ public:
         mElapsedSeconds = 0.0f;
     }
 
-    inline const std::vector<FAnimSequenceTrack>& Get() const
+    inline const std::vector<FAnimSequenceTrack>& GetAnimSequenceTracks() const
     {
         return mAnimSequenceTracks;
+    }
+
+    inline const USkeleton* GeSkeleton() const
+    {
+        return mSkeleton;
+    }
+
+    inline const int32 GetNumberOfFrames() const
+    {
+        return mNumberOfFrames;
+    }
+
+    inline const float GetSequenceLength() const
+    {
+        return mSequenceLength;
     }
 
     std::vector<FMatrix4x4> BoneFinalTransforms;
 
 private:
-    int32 NumberOfFrames;
-    float SequenceLength;
+    int32 mNumberOfFrames;
+    float mSequenceLength;
     std::vector<FAnimSequenceTrack> mAnimSequenceTracks;
     const USkeleton* mSkeleton;
 
     std::vector<FMatrix4x4> mBoneTransforms;
     float mElapsedSeconds;
+};
+
+class FAnimSequenceBlender
+{
+public:
+    FAnimSequenceBlender(UAnimSequence* anim0, UAnimSequence* anim1);
+    ~FAnimSequenceBlender();
+
+    void Blend(float time0, float weight0, float time1, float weight1);
+
+    inline void SetAnimSequence(UAnimSequence* src, UAnimSequence* dest)
+    {
+        mAnimSequence0 = src;
+        mAnimSequence1 = dest;
+    }
+
+public:
+    std::vector<FMatrix4x4> BoneFinalTransforms;
+
+private:
+    UAnimSequence* mAnimSequence0;
+    UAnimSequence* mAnimSequence1;
+    const USkeleton* mSkeleton;
+    std::vector<FMatrix4x4> mBoneTransforms;
+
+    float mTime0;
+    float mTime1;
 };

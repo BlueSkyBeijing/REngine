@@ -170,7 +170,7 @@ void UWorld::Load()
     });
 
     mPlayer = new UPlayer();
-    mPlayer->SetSkeletalMeshObject(*mSkeletalMeshObjects.begin());
+    mPlayer->SetSkeletalMeshFilePath((*mSkeletalMeshObjects.begin())->FullResourcePath);
     mPlayer->Load();
     TSingleton<FPlayerController>::GetInstance().SetPlayer(mPlayer);
     TSingleton<FPlayerController>::GetInstance().SetCamera(GetCamera());
@@ -224,4 +224,6 @@ void UWorld::Update(float deltaSeconds)
         USkeletalMeshObject* skeletalMeshObject = *it;
         skeletalMeshObject->Update(deltaSeconds);
     }
+
+    mPlayer->Update(deltaSeconds);
 }
