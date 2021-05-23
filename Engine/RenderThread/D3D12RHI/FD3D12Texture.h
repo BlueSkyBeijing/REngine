@@ -24,6 +24,7 @@ private:
 
 class FD3D12Texture2D : public FRHITexture2D, public FD3D12Texture
 {
+    friend FD3D12RHI;
 public:
     FD3D12Texture2D();
     virtual ~FD3D12Texture2D() override;
@@ -33,5 +34,7 @@ public:
     virtual void Uninit() override;
 
 private:
+    Microsoft::WRL::ComPtr <ID3D12Resource> mTexture;
+    Microsoft::WRL::ComPtr <ID3D12Resource> mTextureUploadHeap;
 
 };

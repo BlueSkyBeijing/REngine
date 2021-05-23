@@ -27,6 +27,8 @@ public:
     FRHITexture2D* NormalMap;
     FRHITexture2D* EmissiveColor;
 
+    std::string BaseColorFullFilePathName;
+
 private:
 
 };

@@ -631,20 +631,20 @@ FRHITexture2D* FD3D12RHI::CreateTexture2D(const std::wstring& filePathName)
 
     THROW_IF_FAILED(DirectX::CreateDDSTextureFromFile12(mDX12Device.Get(),
         mDX12CommandList.Get(), filePathName.c_str(),
-        mCurTexture, mCurTextureUploadHeap));
+        texture2D->mTexture, texture2D->mTextureUploadHeap));
 
 
     CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorObj(mCBVSRVUAVHeap->GetCPUDescriptorHandleForHeapStart(), msCBVSRVUAVCount, mCBVSRVVUAVDescriptorSize);
 
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    srvDesc.Format = mCurTexture->GetDesc().Format;
+    srvDesc.Format = texture2D->mTexture->GetDesc().Format;
     srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
     srvDesc.Texture2D.MostDetailedMip = 0;
-    srvDesc.Texture2D.MipLevels = mCurTexture->GetDesc().MipLevels;
+    srvDesc.Texture2D.MipLevels = texture2D->mTexture->GetDesc().MipLevels;
     srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
 
-    mDX12Device->CreateShaderResourceView(mCurTexture.Get(), &srvDesc, descriptorObj);
+    mDX12Device->CreateShaderResourceView(texture2D->mTexture.Get(), &srvDesc, descriptorObj);
 
     texture2D->PosInHeapCBVSRVUAV = msCBVSRVUAVCount;
 

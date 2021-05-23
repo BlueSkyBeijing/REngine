@@ -83,9 +83,6 @@ private:
     Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> mDX12DescriptorHeapDepthStencil;
     Microsoft::WRL::ComPtr <ID3D12DescriptorHeap> mCBVSRVUAVHeap;
 
-    Microsoft::WRL::ComPtr <ID3D12Resource> mCurTexture;
-    Microsoft::WRL::ComPtr <ID3D12Resource> mCurTextureUploadHeap;
-
     DXGI_FORMAT mBackBufferFormat;
     DXGI_FORMAT mDepthStencilFormat;
 

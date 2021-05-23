@@ -8,6 +8,7 @@
 #include "FRHI.h"
 #include "FRenderThread.h"
 #include "FShaderManager.h"
+#include "Utility.h"
 
 FMaterial::FMaterial() :
     VertexShader(nullptr),
@@ -64,7 +65,7 @@ void FMaterial::Init()
 
     VertexShaderShadowGPUSkin = TSingleton<FShaderManager>::GetInstance().CreateShader(vertexShaderShadowGPUSkinInfo);
 
-    const std::wstring textureFilePathName = L"Content\\Texture\\T_Default_Material_Gray_C.dds";
+    const std::wstring textureFilePathName = StringToWString(BaseColorFullFilePathName);
 
     FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
     BaseColor = rhi->CreateTexture2D(textureFilePathName);

@@ -50,6 +50,7 @@ void UMaterial::Load()
     //mEmissiveColor->Load();
 
     Material = new FMaterial;
+    Material->BaseColorFullFilePathName = BaseColorTextureFullPathName;
 }
 
 void UMaterial::Unload()
