@@ -19,6 +19,7 @@ public:
 public:
     std::string FullResourcePath;
     std::string FullAnimSequencePath;
+    std::string FullMaterialPath;
 
 public:
     virtual void Load() override;
@@ -49,4 +50,5 @@ struct FSkeletalMeshObjectData
     FVector3 Location;
     std::string ResourceName;
     std::string AnimationName;
+    std::string MaterialName;
 };

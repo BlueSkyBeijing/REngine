@@ -42,6 +42,7 @@ void UPlayer::Load()
     mAnimRing[1]->Load();
 
     mMaterial = new UMaterial();
+    mMaterial->FullFilePathName = FullMaterialPath;
     mMaterial->Load();
 
     mAnimSequenceBlender = new FAnimSequenceBlender(mAnimRing[0], mAnimRing[1]);

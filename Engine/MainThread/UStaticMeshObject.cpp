@@ -27,6 +27,7 @@ void UStaticMeshObject::Load()
     mStaticMesh->Load();
 
     mMaterial = new UMaterial();
+    mMaterial->FullFilePathName = FullMaterialPath;
     mMaterial->Load();
 
     //create render proxy

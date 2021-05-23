@@ -27,6 +27,7 @@ void USkeletalMeshObject::Load()
     mSkeletalMesh->Load();
 
     mMaterial = new UMaterial();
+    mMaterial->FullFilePathName = FullMaterialPath;
     mMaterial->Load();
 
     mAnimSequence = new UAnimSequence(mSkeletalMesh->GetSkeleton());

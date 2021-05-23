@@ -15,6 +15,7 @@ public:
     std::string MetallicSpecularRoughness;
     std::string EmissiveColor;
     FMaterial* Material;
+    std::string FullFilePathName;
 
 public:
     virtual void Load() override;

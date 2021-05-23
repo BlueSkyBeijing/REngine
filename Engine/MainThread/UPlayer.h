@@ -42,6 +42,8 @@ public:
 
     void Update(float deltaSeconds);
 
+    std::string FullMaterialPath;
+
 protected:
     virtual void createRenderProxy() override;
 

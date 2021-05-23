@@ -18,6 +18,7 @@ public:
 
 public:
     std::string FullResourcePath;
+    std::string FullMaterialPath;
 
 public:
     virtual void Load() override;
@@ -42,4 +43,5 @@ struct FStaticMeshObjectData
     FQuat Rotation;
     FVector3 Location;
     std::string ResourceName;
+    std::string MaterialName;
 };
