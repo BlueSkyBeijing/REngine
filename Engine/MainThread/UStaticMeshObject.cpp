@@ -9,6 +9,7 @@
 #include "FEngine.h"
 #include "TSingleton.h"
 #include "FRenderCommand.h"
+#include "FResourceManager.h"
 
 UStaticMeshObject::UStaticMeshObject() :
     mMaterial(nullptr),
@@ -22,13 +23,9 @@ UStaticMeshObject::~UStaticMeshObject()
 
 void UStaticMeshObject::Load()
 {
-    mStaticMesh = new UStaticMesh();
-    mStaticMesh->FullFilePathName = FullResourcePath;
-    mStaticMesh->Load();
+    mStaticMesh = dynamic_cast<UStaticMesh*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_StaticMesh, FullResourcePath));
 
-    mMaterial = new UMaterial();
-    mMaterial->FullFilePathName = FullMaterialPath;
-    mMaterial->Load();
+    mMaterial = dynamic_cast<UMaterial*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Material, FullMaterialPath));
 
     //create render proxy
     createRenderProxy();
@@ -36,12 +33,8 @@ void UStaticMeshObject::Load()
 
 void UStaticMeshObject::Unload()
 {
-    mStaticMesh->Unload();
-    delete mStaticMesh;
     mStaticMesh = nullptr;
 
-    mMaterial->Unload();
-    delete mMaterial;
     mMaterial = nullptr;
 }
 

@@ -4,7 +4,7 @@
 #include "UObject.h"
 
 
-class UMaterial : UObject
+class UMaterial : public UResource
 {
 public:
 	UMaterial();

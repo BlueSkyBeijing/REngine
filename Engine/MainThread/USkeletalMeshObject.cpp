@@ -8,6 +8,7 @@
 #include "FRenderProxy.h"
 #include "FEngine.h"
 #include "TSingleton.h"
+#include "FResourceManager.h"
 #include "FRenderCommand.h"
 
 USkeletalMeshObject::USkeletalMeshObject() :
@@ -22,13 +23,9 @@ USkeletalMeshObject::~USkeletalMeshObject()
 
 void USkeletalMeshObject::Load()
 {
-    mSkeletalMesh = new USkeletalMesh();
-    mSkeletalMesh->FullFilePathName = FullResourcePath;
-    mSkeletalMesh->Load();
+    mSkeletalMesh = dynamic_cast<USkeletalMesh*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_SkeletalMesh, FullResourcePath));
 
-    mMaterial = new UMaterial();
-    mMaterial->FullFilePathName = FullMaterialPath;
-    mMaterial->Load();
+    mMaterial = dynamic_cast<UMaterial*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Material, FullMaterialPath));
 
     mAnimSequence = new UAnimSequence(mSkeletalMesh->GetSkeleton());
     mAnimSequence->FullFilePathName = FullAnimSequencePath;
@@ -40,12 +37,8 @@ void USkeletalMeshObject::Load()
 
 void USkeletalMeshObject::Unload()
 {
-    mSkeletalMesh->Unload();
-    delete mSkeletalMesh;
     mSkeletalMesh = nullptr;
 
-    mMaterial->Unload();
-    delete mMaterial;
     mMaterial = nullptr;
 
     mAnimSequence->Unload();

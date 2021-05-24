@@ -116,6 +116,11 @@ public:
         return mSkeleton;
     }
 
+    inline void SeSkeleton(USkeleton* skeleton)
+    {
+        mSkeleton = skeleton;
+    }
+
     inline const int32 GetNumberOfFrames() const
     {
         return mNumberOfFrames;

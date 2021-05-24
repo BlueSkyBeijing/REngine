@@ -8,6 +8,9 @@
 #include "FRenderProxy.h"
 #include "FRenderCommand.h"
 #include "UMaterial.h"
+#include "TSingleton.h"
+#include "FResourceManager.h"
+
 
 UPlayer::UPlayer(): mRingIndex(0)
 {
@@ -26,10 +29,10 @@ void UPlayer::Load()
     mStateAnimMap.insert(std::make_pair(EPlayerState::PS_Stand, std::string("Tutorial_Idle")));
     mStateAnimMap.insert(std::make_pair(EPlayerState::PS_Walk, std::string("Tutorial_Walk_Fwd")));
 
-    mSkeletalMesh = new USkeletalMesh();
-    mSkeletalMesh->FullFilePathName = mSkeletalMeshFilePath;
+    mSkeletalMesh = dynamic_cast<USkeletalMesh*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_SkeletalMesh, mSkeletalMeshFilePath));
     mSkeletalMesh->Name = "Player";
-    mSkeletalMesh->Load();
+
+    mMaterial = dynamic_cast<UMaterial*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Material, FullMaterialPath));
 
     mAnimRing[0] = new UAnimSequence(mSkeletalMesh->GetSkeleton());
     mAnimRing[0]->FullFilePathName = FConfigManager::DefaultAnimSequencePath + mStateAnimMap[EPlayerState::PS_Stand] + FConfigManager::DefaultAnimSequenceFileSuffix;
@@ -40,10 +43,6 @@ void UPlayer::Load()
     mAnimRing[1]->FullFilePathName = FConfigManager::DefaultAnimSequencePath + mStateAnimMap[EPlayerState::PS_Walk] + FConfigManager::DefaultAnimSequenceFileSuffix;
     mAnimRing[0]->Name = mStateAnimMap[EPlayerState::PS_Walk];
     mAnimRing[1]->Load();
-
-    mMaterial = new UMaterial();
-    mMaterial->FullFilePathName = FullMaterialPath;
-    mMaterial->Load();
 
     mAnimSequenceBlender = new FAnimSequenceBlender(mAnimRing[0], mAnimRing[1]);
     mAnimWeightRing[0] = 1.0f;

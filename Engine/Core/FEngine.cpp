@@ -6,6 +6,7 @@
 #include "FLogManager.h"
 #include "FConfigManager.h"
 #include "FPlayerController.h"
+#include "FResourceManager.h"
 #include "UWorld.h"
 #include "UCamera.h"
 
@@ -37,6 +38,7 @@ void FEngine::init()
     TSingleton<FConfigManager>::GetInstance().Init();
     TSingleton<FInputManager>::GetInstance().Init();
     TSingleton<FPlayerController>::GetInstance().Init();
+    TSingleton<FResourceManager>::GetInstance().Init();
 
     createWindow();
 
@@ -71,6 +73,7 @@ void FEngine::unInit()
     TSingleton<FConfigManager>::GetInstance().UnInit();
     TSingleton<FLogManager>::GetInstance().UnInit();
     TSingleton<FPlayerController>::GetInstance().UnInit();
+    TSingleton<FResourceManager>::GetInstance().UnInit();
 
     mInited = false;
 }

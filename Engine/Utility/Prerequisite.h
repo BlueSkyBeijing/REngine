@@ -22,6 +22,7 @@ typedef Eigen::Quaternionf FQuat;
 enum EPixelFormat;
 enum EInputClassification;
 enum ELogLevel;
+enum EResourceType;
 
 struct FRect;
 struct FInputElementDesc;
@@ -39,6 +40,7 @@ class UCamera;
 class USkeletalMeshObject;
 class USkeletalMesh;
 class UMaterial;
+class UResource;
 
 class FEngine;
 class FRenderThread;
@@ -54,6 +56,7 @@ class FPipelineStateInfo;
 class FStaticMeshRenderProxy;
 class FSkeletalMeshRenderProxy;
 class FAnimSequenceBlender;
+class FResourceManager;
 
 class FSceneManager;
 class FShaderManager;

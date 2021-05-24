@@ -4,6 +4,8 @@
 #include "UTexture.h"
 #include "FMaterial.h"
 #include "FConfigManager.h"
+#include "TSingleton.h"
+#include "FResourceManager.h"
 
 UMaterial::UMaterial() :
     mBaseColor(nullptr),
@@ -37,9 +39,7 @@ void UMaterial::Load()
 
     materialFile.close();
 
-    mBaseColor = new UTexture2D();
-    mBaseColor->FullFilePathName = BaseColorTextureFullPathName;
-    mBaseColor->Load();
+    mBaseColor = dynamic_cast<UTexture2D*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Texture, BaseColorTextureFullPathName));
 
     //mMetallicSpecularRoughness = new UTexture2D();
     //mMetallicSpecularRoughness->FullFilePathName = "Content\\Texture\\T_Default_Material_Gray_C.dds";
@@ -55,8 +55,6 @@ void UMaterial::Load()
 
 void UMaterial::Unload()
 {
-    mBaseColor->Unload();
-    delete mBaseColor;
     mBaseColor = nullptr;
 
     //mMetallicSpecularRoughness->Unload();
