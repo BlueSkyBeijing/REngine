@@ -62,7 +62,7 @@ FRHIPipelineState* FPipelineStateManager::CreatePipleLineState(const FPipelineSt
 {
     FRHIPipelineState* pipelineState = nullptr;
 
-    const uint64 hashValue = HashMemory((const void*)&info, sizeof(FPipelineStateInfo));
+    const uint64 hashValue = HashMemory((const char*)&info, sizeof(FPipelineStateInfo));
 
     auto iter = mPipelineStates.find(hashValue);
     if (iter == mPipelineStates.end())
@@ -80,7 +80,7 @@ FRHIPipelineState* FPipelineStateManager::CreatePipleLineState(const FPipelineSt
 
 FRHIPipelineState* FPipelineStateManager::GetPipleLineState(const FPipelineStateInfo& info)
 {
-    const uint64 hashValue = HashMemory((const void*)&info, sizeof(FPipelineStateInfo));
+    const uint64 hashValue = HashMemory((const char*)&info, sizeof(FPipelineStateInfo));
 
     auto iter = mPipelineStates.find(hashValue);
     if (iter != mPipelineStates.end())

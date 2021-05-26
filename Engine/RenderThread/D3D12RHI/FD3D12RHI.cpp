@@ -476,6 +476,10 @@ FRHIShader* FD3D12RHI::CreateShader(const FShaderInfo& shaderInfo)
         OutputDebugStringA((char*)errors->GetBufferPointer());
     }
 
+    shader->FullFilePathName = shaderInfo.FilePathName;
+    shader->EnterPoint = shaderInfo.EnterPoint;
+    shader->Target = shaderInfo.Target;
+
     return shader;
 }
 

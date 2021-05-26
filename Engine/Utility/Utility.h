@@ -23,4 +23,4 @@ inline std::string WStringToString(const std::wstring& wstr)
     return result;
 }
 
-uint64 HashMemory(const void* Data, int32 NumBytes);
+uint64 HashMemory(const char* Data, int32 NumBytes);

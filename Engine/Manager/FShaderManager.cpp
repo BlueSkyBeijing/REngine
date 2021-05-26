@@ -105,7 +105,7 @@ uint64 FShaderManager::haskShaderInfo(const FShaderInfo& shaderInfo)
         info += static_cast<int32>(defineValue.size());
     }
 
-    const uint64 hashValue = HashMemory((const void*)info, memSize);
+    const uint64 hashValue = HashMemory((const char*)infoStart, memSize);
 
     delete[] infoStart;
     infoStart = nullptr;
