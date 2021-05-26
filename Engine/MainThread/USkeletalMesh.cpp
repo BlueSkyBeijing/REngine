@@ -132,7 +132,7 @@ void USkeleton::Unload()
 {
 }
 
-UAnimSequence::UAnimSequence(): mSkeleton(nullptr), mElapsedSeconds(0.0f)
+UAnimSequence::UAnimSequence(): mSkeleton(nullptr)
 {
 }
 
@@ -175,29 +175,36 @@ void UAnimSequence::Load()
     }
 
     animSequenceFile.close();
-
-    BoneFinalTransforms.resize(mSkeleton->GetBoneInfos().size());
-    mBoneTransforms.resize(mSkeleton->GetBoneInfos().size());
-
 }
 
 void UAnimSequence::Unload()
 {
 }
 
-void UAnimSequence::Update(float deltaSeconds)
+FAnimSequenceInstance::FAnimSequenceInstance(UAnimSequence* animSequence):
+    mAnimSequence(animSequence)
+{
+    BoneFinalTransforms.resize(animSequence->GeSkeleton()->GetBoneInfos().size());
+    mBoneTransforms.resize(animSequence->GeSkeleton()->GetBoneInfos().size());
+}
+
+FAnimSequenceInstance::~FAnimSequenceInstance()
+{
+}
+
+void FAnimSequenceInstance::Update(float deltaSeconds)
 {
     mElapsedSeconds += deltaSeconds;
 
-    const float sequenceTime = std::fmodf(mElapsedSeconds, mSequenceLength);
-    const float percentTime = sequenceTime / mSequenceLength;
-    const int32 keyFrame0 = static_cast<int32>(std::floorf(percentTime * (mNumberOfFrames - 1)));
-    const int32 keyFrame1 = static_cast<int32>(std::ceilf(percentTime * (mNumberOfFrames - 1)));
-    const float oneFrameTime = mSequenceLength / mNumberOfFrames;
+    const float sequenceTime = std::fmodf(mElapsedSeconds, mAnimSequence->GetSequenceLength());
+    const float percentTime = sequenceTime / mAnimSequence->GetSequenceLength();
+    const int32 keyFrame0 = static_cast<int32>(std::floorf(percentTime * (mAnimSequence->GetNumberOfFrames() - 1)));
+    const int32 keyFrame1 = static_cast<int32>(std::ceilf(percentTime * (mAnimSequence->GetNumberOfFrames() - 1)));
+    const float oneFrameTime = mAnimSequence->GetSequenceLength() / mAnimSequence->GetNumberOfFrames();
     const float lerpFrames = (sequenceTime - oneFrameTime * keyFrame0) / oneFrameTime;
 
-    const std::vector<FBoneInfo>& boneInfos = mSkeleton->GetBoneInfos();
-    const std::vector<FTransform>& bonePose = mSkeleton->GetBonePose();
+    const std::vector<FBoneInfo>& boneInfos = mAnimSequence->GeSkeleton()->GetBoneInfos();
+    const std::vector<FTransform>& bonePose = mAnimSequence->GeSkeleton()->GetBonePose();
 
     for (uint32 i = 0; i < boneInfos.size(); ++i)
     {
@@ -213,33 +220,33 @@ void UAnimSequence::Update(float deltaSeconds)
         toParentTranslation.setZero();
 
         //get 2 frame and interpolate
-        const int32 rotKeyNum = static_cast<int32>(mAnimSequenceTracks[i].RotKeys.size());
+        const int32 rotKeyNum = static_cast<int32>(mAnimSequence->GetAnimSequenceTracks()[i].RotKeys.size());
         if (rotKeyNum > 0)
         {
-            rotKeyFrame0 = static_cast<int32>(std::floorf(percentTime * (rotKeyNum -1)));
+            rotKeyFrame0 = static_cast<int32>(std::floorf(percentTime * (rotKeyNum - 1)));
 
-            toParentRot = mAnimSequenceTracks[i].RotKeys[rotKeyFrame0];
+            toParentRot = mAnimSequence->GetAnimSequenceTracks()[i].RotKeys[rotKeyFrame0];
 
             if (rotKeyNum > 1)
             {
                 rotKeyFrame1 = static_cast<int32>(std::ceilf(percentTime * (rotKeyNum - 1)));
 
-                toParentRot = toParentRot.slerp(1.0f - lerpFrames, mAnimSequenceTracks[i].RotKeys[rotKeyFrame1]);
+                toParentRot = toParentRot.slerp(1.0f - lerpFrames, mAnimSequence->GetAnimSequenceTracks()[i].RotKeys[rotKeyFrame1]);
             }
         }
 
-        const int32 posKeyNum = static_cast<int32>(mAnimSequenceTracks[i].PosKeys.size());
+        const int32 posKeyNum = static_cast<int32>(mAnimSequence->GetAnimSequenceTracks()[i].PosKeys.size());
         if (posKeyNum > 0)
         {
             posKeyFrame0 = static_cast<int32>(std::floorf(percentTime * (posKeyNum - 1)));
 
-            toParentTranslation = mAnimSequenceTracks[i].PosKeys[posKeyFrame0];
+            toParentTranslation = mAnimSequence->GetAnimSequenceTracks()[i].PosKeys[posKeyFrame0];
 
             if (posKeyNum > 1)
             {
                 posKeyFrame1 = static_cast<int32>(std::ceilf(percentTime * (posKeyNum - 1)));
 
-                toParentTranslation = toParentTranslation * lerpFrames + mAnimSequenceTracks[i].PosKeys[posKeyFrame1] * (1.0f - lerpFrames);
+                toParentTranslation = toParentTranslation * lerpFrames + mAnimSequence->GetAnimSequenceTracks()[i].PosKeys[posKeyFrame1] * (1.0f - lerpFrames);
             }
         }
 
@@ -274,6 +281,7 @@ void UAnimSequence::Update(float deltaSeconds)
         BoneFinalTransforms[i] = (BoneFinalTransforms[i] * mBoneTransforms[i].inverse()).transpose();
     }
 }
+
 
 FAnimSequenceBlender::FAnimSequenceBlender(UAnimSequence* anim0, UAnimSequence* anim1): mAnimSequence0(anim0), mAnimSequence1(anim1)
 {

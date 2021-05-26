@@ -36,7 +36,7 @@ protected:
 private:
     USkeletalMesh* mSkeletalMesh;
     UMaterial* mMaterial;
-    UAnimSequence* mAnimSequence;
+    FAnimSequenceInstance* mAnimSequence;
 
     FRenderProxy* mRenderProxy;
 };

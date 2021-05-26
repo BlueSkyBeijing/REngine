@@ -27,9 +27,10 @@ void USkeletalMeshObject::Load()
 
     mMaterial = dynamic_cast<UMaterial*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Material, FullMaterialPath));
 
-    mAnimSequence = dynamic_cast<UAnimSequence*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Animation, FullAnimSequencePath));
-    mAnimSequence->SeSkeleton(mSkeletalMesh->GetSkeleton());
-    mAnimSequence->Load();
+    UAnimSequence* animSequence = dynamic_cast<UAnimSequence*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Animation, FullAnimSequencePath));
+    animSequence->SeSkeleton(mSkeletalMesh->GetSkeleton());
+    animSequence->Load();
+    mAnimSequence = new FAnimSequenceInstance(animSequence);
 
     //create render proxy
     createRenderProxy();
@@ -41,6 +42,7 @@ void USkeletalMeshObject::Unload()
 
     mMaterial = nullptr;
 
+    delete mAnimSequence;
     mAnimSequence = nullptr;
 }
 

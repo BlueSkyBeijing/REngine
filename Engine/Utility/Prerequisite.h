@@ -57,6 +57,7 @@ class FStaticMeshRenderProxy;
 class FSkeletalMeshRenderProxy;
 class FAnimSequenceBlender;
 class FResourceManager;
+class FAnimSequenceInstance;
 
 class FSceneManager;
 class FShaderManager;

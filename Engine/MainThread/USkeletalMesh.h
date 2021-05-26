@@ -99,12 +99,6 @@ public:
 public:
     virtual void Load() override;
     virtual void Unload() override;
-    void Update(float deltaSeconds);
-
-    inline void ResetTime()
-    {
-        mElapsedSeconds = 0.0f;
-    }
 
     inline const std::vector<FAnimSequenceTrack>& GetAnimSequenceTracks() const
     {
@@ -131,16 +125,32 @@ public:
         return mSequenceLength;
     }
 
-    std::vector<FMatrix4x4> BoneFinalTransforms;
-
 private:
     int32 mNumberOfFrames;
     float mSequenceLength;
     std::vector<FAnimSequenceTrack> mAnimSequenceTracks;
     const USkeleton* mSkeleton;
+};
 
-    std::vector<FMatrix4x4> mBoneTransforms;
+class FAnimSequenceInstance
+{
+public:
+    FAnimSequenceInstance(UAnimSequence* animSequence);
+    ~FAnimSequenceInstance();
+
+    void Update(float deltaSeconds);
+
+    inline void ResetTime()
+    {
+        mElapsedSeconds = 0.0f;
+    }
+
+    std::vector<FMatrix4x4> BoneFinalTransforms;
+
+private:
     float mElapsedSeconds;
+    std::vector<FMatrix4x4> mBoneTransforms;
+    UAnimSequence* mAnimSequence;
 };
 
 class FAnimSequenceBlender
