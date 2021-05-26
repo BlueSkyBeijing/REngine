@@ -93,7 +93,7 @@ private:
 class UAnimSequence : public UResource
 {
 public:
-    UAnimSequence(const USkeleton* skeleton);
+    UAnimSequence();
     virtual ~UAnimSequence() override;
 
 public:
@@ -116,7 +116,7 @@ public:
         return mSkeleton;
     }
 
-    inline void SeSkeleton(USkeleton* skeleton)
+    inline void SeSkeleton(const USkeleton* skeleton)
     {
         mSkeleton = skeleton;
     }

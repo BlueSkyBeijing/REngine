@@ -77,13 +77,13 @@ UResource* FResourceManager::GetOrCreate(EResourceType resorceType, const std::s
         break;
         case RT_Animation:
         {
-            //UAnimSequence* animSequence = new UAnimSequence();
-            //animSequence->FullFilePathName = fullFileName;
+            UAnimSequence* animSequence = new UAnimSequence();
+            animSequence->FullFilePathName = fullFileName;
             //animSequence->Load();
 
-            //mResourceMaps[resorceType].insert(std::make_pair(fullFileName, animSequence));
+            mResourceMaps[resorceType].insert(std::make_pair(fullFileName, animSequence));
 
-            //return animSequence;
+            return animSequence;
         }
             break;
         case RT_Texture:

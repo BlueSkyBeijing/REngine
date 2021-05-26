@@ -132,7 +132,7 @@ void USkeleton::Unload()
 {
 }
 
-UAnimSequence::UAnimSequence(const USkeleton * skeleton): mSkeleton(skeleton), mElapsedSeconds(0.0f)
+UAnimSequence::UAnimSequence(): mSkeleton(nullptr), mElapsedSeconds(0.0f)
 {
 }
 

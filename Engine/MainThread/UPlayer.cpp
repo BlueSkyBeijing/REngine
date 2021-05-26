@@ -34,13 +34,16 @@ void UPlayer::Load()
 
     mMaterial = dynamic_cast<UMaterial*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Material, FullMaterialPath));
 
-    mAnimRing[0] = new UAnimSequence(mSkeletalMesh->GetSkeleton());
-    mAnimRing[0]->FullFilePathName = FConfigManager::DefaultAnimSequencePath + mStateAnimMap[EPlayerState::PS_Stand] + FConfigManager::DefaultAnimSequenceFileSuffix;
+    const std::string animFileName0 =  FConfigManager::DefaultAnimSequencePath + mStateAnimMap[EPlayerState::PS_Stand] + FConfigManager::DefaultAnimSequenceFileSuffix;
+    const std::string animFileName1 = FConfigManager::DefaultAnimSequencePath + mStateAnimMap[EPlayerState::PS_Walk] + FConfigManager::DefaultAnimSequenceFileSuffix;
+
+    mAnimRing[0] = dynamic_cast<UAnimSequence*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Animation, animFileName0));
+    mAnimRing[0]->SeSkeleton(mSkeletalMesh->GetSkeleton());
     mAnimRing[0]->Name = mStateAnimMap[EPlayerState::PS_Stand];
     mAnimRing[0]->Load();
 
-    mAnimRing[1] = new UAnimSequence(mSkeletalMesh->GetSkeleton());
-    mAnimRing[1]->FullFilePathName = FConfigManager::DefaultAnimSequencePath + mStateAnimMap[EPlayerState::PS_Walk] + FConfigManager::DefaultAnimSequenceFileSuffix;
+    mAnimRing[1] = dynamic_cast<UAnimSequence*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Animation, animFileName1));
+    mAnimRing[1]->SeSkeleton(mSkeletalMesh->GetSkeleton());
     mAnimRing[0]->Name = mStateAnimMap[EPlayerState::PS_Walk];
     mAnimRing[1]->Load();
 
@@ -63,20 +66,12 @@ void UPlayer::Load()
 
 void UPlayer::Unload()
 {
-    mAnimRing[0]->Unload();
-    delete mAnimRing[0];
     mAnimRing[0] = nullptr;
 
-    mAnimRing[1]->Unload();
-    delete mAnimRing[1];
     mAnimRing[1] = nullptr;
 
-    mSkeletalMesh->Unload();
-    delete mSkeletalMesh;
     mSkeletalMesh = nullptr;
 
-    mMaterial->Unload();
-    delete mMaterial;
     mMaterial = nullptr;
 
     delete mAnimSequenceBlender;
