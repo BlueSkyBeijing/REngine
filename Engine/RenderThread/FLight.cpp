@@ -18,3 +18,11 @@ FDirectionalLight::FDirectionalLight()
 FDirectionalLight::~FDirectionalLight()
 {
 }
+ 
+FPointLight::FPointLight()
+{
+}
+
+FPointLight::~FPointLight()
+{
+}

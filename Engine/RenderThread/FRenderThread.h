@@ -18,7 +18,7 @@ public:
 
     void SetView(FView* view);
 
-    void SetDirectionalLight(FDirectionalLight* light);
+    void AddLight(FLight* light);
 
     void OnProduceOneFrame();
 

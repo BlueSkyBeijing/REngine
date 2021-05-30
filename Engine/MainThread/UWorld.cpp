@@ -47,6 +47,21 @@ void UWorld::Load()
     directionalLightDatas.resize(numDirectionalLight);
     mapFile.read((char*)directionalLightDatas.data(), numDirectionalLight * sizeof(FDirectionalLightData));
 
+    int32 numPointLight;
+    std::vector<FPointLightData> pointLightDatas;
+    mapFile.read((char*)&numPointLight, sizeof(int32));
+    for (int32 i = 0; i < numPointLight; i++)
+    {
+        FPointLightData data;
+        mapFile.read((char*)data.Color.data(), sizeof(FVector4));
+        mapFile.read((char*)data.Location.data(), sizeof(FVector3));
+        mapFile.read((char*)&data.Intensity, sizeof(float));
+        mapFile.read((char*)&data.AttenuationRadius, sizeof(float));
+        mapFile.read((char*)&data.LightFalloffExponent, sizeof(float));
+
+        pointLightDatas.push_back(data);
+    }
+
     int32 numStaticMeshObject;
     std::vector<FStaticMeshObjectData> staticMeshObjectDatas;
     mapFile.read((char*)&numStaticMeshObject, sizeof(int32));
@@ -121,6 +136,26 @@ void UWorld::Load()
 
         directionalLightDataIndex++;
     }
+
+    mPointLights.resize(numPointLight);
+    int32 pointLightDataIndex = 0;
+    for (auto it = mPointLights.begin(); it != mPointLights.end(); it++)
+    {
+        UPointLight* pointLight = new UPointLight();
+
+        pointLight->Color = pointLightDatas[pointLightDataIndex].Color;
+        pointLight->Location = pointLightDatas[pointLightDataIndex].Location;
+        pointLight->Intensity = pointLightDatas[pointLightDataIndex].Intensity;
+        pointLight->AttenuationRadius = pointLightDatas[pointLightDataIndex].AttenuationRadius;
+        pointLight->LightFalloffExponent = pointLightDatas[pointLightDataIndex].LightFalloffExponent;
+
+        pointLight->Load();
+
+        *it = pointLight;
+
+        pointLightDataIndex++;
+    }
+
 
     mStaticMeshObjects.resize(numStaticMeshObject);
     int32 staticMeshObjectDataIndex = 0;

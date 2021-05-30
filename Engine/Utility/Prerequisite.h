@@ -23,6 +23,7 @@ enum EPixelFormat;
 enum EInputClassification;
 enum ELogLevel;
 enum EResourceType;
+enum EBlendMode;
 
 struct FRect;
 struct FInputElementDesc;
@@ -41,6 +42,8 @@ class USkeletalMeshObject;
 class USkeletalMesh;
 class UMaterial;
 class UResource;
+class UPointLight;
+class UDirectionalLight;
 
 class FEngine;
 class FRenderThread;
@@ -58,6 +61,8 @@ class FSkeletalMeshRenderProxy;
 class FAnimSequenceBlender;
 class FResourceManager;
 class FAnimSequenceInstance;
+class FLight;
+class FPointLight;
 
 class FSceneManager;
 class FShaderManager;

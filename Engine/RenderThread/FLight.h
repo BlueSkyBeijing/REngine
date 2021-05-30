@@ -23,7 +23,21 @@ public:
 
 public:
     FVector3 Direction;
-    float Intensity;
+
+private:
+
+};
+
+class FPointLight : public FLight
+{
+public:
+    FPointLight();
+    virtual ~FPointLight();
+
+public:
+    FVector3 Location;
+    float AttenuationRadius;
+    float LightFalloffExponent;
 
 private:
 

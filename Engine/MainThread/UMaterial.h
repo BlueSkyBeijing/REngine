@@ -26,5 +26,6 @@ private:
     UTexture2D* mMetallicSpecularRoughness;
     UTexture2D* mNormalMap;
     UTexture2D* mEmissiveColor;
-
+    EBlendMode mBlendMode;
+    float mOpacity;
 };

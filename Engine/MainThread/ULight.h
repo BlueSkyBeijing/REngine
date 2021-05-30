@@ -29,11 +29,26 @@ public:
 
 public:
     FVector3 Direction;
-    float Intensity;
 
 private:
 };
 
+class UPointLight : public ULight
+{
+public:
+    UPointLight();
+    virtual~UPointLight() override;
+
+public:
+    virtual void Load() override;
+
+public:
+    FVector3 Location;
+    float AttenuationRadius;
+    float LightFalloffExponent;
+
+private:
+};
 
 struct FDirectionalLightData
 {
@@ -43,4 +58,16 @@ struct FDirectionalLightData
     FVector4 Color;
     FVector3 Direction;
     float Intensity;
+};
+
+struct FPointLightData
+{
+    FPointLightData() {}
+    ~FPointLightData() {}
+
+    FVector4 Color;
+    FVector3 Location;
+    float Intensity;
+    float AttenuationRadius;
+    float LightFalloffExponent;
 };

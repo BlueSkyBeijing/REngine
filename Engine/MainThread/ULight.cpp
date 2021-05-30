@@ -39,6 +39,32 @@ void UDirectionalLight::Load()
 
     ENQUEUE_RENDER_COMMAND([renderThread, light]
     {
-        renderThread->SetDirectionalLight(light);
+        renderThread->AddLight(light);
+    });
+}
+
+UPointLight::UPointLight() :
+    ULight()
+{
+}
+
+UPointLight::~UPointLight()
+{
+}
+
+void UPointLight::Load()
+{
+    FPointLight* light = new FPointLight;
+    light->Color = Color;
+    light->Location = Location;
+    light->Intensity = Intensity;
+    light->AttenuationRadius = AttenuationRadius;
+    light->LightFalloffExponent = LightFalloffExponent;
+
+    FRenderThread* renderThread = TSingleton<FEngine>::GetInstance().GetRenderThread();
+
+    ENQUEUE_RENDER_COMMAND([renderThread, light]
+    {
+        renderThread->AddLight(light);
     });
 }

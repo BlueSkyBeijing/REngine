@@ -74,9 +74,9 @@ void FRenderThread::SetView(FView* view)
     delete view;
 }
 
-void FRenderThread::SetDirectionalLight(FDirectionalLight* light)
+void FRenderThread::AddLight(FLight* light)
 {
-    mScene->SetDirectionalLight(light);
+    mScene->AddlLight(light);
 }
 
 void FRenderThread::OnProduceOneFrame()

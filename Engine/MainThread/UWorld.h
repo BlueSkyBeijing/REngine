@@ -3,11 +3,6 @@
 
 #include "UObject.h"
 
-class UStaticMeshObject;
-class UCamera;
-class UDirectionalLight;
-class FEngine;
-
 class UWorld : UResource
 {
 public:
@@ -27,6 +22,7 @@ public:
 private:
     std::vector<UCamera*> mCameras;
     std::vector<UDirectionalLight*> mDirectionalLights;
+    std::vector<UPointLight*> mPointLights;
     std::vector<UStaticMeshObject*> mStaticMeshObjects;
     std::vector<USkeletalMeshObject*> mSkeletalMeshObjects;
     FEngine* mEngine;

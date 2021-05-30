@@ -58,12 +58,20 @@ void FScene::AddRenderable(FRenderProxy* renderProxy)
     }
 }
 
-void FScene::SetDirectionalLight(FDirectionalLight* light)
+void FScene::AddlLight(FLight* light)
 {
     assert(light != nullptr);
-    if (mDirectionalLight != nullptr)
+    FDirectionalLight* directionalLight = dynamic_cast<FDirectionalLight*>(light);
+    if (directionalLight != nullptr)
     {
         delete mDirectionalLight;
+        mDirectionalLight = directionalLight;
     }
-    mDirectionalLight = light;
+
+    FPointLight* pointLight = dynamic_cast<FPointLight*>(light);
+    if (pointLight != nullptr)
+    {
+        mPointLights.push_back(pointLight);
+    }
+
 }

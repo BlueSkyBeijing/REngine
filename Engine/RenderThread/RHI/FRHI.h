@@ -390,6 +390,18 @@ public:
     EPixelFormat DepthStencilFormat;
 };
 
+enum EBlendMode
+{
+    BM_Opaque,
+    BM_Masked,
+    BM_Translucent,
+    BM_Additive,
+    BM_Modulate,
+    BM_AlphaComposite,
+    BM_AlphaHoldout,
+    BM_MAX,
+};
+
 
 class FRHI
 {

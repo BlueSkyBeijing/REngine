@@ -28,6 +28,9 @@ void UMaterial::Load()
         return;
     }
 
+
+    materialFile.read((char*)&mBlendMode, sizeof(int32));
+
     std::string BaseColorTextureName;
     int32 stringSize;
     materialFile.read((char*)&stringSize, sizeof(int32));
@@ -36,6 +39,8 @@ void UMaterial::Load()
     std::string BaseColorTextureFullPathName = FConfigManager::DefaultTexturePath +
         std::string(BaseColorTextureName.c_str()) +
         FConfigManager::DefaultTextureFileSuffix;
+
+    materialFile.read((char*)&mOpacity, sizeof(float));
 
     materialFile.close();
 
