@@ -109,7 +109,7 @@ void FRenderer::drawShadowPass()
     mRHI->Clear(false, clearColor, true, 1, true, 0);
 
     //static
-    const std::vector<FStaticMeshRenderProxy*>& staticRenderProxys = mScene->GetStaticRenderProxys();
+    const std::vector<FStaticMeshRenderProxy*>& staticRenderProxys = mScene->GetStaticOpaqueRenderProxys();
     for (auto it = staticRenderProxys.begin(); it != staticRenderProxys.end(); it++)
     {
         FRenderProxy* renderProxy = *it;
@@ -139,7 +139,7 @@ void FRenderer::drawShadowPass()
     }
 
     //dyamic
-    const std::vector<FSkeletalMeshRenderProxy*>& dynamicRenderProxys = mScene->GetDynamicRenderProxys();
+    const std::vector<FSkeletalMeshRenderProxy*>& dynamicRenderProxys = mScene->GetDynamicOpaqueRenderProxys();
     for (auto it = dynamicRenderProxys.begin(); it != dynamicRenderProxys.end(); it++)
     {
         FRenderProxy* renderProxy = *it;
@@ -243,35 +243,11 @@ void FRenderer::_createShadowPassConstant(FShadowPassConstant& constant)
     constant.ViewProj = lightView * lightProj;
 }
 
-void FRenderer::initSceneColorPass()
+void FRenderer::_drawSceneColorOpaque()
 {
-    //create shadow depth render target
-    mSceneColor = mRHI->CreateRenderTarget(TSingleton<FConfigManager>::GetInstance().WindowWidth,
-        TSingleton<FConfigManager>::GetInstance().WindowHeight, 1, PF_R16G16B16A16_FLOAT, PF_D24_UNORM_S8_UINT);
+    mRHI->BeginEvent("Opaque");
 
-    createSceneColorPassConstantBuffer();
-}
-
-void FRenderer::drawSceneColorPass()
-{
-    mRHI->BeginEvent("SceneColor");
-
-    mRHI->SetRenderTarget(mSceneColor);
-
-    const FRHITransitionInfo infoRenderTargetBegin(mSceneColor->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
-    mRHI->TransitionResource(infoRenderTargetBegin);
-    const FRHITransitionInfo infoDepthStencilBegin(mSceneColor->DepthStencilTarget, ACCESS_GENERIC_READ, ACCESS_DEPTH_WRITE);
-    mRHI->TransitionResource(infoDepthStencilBegin);
-
-    const FVector4 clearColor(0.5f, 0.5f, 0.5f, 1.0f);
-    mRHI->Clear(true, clearColor, true, 1, true, 0);
-
-    mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mRenderTarget->Width), static_cast<float>(mRenderTarget->Height), 1.0f);
-    mRHI->SetSetScissor(true, 0.0f, 0.0f, static_cast<float>(mRenderTarget->Width), static_cast<float>(mRenderTarget->Height));
-
-    updateSceneColorPassConstantBuffer();
-
-    const std::vector<FStaticMeshRenderProxy*>& staticRenderProxys = mScene->GetStaticRenderProxys();
+    const std::vector<FStaticMeshRenderProxy*>& staticRenderProxys = mScene->GetStaticOpaqueRenderProxys();
     for (auto it = staticRenderProxys.begin(); it != staticRenderProxys.end(); it++)
     {
         FRenderProxy* renderProxy = *it;
@@ -303,7 +279,7 @@ void FRenderer::drawSceneColorPass()
         mRHI->EndEvent();
     }
 
-    const std::vector<FSkeletalMeshRenderProxy*>& dynamicRenderProxys = mScene->GetDynamicRenderProxys();
+    const std::vector<FSkeletalMeshRenderProxy*>& dynamicRenderProxys = mScene->GetDynamicOpaqueRenderProxys();
     for (auto it = dynamicRenderProxys.begin(); it != dynamicRenderProxys.end(); it++)
     {
         FRenderProxy* renderProxy = *it;
@@ -335,6 +311,112 @@ void FRenderer::drawSceneColorPass()
         mRHI->EndEvent();
     }
 
+    mRHI->EndEvent();
+}
+
+void FRenderer::_drawSceneColorTranslucent()
+{
+    mRHI->BeginEvent("Translucent");
+
+    const std::vector<FStaticMeshRenderProxy*>& staticRenderProxys = mScene->GetStaticTranslucentRenderProxys();
+    for (auto it = staticRenderProxys.begin(); it != staticRenderProxys.end(); it++)
+    {
+        FRenderProxy* renderProxy = *it;
+
+        mRHI->BeginEvent(renderProxy->DebugName.c_str());
+
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        FPipelineStateInfo info;
+        info.ShaderBindings = shaderBindings;
+        info.VertexShader = renderProxy->Material->VertexShader;
+        info.PixelShader = renderProxy->Material->PixelShader;
+        info.VertexLayout = &(renderProxy->VertexLayout);
+        info.DepthStencilState.bEnableDepthWrite = true;
+        info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
+        info.BlendState.AlphaBlendOp = BO_Subtract;
+
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
+
+        mRHI->SetPipelineState(pipelineState);
+        mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
+        mRHI->SetVertexBuffer(renderProxy->VertexBuffer);
+        mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
+        mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mSceneColorPassConstantBuffer, 1);
+        mRHI->SetTexture2D(renderProxy->Material->BaseColor, 0);
+        mRHI->SetTexture2D(mShadowMap->DepthStencilTarget, 1);
+
+        mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
+
+        mRHI->EndEvent();
+    }
+
+    const std::vector<FSkeletalMeshRenderProxy*>& dynamicRenderProxys = mScene->GetDynamicTranslucentRenderProxys();
+    for (auto it = dynamicRenderProxys.begin(); it != dynamicRenderProxys.end(); it++)
+    {
+        FRenderProxy* renderProxy = *it;
+
+        mRHI->BeginEvent(renderProxy->DebugName.c_str());
+
+        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        FPipelineStateInfo info;
+        info.ShaderBindings = shaderBindings;
+        info.VertexShader = renderProxy->Material->VertexShaderGPUSkin;
+        info.PixelShader = renderProxy->Material->PixelShader;
+        info.VertexLayout = &(renderProxy->VertexLayout);
+        info.DepthStencilState.bEnableDepthWrite = true;
+        info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
+        info.BlendState.AlphaBlendOp = BO_Subtract;
+
+        FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
+
+        mRHI->SetPipelineState(pipelineState);
+        mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
+        mRHI->SetVertexBuffer(renderProxy->VertexBuffer);
+        mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
+        mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
+        mRHI->SetConstantBuffer(mSceneColorPassConstantBuffer, 1);
+        mRHI->SetTexture2D(renderProxy->Material->BaseColor, 0);
+        mRHI->SetTexture2D(mShadowMap->DepthStencilTarget, 1);
+
+        mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
+
+        mRHI->EndEvent();
+    }
+
+    mRHI->EndEvent();
+}
+
+void FRenderer::initSceneColorPass()
+{
+    //create shadow depth render target
+    mSceneColor = mRHI->CreateRenderTarget(TSingleton<FConfigManager>::GetInstance().WindowWidth,
+        TSingleton<FConfigManager>::GetInstance().WindowHeight, 1, PF_R16G16B16A16_FLOAT, PF_D24_UNORM_S8_UINT);
+
+    createSceneColorPassConstantBuffer();
+}
+
+void FRenderer::drawSceneColorPass()
+{
+    mRHI->BeginEvent("SceneColor");
+
+    mRHI->SetRenderTarget(mSceneColor);
+
+    const FRHITransitionInfo infoRenderTargetBegin(mSceneColor->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
+    mRHI->TransitionResource(infoRenderTargetBegin);
+    const FRHITransitionInfo infoDepthStencilBegin(mSceneColor->DepthStencilTarget, ACCESS_GENERIC_READ, ACCESS_DEPTH_WRITE);
+    mRHI->TransitionResource(infoDepthStencilBegin);
+
+    const FVector4 clearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    mRHI->Clear(true, clearColor, true, 1, true, 0);
+
+    mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mRenderTarget->Width), static_cast<float>(mRenderTarget->Height), 1.0f);
+    mRHI->SetSetScissor(true, 0.0f, 0.0f, static_cast<float>(mRenderTarget->Width), static_cast<float>(mRenderTarget->Height));
+
+    updateSceneColorPassConstantBuffer();
+
+    _drawSceneColorOpaque();
+    _drawSceneColorTranslucent();
 
     const FRHITransitionInfo infoRederTargetEnd(mSceneColor->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
     mRHI->TransitionResource(infoRederTargetEnd);

@@ -273,6 +273,26 @@ enum EBlendOperation
     BO_ReverseSubtract,
 };
 
+enum EBlendFactor
+{
+    BF_Zero,
+    BF_One,
+    BF_SourceColor,
+    BF_InverseSourceColor,
+    BF_SourceAlpha,
+    BF_InverseSourceAlpha,
+    BF_DestAlpha,
+    BF_InverseDestAlpha,
+    BF_DestColor,
+    BF_InverseDestColor,
+    BF_ConstantBlendFactor,
+    BF_InverseConstantBlendFactor,
+    BF_Source1Color,
+    BF_InverseSource1Color,
+    BF_Source1Alpha,
+    BF_InverseSource1Alpha,
+};
+
 struct FRHITransitionInfo
 {
     FRHIResource* Resource;
@@ -358,6 +378,28 @@ struct FDepthStencilStateInfo
 class FBlendStateInfo
 {
 public:
+    FBlendStateInfo(
+        EBlendOperation InColorBlendOp = BO_Add,
+        EBlendFactor InColorSrcBlend = BF_One,
+        EBlendFactor InColorDestBlend = BF_Zero,
+        EBlendOperation InAlphaBlendOp = BO_Add,
+        EBlendFactor InAlphaSrcBlend = BF_One,
+        EBlendFactor InAlphaDestBlend = BF_Zero
+        )
+        : ColorBlendOp(InColorBlendOp)
+        , ColorSrcBlend(InColorSrcBlend)
+        , ColorDestBlend(InColorDestBlend)
+        , AlphaBlendOp(InAlphaBlendOp)
+        , AlphaSrcBlend(InAlphaSrcBlend)
+        , AlphaDestBlend(InAlphaDestBlend)
+    {}
+
+    EBlendOperation ColorBlendOp;
+    EBlendFactor ColorSrcBlend;
+    EBlendFactor ColorDestBlend;
+    EBlendOperation AlphaBlendOp;
+    EBlendFactor AlphaSrcBlend;
+    EBlendFactor AlphaDestBlend;
 };
 
 class FShaderInfo
@@ -385,7 +427,7 @@ public:
 
     FRasterizerStateInfo RasterizerState;
     FDepthStencilStateInfo DepthStencilState;
-    FBlendStateInfo FRHIBlendState;
+    FBlendStateInfo BlendState;
     EPixelFormat RenderTargetFormat;
     EPixelFormat DepthStencilFormat;
 };

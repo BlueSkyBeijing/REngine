@@ -10,6 +10,7 @@
 #include "TSingleton.h"
 #include "FRenderCommand.h"
 #include "FResourceManager.h"
+#include "FMaterial.h"
 
 UStaticMeshObject::UStaticMeshObject() :
     mMaterial(nullptr),
@@ -50,6 +51,7 @@ void UStaticMeshObject::createRenderProxy()
     initializer.Position = Position;
     initializer.Rotation = Rotation;
     initializer.Scale = Scale;
+    initializer.BlendMode = mMaterial->Material->BlendMode;
 
     mRenderProxy = new FStaticMeshRenderProxy(initializer);
     mRenderProxy->DebugName = Name;

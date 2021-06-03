@@ -24,7 +24,7 @@ FPipelineStateInfo::FPipelineStateInfo():
     VertexLayout(nullptr),
     RasterizerState(),
     DepthStencilState(),
-    FRHIBlendState(),
+    BlendState(),
     RenderTargetFormat(),
     DepthStencilFormat()
 {

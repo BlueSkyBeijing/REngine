@@ -3,6 +3,7 @@
 #include "FScene.h"
 #include "FRenderProxy.h"
 #include "FLight.h"
+#include "FRHI.h"
 
 FScene::FScene()
 {
@@ -19,21 +20,21 @@ void FScene::Init()
 
 void FScene::UnInit()
 {
-    for (auto it = mStaticRenderProxys.begin(); it != mStaticRenderProxys.end(); it++)
+    for (auto it = mStaticOpaqueRenderProxys.begin(); it != mStaticOpaqueRenderProxys.end(); it++)
     {
         FRenderProxy* renderProxy = *it;
         renderProxy->ReleaseRenderResource();
         delete renderProxy;
     }
-    mStaticRenderProxys.clear();
+    mStaticOpaqueRenderProxys.clear();
 
-    for (auto it = mDynamicRenderProxys.begin(); it != mDynamicRenderProxys.end(); it++)
+    for (auto it = mDynamicOpaqueRenderProxys.begin(); it != mDynamicOpaqueRenderProxys.end(); it++)
     {
         FRenderProxy* renderProxy = *it;
         renderProxy->ReleaseRenderResource();
         delete renderProxy;
     }
-    mDynamicRenderProxys.clear();
+    mDynamicOpaqueRenderProxys.clear();
 
     if (mDirectionalLight != nullptr)
     {
@@ -48,13 +49,28 @@ void FScene::AddRenderable(FRenderProxy* renderProxy)
     FStaticMeshRenderProxy* staticRenderProxy = dynamic_cast<FStaticMeshRenderProxy*>(renderProxy);
     if (staticRenderProxy != nullptr)
     {
-        mStaticRenderProxys.push_back(staticRenderProxy);
+        if (staticRenderProxy->BlendMode == BM_Translucent)
+        {
+            mStaticTranslucentRenderProxys.push_back(staticRenderProxy);
+        }
+        else
+        {
+            mStaticOpaqueRenderProxys.push_back(staticRenderProxy);
+        }
     }
     else
     {
         FSkeletalMeshRenderProxy* dynamicRenderProxy = dynamic_cast<FSkeletalMeshRenderProxy*>(renderProxy);
         assert(dynamicRenderProxy != nullptr);
-        mDynamicRenderProxys.push_back(dynamicRenderProxy);
+
+        if (dynamicRenderProxy->BlendMode == BM_Translucent)
+        {
+            mDynamicTranslucentRenderProxys.push_back(dynamicRenderProxy);
+        }
+        else
+        {
+            mDynamicOpaqueRenderProxys.push_back(dynamicRenderProxy);
+        }
     }
 }
 

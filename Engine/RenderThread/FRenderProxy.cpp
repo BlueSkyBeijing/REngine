@@ -64,6 +64,7 @@ FStaticMeshRenderProxy::FStaticMeshRenderProxy(const FStaticMeshRenderProxyIniti
     Position = initializer.Position;
     Rotation = initializer.Rotation;
     Scale = initializer.Scale;
+    BlendMode = initializer.BlendMode;
 }
 
 FStaticMeshRenderProxy::~FStaticMeshRenderProxy()
@@ -86,6 +87,8 @@ void FStaticMeshRenderProxy::CreateRenderResource()
 
     Material->Init();
 
+    const bool isTranslucent = Material->BlendMode == BM_Translucent;
+
     IndexCountPerInstance = static_cast<uint32>(mIndexes.size());
     InstanceCount = 1;
     StartIndexLocation = 0;
@@ -100,6 +103,10 @@ void FStaticMeshRenderProxy::CreateRenderResource()
     info.VertexLayout = &VertexLayout;
     info.DepthStencilState.bEnableDepthWrite = true;
     info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
+    if (isTranslucent)
+    {
+        info.BlendState.AlphaBlendOp = BO_Subtract;
+    }
 
     TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
 
@@ -140,6 +147,7 @@ FSkeletalMeshRenderProxy::FSkeletalMeshRenderProxy(const FSkeletalMeshRenderProx
     Position = initializer.Position;
     Rotation = initializer.Rotation;
     Scale = initializer.Scale;
+    BlendMode = initializer.BlendMode;
 }
 
 FSkeletalMeshRenderProxy::~FSkeletalMeshRenderProxy()

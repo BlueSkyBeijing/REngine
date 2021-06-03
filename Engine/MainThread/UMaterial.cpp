@@ -56,6 +56,7 @@ void UMaterial::Load()
 
     Material = new FMaterial;
     Material->BaseColorFullFilePathName = BaseColorTextureFullPathName;
+    Material->BlendMode = mBlendMode;
 }
 
 void UMaterial::Unload()

@@ -15,15 +15,26 @@ public:
 
     void AddlLight(FLight* light);
 
-    std::vector<FStaticMeshRenderProxy*>& GetStaticRenderProxys()
+    std::vector<FStaticMeshRenderProxy*>& GetStaticOpaqueRenderProxys()
     {
-        return mStaticRenderProxys;
+        return mStaticOpaqueRenderProxys;
     }
 
-    std::vector<FSkeletalMeshRenderProxy*>& GetDynamicRenderProxys()
+    std::vector<FSkeletalMeshRenderProxy*>& GetDynamicOpaqueRenderProxys()
     {
-        return mDynamicRenderProxys;
+        return mDynamicOpaqueRenderProxys;
     }
+
+    std::vector<FStaticMeshRenderProxy*>& GetStaticTranslucentRenderProxys()
+    {
+        return mStaticTranslucentRenderProxys;
+    }
+
+    std::vector<FSkeletalMeshRenderProxy*>& GetDynamicTranslucentRenderProxys()
+    {
+        return mDynamicTranslucentRenderProxys;
+    }
+
 
     FDirectionalLight* GetDirectionalLight() const
     {
@@ -31,8 +42,12 @@ public:
     }
 
 private:
-    std::vector<FStaticMeshRenderProxy*> mStaticRenderProxys;
-    std::vector<FSkeletalMeshRenderProxy*> mDynamicRenderProxys;
+    std::vector<FStaticMeshRenderProxy*> mStaticOpaqueRenderProxys;
+    std::vector<FSkeletalMeshRenderProxy*> mDynamicOpaqueRenderProxys;
+
+    std::vector<FStaticMeshRenderProxy*> mStaticTranslucentRenderProxys;
+    std::vector<FSkeletalMeshRenderProxy*> mDynamicTranslucentRenderProxys;
+    
     FDirectionalLight* mDirectionalLight;
     std::vector<FPointLight*> mPointLights;
 

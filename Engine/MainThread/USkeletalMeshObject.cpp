@@ -10,6 +10,7 @@
 #include "TSingleton.h"
 #include "FResourceManager.h"
 #include "FRenderCommand.h"
+#include "FMaterial.h"
 
 USkeletalMeshObject::USkeletalMeshObject() :
     mMaterial(nullptr),
@@ -72,6 +73,7 @@ void USkeletalMeshObject::createRenderProxy()
     initializer.Position = Position;
     initializer.Rotation = Rotation;
     initializer.Scale = Scale;
+    initializer.BlendMode = mMaterial->Material->BlendMode;
 
     mRenderProxy = new FSkeletalMeshRenderProxy(initializer);
     mRenderProxy->DebugName = Name;

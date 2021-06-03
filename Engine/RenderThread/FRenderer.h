@@ -62,6 +62,9 @@ private:
     void _createSceneColorPassConstant(FSceneColorPassConstant& constant);
     void _createShadowPassConstant(FShadowPassConstant& constant);
 
+    void _drawSceneColorOpaque();
+    void _drawSceneColorTranslucent();
+
 private:
     FRHI* mRHI;
     FRHIRenderTarget* mRenderTarget;

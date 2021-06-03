@@ -31,6 +31,8 @@ public:
     FQuat Rotation;
     FVector3 Scale;
     FMaterial* Material;
+    EBlendMode BlendMode;
+
 };
 
 struct FSkeletalMeshRenderProxyInitializer
@@ -46,6 +48,8 @@ public:
     FQuat Rotation;
     FVector3 Scale;
     FMaterial* Material;
+    EBlendMode BlendMode;
+
 };
 
 
@@ -74,6 +78,7 @@ public:
     FVector3 Position;
     FQuat Rotation;
     FVector3 Scale;
+    EBlendMode BlendMode;
 
     std::string DebugName;
 
