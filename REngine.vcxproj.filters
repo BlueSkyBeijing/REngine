@@ -197,6 +197,9 @@
     <ClCompile Include="Engine\MainThread\UPlayer.cpp">
       <Filter>Engine\MainThread</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Utility\FArchive.cpp">
+      <Filter>Engine\Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Manager\FInputManager.h">
@@ -372,6 +375,9 @@
     </ClInclude>
     <ClInclude Include="Engine\MainThread\UPlayer.h">
       <Filter>Engine\MainThread</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Utility\FArchive.h">
+      <Filter>Engine\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,7 @@
 #include "ShadingCommon.hlsl"
 
+#define MAX_POINT_LIGHT_NUM 4
+
 struct VertexShaderInput
 {
     float3 Pos : POSITION;
@@ -43,5 +45,10 @@ cbuffer SceneColorPassConstantBuffer : register(b1)
     float3 DirectionalLightColor;
     float _placeholder3;
     float2 InvShadowMapSize;
+    float _placeholder4;
+   
+    int PointLightNum;
+    float4 PointLightPositionAndInvRadius[MAX_POINT_LIGHT_NUM];
+    float4 PointLightColorAndFalloffExponent[MAX_POINT_LIGHT_NUM];
 };
 

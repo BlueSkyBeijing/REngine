@@ -478,6 +478,15 @@ void FRenderer::_createSceneColorPassConstant(FSceneColorPassConstant& constant)
     const int32 shadowMapWidth = TSingleton<FConfigManager>::GetInstance().ShadowMapWidth;
     const int32 shadowMapHeight = TSingleton<FConfigManager>::GetInstance().ShadowMapHeight;
     constant.InvShadowMapSize = FVector2(1.0f / (shadowMapWidth), 1.0f / (shadowMapHeight));
+
+    const std::vector<FPointLight*>& pointLight = mScene->GetPointLights();
+    const int32 pointLightNum = std::min(MAX_POINT_LIGHT_NUM, static_cast<int32>(pointLight.size()));
+    constant.PointLightNum = pointLightNum;
+    for (int32 i = 0; i < pointLightNum; i++)
+    {
+        constant.PointLightColorAndFalloffExponent[i] = FVector4(pointLight[i]->Color.x(), pointLight[i]->Color.y(), pointLight[i]->Color.z(), 1.0f);
+        constant.PointLightPositionAndInvRadius[i] = FVector4(pointLight[i]->Location.x(), pointLight[i]->Location.y(), pointLight[i]->Location.z(), 1.0f / pointLight[i]->AttenuationRadius);
+    }
 }
 
 void FRenderer::initPostProcess()

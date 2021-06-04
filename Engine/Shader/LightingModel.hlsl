@@ -18,3 +18,24 @@ float3 BlinnPhong(float3 normal, float3 lightDir, float3 lightColor, float light
     	 
     return colorLinear;
 }
+
+#define PI 3.1415926
+
+float Square(float x)
+{
+    return x * x;
+}
+
+float3 PointLighting(float3 normal, float3 lightPosition, float3 lightColor, float invRadius, float3 pixelPosition, float3 diffuseColor)
+{
+    float3 toLight = lightPosition - pixelPosition;
+    float distanceSqr = dot(toLight, toLight);
+    float3 l = toLight * rsqrt(distanceSqr);
+    float pointNoL = max(0, dot(normal, l));
+
+    float attenuation = 1 / (distanceSqr + 1);
+
+    float lightRadiusMask = Square(saturate(1 - Square(distanceSqr * (invRadius * invRadius))));
+    attenuation *= lightRadiusMask;
+    return (attenuation * pointNoL) * lightColor * (1.0 / PI) * diffuseColor;
+}

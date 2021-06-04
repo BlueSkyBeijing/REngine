@@ -16,6 +16,11 @@ float4 PSMain(VertexShaderOutput pixelIn) : SV_Target
     const float shadow = DirectionalLightShadow(pixelIn.ShadowPosH);
     float3 lighting = BlinnPhong(pixelIn.Normal, DirectionalLightDir, DirectionalLightColor, lightIntensity, viewDir, diffuseColor.rgb, shadow);
 
+    for (int i = 0; i < PointLightNum; ++i)
+    {
+        lighting += PointLighting(pixelIn.Normal, PointLightPositionAndInvRadius[i].xyz, PointLightColorAndFalloffExponent[i].xyz, PointLightPositionAndInvRadius[i].w, pixelIn.PosW.xyz, diffuseColor.xyz);
+    }
+
     outColor.rgb = lighting;
     outColor.a = 1.0f;
     

@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Prerequisite.h"
 
+#define MAX_POINT_LIGHT_NUM 4
 
 struct FSceneColorPassConstant
 {
@@ -17,6 +18,10 @@ struct FSceneColorPassConstant
     FVector3 DirectionalLightColor;
     float _Placeholder3;
     FVector2 InvShadowMapSize;
+    float _Placeholder4;
+    int32 PointLightNum;
+    FVector4 PointLightPositionAndInvRadius[MAX_POINT_LIGHT_NUM];
+    FVector4 PointLightColorAndFalloffExponent[MAX_POINT_LIGHT_NUM];
 };
 
 struct FShadowPassConstant
