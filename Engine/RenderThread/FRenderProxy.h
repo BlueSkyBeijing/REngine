@@ -10,12 +10,14 @@
 struct FObjectConstant
 {
     FMatrix4x4 World;
+    float Opacity;
 };
 
 struct FSkeletonMeshConstant
 {
     FMatrix4x4 World;
     FMatrix4x4 BoneTransforms[75];
+    float Opacity;
 };
 
 struct FStaticMeshRenderProxyInitializer

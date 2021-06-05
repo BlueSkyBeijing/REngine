@@ -28,6 +28,7 @@ cbuffer ObjectConstantBuffer : register(b0)
 #ifdef GPU_SKIN
     float4x4 BoneTransforms[75];
 #endif
+    float Opacity;
 };
 
 cbuffer SceneColorPassConstantBuffer : register(b1)

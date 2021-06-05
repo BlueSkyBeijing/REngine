@@ -62,6 +62,7 @@ void FFullScreenQuad::Init()
     info.PixelShader = PixelShader;
     info.VertexLayout = mLayout;
     info.DepthStencilState.bEnableDepthWrite = false;
+    info.DepthStencilState.DepthTest = CF_Always;
     info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
     TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
@@ -193,6 +194,7 @@ void FPostProcessing::Init()
         info.PixelShader = PixelShaderBloomSetup;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.DepthStencilState.DepthTest = CF_Always;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
@@ -221,6 +223,7 @@ void FPostProcessing::Init()
         info.PixelShader = PixelShaderBloomDown;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.DepthStencilState.DepthTest = CF_Always;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
@@ -249,6 +252,7 @@ void FPostProcessing::Init()
         info.PixelShader = PixelShaderBloomUp;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.DepthStencilState.DepthTest = CF_Always;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
@@ -277,6 +281,7 @@ void FPostProcessing::Init()
         info.PixelShader = PixelShaderTonemap;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.DepthStencilState.DepthTest = CF_Always;
         info.RenderTargetFormat = EPixelFormat::PF_R8G8B8A8_UNORM;
 
         TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
@@ -413,6 +418,7 @@ void FPostProcessing::Draw()
         info.PixelShader = PixelShaderBloomSetup;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.DepthStencilState.DepthTest = CF_Always;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
@@ -449,6 +455,7 @@ void FPostProcessing::Draw()
         info.PixelShader = PixelShaderBloomDown;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.DepthStencilState.DepthTest = CF_Always;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
@@ -486,6 +493,7 @@ void FPostProcessing::Draw()
         info.PixelShader = PixelShaderBloomDown;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.DepthStencilState.DepthTest = CF_Always;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
@@ -524,6 +532,7 @@ void FPostProcessing::Draw()
         info.PixelShader = PixelShaderBloomDown;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.DepthStencilState.DepthTest = CF_Always;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
@@ -561,6 +570,7 @@ void FPostProcessing::Draw()
         info.PixelShader = PixelShaderBloomDown;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.DepthStencilState.DepthTest = CF_Always;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
@@ -598,6 +608,7 @@ void FPostProcessing::Draw()
         info.PixelShader = PixelShaderBloomUp;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.DepthStencilState.DepthTest = CF_Always;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
@@ -636,6 +647,7 @@ void FPostProcessing::Draw()
         info.PixelShader = PixelShaderBloomUp;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.DepthStencilState.DepthTest = CF_Always;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
@@ -675,6 +687,7 @@ void FPostProcessing::Draw()
         info.PixelShader = PixelShaderBloomUp;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.DepthStencilState.DepthTest = CF_Always;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
@@ -714,6 +727,7 @@ void FPostProcessing::Draw()
         info.PixelShader = PixelShaderBloomUp;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.DepthStencilState.DepthTest = CF_Always;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
@@ -755,6 +769,7 @@ void FPostProcessing::Draw()
         info.PixelShader = PixelShaderTonemap;
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.DepthStencilState.DepthTest = CF_Always;
         info.RenderTargetFormat = EPixelFormat::PF_R8G8B8A8_UNORM;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);

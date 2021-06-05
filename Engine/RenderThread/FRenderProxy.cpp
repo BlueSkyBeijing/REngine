@@ -82,6 +82,7 @@ void FStaticMeshRenderProxy::CreateRenderResource()
     FMatrix3x3 rotation = Rotation.toRotationMatrix();
     mObjectConstants.World.block<3, 3>(0, 0) = rotation;
     mObjectConstants.World.block<1, 3>(3, 0) = Position;
+    mObjectConstants.Opacity = Material->Opacity;
 
     ConstantBuffer = rhi->CreateConstantBuffer(sizeof(mObjectConstants), (uint8*)&mObjectConstants);
 
@@ -101,7 +102,7 @@ void FStaticMeshRenderProxy::CreateRenderResource()
     info.VertexShader = Material->VertexShader;
     info.PixelShader = Material->PixelShader;
     info.VertexLayout = &VertexLayout;
-    info.DepthStencilState.bEnableDepthWrite = true;
+    info.DepthStencilState.bEnableDepthWrite = !isTranslucent;
     info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
     if (isTranslucent)
     {
@@ -165,10 +166,13 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
     FMatrix3x3 rotation = Rotation.toRotationMatrix();
     mObjectConstants.World.block<3, 3>(0, 0) = rotation;
     mObjectConstants.World.block<1, 3>(3, 0) = Position;
+    mObjectConstants.Opacity = Material->Opacity;
 
     ConstantBuffer = rhi->CreateConstantBuffer(sizeof(mObjectConstants), (uint8*)&mObjectConstants);
 
     Material->Init();
+
+    const bool isTranslucent = Material->BlendMode == BM_Translucent;
 
     IndexCountPerInstance = static_cast<uint32>(mIndexes.size());
     InstanceCount = 1;
@@ -182,8 +186,12 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
     info.VertexShader = Material->VertexShader;
     info.PixelShader = Material->PixelShader;
     info.VertexLayout = &VertexLayout;
-    info.DepthStencilState.bEnableDepthWrite = true;
+    info.DepthStencilState.bEnableDepthWrite = !isTranslucent;
     info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
+    if (isTranslucent)
+    {
+        info.BlendState.AlphaBlendOp = BO_Subtract;
+    }
 
     TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
 

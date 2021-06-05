@@ -28,6 +28,8 @@ public:
     FRHITexture2D* EmissiveColor;
 
     EBlendMode BlendMode;
+    float Opacity;
+
 
     std::string BaseColorFullFilePathName;
 

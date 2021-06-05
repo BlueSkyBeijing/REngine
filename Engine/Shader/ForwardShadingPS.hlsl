@@ -14,7 +14,7 @@ float4 PSMain(VertexShaderOutput pixelIn) : SV_Target
     const float3 viewDir = normalize(CameraPos - pixelIn.PosW.xyz);
     const float lightIntensity = 1.5f;
     const float shadow = DirectionalLightShadow(pixelIn.ShadowPosH);
-    float3 lighting = BlinnPhong(pixelIn.Normal, DirectionalLightDir, DirectionalLightColor, lightIntensity, viewDir, diffuseColor.rgb, shadow);
+    float3 lighting = BlinnPhong(pixelIn.Normal, DirectionalLightDir, DirectionalLightColor, lightIntensity, viewDir, diffuseColor.rgb, shadow) * 0.1;
 
     for (int i = 0; i < PointLightNum; ++i)
     {
@@ -22,7 +22,7 @@ float4 PSMain(VertexShaderOutput pixelIn) : SV_Target
     }
 
     outColor.rgb = lighting;
-    outColor.a = 1.0f;
+    outColor.a = Opacity;
     
     return outColor;
 }

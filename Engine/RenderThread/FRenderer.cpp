@@ -331,7 +331,7 @@ void FRenderer::_drawSceneColorTranslucent()
         info.VertexShader = renderProxy->Material->VertexShader;
         info.PixelShader = renderProxy->Material->PixelShader;
         info.VertexLayout = &(renderProxy->VertexLayout);
-        info.DepthStencilState.bEnableDepthWrite = true;
+        info.DepthStencilState.bEnableDepthWrite = false;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
         info.BlendState.AlphaBlendOp = BO_Subtract;
 
@@ -364,7 +364,7 @@ void FRenderer::_drawSceneColorTranslucent()
         info.VertexShader = renderProxy->Material->VertexShaderGPUSkin;
         info.PixelShader = renderProxy->Material->PixelShader;
         info.VertexLayout = &(renderProxy->VertexLayout);
-        info.DepthStencilState.bEnableDepthWrite = true;
+        info.DepthStencilState.bEnableDepthWrite = false;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
         info.BlendState.AlphaBlendOp = BO_Subtract;
 
@@ -484,7 +484,8 @@ void FRenderer::_createSceneColorPassConstant(FSceneColorPassConstant& constant)
     constant.PointLightNum = pointLightNum;
     for (int32 i = 0; i < pointLightNum; i++)
     {
-        constant.PointLightColorAndFalloffExponent[i] = FVector4(pointLight[i]->Color.x(), pointLight[i]->Color.y(), pointLight[i]->Color.z(), 1.0f);
+        const FVector4 lightColor = pointLight[i]->Color * pointLight[i]->Intensity;
+        constant.PointLightColorAndFalloffExponent[i] = FVector4(lightColor.x(), lightColor.y(), lightColor.z(), pointLight[i]->LightFalloffExponent);
         constant.PointLightPositionAndInvRadius[i] = FVector4(pointLight[i]->Location.x(), pointLight[i]->Location.y(), pointLight[i]->Location.z(), 1.0f / pointLight[i]->AttenuationRadius);
     }
 }

@@ -33,9 +33,9 @@ float3 PointLighting(float3 normal, float3 lightPosition, float3 lightColor, flo
     float3 l = toLight * rsqrt(distanceSqr);
     float pointNoL = max(0, dot(normal, l));
 
-    float attenuation = 1 / (distanceSqr + 1);
+    float attenuation = 1 / (sqrt(distanceSqr) + 1);
 
     float lightRadiusMask = Square(saturate(1 - Square(distanceSqr * (invRadius * invRadius))));
-    attenuation *= lightRadiusMask;
+    attenuation *= lightRadiusMask * 100.0f;
     return (attenuation * pointNoL) * lightColor * (1.0 / PI) * diffuseColor;
 }
