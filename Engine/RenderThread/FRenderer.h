@@ -16,7 +16,7 @@ struct FSceneColorPassConstant
     FVector3 DirectionalLightDir;
     float _Placeholder2;
     FVector3 DirectionalLightColor;
-    float _Placeholder3;
+    float DirectionalLightIntensity;
     FVector2 InvShadowMapSize;
     float _Placeholder4;
     int32 PointLightNum;

@@ -44,7 +44,7 @@ cbuffer SceneColorPassConstantBuffer : register(b1)
     float3 DirectionalLightDir;
     float _placeholder2;
     float3 DirectionalLightColor;
-    float _placeholder3;
+    float DirectionalLightIntensity;
     float2 InvShadowMapSize;
     float _placeholder4;
    

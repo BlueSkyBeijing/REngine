@@ -12,9 +12,8 @@ float4 PSMain(VertexShaderOutput pixelIn) : SV_Target
     const float4 diffuseColor = DiffuseMap.Sample(DiffuseSamplerState, pixelIn.UV) * diffuseTint;
     //view dir is different from camare dir,it's diffent in every pixel
     const float3 viewDir = normalize(CameraPos - pixelIn.PosW.xyz);
-    const float lightIntensity = 1.5f;
     const float shadow = DirectionalLightShadow(pixelIn.ShadowPosH);
-    float3 lighting = BlinnPhong(pixelIn.Normal, DirectionalLightDir, DirectionalLightColor, lightIntensity, viewDir, diffuseColor.rgb, shadow) * 0.1;
+    float3 lighting = BlinnPhong(pixelIn.Normal, DirectionalLightDir, DirectionalLightColor, DirectionalLightIntensity, viewDir, diffuseColor.rgb, shadow);
 
     for (int i = 0; i < PointLightNum; ++i)
     {

@@ -475,6 +475,7 @@ void FRenderer::_createSceneColorPassConstant(FSceneColorPassConstant& constant)
     //should use negative value of camera direction in shader
     constant.DirectionalLightDir = -light->Direction;
     constant.DirectionalLightColor = FVector3(light->Color.x(), light->Color.y(), light->Color.z());
+    constant.DirectionalLightIntensity = light->Intensity;
     const int32 shadowMapWidth = TSingleton<FConfigManager>::GetInstance().ShadowMapWidth;
     const int32 shadowMapHeight = TSingleton<FConfigManager>::GetInstance().ShadowMapHeight;
     constant.InvShadowMapSize = FVector2(1.0f / (shadowMapWidth), 1.0f / (shadowMapHeight));
