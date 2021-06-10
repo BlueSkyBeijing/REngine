@@ -15,7 +15,7 @@ FPlayerController::~FPlayerController()
 void FPlayerController::Init()
 {
     mCameraPitchAngle = -30.0f * 3.1415926f / 180.0f;
-    mCameraArmLength = 600.0f;
+    mCameraArmLength = 800.0f;
 }
 
 void FPlayerController::UnInit()
@@ -51,4 +51,9 @@ void FPlayerController::MoveStraight(float deltaDistance)
 void FPlayerController::Turn(float deltaAngle)
 {
     mPlayer->Turn(deltaAngle);
+}
+
+void FPlayerController::AdjustPitch(float deltaPitch)
+{
+    mCameraPitchAngle += deltaPitch;
 }

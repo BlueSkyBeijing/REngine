@@ -27,6 +27,8 @@ public:
     void MoveStraight(float deltaDistance);
     void Turn(float deltaAngle);
 
+    void AdjustPitch(float deltaPitch);
+
     inline void SetPlayer(UPlayer* player)
     {
         mPlayer = player;

@@ -112,11 +112,11 @@ void FInputManager::OnMouseMove(WPARAM btnState, int32 x, int32 y)
     if ((btnState & MK_LBUTTON) != 0)
     {
         const float deltaScale = 0.0025f;
-        float dx = (deltaScale * static_cast<float>(x - mLastMousePos.x()));
-        float dy = (deltaScale * static_cast<float>(y - mLastMousePos.y()));
+        float dx = -(deltaScale * static_cast<float>(x - mLastMousePos.x()));
+        float dy = -(deltaScale * static_cast<float>(y - mLastMousePos.y()));
 
-        engine.GetWorld()->GetCamera()->AdjustPitch(dy);
-        engine.GetWorld()->GetCamera()->AdjustYaw(dx);
+        TSingleton<FPlayerController>::GetInstance().AdjustPitch(dy);
+        TSingleton<FPlayerController>::GetInstance().Turn(dx);
     }
 
     mLastMousePos.x() = x;
