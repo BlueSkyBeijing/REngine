@@ -605,32 +605,26 @@ FRHIPipelineState* FD3D12RHI::CreatePipelineState(const FPipelineStateInfo& info
     psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
     psoDesc.DepthStencilState.DepthEnable = info.DepthStencilState.bEnableDepthWrite;
     psoDesc.DepthStencilState.StencilEnable = info.DepthStencilState.bEnableFrontFaceStencil || info.DepthStencilState.bEnableBackFaceStencil;
-    if (!info.DepthStencilState.bEnableDepthWrite && info.DepthStencilState.DepthTest != CF_Never)
-    {
-        psoDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+    psoDesc.DepthStencilState.DepthWriteMask = info.DepthStencilState.bEnableDepthWrite ? D3D12_DEPTH_WRITE_MASK_ALL : D3D12_DEPTH_WRITE_MASK_ZERO;
 
-        if (info.DepthStencilState.DepthTest == CF_Less)
-        {
-            D3D12_RENDER_TARGET_BLEND_DESC transparencyBlendDesc;
-            transparencyBlendDesc.BlendEnable = true;
-            transparencyBlendDesc.LogicOpEnable = false;
-            transparencyBlendDesc.SrcBlend = D3D12_BLEND_SRC_ALPHA;
-            transparencyBlendDesc.DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-            transparencyBlendDesc.BlendOp = D3D12_BLEND_OP_ADD;
-            transparencyBlendDesc.SrcBlendAlpha = D3D12_BLEND_ONE;
-            transparencyBlendDesc.DestBlendAlpha = D3D12_BLEND_ZERO;
-            transparencyBlendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
-            transparencyBlendDesc.LogicOp = D3D12_LOGIC_OP_NOOP;
-            transparencyBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+    D3D12_RENDER_TARGET_BLEND_DESC renderTargetBlendDesc;
 
-            psoDesc.BlendState.RenderTarget[0] = transparencyBlendDesc;
-        }
-    }
-    if (info.DepthStencilState.DepthTest == CF_Always)
-    {
-        psoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
-        psoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
-    }
+    renderTargetBlendDesc.BlendEnable =
+        info.BlendState.ColorBlendOp != BO_Add || info.BlendState.ColorDestBlend != BF_Zero || info.BlendState.ColorSrcBlend != BF_One ||
+        info.BlendState.AlphaBlendOp != BO_Add || info.BlendState.AlphaDestBlend != BF_Zero || info.BlendState.AlphaSrcBlend != BF_One;
+
+    renderTargetBlendDesc.BlendOp = translateBlendOp(info.BlendState.ColorBlendOp);
+    renderTargetBlendDesc.SrcBlend = translateBlendFactor(info.BlendState.ColorSrcBlend);
+    renderTargetBlendDesc.DestBlend = translateBlendFactor(info.BlendState.ColorDestBlend);
+    renderTargetBlendDesc.BlendOpAlpha = translateBlendOp(info.BlendState.AlphaBlendOp);
+    renderTargetBlendDesc.SrcBlendAlpha = translateBlendFactor(info.BlendState.AlphaSrcBlend);
+    renderTargetBlendDesc.DestBlendAlpha = translateBlendFactor(info.BlendState.AlphaDestBlend);
+    renderTargetBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+    renderTargetBlendDesc.LogicOpEnable = false;
+    psoDesc.BlendState.RenderTarget[0] = renderTargetBlendDesc;
+
+    psoDesc.DepthStencilState.DepthFunc = translateCompareFunction(info.DepthStencilState.DepthTest);
+    psoDesc.RasterizerState.CullMode = translateCullMode(info.RasterizerState.CullMode);
 
     psoDesc.SampleMask = UINT_MAX;
     psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -999,4 +993,60 @@ D3D12_RESOURCE_STATES FD3D12RHI::translateResourceTransitionAccess(EResourceTran
 DXGI_FORMAT FD3D12RHI::translatePixelFormat(EPixelFormat format)
 {
     return (DXGI_FORMAT)format;
+}
+
+D3D12_COMPARISON_FUNC FD3D12RHI::translateCompareFunction(ECompareFunction CompareFunction)
+{
+    switch (CompareFunction)
+    {
+    case CF_Less: return D3D12_COMPARISON_FUNC_LESS;
+    case CF_LessEqual: return D3D12_COMPARISON_FUNC_LESS_EQUAL;
+    case CF_Greater: return D3D12_COMPARISON_FUNC_GREATER;
+    case CF_GreaterEqual: return D3D12_COMPARISON_FUNC_GREATER_EQUAL;
+    case CF_Equal: return D3D12_COMPARISON_FUNC_EQUAL;
+    case CF_NotEqual: return D3D12_COMPARISON_FUNC_NOT_EQUAL;
+    case CF_Never: return D3D12_COMPARISON_FUNC_NEVER;
+    default: return D3D12_COMPARISON_FUNC_ALWAYS;
+    };
+}
+
+D3D12_BLEND_OP FD3D12RHI::translateBlendOp(EBlendOperation BlendOp)
+{
+    switch (BlendOp)
+    {
+    case BO_Subtract: return D3D12_BLEND_OP_SUBTRACT;
+    case BO_Min: return D3D12_BLEND_OP_MIN;
+    case BO_Max: return D3D12_BLEND_OP_MAX;
+    case BO_ReverseSubtract: return D3D12_BLEND_OP_REV_SUBTRACT;
+    default: return D3D12_BLEND_OP_ADD;
+    };
+}
+
+D3D12_BLEND FD3D12RHI::translateBlendFactor(EBlendFactor BlendFactor)
+{
+    switch (BlendFactor)
+    {
+    case BF_One: return D3D12_BLEND_ONE;
+    case BF_SourceColor: return D3D12_BLEND_SRC_COLOR;
+    case BF_InverseSourceColor: return D3D12_BLEND_INV_SRC_COLOR;
+    case BF_SourceAlpha: return D3D12_BLEND_SRC_ALPHA;
+    case BF_InverseSourceAlpha: return D3D12_BLEND_INV_SRC_ALPHA;
+    case BF_DestAlpha: return D3D12_BLEND_DEST_ALPHA;
+    case BF_InverseDestAlpha: return D3D12_BLEND_INV_DEST_ALPHA;
+    case BF_DestColor: return D3D12_BLEND_DEST_COLOR;
+    case BF_InverseDestColor: return D3D12_BLEND_INV_DEST_COLOR;
+    case BF_ConstantBlendFactor: return D3D12_BLEND_BLEND_FACTOR;
+    case BF_InverseConstantBlendFactor: return D3D12_BLEND_INV_BLEND_FACTOR;
+    default: return D3D12_BLEND_ZERO;
+    };
+}
+
+D3D12_CULL_MODE FD3D12RHI::translateCullMode(ERasterizerCullMode CullMode)
+{
+    switch (CullMode)
+    {
+    case CM_CW: return D3D12_CULL_MODE_BACK;
+    case CM_CCW: return D3D12_CULL_MODE_FRONT;
+    default: return D3D12_CULL_MODE_NONE;
+    };
 }

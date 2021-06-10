@@ -333,7 +333,12 @@ void FRenderer::_drawSceneColorTranslucent()
         info.VertexLayout = &(renderProxy->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = false;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
-        info.BlendState.AlphaBlendOp = BO_Subtract;
+        info.BlendState.ColorBlendOp = BO_Add;
+        info.BlendState.ColorSrcBlend = BF_SourceAlpha;
+        info.BlendState.ColorDestBlend = BF_InverseSourceAlpha;
+        info.BlendState.AlphaBlendOp = BO_Add;
+        info.BlendState.AlphaSrcBlend = BF_Zero;
+        info.BlendState.AlphaDestBlend = BF_One;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
@@ -366,7 +371,12 @@ void FRenderer::_drawSceneColorTranslucent()
         info.VertexLayout = &(renderProxy->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = false;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
-        info.BlendState.AlphaBlendOp = BO_Subtract;
+        info.BlendState.ColorBlendOp = BO_Add;
+        info.BlendState.ColorSrcBlend = BF_SourceAlpha;
+        info.BlendState.ColorDestBlend = BF_InverseSourceAlpha;
+        info.BlendState.AlphaBlendOp = BO_Add;
+        info.BlendState.AlphaSrcBlend = BF_Zero;
+        info.BlendState.AlphaDestBlend = BF_One;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 

@@ -64,6 +64,10 @@ protected:
     D3D_PRIMITIVE_TOPOLOGY translatePrimitiveType(EPrimitiveType primitiveType);
     D3D12_RESOURCE_STATES translateResourceTransitionAccess(EResourceTransitionAccess access);
     DXGI_FORMAT translatePixelFormat(EPixelFormat format);
+    D3D12_COMPARISON_FUNC translateCompareFunction(ECompareFunction CompareFunction);
+    D3D12_BLEND_OP translateBlendOp(EBlendOperation BlendOp);
+    D3D12_BLEND translateBlendFactor(EBlendFactor BlendFactor);
+    D3D12_CULL_MODE translateCullMode(ERasterizerCullMode CullMode);
 
 private:
     FRHIRenderTarget* mRenderTargetCurrent;
