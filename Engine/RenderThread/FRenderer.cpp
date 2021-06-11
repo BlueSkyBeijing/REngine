@@ -318,7 +318,13 @@ void FRenderer::_drawSceneColorTranslucent()
 {
     mRHI->BeginEvent("Translucent");
 
-    const std::vector<FStaticMeshRenderProxy*>& staticRenderProxys = mScene->GetStaticTranslucentRenderProxys();
+    std::vector<FStaticMeshRenderProxy*> staticRenderProxys = mScene->GetStaticTranslucentRenderProxys();
+
+    const FView* view = mView;
+    std::sort(staticRenderProxys.begin(), staticRenderProxys.end(), [view](const FStaticMeshRenderProxy* renderProxyA, const FStaticMeshRenderProxy* renderProxyB) {
+        return (renderProxyA->Position - view->Position).size() < (renderProxyB->Position - view->Position).size();
+    });
+
     for (auto it = staticRenderProxys.begin(); it != staticRenderProxys.end(); it++)
     {
         FRenderProxy* renderProxy = *it;
@@ -356,7 +362,12 @@ void FRenderer::_drawSceneColorTranslucent()
         mRHI->EndEvent();
     }
 
-    const std::vector<FSkeletalMeshRenderProxy*>& dynamicRenderProxys = mScene->GetDynamicTranslucentRenderProxys();
+    std::vector<FSkeletalMeshRenderProxy*> dynamicRenderProxys = mScene->GetDynamicTranslucentRenderProxys();
+
+    std::sort(dynamicRenderProxys.begin(), dynamicRenderProxys.end(), [view](const FSkeletalMeshRenderProxy* renderProxyA, const FSkeletalMeshRenderProxy* renderProxyB) {
+        return (renderProxyA->Position - view->Position).size() < (renderProxyB->Position - view->Position).size();
+    });
+
     for (auto it = dynamicRenderProxys.begin(); it != dynamicRenderProxys.end(); it++)
     {
         FRenderProxy* renderProxy = *it;
