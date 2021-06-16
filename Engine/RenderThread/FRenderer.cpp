@@ -322,7 +322,7 @@ void FRenderer::_drawSceneColorTranslucent()
 
     const FView* view = mView;
     std::sort(staticRenderProxys.begin(), staticRenderProxys.end(), [view](const FStaticMeshRenderProxy* renderProxyA, const FStaticMeshRenderProxy* renderProxyB) {
-        return (renderProxyA->Position - view->Position).size() < (renderProxyB->Position - view->Position).size();
+        return (renderProxyA->Position - view->Position).norm() > (renderProxyB->Position - view->Position).norm();
     });
 
     for (auto it = staticRenderProxys.begin(); it != staticRenderProxys.end(); it++)
@@ -338,6 +338,7 @@ void FRenderer::_drawSceneColorTranslucent()
         info.PixelShader = renderProxy->Material->PixelShader;
         info.VertexLayout = &(renderProxy->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = false;
+        info.DepthStencilState.DepthTest = CF_Less;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
         info.BlendState.ColorBlendOp = BO_Add;
         info.BlendState.ColorSrcBlend = BF_SourceAlpha;
@@ -365,7 +366,7 @@ void FRenderer::_drawSceneColorTranslucent()
     std::vector<FSkeletalMeshRenderProxy*> dynamicRenderProxys = mScene->GetDynamicTranslucentRenderProxys();
 
     std::sort(dynamicRenderProxys.begin(), dynamicRenderProxys.end(), [view](const FSkeletalMeshRenderProxy* renderProxyA, const FSkeletalMeshRenderProxy* renderProxyB) {
-        return (renderProxyA->Position - view->Position).size() < (renderProxyB->Position - view->Position).size();
+        return (renderProxyA->Position - view->Position).norm() > (renderProxyB->Position - view->Position).norm();
     });
 
     for (auto it = dynamicRenderProxys.begin(); it != dynamicRenderProxys.end(); it++)
@@ -383,6 +384,7 @@ void FRenderer::_drawSceneColorTranslucent()
         info.DepthStencilState.bEnableDepthWrite = false;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
         info.BlendState.ColorBlendOp = BO_Add;
+        info.DepthStencilState.DepthTest = CF_Less;
         info.BlendState.ColorSrcBlend = BF_SourceAlpha;
         info.BlendState.ColorDestBlend = BF_InverseSourceAlpha;
         info.BlendState.AlphaBlendOp = BO_Add;

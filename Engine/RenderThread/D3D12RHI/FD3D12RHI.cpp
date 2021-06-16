@@ -603,7 +603,7 @@ FRHIPipelineState* FD3D12RHI::CreatePipelineState(const FPipelineStateInfo& info
 
     psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
     psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-    psoDesc.DepthStencilState.DepthEnable = info.DepthStencilState.bEnableDepthWrite;
+    psoDesc.DepthStencilState.DepthEnable = info.DepthStencilState.DepthTest != CF_Always;
     psoDesc.DepthStencilState.StencilEnable = info.DepthStencilState.bEnableFrontFaceStencil || info.DepthStencilState.bEnableBackFaceStencil;
     psoDesc.DepthStencilState.DepthWriteMask = info.DepthStencilState.bEnableDepthWrite ? D3D12_DEPTH_WRITE_MASK_ALL : D3D12_DEPTH_WRITE_MASK_ZERO;
 
