@@ -27,5 +27,6 @@ private:
     UTexture2D* mNormalMap;
     UTexture2D* mEmissiveColor;
     EBlendMode mBlendMode;
+    EMaterialShadingModel mShadingModel;
     float mOpacity;
 };

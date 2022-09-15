@@ -13,7 +13,7 @@ float4 PSMain(VertexShaderOutput pixelIn) : SV_Target
     //view dir is different from camare dir,it's diffent in every pixel
     const float3 viewDir = normalize(CameraPos - pixelIn.PosW.xyz);
     const float shadow = DirectionalLightShadow(pixelIn.ShadowPosH);
-    float3 lighting = BlinnPhong(pixelIn.Normal, DirectionalLightDir, DirectionalLightColor, DirectionalLightIntensity, viewDir, diffuseColor.rgb, shadow);
+    float3 lighting = PBR_Lighting(pixelIn.Normal, DirectionalLightDir, DirectionalLightColor, DirectionalLightIntensity, viewDir, diffuseColor.rgb, shadow);
 
     for (int i = 0; i < PointLightNum; ++i)
     {

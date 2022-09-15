@@ -24,6 +24,7 @@ enum EInputClassification;
 enum ELogLevel;
 enum EResourceType;
 enum EBlendMode;
+enum EMaterialShadingModel;
 
 struct FRect;
 struct FInputElementDesc;

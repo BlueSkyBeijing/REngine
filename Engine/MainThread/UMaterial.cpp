@@ -57,6 +57,7 @@ void UMaterial::Load()
     Material = new FMaterial;
     Material->BaseColorFullFilePathName = BaseColorTextureFullPathName;
     Material->BlendMode = mBlendMode;
+    Material->ShadingModel = mShadingModel;
     Material->Opacity = mOpacity;
 }
 

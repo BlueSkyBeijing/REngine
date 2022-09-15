@@ -28,6 +28,7 @@ public:
     FRHITexture2D* EmissiveColor;
 
     EBlendMode BlendMode;
+    EMaterialShadingModel ShadingModel;
     float Opacity;
 
 

@@ -557,6 +557,10 @@ bool UObjectExporterBPLibrary::ExportMaterialInstance(const UMaterialInstance* M
                 }
             }
 
+            EMaterialShadingModel MaterialShadingModel = MaterialInstace->GetShadingModels().GetFirstShadingModel();
+            int32 ShadingModel = (int32)MaterialShadingModel;
+            *FileWriter << ShadingModel;
+
             TArray<FMaterialParameterInfo> OutScalarParameterInfo;
             TArray<FGuid> GuidsScalar;
             MaterialInstace->GetAllScalarParameterInfo(OutScalarParameterInfo, GuidsScalar);
