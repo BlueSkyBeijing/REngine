@@ -129,8 +129,8 @@ float3 PBR_Lighting(float3 normal, float3 lightDir, float3 lightColor, float lig
 
     float NoL = max(dot(lightDir, normal), 0.0);
 
-    float diffuse = Diffuse_Lambert(diffuseColor);
-    float specular = SpecularGGX(0.5, lightColor, Context, NoL);
+    float diffuse = NoL * Diffuse_Lambert(diffuseColor);
+    float specular = NoL * SpecularGGX(0.5, lightColor, Context, NoL);
     
     return (diffuse + specular) * shadow;
 
