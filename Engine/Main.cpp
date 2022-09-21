@@ -4,6 +4,8 @@
 
 #include <stdlib.h>
 #include <crtdbg.h>
+#include <imm.h>  
+#pragma comment (lib ,"imm32.lib") 
 
 #include "FEngine.h"
 #include "TSingleton.h"
@@ -42,6 +44,10 @@ static BOOL CALLBACK CosonleHandler(DWORD event)
 
 int main()
 {
+    //typewriting english as default
+    HKL m_hKeyLayout = GetKeyboardLayout(GetCurrentThreadId());
+    LoadKeyboardLayout(TEXT("0x0409"), KLF_ACTIVATE);
+
     //enable run-time memory check for debug builds.
 #if defined(DEBUG) | defined(_DEBUG)
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
