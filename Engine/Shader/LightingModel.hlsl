@@ -135,3 +135,38 @@ float3 PBR_Lighting(float3 normal, float3 lightDir, float3 lightColor, float lig
     return (diffuse + specular) * shadow;
 
 }
+
+
+float D_InvGGX(float a2, float NoH)
+{
+    float A = 4;
+    float d = (NoH - a2 * NoH) * NoH + a2;
+    return rcp(PI * (1 + A * a2)) * (1 + 4 * a2 * a2 / (d * d));
+}
+
+
+float Vis_Cloth(float NoV, float NoL)
+{
+    return rcp(4 * (NoL + NoV - NoL * NoV));
+}
+
+float3 ClothBxDF(half3 N, half3 V, half3 L, float Falloff, float NoL, float3 FuzzColor, float Cloth, float Roughness, float3 DiffuseColor, float3 SpecularColor)
+{
+
+    BxDFContext Context;
+    Init(Context, N, V, L);
+    Context.NoV = saturate(abs(Context.NoV) + 1e-5);
+
+    float3 Spec1 = NoL * SpecularGGX(Roughness, SpecularColor, Context, NoL);
+
+	// Cloth - Asperity Scattering - Inverse Beckmann Layer
+    float D2 = D_InvGGX(Pow4(Roughness), Context.NoH);
+    float Vis2 = Vis_Cloth(Context.NoV, NoL);
+    float3 F2 = F_Schlick(FuzzColor, Context.VoH);
+    float3 Spec2 = (Falloff * NoL) * (D2 * Vis2) * F2;
+	
+    float3 Diffuse = NoL * Diffuse_Lambert(DiffuseColor);
+    float3 Specular = lerp(Spec1, Spec2, Cloth);
+
+    return Diffuse + Specular;
+}
