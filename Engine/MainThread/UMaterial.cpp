@@ -30,6 +30,8 @@ void UMaterial::Load()
 
 
     materialFile.read((char*)&mBlendMode, sizeof(int32));
+    materialFile.read((char*)&mShadingModel, sizeof(int32));
+    materialFile.read((char*)&mOpacity, sizeof(float));
 
     std::string BaseColorTextureName;
     int32 stringSize;
@@ -40,7 +42,6 @@ void UMaterial::Load()
         std::string(BaseColorTextureName.c_str()) +
         FConfigManager::DefaultTextureFileSuffix;
 
-    materialFile.read((char*)&mOpacity, sizeof(float));
 
     materialFile.close();
 

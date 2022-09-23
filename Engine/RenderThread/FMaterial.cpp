@@ -40,7 +40,7 @@ void FMaterial::Init()
     pixelShaderInfo.FilePathName = L"Engine\\Shader\\ForwardShadingPS.hlsl";
     pixelShaderInfo.EnterPoint = "PSMain";
     pixelShaderInfo.Target = "ps_5_0";
-    pixelShaderInfo.Defines.insert(std::make_pair("MATERIAL_SHADINGMODEL_DEFAULT_LIT", "1"));
+    pixelShaderInfo.Defines.insert(std::make_pair("SHADING_MODEL", std::to_string(ShadingModel)));
 
     PixelShader = TSingleton<FShaderManager>::GetInstance().CreateShader(pixelShaderInfo);
 

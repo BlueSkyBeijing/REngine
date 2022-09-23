@@ -170,3 +170,12 @@ float3 ClothBxDF(half3 N, half3 V, half3 L, float Falloff, float NoL, float3 Fuz
 
     return Diffuse + Specular;
 }
+
+float3 Diectional_Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float shadow)
+{
+#if SHADING_MODEL == 1
+    return PBR_Lighting(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);
+#else 
+    return BlinnPhong(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);
+#endif
+}
