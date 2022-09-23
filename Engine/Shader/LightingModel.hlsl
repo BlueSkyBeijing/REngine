@@ -121,7 +121,7 @@ float3 SpecularGGX(float Roughness, float3 SpecularColor, BxDFContext Context, f
     return (D * Vis) * F;
 }
 
-float3 PBR_Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float shadow)
+float3 DefaultLitBxDF(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float shadow)
 {
     BxDFContext Context;
     Init(Context, normal, viewDir, lightDir);
@@ -171,11 +171,34 @@ float3 ClothBxDF(half3 N, half3 V, half3 L, float Falloff, float NoL, float3 Fuz
     return Diffuse + Specular;
 }
 
+float3 SubsurfaceBxDF(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float shadow)
+{
+    float3 Lighting = DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);
+	
+    float3 SubsurfaceColor = float3(1, 0, 0);
+    float Opacity = 0.9;
+
+    float3 H = normalize(viewDir + lightDir);
+
+	// to get an effect when you see through the material
+	// hard coded pow constant
+    float InScatter = pow(saturate(dot(lightDir, -viewDir)), 12) * lerp(3, .1f, Opacity);
+	// wrap around lighting, /(PI*2) to be energy consistent (hack do get some view dependnt and light dependent effect)
+	// Opacity of 0 gives no normal dependent lighting, Opacity of 1 gives strong normal contribution
+    float NormalContribution = saturate(dot(normal, H) * Opacity + 1 - Opacity);
+    float BackScatter = NormalContribution / (PI * 2);
+	
+	// lerp to never exceed 1 (energy conserving)
+    float Transmission = lerp(BackScatter, 1, InScatter) * SubsurfaceColor;
+
+    return Lighting + Transmission;
+}
+
 float3 Diectional_Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float shadow)
 {
 #if SHADING_MODEL == 1
-    return PBR_Lighting(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);
+    return DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);
 #else 
-    return BlinnPhong(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);
+    return SubsurfaceBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);
 #endif
 }
