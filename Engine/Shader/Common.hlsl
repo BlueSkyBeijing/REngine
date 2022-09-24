@@ -1,3 +1,8 @@
+float Pow2(float x)
+{
+    return x * x;
+}
+
 float Pow4(float x)
 {
     float xx = x * x;

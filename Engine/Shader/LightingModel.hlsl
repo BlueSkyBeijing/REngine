@@ -1,5 +1,20 @@
 #include "Common.hlsl"
 
+#define SHADING_MODEL_UNLIT 0
+#define SHADING_MODEL_DEFAULT_LIT 1
+#define SHADING_MODEL_SUBSUFACE 2
+#define SHADING_MODEL_PREINTEGRATED_SKIN 3
+#define SHADING_MODEL_CLEAR_COAT 4
+#define SHADING_MODEL_TWO_SIDE_FOLIAGE 5
+#define SHADING_MODEL_HAIR 6
+#define SHADING_MODEL_CLOTH 7
+#define SHADING_MODEL_EYE 8
+#define SHADING_MODEL_SIGLE_LAYER_WATER 9
+#define SHADING_MODEL_THIN_TRANSLUCENT 10
+#define SHADING_MODEL_STRATA 11
+
+
+
 // Blinn-Phong
 // from: https://en.wikipedia.org/wiki/Blinn%E2%80%93Phong_reflection_model
 float3 BlinnPhong(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float shadow)
@@ -194,11 +209,178 @@ float3 SubsurfaceBxDF(float3 normal, float3 lightDir, float3 lightColor, float l
     return Lighting + Transmission;
 }
 
+float3 CalcThinTransmission(float NoL, float NoV, float3 BaseColor, float Metallic)
+{
+    float3 Transmission = 1.0;
+
+    float AbsorptionMix = Metallic;
+    if (AbsorptionMix > 0.0)
+    {
+        float LayerThickness = 1.0; // Assume normalized thickness
+        float ThinDistance = LayerThickness * (rcp(NoV) + rcp(NoL));
+
+		// Base color represents reflected color viewed at 0 incidence angle, after being absorbed through the substrate.
+		// Because of this, extinction is normalized by traveling through layer thickness twice
+        float3 TransmissionColor = Diffuse_Lambert(BaseColor);
+        float3 ExtinctionCoefficient = -log(TransmissionColor) / (2.0 * LayerThickness);
+        float3 OpticalDepth = ExtinctionCoefficient * max(ThinDistance - 2.0 * LayerThickness, 0.0);
+        Transmission = exp(-OpticalDepth);
+        Transmission = lerp(1.0, Transmission, AbsorptionMix);
+    }
+    return Transmission;
+}
+
+float RefractBlendClearCoatApprox(float VoH)
+{
+	// Polynomial approximation of refraction blend factor for normal component of VoH with fixed Eta (1/1.5):
+    return (0.63 - 0.22 * VoH) * VoH - 0.745;
+}
+
+BxDFContext RefractClearCoatContext(BxDFContext Context)
+{
+	// Reference: Propagation of refraction through dot-product NoV
+	// Note: This version of Refract requires V to point away from the point of incidence
+	//  NoV2 = -dot(N, Refract(V, H, Eta))
+	//  NoV2 = -dot(N, RefractBlend(VoH, Eta) * H - Eta * V)
+	//  NoV2 = -(RefractBlend(VoH, Eta) * NoH - Eta * NoV)
+	//  NoV2 = Eta * NoV - RefractBlend(VoH, Eta) * NoH
+	//  NoV2 = 1.0 / 1.5 * NoV - RefractBlendClearCoatApprox(VoH) * NoH
+
+    BxDFContext RefractedContext = Context;
+    float Eta = 1.0 / 1.5;
+    float RefractionBlendFactor = RefractBlendClearCoatApprox(Context.VoH);
+    float RefractionProjectionTerm = RefractionBlendFactor * Context.NoH;
+    RefractedContext.NoV = clamp(Eta * Context.NoV - RefractionProjectionTerm, 0.001, 1.0); // Due to CalcThinTransmission and Vis_SmithJointAniso, we need to make sure
+    RefractedContext.NoL = clamp(Eta * Context.NoL - RefractionProjectionTerm, 0.001, 1.0); // those values are not 0s to avoid NaNs.
+    RefractedContext.VoH = saturate(Eta * Context.VoH - RefractionBlendFactor);
+    RefractedContext.VoL = 2.0 * RefractedContext.VoH * RefractedContext.VoH - 1.0;
+    RefractedContext.NoH = Context.NoH;
+    return RefractedContext;
+}
+
+float3 ClearCoatBxDF(half3 N, half3 V, half3 L, float Falloff, float NoL, float3 FuzzColor, float Cloth, float Roughness, float3 DiffuseColor, float3 SpecularColor)
+{
+    const float ClearCoat = 0.1f;
+    const float ClearCoatRoughness = max(0.1, 0.02f);
+    const float Film = 1 * ClearCoat;
+    const float MetalSpec = 0.9;
+    float3 Lighting;
+    BxDFContext Context;
+    half3 Nspec = N;
+
+    half3 X = 0;
+    half3 Y = 0;
+
+	//////////////////////////////
+	/// Top Layer
+	//////////////////////////////
+
+	// No anisotropy for the top layer
+    Init(Context, Nspec, V, L);
+	
+	// Modify SphereSinAlpha, knowing that it was previously manipulated by roughness of the under coat
+	// Note: the operation is not invertible for GBuffer.Roughness = 1.0, so roughness is clamped to 254.0/255.0
+    float SphereSinAlpha = 0.1f;
+    float RoughnessCompensation = 1 - Pow2(Roughness);
+    float Alpha = Pow2(ClearCoatRoughness);
+    RoughnessCompensation = RoughnessCompensation > 0.0 ? (1 - Alpha) / RoughnessCompensation : 0.0;
+
+    Context.NoV = saturate(abs(Context.NoV) + 1e-5);
+
+	// Hard-coded Fresnel evaluation with IOR = 1.5 (for polyurethane cited by Disney BRDF)
+    float F0 = 0.04;
+    float Fc = Pow5(1 - Context.VoH);
+    float F = Fc + (1 - Fc) * F0;
+
+	// Generalized microfacet specular
+    float a2 = Pow2(Alpha);
+    float D = D_GGX(a2, Context.NoH);
+    float Vis = Vis_SmithJointApprox(a2, Context.NoV, NoL);
+
+    float Fr1 = D * Vis * F;
+    float3 Specular = ClearCoat * (NoL * Fr1);
+
+	// Restore previously changed SphereSinAlpha for the top layer. 
+	// Alpha needs to also be restored to the bottom layer roughness.
+    Alpha = Pow2(Roughness);
+
+	// Incoming and exiting Fresnel terms are identical to incoming Fresnel term (VoH == HoL)
+	// float FresnelCoeff = (1.0 - F1) * (1.0 - F2);
+	// Preserve old behavior when energy conservation is disabled
+    float FresnelCoeff = 1.0 - F;
+    FresnelCoeff *= FresnelCoeff;
+
+	//////////////////////////////
+	/// Bottom Layer
+	//////////////////////////////
+
+	// Propagate refraction through dot-products rather than the original vectors:
+	// Reference:
+	//   float Eta = 1.0 / 1.5;
+	//   float3 H = normalize(V + L);
+	//   float3 V2 = Refract(V, H, Eta);
+	//   float3 L2 = reflect(V2, H);
+	//   V2 = -V2;
+	//   BxDFContext BottomContext;
+	//   Init(BottomContext, N, X, Y, V2, L2);
+    BxDFContext BottomContext = RefractClearCoatContext(Context);
+
+
+	// Absorption
+	// Default Lit
+    float3 DefaultDiffuse = (NoL) *  Diffuse_Lambert(DiffuseColor);
+    float3 RefractedDiffuse = FresnelCoeff * DefaultDiffuse;
+    float3 Diffuse = lerp(DefaultDiffuse, RefractedDiffuse, ClearCoat);
+
+
+    a2 = Pow4(Roughness);
+    float D2 = 0;
+    float Vis2 = 0;
+
+
+    D2 = D_GGX(a2, BottomContext.NoH);
+	// NoL is chosen to provide better parity with DefaultLit when ClearCoat=0
+    Vis2 = Vis_SmithJointApprox(a2, BottomContext.NoV, NoL);
+    F = F_Schlick(SpecularColor, BottomContext.VoH);
+    float3 F_DefaultLit = F_Schlick(SpecularColor, Context.VoH);
+		
+
+	// Note: reusing D and V from refracted context to save computation when ClearCoat < 1
+    float3 CommonSpecular = (NoL * D2 * Vis2);
+    float3 DefaultSpecular = F_DefaultLit;
+    float3 RefractedSpecular = FresnelCoeff;
+    Specular += CommonSpecular * lerp(DefaultSpecular, RefractedSpecular, ClearCoat);
+    Lighting = Diffuse + Specular;
+    return Lighting;
+}
+
 float3 Diectional_Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float shadow)
 {
-#if SHADING_MODEL == 1
+#if SHADING_MODEL == SHADING_MODEL_UNLIT
     return DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);
-#else 
+#elif SHADING_MODEL == SHADING_MODEL_DEFAULT_LIT
+    return DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);
+#elif SHADING_MODEL == SHADING_MODEL_SUBSUFACE
     return SubsurfaceBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);
+#elif SHADING_MODEL == SHADING_MODEL_PREINTEGRATED_SKIN
+    return DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);
+#elif SHADING_MODEL == SHADING_MODEL_CLEAR_COAT
+    return DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);
+#elif SHADING_MODEL == SHADING_MODEL_TWO_SIDE_FOLIAGE
+    return DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);
+#elif SHADING_MODEL == SHADING_MODEL_HAIR
+    return DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);
+#elif SHADING_MODEL == SHADING_MODEL_CLOTH
+    return DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);
+#elif SHADING_MODEL == SHADING_MODEL_EYE
+    return DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);
+#elif SHADING_MODEL == SHADING_MODEL_SIGLE_LAYER_WATER
+    return DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);
+#elif SHADING_MODEL == SHADING_MODEL_THIN_TRANSLUCENT
+    return DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);
+#elif SHADING_MODEL == SHADING_MODEL_STRATA
+    return DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);
+#else
+    return BlinnPhong(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);
 #endif
 }
