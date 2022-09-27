@@ -22,6 +22,7 @@ struct FSceneColorPassConstant
     int32 PointLightNum;
     FVector4 PointLightPositionAndInvRadius[MAX_POINT_LIGHT_NUM];
     FVector4 PointLightColorAndFalloffExponent[MAX_POINT_LIGHT_NUM];
+    float PointLightIntensity[MAX_POINT_LIGHT_NUM];
 };
 
 struct FShadowPassConstant

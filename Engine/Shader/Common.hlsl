@@ -1,3 +1,10 @@
+#define PI 3.1415926
+
+float Square(float x)
+{
+    return x * x;
+}
+
 float Pow2(float x)
 {
     return x * x;

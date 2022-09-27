@@ -508,9 +508,10 @@ void FRenderer::_createSceneColorPassConstant(FSceneColorPassConstant& constant)
     constant.PointLightNum = pointLightNum;
     for (int32 i = 0; i < pointLightNum; i++)
     {
-        const FVector4 lightColor = pointLight[i]->Color * pointLight[i]->Intensity;
+        const FVector4 lightColor = pointLight[i]->Color;
         constant.PointLightColorAndFalloffExponent[i] = FVector4(lightColor.x(), lightColor.y(), lightColor.z(), pointLight[i]->LightFalloffExponent);
         constant.PointLightPositionAndInvRadius[i] = FVector4(pointLight[i]->Location.x(), pointLight[i]->Location.y(), pointLight[i]->Location.z(), 1.0f / pointLight[i]->AttenuationRadius);
+        constant.PointLightIntensity[i] = pointLight[i]->Intensity;
     }
 }
 

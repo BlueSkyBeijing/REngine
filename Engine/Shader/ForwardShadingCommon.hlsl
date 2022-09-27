@@ -51,5 +51,6 @@ cbuffer SceneColorPassConstantBuffer : register(b1)
     int PointLightNum;
     float4 PointLightPositionAndInvRadius[MAX_POINT_LIGHT_NUM];
     float4 PointLightColorAndFalloffExponent[MAX_POINT_LIGHT_NUM];
+    float4 PointLightIntensity[MAX_POINT_LIGHT_NUM/4];
 };
 
