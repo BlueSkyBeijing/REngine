@@ -1,9 +1,9 @@
 Texture2D ShadowMap : register(t1);
-SamplerComparisonState SamperShadow : register(s1);
+SamplerState SamperShadow : register(s1);
 
 #define PCF_COUNT 9
 
-float DirectionalLightShadow(float4 shadowPosH)
+float2 DirectionalLightShadow(float4 shadowPosH)
 {
     shadowPosH.xyz /= shadowPosH.w;
 
@@ -17,13 +17,17 @@ float DirectionalLightShadow(float4 shadowPosH)
         float2(-InvShadowMapSize.x, InvShadowMapSize.y), float2(0.0f, InvShadowMapSize.y), float2(InvShadowMapSize.x, InvShadowMapSize.y)
     };
 
+    float2 shadowAndThickness = float2(1, 1);
     [unroll]
     for (int i = 0; i < PCF_COUNT; ++i)
     {
-        shadow += ShadowMap.SampleCmpLevelZero(SamperShadow,
-            shadowPosH.xy + offsets[i], depth).r;
+        float curShadow = ShadowMap.Sample(SamperShadow,
+            (shadowPosH.xy + offsets[i])).r;
+        curShadow = saturate(sign(curShadow - depth));
+        shadowAndThickness.x += curShadow;
+        shadowAndThickness.y += 1-exp(-abs(curShadow - depth));
     }
     
-    return shadow / PCF_COUNT;
+    return shadowAndThickness / PCF_COUNT;
 }
 

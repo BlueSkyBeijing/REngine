@@ -11,9 +11,11 @@ float4 PSMain(VertexShaderOutput pixelIn) : SV_Target
     const float4 baseColor = DiffuseMap.Sample(DiffuseSamplerState, pixelIn.UV);
     //view dir is different from camare dir,it's diffent in every pixel
     const float3 viewDir = normalize(CameraPos - pixelIn.PosW.xyz);
-    const float shadow = DirectionalLightShadow(pixelIn.ShadowPosH);
+    const float2 shadowAndThickness = DirectionalLightShadow(pixelIn.ShadowPosH);
+    const float shadow = shadowAndThickness.x;
+    const float thickness = shadowAndThickness.y; 
     
-    float3 lighting = DirectionalLighting(pixelIn.Normal, DirectionalLightDir, DirectionalLightColor, DirectionalLightIntensity, viewDir, baseColor.rgb, shadow);
+    float3 lighting = DirectionalLighting(pixelIn.Normal, DirectionalLightDir, DirectionalLightColor, DirectionalLightIntensity, viewDir, baseColor.rgb, shadow, thickness);
 
     for (int i = 0; i < PointLightNum; ++i)
     {
