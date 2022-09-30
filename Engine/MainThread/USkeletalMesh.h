@@ -23,7 +23,7 @@ public:
         return mVertexes;
     }
 
-    inline const std::vector<uint16>& GetIndexes() const
+    inline const std::vector<uint32>& GetIndexes() const
     {
         return mIndexes;
     }
@@ -39,7 +39,7 @@ public:
     }
 private:
     std::vector<FSkeletalMeshVertex> mVertexes;
-    std::vector<uint16> mIndexes;
+    std::vector<uint32> mIndexes;
     FRHIVertexLayout mVertexLayout;
     USkeleton* mSkeleton;
 };

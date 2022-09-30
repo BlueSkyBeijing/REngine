@@ -47,7 +47,7 @@ public:
     virtual void Uninit() override;
 
 public:
-    std::vector<uint16> Indexes;
+    std::vector<uint32> Indexes;
 
 private:
 

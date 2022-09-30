@@ -27,7 +27,7 @@ public:
     ~FStaticMeshRenderProxyInitializer();
 
     std::vector<FStaticMeshVertex> Vertexes;
-    std::vector<uint16> Indexes;
+    std::vector<uint32> Indexes;
     FRHIVertexLayout VertexLayout;
     FVector3 Position;
     FQuat Rotation;
@@ -44,7 +44,7 @@ public:
     ~FSkeletalMeshRenderProxyInitializer();
 
     std::vector<FSkeletalMeshVertex> Vertexes;
-    std::vector<uint16> Indexes;
+    std::vector<uint32> Indexes;
     FRHIVertexLayout VertexLayout;
     FVector3 Position;
     FQuat Rotation;
@@ -102,7 +102,7 @@ private:
     FObjectConstant mObjectConstants;
 
     std::vector<FStaticMeshVertex> mVertexes;
-    std::vector<uint16> mIndexes;
+    std::vector<uint32> mIndexes;
 };
 
 class FSkeletalMeshRenderProxy : public FRenderProxy
@@ -122,5 +122,5 @@ private:
     FSkeletonMeshConstant mObjectConstants;
 
     std::vector<FSkeletalMeshVertex> mVertexes;
-    std::vector<uint16> mIndexes;
+    std::vector<uint32> mIndexes;
 };

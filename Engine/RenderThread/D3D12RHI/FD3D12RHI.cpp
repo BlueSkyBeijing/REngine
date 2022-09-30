@@ -392,7 +392,7 @@ FRHIIndexBuffer* FD3D12RHI::CreateIndexBuffer(uint32 structureSize, uint32 index
     indexBuffer->mIndexBuffer->Unmap(0, nullptr);
 
     indexBuffer->mIndexBufferView.BufferLocation = indexBuffer->mIndexBuffer->GetGPUVirtualAddress();
-    indexBuffer->mIndexBufferView.Format = DXGI_FORMAT_R16_UINT;
+    indexBuffer->mIndexBufferView.Format = DXGI_FORMAT_R32_UINT;
     indexBuffer->mIndexBufferView.SizeInBytes = ibByteSize;;
 
     return indexBuffer;

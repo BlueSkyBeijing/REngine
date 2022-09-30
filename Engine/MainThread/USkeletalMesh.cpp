@@ -47,7 +47,7 @@ void USkeletalMesh::Load()
     int32 numIndexes;
     skeletalMeshFile.read((char*)&numIndexes, sizeof(int32));
     mIndexes.resize(numIndexes);
-    skeletalMeshFile.read((char*)mIndexes.data(), numIndexes * sizeof(uint16));
+    skeletalMeshFile.read((char*)mIndexes.data(), numIndexes * sizeof(uint32));
 
     std::string ResourceName;
     int32 stringSize;

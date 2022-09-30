@@ -36,10 +36,10 @@ void FFullScreenQuad::Init()
         FScreenVertex(FVector3(1.f, -1.f, 0.0f), FVector2(1.0f, 1.0f)),
         FScreenVertex(FVector3(-1.f, 1.f, 0.0f), FVector2(0.0f, 0.0f)),
         FScreenVertex(FVector3(1.f, 1.f, 0.0f), FVector2(1.0f, 0.0f)) };
-    const uint16 indexes[6] = { 0, 2, 1, 1, 2, 3 };
+    const uint32 indexes[6] = { 0, 2, 1, 1, 2, 3 };
 
     VertexBuffer = mRHI->CreateVertexBuffer(sizeof(FScreenVertex), 4, (uint8*)vertexes);
-    IndexBuffer = mRHI->CreateIndexBuffer(sizeof(uint16), 6, (uint8*)indexes);
+    IndexBuffer = mRHI->CreateIndexBuffer(sizeof(uint32), 6, (uint8*)indexes);
 
     FShaderInfo vertexShaderInfo;
     vertexShaderInfo.FilePathName = L"Engine\\Shader\\Postprocess.hlsl";

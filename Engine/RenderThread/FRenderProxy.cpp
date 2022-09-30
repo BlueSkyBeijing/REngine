@@ -76,7 +76,7 @@ void FStaticMeshRenderProxy::CreateRenderResource()
     FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
     VertexBuffer = rhi->CreateVertexBuffer(sizeof(FStaticMeshVertex), (uint32)mVertexes.size(), (uint8*)mVertexes.data());
 
-    IndexBuffer = rhi->CreateIndexBuffer(sizeof(uint16), (uint32)mIndexes.size(), (uint8*)mIndexes.data());
+    IndexBuffer = rhi->CreateIndexBuffer(sizeof(uint32), (uint32)mIndexes.size(), (uint8*)mIndexes.data());
 
     mObjectConstants.World.setIdentity();
     FMatrix3x3 rotation = Rotation.toRotationMatrix();
@@ -165,7 +165,7 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
     FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
     VertexBuffer = rhi->CreateVertexBuffer(sizeof(FSkeletalMeshVertex), (uint32)mVertexes.size(), (uint8*)mVertexes.data());
 
-    IndexBuffer = rhi->CreateIndexBuffer(sizeof(uint16), (uint32)mIndexes.size(), (uint8*)mIndexes.data());
+    IndexBuffer = rhi->CreateIndexBuffer(sizeof(uint32), (uint32)mIndexes.size(), (uint8*)mIndexes.data());
 
     mObjectConstants.World.setIdentity();
     FMatrix3x3 rotation = Rotation.toRotationMatrix();

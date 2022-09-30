@@ -42,7 +42,7 @@ void UStaticMesh::Load()
     int32 numIndexes;
     staticMeshFile.read((char*)&numIndexes, sizeof(int32));
     mIndexes.resize(numIndexes);
-    staticMeshFile.read((char*)mIndexes.data(), numIndexes * sizeof(uint16));
+    staticMeshFile.read((char*)mIndexes.data(), numIndexes * sizeof(uint32));
 
     staticMeshFile.close();
 }
