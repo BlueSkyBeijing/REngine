@@ -332,6 +332,15 @@ void FD3D12RHI::SetTexture2D(FRHITexture2D* texture, int32 shaderPos)
     mDX12CommandList->SetGraphicsRootDescriptorTable(shaderPos == 0 ? msObjectSRVTableIndex : msPassSRVTableIndex, descriptorObject);
 }
 
+void FD3D12RHI::SetTextureCube(FRHITextureCube* texture, int32 shaderPos)
+{
+    //FD3D12TextureCube* textureDX12 = dynamic_cast<FD3D12TextureCube*>(texture);
+    //CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
+
+    //descriptorObject.Offset(textureDX12->PosInHeapCBVSRVUAV, mCBVSRVVUAVDescriptorSize);
+    //mDX12CommandList->SetGraphicsRootDescriptorTable((shaderPos == 0 || shaderPos == 2) ? msObjectSRVTableIndex : msPassSRVTableIndex, descriptorObject);
+}
+
 void FD3D12RHI::DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation)
 {
     mDX12CommandList->DrawIndexedInstanced(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
@@ -490,13 +499,13 @@ FRHIShaderBindings* FD3D12RHI::CreateShaderBindings()
     CD3DX12_ROOT_PARAMETER slotRootParameter[4];
 
     CD3DX12_DESCRIPTOR_RANGE objTexTable;
-    objTexTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+    objTexTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 0);
 
     CD3DX12_DESCRIPTOR_RANGE objConTable;
     objConTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
 
     CD3DX12_DESCRIPTOR_RANGE passTexTable;
-    passTexTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 1);
+    passTexTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2);
 
     CD3DX12_DESCRIPTOR_RANGE passConTable;
     passConTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 1);
@@ -678,6 +687,44 @@ FRHITexture2D* FD3D12RHI::CreateTexture2D(const std::wstring& filePathName)
     return texture2D;
 }
 
+FRHITextureCube* FD3D12RHI::CreateTextureCube(const std::wstring& filePathName)
+{
+    FD3D12TextureCube* textureCube = new FD3D12TextureCube;
+
+    FlushCommandQueue();
+
+    //reset command list
+    THROW_IF_FAILED(mDX12CommandList->Reset(mDX12CommandAllocator[mFrameIndex].Get(), NULL));
+
+    THROW_IF_FAILED(DirectX::CreateDDSTextureFromFile12(mDX12Device.Get(),
+        mDX12CommandList.Get(), filePathName.c_str(),
+        textureCube->mTexture, textureCube->mTextureUploadHeap));
+
+
+    CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorObj(mCBVSRVUAVHeap->GetCPUDescriptorHandleForHeapStart(), msCBVSRVUAVCount, mCBVSRVVUAVDescriptorSize);
+
+    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    srvDesc.Format = textureCube->mTexture->GetDesc().Format;
+    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
+    srvDesc.TextureCube.MostDetailedMip = 0;
+    srvDesc.TextureCube.MipLevels = textureCube->mTexture->GetDesc().MipLevels;
+    srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
+
+    mDX12Device->CreateShaderResourceView(textureCube->mTexture.Get(), &srvDesc, descriptorObj);
+
+    textureCube->PosInHeapCBVSRVUAV = msCBVSRVUAVCount;
+
+    msCBVSRVUAVCount++;
+
+    mDX12CommandList->Close();
+
+    //execute command list
+    ID3D12CommandList* CommandLists[] = { mDX12CommandList.Get() };
+    mDX12CommandQueue->ExecuteCommandLists(1, CommandLists);
+
+    return textureCube;
+}
 
 FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint32 numTarget, EPixelFormat formatTarget, EPixelFormat formatDepthStencil)
 {

@@ -273,6 +273,7 @@ void FRenderer::_drawSceneColorOpaque()
         mRHI->SetConstantBuffer(mSceneColorPassConstantBuffer, 1);
         mRHI->SetTexture2D(renderProxy->Material->BaseColor, 0);
         mRHI->SetTexture2D(mShadowMap->DepthStencilTarget, 1);
+        mRHI->SetTextureCube(renderProxy->Material->EnvMap, 2);
 
         mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
 
@@ -305,6 +306,7 @@ void FRenderer::_drawSceneColorOpaque()
         mRHI->SetConstantBuffer(mSceneColorPassConstantBuffer, 1);
         mRHI->SetTexture2D(renderProxy->Material->BaseColor, 0);
         mRHI->SetTexture2D(mShadowMap->DepthStencilTarget, 1);
+        mRHI->SetTextureCube(renderProxy->Material->EnvMap, 2);
 
         mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
 
@@ -357,6 +359,7 @@ void FRenderer::_drawSceneColorTranslucent()
         mRHI->SetConstantBuffer(mSceneColorPassConstantBuffer, 1);
         mRHI->SetTexture2D(renderProxy->Material->BaseColor, 0);
         mRHI->SetTexture2D(mShadowMap->DepthStencilTarget, 1);
+        mRHI->SetTextureCube(renderProxy->Material->EnvMap, 2);
 
         mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
 
@@ -401,6 +404,7 @@ void FRenderer::_drawSceneColorTranslucent()
         mRHI->SetConstantBuffer(mSceneColorPassConstantBuffer, 1);
         mRHI->SetTexture2D(renderProxy->Material->BaseColor, 0);
         mRHI->SetTexture2D(mShadowMap->DepthStencilTarget, 1);
+        mRHI->SetTextureCube(renderProxy->Material->EnvMap, 2);
 
         mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
 

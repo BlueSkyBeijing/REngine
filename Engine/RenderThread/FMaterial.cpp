@@ -72,6 +72,9 @@ void FMaterial::Init()
     FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
     BaseColor = rhi->CreateTexture2D(textureFilePathName);
 
+    const std::wstring envMap = StringToWString(FConfigManager::DefaultTexturePath + "T_EnvCube" + FConfigManager::DefaultTextureFileSuffix);
+    EnvMap = rhi->CreateTextureCube(envMap);
+
     //MetallicSpecularRoughness->Init();
     //EmissiveColor->Init();
 

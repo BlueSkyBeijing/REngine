@@ -33,6 +33,7 @@ struct FTransform;
 class UObject;
 class UWorld;
 class UTexture2D;
+class UTextureCube;
 class UStaticMeshObject;
 class USkeletalMeshObject;
 class UAnimSequence;
@@ -82,6 +83,7 @@ class FRHI;
 class FRHIShader;
 class FRHITexture;
 class FRHITexture2D;
+class FRHITextureCube;
 class FRHIBuffer;
 class FRHIIndexBuffer;
 class FRHIVertexBuffer;
@@ -107,5 +109,6 @@ class FD3D12PipelineState;
 class FD3D12VertexBuffer;
 class FD3D12ShaderBindings;
 class FD3D12Texture2D;
+class FD3D12TextureCube;
 
 #define FRAME_BUFFER_NUM 2

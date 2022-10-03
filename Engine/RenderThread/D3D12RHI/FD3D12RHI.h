@@ -33,6 +33,7 @@ public:
     virtual void SetIndexBuffer(FRHIIndexBuffer* buffer) override;
     virtual void SetConstantBuffer(FRHIConstantBuffer* buffer, int32 shaderPos) override;
     virtual void SetTexture2D(FRHITexture2D* texture, int32 shaderPos) override;
+    virtual void SetTextureCube(FRHITextureCube* texture, int32 shaderPos) override;
 
     virtual void DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation) override;
 
@@ -43,6 +44,7 @@ public:
     virtual FRHIShaderBindings* CreateShaderBindings() override;
     virtual FRHIPipelineState* CreatePipelineState(const FPipelineStateInfo& info) override;
     virtual FRHITexture2D* CreateTexture2D(const std::wstring& filePathName) override;
+    virtual FRHITextureCube* CreateTextureCube(const std::wstring& filePathName) override;
     virtual FRHIRenderTarget* CreateRenderTarget(uint32 width, uint32 hight, uint32 numTarget, EPixelFormat formatTarget, EPixelFormat formatDepthStencil) override;
     virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) override;
 

@@ -13,6 +13,40 @@
 #define SHADING_MODEL_THIN_TRANSLUCENT 10
 #define SHADING_MODEL_STRATA 11
 
+//#define REFLECTION_CAPTURE_ROUGHEST_MIP 1
+//#define REFLECTION_CAPTURE_ROUGHNESS_MIP_SCALE 1.2
+
+///** 
+// * Compute absolute mip for a reflection capture cubemap given a roughness.
+// */
+//float ComputeReflectionCaptureMipFromRoughness(float Roughness, float CubemapMaxMip)
+//{
+//	// Heuristic that maps roughness to mip level
+//	// This is done in a way such that a certain mip level will always have the same roughness, regardless of how many mips are in the texture
+//	// Using more mips in the cubemap just allows sharper reflections to be supported
+//    float LevelFrom1x1 = REFLECTION_CAPTURE_ROUGHEST_MIP - REFLECTION_CAPTURE_ROUGHNESS_MIP_SCALE * log2(Roughness);
+//    return CubemapMaxMip - 1 - LevelFrom1x1;
+//}
+
+//---------------
+// EnvBRDF
+//---------------
+float3 EnvBRDFApprox(float3 SpecularColor, float Roughness, float NoV)
+{
+	// [ Lazarov 2013, "Getting More Physical in Call of Duty: Black Ops II" ]
+	// Adaptation to fit our G term.
+    const float4 c0 = { -1, -0.0275, -0.572, 0.022 };
+    const float4 c1 = { 1, 0.0425, 1.04, -0.04 };
+    float4 r = Roughness * c0 + c1;
+    float a004 = min(r.x * r.x, exp2(-9.28 * NoV)) * r.x + r.y;
+    float2 AB = float2(-1.04, 1.04) * a004 + r.zw;
+
+	// Anything less than 2% is physically impossible and is instead considered to be shadowing
+	// Note: this is needed for the 'specular' show flag to work, since it uses a SpecularColor of 0
+    AB.y *= saturate(50.0 * SpecularColor.g);
+
+    return SpecularColor * AB.x + AB.y;
+}
 
 // Blinn-Phong
 // from: https://en.wikipedia.org/wiki/Blinn%E2%80%93Phong_reflection_model
@@ -423,6 +457,12 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
 {
     float3 specularColor = ComputeF0(specular, diffuseColor, metallic);
     diffuseColor = diffuseColor - diffuseColor * metallic;
+    
+    //// Compute fractional mip from roughness
+    //float AbsoluteSpecularMip = ComputeReflectionCaptureMipFromRoughness(Roughness, 10.0f);
+    //float4 reflectionColor = EnvironmentMap.SampleLevel(DiffuseSamplerState, r, AbsoluteSpecularMip);
+    //float3 IndirectSpecularPart = EnvBRDFApprox(SpecularColor, Roughness, NoV);
+    //Color += IndirectSpecularPart * RGBMDecode(reflectionColor, 16.0f);
     
 #if SHADING_MODEL == SHADING_MODEL_UNLIT
     return Unlit(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);

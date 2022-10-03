@@ -506,6 +506,7 @@ public:
     virtual void SetIndexBuffer(FRHIIndexBuffer* buffer) = 0;
     virtual void SetConstantBuffer(FRHIConstantBuffer* buffer, int32 shaderPos) = 0;
     virtual void SetTexture2D(FRHITexture2D* texture, int32 shaderPos) = 0;
+    virtual void SetTextureCube(FRHITextureCube* texture, int32 shaderPos) = 0;
 
     virtual void DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation) = 0;
 
@@ -516,6 +517,7 @@ public:
     virtual FRHIShaderBindings* CreateShaderBindings() = 0;
     virtual FRHIPipelineState* CreatePipelineState(const FPipelineStateInfo& info) = 0;
     virtual FRHITexture2D* CreateTexture2D(const std::wstring& filePathName) = 0;
+    virtual FRHITextureCube* CreateTextureCube(const std::wstring& filePathName) = 0;
     virtual FRHIRenderTarget* CreateRenderTarget(uint32 width, uint32 hight, uint32 numTarget, EPixelFormat formatTarget, EPixelFormat formatDepthStencil) = 0;
     virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) = 0;
 

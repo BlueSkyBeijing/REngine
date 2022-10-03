@@ -21,3 +21,13 @@ float Pow5(float x)
     float xx = x * x;
     return xx * xx * x;
 }
+
+float3 RGBMDecode( float4 rgbm, float MaxValue )
+{
+	return rgbm.rgb * (rgbm.a * MaxValue);
+}
+
+float3 RGBMDecode( float4 rgbm )
+{
+	return rgbm.rgb * (rgbm.a * 64.0f);
+}

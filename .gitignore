@@ -1,2 +1,7 @@
 /.vs
 /Debug
+/Intermediate
+/Saved
+/Engine/ThirdParty/Eigen/out
+/Engine/ThirdParty/spdlog-1.x/out
+/REngine.vcxproj.user

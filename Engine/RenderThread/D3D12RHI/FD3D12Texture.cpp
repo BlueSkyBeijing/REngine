@@ -36,3 +36,19 @@ void FD3D12Texture2D::Init()
 void FD3D12Texture2D::Uninit()
 {
 }
+
+FD3D12TextureCube::FD3D12TextureCube()
+{
+}
+
+FD3D12TextureCube::~FD3D12TextureCube()
+{
+}
+
+void FD3D12TextureCube::Init()
+{
+}
+
+void FD3D12TextureCube::Uninit()
+{
+}

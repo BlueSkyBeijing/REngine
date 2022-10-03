@@ -34,3 +34,17 @@ public:
 private:
 
 };
+
+class FRHITextureCube : public FRHITexture
+{
+public:
+    FRHITextureCube();
+    virtual ~FRHITextureCube() override;
+
+public:
+    virtual void Init() override;
+    virtual void Uninit() override;
+
+private:
+
+};

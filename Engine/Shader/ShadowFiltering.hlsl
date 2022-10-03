@@ -1,4 +1,4 @@
-Texture2D ShadowMap : register(t1);
+Texture2D ShadowMap : register(t2);
 SamplerState SamperShadow : register(s1);
 
 #define PCF_COUNT 9

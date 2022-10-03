@@ -31,6 +31,7 @@ public:
     EMaterialShadingModel ShadingModel;
     float Opacity;
 
+    FRHITextureCube* EnvMap;
 
     std::string BaseColorFullFilePathName;
 

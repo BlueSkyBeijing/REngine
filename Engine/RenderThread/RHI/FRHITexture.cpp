@@ -34,3 +34,19 @@ void FRHITexture2D::Init()
 void FRHITexture2D::Uninit()
 {
 }
+
+FRHITextureCube::FRHITextureCube()
+{
+}
+
+FRHITextureCube::~FRHITextureCube()
+{
+}
+
+void FRHITextureCube::Init()
+{
+}
+
+void FRHITextureCube::Uninit()
+{
+}
