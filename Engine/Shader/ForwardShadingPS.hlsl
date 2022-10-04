@@ -27,8 +27,8 @@ float4 PSMain(VertexShaderOutput pixelIn) : SV_Target
     float specular = 0.5f;
     float metallic = 0.9f;
 
-    float3 specularColor = ComputeF0(specular, baseColor, metallic);
-    float3 diffuseColor = baseColor - baseColor * metallic;
+    float3 specularColor = ComputeF0(specular, baseColor.rgb, metallic);
+    float3 diffuseColor = baseColor.rgb - baseColor.rgb * metallic;
 
     half3 ReflectionColor = GetImageBasedReflectionLighting(CameraPos, roughness, specularColor, pixelIn.Normal, viewDir);
     lighting += ReflectionColor;

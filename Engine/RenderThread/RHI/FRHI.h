@@ -504,9 +504,9 @@ public:
     virtual void SetPrimitiveType(EPrimitiveType primitiveType) = 0;
     virtual void SetVertexBuffer(FRHIVertexBuffer* buffer) = 0;
     virtual void SetIndexBuffer(FRHIIndexBuffer* buffer) = 0;
-    virtual void SetConstantBuffer(FRHIConstantBuffer* buffer, int32 shaderPos) = 0;
-    virtual void SetTexture2D(FRHITexture2D* texture, int32 shaderPos) = 0;
-    virtual void SetTextureCube(FRHITextureCube* texture, int32 shaderPos) = 0;
+    virtual void SetConstantBuffer(FRHIConstantBuffer* buffer, int32 registerIndex) = 0;
+    virtual void SetTexture2D(FRHITexture2D* texture, int32 registerIndex) = 0;
+    virtual void SetTextureCube(FRHITextureCube* texture, int32 registerIndex) = 0;
 
     virtual void DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation) = 0;
 

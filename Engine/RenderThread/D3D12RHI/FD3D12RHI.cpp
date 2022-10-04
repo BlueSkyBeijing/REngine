@@ -15,14 +15,16 @@
 #include "TSingleton.h"
 
 
-int32 FD3D12RHI::msObjectSRVTableIndex = 0;
-int32 FD3D12RHI::msObjectCBVTableIndex = 1;
-int32 FD3D12RHI::msPassSRVTableIndex = 2;
-int32 FD3D12RHI::msPassCBVTableIndex = 3;
 
 int32 FD3D12RHI::msRTVCount = 0;
 int32 FD3D12RHI::msDSVCount = 0;
 int32 FD3D12RHI::msCBVSRVUAVCount = 0;
+
+int32 FD3D12RHI::msMaxCBVDiscriptorNum = 4;
+int32 FD3D12RHI::msMaxSRVDiscriptorNum = 16;
+
+int32 FD3D12RHI::msCBVTableBaseIndex = 0;
+int32 FD3D12RHI::msSRVTableBaseIndex = msMaxCBVDiscriptorNum;
 
 FD3D12RHI::FD3D12RHI() :
     mDX12Device(nullptr),
@@ -313,32 +315,32 @@ void FD3D12RHI::SetIndexBuffer(FRHIIndexBuffer* buffer)
     mDX12CommandList->IASetIndexBuffer(&indexBuffer->mIndexBufferView);
 }
 
-void FD3D12RHI::SetConstantBuffer(FRHIConstantBuffer* buffer, int32 shaderPos)
-{
+void FD3D12RHI::SetConstantBuffer(FRHIConstantBuffer* buffer, int32 registerIndex)
+{   
     CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
 
     FD3D12Resource* resourceDX12 = dynamic_cast<FD3D12Resource*>(buffer);
 
     descriptorObject.Offset(resourceDX12->PosInHeapCBVSRVUAV, mCBVSRVVUAVDescriptorSize);
-    mDX12CommandList->SetGraphicsRootDescriptorTable(shaderPos == 0 ? msObjectCBVTableIndex : msPassCBVTableIndex, descriptorObject);
+    mDX12CommandList->SetGraphicsRootDescriptorTable(msCBVTableBaseIndex + registerIndex, descriptorObject);
 }
 
-void FD3D12RHI::SetTexture2D(FRHITexture2D* texture, int32 shaderPos)
+void FD3D12RHI::SetTexture2D(FRHITexture2D* texture, int32 registerIndex)
 {
     FD3D12Texture2D* textureDX12 = dynamic_cast<FD3D12Texture2D*>(texture);
     CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
 
     descriptorObject.Offset(textureDX12->PosInHeapCBVSRVUAV, mCBVSRVVUAVDescriptorSize);
-    mDX12CommandList->SetGraphicsRootDescriptorTable(shaderPos == 0 ? msObjectSRVTableIndex : msPassSRVTableIndex, descriptorObject);
+    mDX12CommandList->SetGraphicsRootDescriptorTable(msSRVTableBaseIndex + registerIndex, descriptorObject);
 }
 
-void FD3D12RHI::SetTextureCube(FRHITextureCube* texture, int32 shaderPos)
+void FD3D12RHI::SetTextureCube(FRHITextureCube* texture, int32 registerIndex)
 {
-    //FD3D12TextureCube* textureDX12 = dynamic_cast<FD3D12TextureCube*>(texture);
-    //CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
+    FD3D12TextureCube* textureDX12 = dynamic_cast<FD3D12TextureCube*>(texture);
+    CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
 
-    //descriptorObject.Offset(textureDX12->PosInHeapCBVSRVUAV, mCBVSRVVUAVDescriptorSize);
-    //mDX12CommandList->SetGraphicsRootDescriptorTable((shaderPos == 0 || shaderPos == 2) ? msObjectSRVTableIndex : msPassSRVTableIndex, descriptorObject);
+    descriptorObject.Offset(textureDX12->PosInHeapCBVSRVUAV, mCBVSRVVUAVDescriptorSize);
+    mDX12CommandList->SetGraphicsRootDescriptorTable(msSRVTableBaseIndex + registerIndex, descriptorObject);
 }
 
 void FD3D12RHI::DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation)
@@ -496,24 +498,22 @@ FRHIShaderBindings* FD3D12RHI::CreateShaderBindings()
 {
     FD3D12ShaderBindings* rootSignature = new FD3D12ShaderBindings;
 
-    CD3DX12_ROOT_PARAMETER slotRootParameter[4];
+    CD3DX12_ROOT_PARAMETER* rootParameter = new CD3DX12_ROOT_PARAMETER[msMaxSRVDiscriptorNum + msMaxCBVDiscriptorNum];
 
-    CD3DX12_DESCRIPTOR_RANGE objTexTable;
-    objTexTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, 0);
+    for (int i = 0; i < msMaxSRVDiscriptorNum; i++)
+    {
+        CD3DX12_DESCRIPTOR_RANGE* discripterRangeSRV = new CD3DX12_DESCRIPTOR_RANGE;
+        discripterRangeSRV->Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, i);
+        rootParameter[msSRVTableBaseIndex+i].InitAsDescriptorTable(1, discripterRangeSRV, D3D12_SHADER_VISIBILITY_PIXEL);
+    }
 
-    CD3DX12_DESCRIPTOR_RANGE objConTable;
-    objConTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
+    for (int i = 0; i < msMaxCBVDiscriptorNum; i++)
+    {
+        CD3DX12_DESCRIPTOR_RANGE* discripterRangeCBV = new CD3DX12_DESCRIPTOR_RANGE;
+        discripterRangeCBV->Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, i);
+        rootParameter[msCBVTableBaseIndex+i].InitAsDescriptorTable(1, discripterRangeCBV, D3D12_SHADER_VISIBILITY_ALL);
+    }
 
-    CD3DX12_DESCRIPTOR_RANGE passTexTable;
-    passTexTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 2);
-
-    CD3DX12_DESCRIPTOR_RANGE passConTable;
-    passConTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 1);
-
-    slotRootParameter[msObjectSRVTableIndex].InitAsDescriptorTable(1, &objTexTable, D3D12_SHADER_VISIBILITY_PIXEL);
-    slotRootParameter[msObjectCBVTableIndex].InitAsDescriptorTable(1, &objConTable, D3D12_SHADER_VISIBILITY_ALL);
-    slotRootParameter[msPassSRVTableIndex].InitAsDescriptorTable(1, &passTexTable, D3D12_SHADER_VISIBILITY_PIXEL);
-    slotRootParameter[msPassCBVTableIndex].InitAsDescriptorTable(1, &passConTable, D3D12_SHADER_VISIBILITY_ALL);
 
     const CD3DX12_STATIC_SAMPLER_DESC linearWrap(
         0, // shaderRegister
@@ -549,7 +549,7 @@ FRHIShaderBindings* FD3D12RHI::CreateShaderBindings()
 
     std::array<const CD3DX12_STATIC_SAMPLER_DESC, 4> sampler = { linearWrap , shadow, linearClamp, pointClamp };
 
-    CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc(4, slotRootParameter, 4, sampler.data(),
+    CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc(msMaxSRVDiscriptorNum + msMaxCBVDiscriptorNum, rootParameter, 4, sampler.data(),
         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
     Microsoft::WRL::ComPtr <ID3DBlob> signature;

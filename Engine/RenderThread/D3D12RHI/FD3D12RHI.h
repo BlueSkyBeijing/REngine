@@ -31,9 +31,9 @@ public:
     virtual void SetPrimitiveType(EPrimitiveType primitiveType) override;
     virtual void SetVertexBuffer(FRHIVertexBuffer* buffer) override;
     virtual void SetIndexBuffer(FRHIIndexBuffer* buffer) override;
-    virtual void SetConstantBuffer(FRHIConstantBuffer* buffer, int32 shaderPos) override;
-    virtual void SetTexture2D(FRHITexture2D* texture, int32 shaderPos) override;
-    virtual void SetTextureCube(FRHITextureCube* texture, int32 shaderPos) override;
+    virtual void SetConstantBuffer(FRHIConstantBuffer* buffer, int32 registerIndex) override;
+    virtual void SetTexture2D(FRHITexture2D* texture, int32 registerIndex) override;
+    virtual void SetTextureCube(FRHITextureCube* texture, int32 registerIndex) override;
 
     virtual void DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation) override;
 
@@ -101,14 +101,13 @@ private:
     D3D12_RECT mScissorRect;
     D3D12_VIEWPORT mViewPort;
     uint32 mFrameIndex;
-
-    static int32 msPassSRVTableIndex;
-    static int32 msPassCBVTableIndex;
-    static int32 msObjectSRVTableIndex;
-    static int32 msObjectCBVTableIndex;
-
     static int32 msRTVCount;
     static int32 msDSVCount;
     static int32 msCBVSRVUAVCount;
 
+    static int32 msMaxCBVDiscriptorNum;
+    static int32 msMaxSRVDiscriptorNum;
+
+    static int32 msCBVTableBaseIndex;
+    static int32 msSRVTableBaseIndex;
 };
