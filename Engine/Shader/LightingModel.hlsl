@@ -13,20 +13,23 @@
 #define SHADING_MODEL_THIN_TRANSLUCENT 10
 #define SHADING_MODEL_STRATA 11
 
-//#define REFLECTION_CAPTURE_ROUGHEST_MIP 1
-//#define REFLECTION_CAPTURE_ROUGHNESS_MIP_SCALE 1.2
+#define REFLECTION_CAPTURE_ROUGHEST_MIP 1
+#define REFLECTION_CAPTURE_ROUGHNESS_MIP_SCALE 1.2
 
-///** 
-// * Compute absolute mip for a reflection capture cubemap given a roughness.
-// */
-//float ComputeReflectionCaptureMipFromRoughness(float Roughness, float CubemapMaxMip)
-//{
-//	// Heuristic that maps roughness to mip level
-//	// This is done in a way such that a certain mip level will always have the same roughness, regardless of how many mips are in the texture
-//	// Using more mips in the cubemap just allows sharper reflections to be supported
-//    float LevelFrom1x1 = REFLECTION_CAPTURE_ROUGHEST_MIP - REFLECTION_CAPTURE_ROUGHNESS_MIP_SCALE * log2(Roughness);
-//    return CubemapMaxMip - 1 - LevelFrom1x1;
-//}
+TextureCube EnvironmentMap : register(t1);
+SamplerState EnvironmentMapSampe : register(s2);
+
+/** 
+ * Compute absolute mip for a reflection capture cubemap given a roughness.
+ */
+float ComputeReflectionCaptureMipFromRoughness(float Roughness, float CubemapMaxMip)
+{
+	// Heuristic that maps roughness to mip level
+	// This is done in a way such that a certain mip level will always have the same roughness, regardless of how many mips are in the texture
+	// Using more mips in the cubemap just allows sharper reflections to be supported
+    float LevelFrom1x1 = REFLECTION_CAPTURE_ROUGHEST_MIP - REFLECTION_CAPTURE_ROUGHNESS_MIP_SCALE * log2(Roughness);
+    return CubemapMaxMip - 1 - LevelFrom1x1;
+}
 
 //---------------
 // EnvBRDF
@@ -500,9 +503,9 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
 float3 DirectionalLighting(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float shadow, float thickness)
 {
     //return float3(0,0,0);
-    float roughness = 0.5f;
+    float roughness = 0.1f;
     float specular = 0.5f;
-    float metallic = 0.5f;
+    float metallic = 0.9f;
     float3 lighting = Lighting(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, specular, metallic, shadow);
     
     #if SHADING_MODEL == SHADING_MODEL_SUBSUFACE
@@ -514,14 +517,36 @@ float3 DirectionalLighting(float3 normal, float3 lightDir, float3 lightColor, fl
 
 float3 PointLighting(float3 normal, float3 lightPosition, float3 lightColor, float lightIntensity, float invRadius, float3 pixelPosition, float3 viewDir, float3 diffuseColor, float shadow)
 {
-    float roughness = 0.5f;
+    float roughness = 0.1f;
     float specular = 0.5f;
-    float metallic = 0.5f;
-    
+    float metallic = 0.9f;    
     float3 toLight = lightPosition - pixelPosition;
     float distanceSqr = dot(toLight, toLight);
     float3 lightDir = toLight * rsqrt(distanceSqr);
     
     float lightIntensityPixel = saturate(1 - (distanceSqr * invRadius * invRadius)) * lightIntensity;
     return Lighting(normal, lightDir, lightColor, lightIntensityPixel, viewDir, diffuseColor, roughness, specular, metallic, 1);
+}
+
+float3 GetImageBasedReflectionSpecular(float3 cameraPos, float roughness, float3 specularColor, float3 normal)
+{
+    // Compute fractional mip from roughness
+    float3 r = reflect(-cameraPos, normal);
+    float absoluteSpecularMip = ComputeReflectionCaptureMipFromRoughness(roughness, 10.0f);
+    float4 specularIBLSample = EnvironmentMap.SampleLevel(EnvironmentMapSampe, r, absoluteSpecularMip);
+    float3 specularIBL = RGBMDecode(specularIBLSample, 16.0f);
+	specularIBL = specularIBL * specularIBL;
+    return specularIBL;
+
+}
+
+float3 GetImageBasedReflectionLighting(float3 cameraPos, float roughness, float3 specularColor, float3 normal, float3 viewDir)
+{
+    float3 specularLighting = GetImageBasedReflectionSpecular(cameraPos, roughness, specularColor, normal);
+    float NoV = max(dot(viewDir,  normal), 0.0);
+
+    specularColor = EnvBRDFApprox(specularColor, roughness, NoV);
+    float3 SpecularIBL = specularLighting * specularColor;
+
+    return SpecularIBL;
 }
