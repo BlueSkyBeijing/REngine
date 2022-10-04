@@ -10,6 +10,9 @@
 struct FObjectConstant
 {
     FMatrix4x4 World;
+    float Metallic;
+    float Specular;
+    float Roughness;
     float Opacity;
 };
 
@@ -17,6 +20,9 @@ struct FSkeletonMeshConstant
 {
     FMatrix4x4 World;
     FMatrix4x4 BoneTransforms[75];
+    float Metallic;
+    float Specular;
+    float Roughness;
     float Opacity;
 };
 

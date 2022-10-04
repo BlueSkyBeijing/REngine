@@ -31,6 +31,9 @@ void UMaterial::Load()
 
     materialFile.read((char*)&mBlendMode, sizeof(int32));
     materialFile.read((char*)&mShadingModel, sizeof(int32));
+    materialFile.read((char*)&mMetallic, sizeof(float));
+    materialFile.read((char*)&mSpecular, sizeof(float));
+    materialFile.read((char*)&mRoughness, sizeof(float));
     materialFile.read((char*)&mOpacity, sizeof(float));
 
     std::string BaseColorTextureName;
@@ -59,6 +62,9 @@ void UMaterial::Load()
     Material->BaseColorFullFilePathName = BaseColorTextureFullPathName;
     Material->BlendMode = mBlendMode;
     Material->ShadingModel = mShadingModel;
+    Material->Metallic = mMetallic;
+    Material->Specular = mSpecular;
+    Material->Roughness = mRoughness;
     Material->Opacity = mOpacity;
 }
 

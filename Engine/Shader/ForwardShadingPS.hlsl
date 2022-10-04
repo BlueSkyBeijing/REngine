@@ -23,14 +23,10 @@ float4 PSMain(VertexShaderOutput pixelIn) : SV_Target
         lighting += PointLighting(pixelIn.Normal, PointLightPositionAndInvRadius[i].xyz, PointLightColorAndFalloffExponent[i].xyz,  PointLightIntensity[(uint)i/(MAX_POINT_LIGHT_NUM/4)][(uint)i%(MAX_POINT_LIGHT_NUM/4)], PointLightPositionAndInvRadius[i].w, pixelIn.PosW.xyz, viewDir, baseColor.xyz, shadow);
     }
 
-    float roughness = 0.1f;
-    float specular = 0.5f;
-    float metallic = 0.9f;
+    float3 specularColor = ComputeF0(Specular, baseColor.rgb, Metallic);
+    float3 diffuseColor = baseColor.rgb - baseColor.rgb * Metallic;
 
-    float3 specularColor = ComputeF0(specular, baseColor.rgb, metallic);
-    float3 diffuseColor = baseColor.rgb - baseColor.rgb * metallic;
-
-    half3 ReflectionColor = GetImageBasedReflectionLighting(CameraPos, roughness, specularColor, pixelIn.Normal, viewDir);
+    half3 ReflectionColor = GetImageBasedReflectionLighting(CameraPos, Roughness, specularColor, pixelIn.Normal, viewDir);
     lighting += ReflectionColor;
     outColor.rgb = lighting;
     outColor.a = Opacity;

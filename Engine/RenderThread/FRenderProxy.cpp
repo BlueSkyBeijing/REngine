@@ -82,6 +82,9 @@ void FStaticMeshRenderProxy::CreateRenderResource()
     FMatrix3x3 rotation = Rotation.toRotationMatrix();
     mObjectConstants.World.block<3, 3>(0, 0) = rotation;
     mObjectConstants.World.block<1, 3>(3, 0) = Position;
+    mObjectConstants.Metallic = Material->Metallic;
+    mObjectConstants.Specular = Material->Specular;
+    mObjectConstants.Roughness = Material->Roughness;
     mObjectConstants.Opacity = Material->Opacity;
 
     ConstantBuffer = rhi->CreateConstantBuffer(sizeof(mObjectConstants), (uint8*)&mObjectConstants);
@@ -171,6 +174,9 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
     FMatrix3x3 rotation = Rotation.toRotationMatrix();
     mObjectConstants.World.block<3, 3>(0, 0) = rotation;
     mObjectConstants.World.block<1, 3>(3, 0) = Position;
+    mObjectConstants.Metallic = Material->Metallic;
+    mObjectConstants.Specular = Material->Specular;
+    mObjectConstants.Roughness = Material->Roughness;
     mObjectConstants.Opacity = Material->Opacity;
 
     ConstantBuffer = rhi->CreateConstantBuffer(sizeof(mObjectConstants), (uint8*)&mObjectConstants);

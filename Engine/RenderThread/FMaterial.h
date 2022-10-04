@@ -29,6 +29,9 @@ public:
 
     EBlendMode BlendMode;
     EMaterialShadingModel ShadingModel;
+    float Metallic;
+    float Specular;
+    float Roughness;
     float Opacity;
 
     FRHITextureCube* EnvMap;

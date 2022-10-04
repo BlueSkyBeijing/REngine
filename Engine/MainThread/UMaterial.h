@@ -28,5 +28,8 @@ private:
     UTexture2D* mEmissiveColor;
     EBlendMode mBlendMode;
     EMaterialShadingModel mShadingModel;
+    float mMetallic;
+    float mSpecular;
+    float mRoughness;
     float mOpacity;
 };
