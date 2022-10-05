@@ -456,11 +456,14 @@ float3 EyeBxDF(half3 normal, half3 viewDir, half3 lightDir, float specular, floa
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float roughness, float specular, float metallic, float shadow)
+void GetDiffuseAndSpecularColor(float specular, float metallic, inout float3 diffuseColor, inout float3 specularColor)
 {
-    float3 specularColor = ComputeF0(specular, diffuseColor, metallic);
+    specularColor = ComputeF0(specular, diffuseColor, metallic);
     diffuseColor = diffuseColor - diffuseColor * metallic;
-    
+}
+
+float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float roughness, float3 specularColor, float metallic, float shadow)
+{    
     //// Compute fractional mip from roughness
     //float AbsoluteSpecularMip = ComputeReflectionCaptureMipFromRoughness(Roughness, 10.0f);
     //float4 reflectionColor = EnvironmentMap.SampleLevel(DiffuseSamplerState, r, AbsoluteSpecularMip);
@@ -488,7 +491,7 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
     float cloth = 1;
     return ClothBxDF(normal, viewDir lightDir, fuzzColor, cloth, roughness, diffuseColor, specularColor);
 #elif SHADING_MODEL == SHADING_MODEL_EYE
-    return EyeBxDF(normal, viewDir, lightDir, specular, specularColor, diffuseColor, roughness, shadow);
+    return EyeBxDF(normal, viewDir, lightDir, 0, specularColor, diffuseColor, roughness, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_SIGLE_LAYER_WATER
     return DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, specularColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_THIN_TRANSLUCENT
@@ -500,13 +503,13 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
 #endif
 }
 
-float3 DirectionalLighting(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float shadow, float thickness)
+float3 DirectionalLighting(LightingContext litContext, MaterialContext matContext, float shadow, float thickness)
 {
-    //return float3(0,0,0);
-    float roughness = 0.1f;
-    float specular = 0.5f;
-    float metallic = 0.9f;
-    float3 lighting = Lighting(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, specular, metallic, shadow);
+    float3 diffuseColor = matContext.BaseColor;
+    float3 specularColor;
+    GetDiffuseAndSpecularColor(matContext.Specular, matContext.Metallic, diffuseColor, specularColor);
+    
+    float3 lighting = Lighting(litContext.Normal, litContext.LightDir, litContext.LightColor, litContext.LightIntensity, litContext.ViewDir, diffuseColor, matContext.Roughness, matContext.Specular, matContext.Metallic, shadow);
     
     #if SHADING_MODEL == SHADING_MODEL_SUBSUFACE
     lighting *= thickness;
@@ -515,17 +518,18 @@ float3 DirectionalLighting(float3 normal, float3 lightDir, float3 lightColor, fl
     return  lighting;
 }
 
-float3 PointLighting(float3 normal, float3 lightPosition, float3 lightColor, float lightIntensity, float invRadius, float3 pixelPosition, float3 viewDir, float3 diffuseColor, float shadow)
+float3 PointLighting(LightingContext litContext, MaterialContext matContext, float shadow, float thickness)
 {
-    float roughness = 0.1f;
-    float specular = 0.5f;
-    float metallic = 0.9f;    
-    float3 toLight = lightPosition - pixelPosition;
+    float3 diffuseColor = matContext.BaseColor;
+    float3 specularColor;
+    GetDiffuseAndSpecularColor(matContext.Specular, matContext.Metallic, diffuseColor, specularColor);
+
+    float3 toLight = litContext.LightPos - litContext.PixelPos;
     float distanceSqr = dot(toLight, toLight);
     float3 lightDir = toLight * rsqrt(distanceSqr);
     
-    float lightIntensityPixel = saturate(1 - (distanceSqr * invRadius * invRadius)) * lightIntensity;
-    return Lighting(normal, lightDir, lightColor, lightIntensityPixel, viewDir, diffuseColor, roughness, specular, metallic, 1);
+    float lightIntensityPixel = saturate(1 - (distanceSqr * litContext.LightRadius * litContext.LightRadius)) * litContext.LightIntensity;
+    return Lighting(litContext.Normal, litContext.LightDir, litContext.LightColor, lightIntensityPixel, litContext.ViewDir, diffuseColor, matContext.Roughness, matContext.Specular, matContext.Metallic, 1);
 }
 
 float3 GetImageBasedReflectionSpecular(float3 cameraPos, float roughness, float3 specularColor, float3 normal)
@@ -540,12 +544,16 @@ float3 GetImageBasedReflectionSpecular(float3 cameraPos, float roughness, float3
 
 }
 
-float3 GetImageBasedReflectionLighting(float3 cameraPos, float roughness, float3 specularColor, float3 normal, float3 viewDir)
+float3 GetImageBasedReflectionLighting(LightingContext litContext, MaterialContext matContext, float shadow, float thickness)
 {
-    float3 specularLighting = GetImageBasedReflectionSpecular(cameraPos, roughness, specularColor, normal);
-    float NoV = max(dot(viewDir,  normal), 0.0);
+    float3 diffuseColor = matContext.BaseColor;
+    float3 specularColor;
+    GetDiffuseAndSpecularColor(matContext.Specular, matContext.Metallic, diffuseColor, specularColor);
 
-    specularColor = EnvBRDFApprox(specularColor, roughness, NoV);
+    float3 specularLighting = GetImageBasedReflectionSpecular(litContext.CameraPos, matContext.Roughness, specularColor, litContext.Normal);
+    float NoV = max(dot(litContext.ViewDir,  litContext.Normal), 0.0);
+
+    specularColor = EnvBRDFApprox(specularColor, matContext.Roughness, NoV);
     float3 SpecularIBL = specularLighting * specularColor;
 
     return SpecularIBL;
