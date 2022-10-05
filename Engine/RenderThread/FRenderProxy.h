@@ -14,6 +14,9 @@ struct FObjectConstant
     float Specular;
     float Roughness;
     float Opacity;
+
+    FVector4 EmissiveColor;
+    FVector4 SubsurfaceColor;
 };
 
 struct FSkeletonMeshConstant
@@ -24,6 +27,9 @@ struct FSkeletonMeshConstant
     float Specular;
     float Roughness;
     float Opacity;
+
+    FVector4 EmissiveColor;
+    FVector4 SubsurfaceColor;
 };
 
 struct FStaticMeshRenderProxyInitializer

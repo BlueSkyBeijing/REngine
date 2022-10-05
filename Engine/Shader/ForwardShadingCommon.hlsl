@@ -32,6 +32,9 @@ cbuffer ObjectConstantBuffer : register(b0)
     float Specular;
     float Roughness;
     float Opacity;
+    
+    float4 EmissiveColor;
+    float4 SubsurfaceColor;
 };
 
 cbuffer SceneColorPassConstantBuffer : register(b1)

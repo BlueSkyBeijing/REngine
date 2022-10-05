@@ -25,7 +25,6 @@ public:
     FRHITexture2D* BaseColor;
     FRHITexture2D* MetallicSpecularRoughness;
     FRHITexture2D* NormalMap;
-    FRHITexture2D* EmissiveColor;
 
     EBlendMode BlendMode;
     EMaterialShadingModel ShadingModel;
@@ -33,6 +32,10 @@ public:
     float Specular;
     float Roughness;
     float Opacity;
+
+    FVector4 EmissiveColor;
+    FVector4 SubsurfaceColor;
+
 
     FRHITextureCube* EnvMap;
 

@@ -87,6 +87,10 @@ void FStaticMeshRenderProxy::CreateRenderResource()
     mObjectConstants.Roughness = Material->Roughness;
     mObjectConstants.Opacity = Material->Opacity;
 
+    mObjectConstants.EmissiveColor = Material->EmissiveColor;
+    mObjectConstants.SubsurfaceColor = Material->SubsurfaceColor;
+
+
     ConstantBuffer = rhi->CreateConstantBuffer(sizeof(mObjectConstants), (uint8*)&mObjectConstants);
 
     Material->Init();
@@ -178,6 +182,9 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
     mObjectConstants.Specular = Material->Specular;
     mObjectConstants.Roughness = Material->Roughness;
     mObjectConstants.Opacity = Material->Opacity;
+
+    mObjectConstants.EmissiveColor = Material->EmissiveColor;
+    mObjectConstants.SubsurfaceColor = Material->SubsurfaceColor;
 
     ConstantBuffer = rhi->CreateConstantBuffer(sizeof(mObjectConstants), (uint8*)&mObjectConstants);
 

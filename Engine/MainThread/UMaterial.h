@@ -25,11 +25,12 @@ private:
     UTexture2D* mBaseColor;
     UTexture2D* mMetallicSpecularRoughness;
     UTexture2D* mNormalMap;
-    UTexture2D* mEmissiveColor;
     EBlendMode mBlendMode;
     EMaterialShadingModel mShadingModel;
     float mMetallic;
     float mSpecular;
     float mRoughness;
     float mOpacity;
+    FVector4 mEmissiveColor;
+    FVector4 mSubsurfaceColor;
 };

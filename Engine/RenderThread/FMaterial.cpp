@@ -18,7 +18,6 @@ FMaterial::FMaterial() :
     BaseColor(nullptr),
     MetallicSpecularRoughness(nullptr),
     NormalMap(nullptr),
-    EmissiveColor(nullptr),
     Metallic(0.0f),
     Specular(0.5f),
     Roughness(0.5f),

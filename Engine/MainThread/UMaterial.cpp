@@ -10,8 +10,7 @@
 UMaterial::UMaterial() :
     mBaseColor(nullptr),
     mMetallicSpecularRoughness(nullptr),
-    mNormalMap(nullptr),
-    mEmissiveColor(nullptr)
+    mNormalMap(nullptr)
 {
 }
 
@@ -35,6 +34,9 @@ void UMaterial::Load()
     materialFile.read((char*)&mSpecular, sizeof(float));
     materialFile.read((char*)&mRoughness, sizeof(float));
     materialFile.read((char*)&mOpacity, sizeof(float));
+
+    materialFile.read((char*)&mEmissiveColor, sizeof(FVector4));
+    materialFile.read((char*)&mSubsurfaceColor, sizeof(FVector4));
 
     std::string BaseColorTextureName;
     int32 stringSize;
@@ -66,6 +68,9 @@ void UMaterial::Load()
     Material->Specular = mSpecular;
     Material->Roughness = mRoughness;
     Material->Opacity = mOpacity;
+
+    Material->EmissiveColor = mEmissiveColor;
+    Material->SubsurfaceColor = mSubsurfaceColor;
 }
 
 void UMaterial::Unload()

@@ -14,7 +14,7 @@ float4 PSMain(VertexShaderOutput pixelIn) : SV_Target
     const float4 baseColor = DiffuseMap.Sample(DiffuseSamplerState, pixelIn.UV);
     
     MaterialContext matContext;
-    InitMaterialContext(matContext, baseColor.rgb, Metallic, Specular, Roughness, Opacity);
+    InitMaterialContext(matContext, baseColor.rgb, Metallic, Specular, Roughness, Opacity, EmissiveColor, SubsurfaceColor);
 
     LightingContext litContextDirectional;
     InitLightingContext(litContextDirectional, DirectionalLightDir, DirectionalLightIntensity, DirectionalLightColor, pixelIn.Normal, viewDir, CameraPos);
