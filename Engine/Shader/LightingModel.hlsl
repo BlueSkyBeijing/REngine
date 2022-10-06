@@ -325,25 +325,21 @@ float3 ClearCoatBxDF(half3 normal, half3 viewDir, half3 lightDir,float3 fuzzColo
 	//   Init(BottomContext, normal, X, Y, V2, L2);
     BxDFContext BottomContext = RefractClearCoatContext(context);
 
-
 	// Absorption
 	// Default Lit
     float3 defaultDiffuse = (NoL) *  Diffuse_Lambert(diffuseColor);
     float3 refractedDiffuse = fresnelCoeff * defaultDiffuse;
     float3 diffuse = lerp(defaultDiffuse, refractedDiffuse, clearCoat);
 
-
     a2 = Pow4(roughness);
     float D2 = 0;
     float vis2 = 0;
-
 
     D2 = D_GGX(a2, BottomContext.NoH);
 	// NoL is chosen to provide better parity with DefaultLit when clearCoat=0
     vis2 = Vis_SmithJointApprox(a2, BottomContext.NoV, NoL);
     float3 F_DefaultLit = F_Schlick(specularColor, context.VoH);
 		
-
 	// Note: reusing D and viewDir from refracted context to save computation when clearCoat < 1
     float3 commonSpecular = (NoL * D2 * vis2);
     float3 defaultSpecular = F_DefaultLit;
@@ -473,7 +469,7 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
 #elif SHADING_MODEL == SHADING_MODEL_CLEAR_COAT
     float cloth = 0.5;
     float3 fuzzColor = float3(1, 0, 0);
-    return ClearCoatBxDF(normal, viewDir, lightDir, fuzzColor, cloth, roughness, diffuseColor, specularColor);
+    return ClearCoatBxDF(normal, viewDir, lightDir, fuzzColor, cloth, roughness, diffuseColor, specularColor) * shadow;
 #elif SHADING_MODEL == SHADING_MODEL_TWO_SIDE_FOLIAGE
     return SubsurfaceBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, specularColor, roughness, opacity, subsurfaceColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_HAIR
