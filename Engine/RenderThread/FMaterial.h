@@ -23,8 +23,6 @@ public:
     FRHIShader* VertexShaderShadowGPUSkin;
 
     FRHITexture2D* BaseColor;
-    FRHITexture2D* MetallicSpecularRoughness;
-    FRHITexture2D* NormalMap;
 
     EBlendMode BlendMode;
     EMaterialShadingModel ShadingModel;
@@ -35,7 +33,6 @@ public:
 
     FVector4 EmissiveColor;
     FVector4 SubsurfaceColor;
-
 
     FRHITextureCube* EnvMap;
 

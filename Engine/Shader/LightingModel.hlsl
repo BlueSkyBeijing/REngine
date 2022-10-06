@@ -5,16 +5,18 @@
 #define SHADING_MODEL_SUBSUFACE 2
 #define SHADING_MODEL_PREINTEGRATED_SKIN 3
 #define SHADING_MODEL_CLEAR_COAT 4
-#define SHADING_MODEL_TWO_SIDE_FOLIAGE 5
-#define SHADING_MODEL_HAIR 6
-#define SHADING_MODEL_CLOTH 7
-#define SHADING_MODEL_EYE 8
-#define SHADING_MODEL_SIGLE_LAYER_WATER 9
-#define SHADING_MODEL_THIN_TRANSLUCENT 10
-#define SHADING_MODEL_STRATA 11
+#define SHADING_MODEL_SUBSUFACE_PROFILE 5
+#define SHADING_MODEL_TWO_SIDE_FOLIAGE 65
+#define SHADING_MODEL_HAIR 7
+#define SHADING_MODEL_CLOTH 8
+#define SHADING_MODEL_EYE 9
+#define SHADING_MODEL_SIGLE_LAYER_WATER 10
+#define SHADING_MODEL_THIN_TRANSLUCENT 11
+#define SHADING_MODEL_STRATA 12
 
 #define REFLECTION_CAPTURE_ROUGHEST_MIP 1
 #define REFLECTION_CAPTURE_ROUGHNESS_MIP_SCALE 1.2
+
 
 TextureCube EnvironmentMap : register(t1);
 SamplerState EnvironmentMapSampe : register(s2);
@@ -479,7 +481,7 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
 #elif SHADING_MODEL == SHADING_MODEL_CLOTH
     float3 fuzzColor = float3(1, 0, 0);
     float cloth = 1;
-    return ClothBxDF(normal, viewDir lightDir, fuzzColor, cloth, roughness, diffuseColor, specularColor);
+    return ClothBxDF(normal, viewDir, lightDir, fuzzColor, cloth, roughness, diffuseColor, specularColor) * shadow;
 #elif SHADING_MODEL == SHADING_MODEL_EYE
     return EyeBxDF(normal, viewDir, lightDir, 0, specularColor, diffuseColor, roughness, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_SIGLE_LAYER_WATER

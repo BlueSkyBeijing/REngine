@@ -16,8 +16,6 @@ FMaterial::FMaterial() :
     VertexShaderGPUSkin(nullptr),
     VertexShaderShadowGPUSkin(nullptr),
     BaseColor(nullptr),
-    MetallicSpecularRoughness(nullptr),
-    NormalMap(nullptr),
     Metallic(0.0f),
     Specular(0.5f),
     Roughness(0.5f),
@@ -96,4 +94,8 @@ void FMaterial::UnInit()
 
     delete BaseColor;
     BaseColor = nullptr;
+
+    delete EnvMap;
+    EnvMap = nullptr;
+
 }
