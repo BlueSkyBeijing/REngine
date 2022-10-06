@@ -256,7 +256,7 @@ BxDFContext RefractClearCoatContext(BxDFContext context)
     return RefractedContext;
 }
 
-float3 ClearCoatBxDF(half3 normal, half3 viewDir, half3 lightDir,float3 fuzzColor, float cloth, float roughness, float3 diffuseColor, float3 specularColor)
+float3 ClearCoatBxDF(half3 normal, half3 viewDir, half3 lightDir,float3 fuzzColor, float cloth, float roughness, float metallic, float3 diffuseColor, float3 specularColor)
 {
     float NoL = max(dot(lightDir, normal), 0.00001);
 
@@ -326,9 +326,11 @@ float3 ClearCoatBxDF(half3 normal, half3 viewDir, half3 lightDir,float3 fuzzColo
     BxDFContext BottomContext = RefractClearCoatContext(context);
 
 	// Absorption
+	float3 transmission = CalcThinTransmission(BottomContext.NoL, BottomContext.NoV, diffuseColor, metallic);
+
 	// Default Lit
     float3 defaultDiffuse = (NoL) *  Diffuse_Lambert(diffuseColor);
-    float3 refractedDiffuse = fresnelCoeff * defaultDiffuse;
+    float3 refractedDiffuse = fresnelCoeff * transmission * defaultDiffuse;
     float3 diffuse = lerp(defaultDiffuse, refractedDiffuse, clearCoat);
 
     a2 = Pow4(roughness);
@@ -343,7 +345,7 @@ float3 ClearCoatBxDF(half3 normal, half3 viewDir, half3 lightDir,float3 fuzzColo
 	// Note: reusing D and viewDir from refracted context to save computation when clearCoat < 1
     float3 commonSpecular = (NoL * D2 * vis2);
     float3 defaultSpecular = F_DefaultLit;
-    float3 refractedSpecular = fresnelCoeff;
+    float3 refractedSpecular = fresnelCoeff * transmission * F;
     specular += commonSpecular * lerp(defaultSpecular, refractedSpecular, clearCoat);
     lighting = diffuse + specular;
     return lighting;
@@ -469,7 +471,7 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
 #elif SHADING_MODEL == SHADING_MODEL_CLEAR_COAT
     float cloth = 0.5;
     float3 fuzzColor = float3(1, 0, 0);
-    return ClearCoatBxDF(normal, viewDir, lightDir, fuzzColor, cloth, roughness, diffuseColor, specularColor) * shadow;
+    return ClearCoatBxDF(normal, viewDir, lightDir, fuzzColor, cloth, roughness, metallic, diffuseColor, specularColor) * shadow;
 #elif SHADING_MODEL == SHADING_MODEL_TWO_SIDE_FOLIAGE
     return SubsurfaceBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, specularColor, roughness, opacity, subsurfaceColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_HAIR
