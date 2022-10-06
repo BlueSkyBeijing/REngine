@@ -28,13 +28,13 @@ cbuffer ObjectConstantBuffer : register(b0)
 #ifdef GPU_SKIN
     float4x4 BoneTransforms[75];
 #endif
+    float4 EmissiveColor;
+    float4 SubsurfaceColor;
+    
     float Metallic;
     float Specular;
     float Roughness;
-    float Opacity;
-    
-    float4 EmissiveColor;
-    float4 SubsurfaceColor;
+    float Opacity;   
 };
 
 cbuffer SceneColorPassConstantBuffer : register(b1)

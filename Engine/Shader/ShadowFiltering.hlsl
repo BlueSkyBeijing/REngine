@@ -17,13 +17,14 @@ float2 DirectionalLightShadow(float4 shadowPosH)
         float2(-InvShadowMapSize.x, InvShadowMapSize.y), float2(0.0f, InvShadowMapSize.y), float2(InvShadowMapSize.x, InvShadowMapSize.y)
     };
 
-    float2 shadowAndThickness = float2(1, 1);
+    float2 shadowAndThickness = float2(0, 0);
+    const float bias = 0.0001f;
     [unroll]
     for (int i = 0; i < PCF_COUNT; ++i)
     {
         float curShadow = ShadowMap.Sample(SamperShadow,
             (shadowPosH.xy + offsets[i])).r;
-        curShadow = saturate(sign(curShadow - depth));
+        curShadow = saturate(sign(curShadow - (saturate(depth) - bias)));
         shadowAndThickness.x += curShadow;
         shadowAndThickness.y += 1-exp(-abs(curShadow - depth));
     }

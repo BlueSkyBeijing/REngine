@@ -499,12 +499,15 @@ FRHIShaderBindings* FD3D12RHI::CreateShaderBindings()
     FD3D12ShaderBindings* rootSignature = new FD3D12ShaderBindings;
 
     CD3DX12_ROOT_PARAMETER* rootParameter = new CD3DX12_ROOT_PARAMETER[msMaxSRVDiscriptorNum + msMaxCBVDiscriptorNum];
+    std::list<CD3DX12_DESCRIPTOR_RANGE*> discripterRanges;
 
     for (int i = 0; i < msMaxSRVDiscriptorNum; i++)
     {
         CD3DX12_DESCRIPTOR_RANGE* discripterRangeSRV = new CD3DX12_DESCRIPTOR_RANGE;
         discripterRangeSRV->Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, i);
         rootParameter[msSRVTableBaseIndex+i].InitAsDescriptorTable(1, discripterRangeSRV, D3D12_SHADER_VISIBILITY_PIXEL);
+
+        discripterRanges.push_back(discripterRangeSRV);
     }
 
     for (int i = 0; i < msMaxCBVDiscriptorNum; i++)
@@ -512,6 +515,8 @@ FRHIShaderBindings* FD3D12RHI::CreateShaderBindings()
         CD3DX12_DESCRIPTOR_RANGE* discripterRangeCBV = new CD3DX12_DESCRIPTOR_RANGE;
         discripterRangeCBV->Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, i);
         rootParameter[msCBVTableBaseIndex+i].InitAsDescriptorTable(1, discripterRangeCBV, D3D12_SHADER_VISIBILITY_ALL);
+
+        discripterRanges.push_back(discripterRangeCBV);
     }
 
 
@@ -556,6 +561,13 @@ FRHIShaderBindings* FD3D12RHI::CreateShaderBindings()
     Microsoft::WRL::ComPtr <ID3DBlob> error;
     D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error);
     THROW_IF_FAILED(mDX12Device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&rootSignature->mDX12RootSignature)));
+
+    //release
+    delete[] rootParameter;
+    for (auto& dr : discripterRanges)
+    {
+        delete dr;
+    }
 
     return rootSignature;
 }

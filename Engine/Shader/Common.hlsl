@@ -40,8 +40,11 @@ struct MaterialContext
     float Roughness;
     float Opacity;
     
-    float4 EmissiveColor;
-    float4 SubsurfaceColor;
+    float3 EmissiveColor;
+    float3 SubsurfaceColor;
+    
+    float3 DiffuseColor;
+    float3 SpecularColor;
 };
 
 void InitMaterialContext(inout MaterialContext context,
@@ -51,8 +54,8 @@ void InitMaterialContext(inout MaterialContext context,
     float roughness,
     float opacity,
 
-    float4 emissiveColor,
-    float4 subsurfaceColor
+    float3 emissiveColor,
+    float3 subsurfaceColor
 )
 {
     context.BaseColor = baseColor;
@@ -63,7 +66,8 @@ void InitMaterialContext(inout MaterialContext context,
 
     context.EmissiveColor = emissiveColor;
     context.SubsurfaceColor = subsurfaceColor;
-
+    context.DiffuseColor = baseColor;
+    context.SpecularColor = float3(0,0,0);
 }
 
 struct LightingContext
