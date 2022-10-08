@@ -25,13 +25,14 @@ void FShaderManager::UnInit()
     for (auto it = mShader.begin(); it != mShader.end(); it++)
     {
         FRHIShader* shader = it->second;
+        shader->UnInit();
         delete shader;
     }
 
     mShader.clear();
 }
 
-FRHIShader* FShaderManager::CreateShader(const FShaderInfo& shaderInfo)
+FRHIShader* FShaderManager::GetOrCreate(const FShaderInfo& shaderInfo)
 {
     FRHIShader* shader = nullptr;
 
@@ -42,7 +43,7 @@ FRHIShader* FShaderManager::CreateShader(const FShaderInfo& shaderInfo)
     {
         FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
 
-        shader = rhi->CreateShader(shaderInfo);
+        shader = rhi->GetOrCreate(shaderInfo);
 
         mShader.insert(std::make_pair(hashValue, shader));
     }
@@ -52,19 +53,6 @@ FRHIShader* FShaderManager::CreateShader(const FShaderInfo& shaderInfo)
     }
 
     return shader;
-}
-
-FRHIShader* FShaderManager::GetShader(const FShaderInfo& shaderInfo)
-{
-    const uint64 hashValue = haskShaderInfo(shaderInfo);
-
-    auto iter = mShader.find(hashValue);
-    if (iter != mShader.end())
-    {
-        return iter->second;
-    }
-
-    return nullptr;
 }
 
 uint64 FShaderManager::haskShaderInfo(const FShaderInfo& shaderInfo)

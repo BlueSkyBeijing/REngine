@@ -28,6 +28,7 @@ void FResourceManager::UnInit()
         for (auto iter = mResourceMaps[resorceType].begin(); iter != mResourceMaps[resorceType].end(); iter++)
         {
             UResource* resource = iter->second;
+            resource->Unload();
             delete resource;
         }
     }
@@ -102,7 +103,6 @@ UResource* FResourceManager::GetOrCreate(EResourceType resorceType, const std::s
             UMaterial* material = new UMaterial();
             material->FullFilePathName = fullFileName;
             material->Load();
-
 
             mResourceMaps[resorceType].insert(std::make_pair(fullFileName, material));
 

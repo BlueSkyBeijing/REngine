@@ -80,6 +80,7 @@ class FScreenVertex;
 class FPlayerController;
 
 class FRHI;
+class FRHIResource;
 class FRHIShader;
 class FRHITexture;
 class FRHITexture2D;

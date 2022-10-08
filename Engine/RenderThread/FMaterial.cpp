@@ -9,6 +9,8 @@
 #include "FRenderThread.h"
 #include "FShaderManager.h"
 #include "Utility.h"
+#include "FLogManager.h"
+#include "FRHIResourceManager.h"
 
 FMaterial::FMaterial() :
     VertexShader(nullptr),
@@ -34,7 +36,7 @@ void FMaterial::Init()
     vertexShaderInfo.EnterPoint = "VSMain";
     vertexShaderInfo.Target = "vs_5_0";
 
-    VertexShader = TSingleton<FShaderManager>::GetInstance().CreateShader(vertexShaderInfo);
+    VertexShader = TSingleton<FShaderManager>::GetInstance().GetOrCreate(vertexShaderInfo);
 
     FShaderInfo pixelShaderInfo;
     pixelShaderInfo.FilePathName = L"Engine\\Shader\\ForwardShadingPS.hlsl";
@@ -42,14 +44,14 @@ void FMaterial::Init()
     pixelShaderInfo.Target = "ps_5_0";
     pixelShaderInfo.Defines.insert(std::make_pair("SHADING_MODEL", std::to_string(ShadingModel)));
 
-    PixelShader = TSingleton<FShaderManager>::GetInstance().CreateShader(pixelShaderInfo);
+    PixelShader = TSingleton<FShaderManager>::GetInstance().GetOrCreate(pixelShaderInfo);
 
     FShaderInfo vertexShaderShadowInfo;
     vertexShaderShadowInfo.FilePathName = L"Engine\\Shader\\ShadowDepthVS.hlsl";
     vertexShaderShadowInfo.EnterPoint = "VSMain";
     vertexShaderShadowInfo.Target = "vs_5_0";
 
-    VertexShaderShadow = TSingleton<FShaderManager>::GetInstance().CreateShader(vertexShaderShadowInfo);
+    VertexShaderShadow = TSingleton<FShaderManager>::GetInstance().GetOrCreate(vertexShaderShadowInfo);
 
     FShaderInfo vertexShaderGPUSkinInfo;
     vertexShaderGPUSkinInfo.FilePathName = L"Engine\\Shader\\ForwardShadingVS.hlsl";
@@ -57,7 +59,7 @@ void FMaterial::Init()
     vertexShaderGPUSkinInfo.Target = "vs_5_0";
     vertexShaderGPUSkinInfo.Defines.insert(std::make_pair("GPU_SKIN", "1"));
 
-    VertexShaderGPUSkin = TSingleton<FShaderManager>::GetInstance().CreateShader(vertexShaderGPUSkinInfo);
+    VertexShaderGPUSkin = TSingleton<FShaderManager>::GetInstance().GetOrCreate(vertexShaderGPUSkinInfo);
 
     FShaderInfo vertexShaderShadowGPUSkinInfo;
     vertexShaderShadowGPUSkinInfo.FilePathName = L"Engine\\Shader\\ShadowDepthVS.hlsl";
@@ -65,15 +67,14 @@ void FMaterial::Init()
     vertexShaderShadowGPUSkinInfo.Target = "vs_5_0";
     vertexShaderShadowGPUSkinInfo.Defines.insert(std::make_pair("GPU_SKIN", "1"));
 
-    VertexShaderShadowGPUSkin = TSingleton<FShaderManager>::GetInstance().CreateShader(vertexShaderShadowGPUSkinInfo);
+    VertexShaderShadowGPUSkin = TSingleton<FShaderManager>::GetInstance().GetOrCreate(vertexShaderShadowGPUSkinInfo);
 
-    const std::wstring textureFilePathName = StringToWString(BaseColorFullFilePathName);
+    FRHIResource* texture = TSingleton<FRHIResourceManager>::GetInstance().GetOrCreate(ERHIResourceType::RHIRT_Texture2D, BaseColorFullFilePathName);
+    BaseColor = dynamic_cast<FRHITexture2D*>(texture);
 
-    FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
-    BaseColor = rhi->CreateTexture2D(textureFilePathName);
-
-    const std::wstring envMap = StringToWString(FConfigManager::DefaultTexturePath + "T_EnvCube" + FConfigManager::DefaultTextureFileSuffix);
-    EnvMap = rhi->CreateTextureCube(envMap);
+    const std::string envMap = FConfigManager::DefaultTexturePath + "T_EnvCube" + FConfigManager::DefaultTextureFileSuffix;
+    texture = TSingleton<FRHIResourceManager>::GetInstance().GetOrCreate(ERHIResourceType::RHIRT_TextureCube, envMap);
+    EnvMap = dynamic_cast<FRHITextureCube*>(texture);
 
     //MetallicSpecularRoughness->Init();
     //EmissiveColor->Init();
@@ -92,10 +93,7 @@ void FMaterial::UnInit()
 
     VertexShaderShadowGPUSkin = nullptr;
 
-    delete BaseColor;
     BaseColor = nullptr;
 
-    delete EnvMap;
     EnvMap = nullptr;
-
 }

@@ -26,7 +26,7 @@ float2 DirectionalLightShadow(float4 shadowPosH)
             (shadowPosH.xy + offsets[i])).r;
         curShadow = saturate(sign(curShadow - (saturate(depth) - bias)));
         shadowAndThickness.x += curShadow;
-        shadowAndThickness.y += 1-exp(-abs(curShadow - depth));
+        shadowAndThickness.y += saturate(exp(curShadow - depth));
     }
     
     return shadowAndThickness / PCF_COUNT;

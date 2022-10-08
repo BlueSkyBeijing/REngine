@@ -20,6 +20,14 @@ void FScene::Init()
 
 void FScene::UnInit()
 {
+    for (auto it = mStaticTranslucentRenderProxys.begin(); it != mStaticTranslucentRenderProxys.end(); it++)
+    {
+        FRenderProxy* renderProxy = *it;
+        renderProxy->ReleaseRenderResource();
+        delete renderProxy;
+    }
+    mStaticTranslucentRenderProxys.clear();
+
     for (auto it = mStaticOpaqueRenderProxys.begin(); it != mStaticOpaqueRenderProxys.end(); it++)
     {
         FRenderProxy* renderProxy = *it;
@@ -35,6 +43,13 @@ void FScene::UnInit()
         delete renderProxy;
     }
     mDynamicOpaqueRenderProxys.clear();
+
+    for (auto it = mPointLights.begin(); it != mPointLights.end(); it++)
+    {
+        FPointLight* pointLight = *it;
+        delete pointLight;
+    }
+    mPointLights.clear();
 
     if (mDirectionalLight != nullptr)
     {

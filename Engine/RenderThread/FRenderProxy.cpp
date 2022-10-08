@@ -146,8 +146,6 @@ void FStaticMeshRenderProxy::ReleaseRenderResource()
     delete ConstantBuffer;
     ConstantBuffer = nullptr;
 
-    Material->UnInit();
-    Material = nullptr;
 }
 
 FSkeletalMeshRenderProxy::FSkeletalMeshRenderProxy(const FSkeletalMeshRenderProxyInitializer& initializer)
@@ -285,6 +283,4 @@ void FSkeletalMeshRenderProxy::ReleaseRenderResource()
     delete ConstantBuffer;
     ConstantBuffer = nullptr;
 
-    Material->UnInit();
-    Material = nullptr;
 }

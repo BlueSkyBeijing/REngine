@@ -85,6 +85,7 @@ void UMaterial::Unload()
     //delete mEmissiveColor;
     //mEmissiveColor = nullptr;
 
+    Material->UnInit();
     delete Material;
     Material = nullptr;
 }

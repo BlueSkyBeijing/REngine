@@ -34,8 +34,12 @@ float4 PSMain(VertexShaderOutput pixelIn) : SV_Target
         lighting += PointLighting(litContextPoint, matContext, shadow, thickness);
     }
 
-    float3 ReflectionColor = GetImageBasedReflectionLighting(litContextDirectional, matContext, shadow, thickness);
-    lighting += ReflectionColor;
+    float3 envReflectionColor = GetImageBasedReflectionLighting(litContextDirectional, matContext, shadow, thickness);
+    lighting += envReflectionColor;
+    
+    float3 envDiffuseColor = GetImageBasedDiffuseLighting(litContextDirectional, matContext, shadow, thickness);
+    lighting += envDiffuseColor;
+    
     outColor.rgb = lighting;
     outColor.a = Opacity;
     

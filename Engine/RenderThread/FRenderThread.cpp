@@ -14,6 +14,7 @@
 #include "FPipelineStateManager.h"
 #include "FShaderManager.h"
 #include "FLight.h"
+#include "FRHIResourceManager.h"
 
 
 FRenderThread::FRenderThread(FEngine* engine) :
@@ -114,6 +115,7 @@ void FRenderThread::init()
     TSingleton<FShaderManager>::GetInstance().Init();
     TSingleton<FPipelineStateManager>::GetInstance().Init();
     TSingleton<FShaderBindingsManager>::GetInstance().Init();
+    TSingleton<FRHIResourceManager>::GetInstance().Init();
 
     mRenderWindow = mRHI->CreateRenderWindow(mEngine->GetWindowWidth(), mEngine->GetWindowHeight());
 
@@ -150,6 +152,7 @@ void FRenderThread::unInit()
     TSingleton<FShaderBindingsManager>::GetInstance().UnInit();
     TSingleton<FPipelineStateManager>::GetInstance().UnInit();
     TSingleton<FShaderManager>::GetInstance().UnInit();
+    TSingleton<FRHIResourceManager>::GetInstance().UnInit();
 
     mRHI->UnInit();
     delete mRHI;

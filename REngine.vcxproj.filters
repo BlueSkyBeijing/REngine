@@ -200,6 +200,9 @@
     <ClCompile Include="Engine\Utility\FArchive.cpp">
       <Filter>Engine\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Manager\FRHIResourceManager.cpp">
+      <Filter>Engine\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Manager\FInputManager.h">
@@ -378,6 +381,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Utility\FArchive.h">
       <Filter>Engine\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Manager\FRHIResourceManager.h">
+      <Filter>Engine\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

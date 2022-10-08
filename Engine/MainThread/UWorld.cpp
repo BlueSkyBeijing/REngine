@@ -242,6 +242,14 @@ void UWorld::Unload()
     }
     mDirectionalLights.clear();
 
+    for (auto it = mPointLights.begin(); it != mPointLights.end(); it++)
+    {
+        UPointLight* pointLight = *it;
+        pointLight->Unload();
+        delete pointLight;
+    }
+    mPointLights.clear();
+
     for (auto it = mStaticMeshObjects.begin(); it != mStaticMeshObjects.end(); it++)
     {
         UStaticMeshObject* staticMeshObject = *it;

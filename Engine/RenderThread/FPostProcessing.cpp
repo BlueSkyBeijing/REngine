@@ -46,14 +46,14 @@ void FFullScreenQuad::Init()
     vertexShaderInfo.EnterPoint = "PostprocessVS";
     vertexShaderInfo.Target = "vs_5_0";
 
-    VertexShader = TSingleton<FShaderManager>::GetInstance().CreateShader(vertexShaderInfo);
+    VertexShader = TSingleton<FShaderManager>::GetInstance().GetOrCreate(vertexShaderInfo);
 
     FShaderInfo pixelShaderInfo;
     pixelShaderInfo.FilePathName = L"Engine\\Shader\\Postprocess.hlsl";
     pixelShaderInfo.EnterPoint = "PostprocessPS";
     pixelShaderInfo.Target = "ps_5_0";
 
-    PixelShader = TSingleton<FShaderManager>::GetInstance().CreateShader(pixelShaderInfo);
+    PixelShader = TSingleton<FShaderManager>::GetInstance().GetOrCreate(pixelShaderInfo);
 
     FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
     FPipelineStateInfo info;
@@ -178,14 +178,14 @@ void FPostProcessing::Init()
         vertexShaderBloomSetupInfo.EnterPoint = "BloomSetupVS";
         vertexShaderBloomSetupInfo.Target = "vs_5_0";
 
-        VertexShaderBloomSetup = TSingleton<FShaderManager>::GetInstance().CreateShader(vertexShaderBloomSetupInfo);
+        VertexShaderBloomSetup = TSingleton<FShaderManager>::GetInstance().GetOrCreate(vertexShaderBloomSetupInfo);
 
         FShaderInfo pixelShaderBloomSetupInfo;
         pixelShaderBloomSetupInfo.FilePathName = L"Engine\\Shader\\Bloom.hlsl";
         pixelShaderBloomSetupInfo.EnterPoint = "BloomSetupPS";
         pixelShaderBloomSetupInfo.Target = "ps_5_0";
 
-        PixelShaderBloomSetup = TSingleton<FShaderManager>::GetInstance().CreateShader(pixelShaderBloomSetupInfo);
+        PixelShaderBloomSetup = TSingleton<FShaderManager>::GetInstance().GetOrCreate(pixelShaderBloomSetupInfo);
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
@@ -207,14 +207,14 @@ void FPostProcessing::Init()
         vertexShaderBloomDownInfo.EnterPoint = "BloomDownVS";
         vertexShaderBloomDownInfo.Target = "vs_5_0";
 
-        VertexShaderBloomDown = TSingleton<FShaderManager>::GetInstance().CreateShader(vertexShaderBloomDownInfo);
+        VertexShaderBloomDown = TSingleton<FShaderManager>::GetInstance().GetOrCreate(vertexShaderBloomDownInfo);
 
         FShaderInfo pixelShaderBloomDownInfo;
         pixelShaderBloomDownInfo.FilePathName = L"Engine\\Shader\\Bloom.hlsl";
         pixelShaderBloomDownInfo.EnterPoint = "BloomDownPS";
         pixelShaderBloomDownInfo.Target = "ps_5_0";
 
-        PixelShaderBloomDown = TSingleton<FShaderManager>::GetInstance().CreateShader(pixelShaderBloomDownInfo);
+        PixelShaderBloomDown = TSingleton<FShaderManager>::GetInstance().GetOrCreate(pixelShaderBloomDownInfo);
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
@@ -236,14 +236,14 @@ void FPostProcessing::Init()
         vertexShaderBloomUpInfo.EnterPoint = "BloomUpVS";
         vertexShaderBloomUpInfo.Target = "vs_5_0";
 
-        VertexShaderBloomUp = TSingleton<FShaderManager>::GetInstance().CreateShader(vertexShaderBloomUpInfo);
+        VertexShaderBloomUp = TSingleton<FShaderManager>::GetInstance().GetOrCreate(vertexShaderBloomUpInfo);
 
         FShaderInfo PixelShaderBloomUpInfo;
         PixelShaderBloomUpInfo.FilePathName = L"Engine\\Shader\\Bloom.hlsl";
         PixelShaderBloomUpInfo.EnterPoint = "BloomUpPS";
         PixelShaderBloomUpInfo.Target = "ps_5_0";
 
-        PixelShaderBloomUp = TSingleton<FShaderManager>::GetInstance().CreateShader(PixelShaderBloomUpInfo);
+        PixelShaderBloomUp = TSingleton<FShaderManager>::GetInstance().GetOrCreate(PixelShaderBloomUpInfo);
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
@@ -265,14 +265,14 @@ void FPostProcessing::Init()
         vertexShaderTonemapInfo.EnterPoint = "TonemapVS";
         vertexShaderTonemapInfo.Target = "vs_5_0";
 
-        VertexShaderTonemap = TSingleton<FShaderManager>::GetInstance().CreateShader(vertexShaderTonemapInfo);
+        VertexShaderTonemap = TSingleton<FShaderManager>::GetInstance().GetOrCreate(vertexShaderTonemapInfo);
 
         FShaderInfo pixelShaderTonemapInfo;
         pixelShaderTonemapInfo.FilePathName = L"Engine\\Shader\\Tonemap.hlsl";
         pixelShaderTonemapInfo.EnterPoint = "TonemapPS";
         pixelShaderTonemapInfo.Target = "ps_5_0";
 
-        PixelShaderTonemap = TSingleton<FShaderManager>::GetInstance().CreateShader(pixelShaderTonemapInfo);
+        PixelShaderTonemap = TSingleton<FShaderManager>::GetInstance().GetOrCreate(pixelShaderTonemapInfo);
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;

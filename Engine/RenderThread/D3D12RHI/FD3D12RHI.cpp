@@ -65,8 +65,10 @@ void FD3D12RHI::Init()
     {
         THROW_IF_FAILED(CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(&mDXGIFactory)));
 
+#if defined(DEBUG) || defined(_DEBUG) 
         dxgiInfoQueue->SetBreakOnSeverity(DXGI_DEBUG_ALL, DXGI_INFO_QUEUE_MESSAGE_SEVERITY_ERROR, true);
         dxgiInfoQueue->SetBreakOnSeverity(DXGI_DEBUG_ALL, DXGI_INFO_QUEUE_MESSAGE_SEVERITY_CORRUPTION, true);
+#endif
     }
     else
     {
@@ -448,7 +450,7 @@ FRHIConstantBuffer* FD3D12RHI::CreateConstantBuffer(uint32 structureSize, uint8*
     return constantBuffer;
 }
 
-FRHIShader* FD3D12RHI::CreateShader(const FShaderInfo& shaderInfo)
+FRHIShader* FD3D12RHI::GetOrCreate(const FShaderInfo& shaderInfo)
 {
     FD3D12Shader* shader = new FD3D12Shader;
 
@@ -490,6 +492,12 @@ FRHIShader* FD3D12RHI::CreateShader(const FShaderInfo& shaderInfo)
     shader->FullFilePathName = shaderInfo.FilePathName;
     shader->EnterPoint = shaderInfo.EnterPoint;
     shader->Target = shaderInfo.Target;
+
+    if (shaderDefines != nullptr)
+    {
+        delete[] shaderDefines;
+        shaderDefines = nullptr;
+    }
 
     return shader;
 }
