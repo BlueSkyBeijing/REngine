@@ -80,7 +80,9 @@ struct LightingContext
     float3 CameraPos;
     float3 LightPos;
     float LightRadius;
-    float3 PixelPos;
+    float3 PixelPos;    
+    float Shadow;
+    float Thickness; 
 };
 
 void InitLightingContext(inout LightingContext context,
@@ -91,8 +93,10 @@ void InitLightingContext(inout LightingContext context,
     float3 viewDir,
     float3 cameraPos,
     float3 lightPos = float3(0.0f, 0.0f, 0.0f),
-    float lightRadius = 10,
-    float3 pixelPos = float3(0.0f, 0.0f, 0.0f)
+    float lightRadius = 10.0f,
+    float3 pixelPos = float3(0.0f, 0.0f, 0.0f),
+    float shadow = 1.0f,
+    float thickness = 1.0f
 )
 {
     context.LightDir = lightDir;
@@ -104,4 +108,6 @@ void InitLightingContext(inout LightingContext context,
     context.LightPos = lightPos;
     context.LightRadius = lightRadius;
     context.PixelPos = pixelPos;
+    context.Shadow = shadow;
+    context.Thickness = thickness;
 }

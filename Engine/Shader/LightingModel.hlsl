@@ -18,9 +18,6 @@
 #define REFLECTION_CAPTURE_ROUGHNESS_MIP_SCALE 1.2
 
 
-TextureCube EnvironmentMap : register(t1);
-SamplerState EnvironmentMapSampe : register(s2);
-
 /** 
  * Compute absolute mip for a reflection capture cubemap given a roughness.
  */
@@ -354,6 +351,25 @@ float3 ClearCoatBxDF(half3 normal, half3 viewDir, half3 lightDir,float3 fuzzColo
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+float3 TwoSidedBxDF(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float roughness, float3 specularColor, float3 subsurfaceColor, float shadow)
+{
+    float3 lighting = DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, specularColor, shadow);
+	
+	// http://blog.stevemcauley.com/2011/12/03/energy-conserving-wrapped-diffuse/
+	float wrap = 0.5;
+	float wrapNoL = saturate( ( -dot(normal, lightDir) + wrap ) / Square( 1 + wrap ) );
+
+	// Scatter distribution
+	float VoL = dot(viewDir, lightDir);
+	float scatter = D_GGX( 0.6*0.6, saturate( -VoL ) );
+
+	float3 transmission = (wrapNoL * scatter) * subsurfaceColor;
+
+    lighting += transmission;
+    return lighting;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float D_InvGGX(float a2, float NoH)
 {
     float A = 4;
@@ -447,6 +463,22 @@ float3 EyeBxDF(half3 normal, half3 viewDir, half3 lightDir, float specular, floa
     
 }
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Texture2D PreIntegratedBRDF : register(t3);
+SamplerState PreIntegratedBRDFSampler : register(s3);
+
+float3 PreintegratedSkinBxDF(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float roughness,  float opacity, float3 specularColor, float3 subsurfaceColor, float shadow)
+{
+    float3 lighting = DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, specularColor, shadow);
+	
+	float3 preintegratedBRDF = PreIntegratedBRDF.Sample(PreIntegratedBRDFSampler, float2(saturate(dot(normal, lightDir) * .5 + .5), 1 - opacity)).rgb;
+	float3 transmission = preintegratedBRDF * subsurfaceColor;
+    lighting += transmission;
+    
+	return lighting;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CalculateDiffuseAndSpecularColor(float specular, float metallic, inout float3 diffuseColor, inout float3 specularColor)
 {
@@ -463,13 +495,13 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
 #elif SHADING_MODEL == SHADING_MODEL_SUBSUFACE
     return SubsurfaceBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, specularColor, roughness, opacity, subsurfaceColor, shadow, thickness);
 #elif SHADING_MODEL == SHADING_MODEL_PREINTEGRATED_SKIN
-    return SubsurfaceBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, specularColor, roughness, opacity, subsurfaceColor, shadow, thickness);
+    return PreintegratedSkinBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, opacity, specularColor, subsurfaceColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_CLEAR_COAT
     float cloth = 0.5;
     float3 fuzzColor = float3(1, 0, 0);
     return ClearCoatBxDF(normal, viewDir, lightDir, fuzzColor, cloth, roughness, metallic, diffuseColor, specularColor) * shadow;
 #elif SHADING_MODEL == SHADING_MODEL_TWO_SIDE_FOLIAGE
-    return SubsurfaceBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, specularColor, roughness, opacity, subsurfaceColor, shadow, thickness);
+    return TwoSidedBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, specularColor, subsurfaceColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_HAIR
     return DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, specularColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_CLOTH
@@ -489,26 +521,29 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
 #endif
 }
 
-float3 DirectionalLighting(LightingContext litContext, MaterialContext matContext, float shadow, float thickness)
+float3 DirectionalLighting(LightingContext litContext, MaterialContext matContext)
 {    
-    float3 lighting = Lighting(litContext.Normal, litContext.LightDir, litContext.LightColor, litContext.LightIntensity, litContext.ViewDir, matContext.DiffuseColor, matContext.Roughness, matContext.Opacity, matContext.SpecularColor, matContext.SubsurfaceColor, matContext.Metallic, shadow, thickness);
+    float3 lighting = Lighting(litContext.Normal, litContext.LightDir, litContext.LightColor, litContext.LightIntensity, litContext.ViewDir, matContext.DiffuseColor, matContext.Roughness, matContext.Opacity, matContext.SpecularColor, matContext.SubsurfaceColor, matContext.Metallic, litContext.Shadow, litContext.Thickness);
     
     #if SHADING_MODEL == SHADING_MODEL_SUBSUFACE
-    lighting *= thickness;
+    lighting *= litContext.Thickness;
     #endif
     
     return  lighting;
 }
 
-float3 PointLighting(LightingContext litContext, MaterialContext matContext, float shadow, float thickness)
+float3 PointLighting(LightingContext litContext, MaterialContext matContext)
 {
     float3 toLight = litContext.LightPos - litContext.PixelPos;
     float distanceSqr = dot(toLight, toLight);
     float3 lightDir = toLight * rsqrt(distanceSqr);
     
     float lightIntensityPixel = saturate(1 - (distanceSqr * litContext.LightRadius * litContext.LightRadius)) * litContext.LightIntensity;
-    return Lighting(litContext.Normal, litContext.LightDir, litContext.LightColor, lightIntensityPixel, litContext.ViewDir, matContext.DiffuseColor, matContext.Roughness, matContext.Opacity, matContext.SpecularColor, matContext.SubsurfaceColor, matContext.Metallic, 1, thickness);
+    return Lighting(litContext.Normal, litContext.LightDir, litContext.LightColor, lightIntensityPixel, litContext.ViewDir, matContext.DiffuseColor, matContext.Roughness, matContext.Opacity, matContext.SpecularColor, matContext.SubsurfaceColor, matContext.Metallic, 1, litContext.Thickness);
 }
+
+TextureCube EnvironmentMap : register(t1);
+SamplerState EnvironmentMapSampe : register(s2);
 
 float3 GetImageBasedReflectionSpecular(float3 viewDir, float roughness, float3 specularColor, float3 normal)
 {
@@ -522,7 +557,7 @@ float3 GetImageBasedReflectionSpecular(float3 viewDir, float roughness, float3 s
 
 }
 
-float3 GetImageBasedReflectionLighting(LightingContext litContext, MaterialContext matContext, float shadow, float thickness)
+float3 GetImageBasedReflectionLighting(LightingContext litContext, MaterialContext matContext)
 {
     float3 specularLighting = GetImageBasedReflectionSpecular(litContext.ViewDir, matContext.Roughness, matContext.SpecularColor, litContext.Normal);
     float NoV = max(dot(litContext.ViewDir, litContext.Normal), 0.0);
@@ -533,7 +568,7 @@ float3 GetImageBasedReflectionLighting(LightingContext litContext, MaterialConte
     return SpecularIBL;
 }
 
-float3 GetImageBasedDiffuseLighting(LightingContext litContext, MaterialContext matContext, float shadow, float thickness)
+float3 GetImageBasedDiffuseLighting(LightingContext litContext, MaterialContext matContext)
 {
     float3 diffuseLighting = matContext.DiffuseColor.rgb * 0.15;
 

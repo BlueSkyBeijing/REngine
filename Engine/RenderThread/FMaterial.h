@@ -35,6 +35,7 @@ public:
     FVector4 SubsurfaceColor;
 
     FRHITextureCube* EnvMap;
+    FRHITexture2D* PreIntegratedBRDF;
 
     std::string BaseColorFullFilePathName;
 

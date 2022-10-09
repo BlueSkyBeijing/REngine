@@ -76,6 +76,10 @@ void FMaterial::Init()
     texture = TSingleton<FRHIResourceManager>::GetInstance().GetOrCreate(ERHIResourceType::RHIRT_TextureCube, envMap);
     EnvMap = dynamic_cast<FRHITextureCube*>(texture);
 
+    const std::string preIntegratedBRDF = FConfigManager::DefaultTexturePath + "T_PreintegratedSkinBRDF" + FConfigManager::DefaultTextureFileSuffix;
+    texture = TSingleton<FRHIResourceManager>::GetInstance().GetOrCreate(ERHIResourceType::RHIRT_Texture2D, preIntegratedBRDF);
+    PreIntegratedBRDF = dynamic_cast<FRHITexture2D*>(texture);
+
     //MetallicSpecularRoughness->Init();
     //EmissiveColor->Init();
 
@@ -96,4 +100,6 @@ void FMaterial::UnInit()
     BaseColor = nullptr;
 
     EnvMap = nullptr;
+
+    PreIntegratedBRDF = nullptr;
 }
