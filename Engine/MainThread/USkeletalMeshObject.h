@@ -48,6 +48,7 @@ struct FSkeletalMeshObjectData
 
     FQuat Rotation;
     FVector3 Location;
+    FVector3 Scale;
     std::string ResourceName;
     std::string AnimationName;
     std::string MaterialName;

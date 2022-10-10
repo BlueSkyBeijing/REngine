@@ -1,4 +1,5 @@
 #include "ForwardShadingCommon.hlsl"
+#include "ShadowDepthCommon.hlsl"
 
 cbuffer ShadowPassConstantBuffer : register(b1)
 {
@@ -7,10 +8,6 @@ cbuffer ShadowPassConstantBuffer : register(b1)
     float4x4 ShadowViewProj;
 };
 
-struct ShadowVertexOut
-{
-    float4 Pos : SV_POSITION;
-};
 
 ShadowVertexOut VSMain(VertexShaderInput vertexIn)
 {
@@ -33,6 +30,7 @@ ShadowVertexOut VSMain(VertexShaderInput vertexIn)
 #endif
     float4x4 worldViewProj = mul(World, ShadowViewProj);
     vertexOut.Pos = mul(float4(vertexIn.Pos, 1.0f), worldViewProj);
-    
+    vertexOut.UV = vertexIn.UV;
+
     return vertexOut;
 }

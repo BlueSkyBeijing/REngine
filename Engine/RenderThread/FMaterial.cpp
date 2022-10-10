@@ -43,8 +43,18 @@ void FMaterial::Init()
     pixelShaderInfo.EnterPoint = "PSMain";
     pixelShaderInfo.Target = "ps_5_0";
     pixelShaderInfo.Defines.insert(std::make_pair("SHADING_MODEL", std::to_string(ShadingModel)));
+    pixelShaderInfo.Defines.insert(std::make_pair("MATERIALBLENDING_MASKED", std::to_string(int(BlendMode == BM_Masked))));
 
     PixelShader = TSingleton<FShaderManager>::GetInstance().GetOrCreate(pixelShaderInfo);
+
+    FShaderInfo pixelShaderShadowInfo;
+    pixelShaderShadowInfo.FilePathName = L"Engine\\Shader\\ShadowDepthPS.hlsl";
+    pixelShaderShadowInfo.EnterPoint = "PSMain";
+    pixelShaderShadowInfo.Target = "ps_5_0";
+    pixelShaderShadowInfo.Defines.insert(std::make_pair("MATERIALBLENDING_MASKED", std::to_string(int(BlendMode == BM_Masked))));
+
+    PixelShaderShadow = TSingleton<FShaderManager>::GetInstance().GetOrCreate(pixelShaderShadowInfo);
+
 
     FShaderInfo vertexShaderShadowInfo;
     vertexShaderShadowInfo.FilePathName = L"Engine\\Shader\\ShadowDepthVS.hlsl";
@@ -90,6 +100,8 @@ void FMaterial::UnInit()
     VertexShader = nullptr;
 
     PixelShader = nullptr;
+
+    PixelShaderShadow = nullptr;
 
     VertexShader = nullptr;
 

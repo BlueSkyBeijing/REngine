@@ -82,6 +82,10 @@ void FStaticMeshRenderProxy::CreateRenderResource()
     FMatrix3x3 rotation = Rotation.toRotationMatrix();
     mObjectConstants.World.block<3, 3>(0, 0) = rotation;
     mObjectConstants.World.block<1, 3>(3, 0) = Position;
+    //mObjectConstants.World(0, 0) = Scale(0);
+    //mObjectConstants.World(1, 1) = Scale(1);
+    //mObjectConstants.World(2, 2) = Scale(2);
+
     mObjectConstants.Metallic = Material->Metallic;
     mObjectConstants.Specular = Material->Specular;
     mObjectConstants.Roughness = Material->Roughness;
@@ -89,7 +93,6 @@ void FStaticMeshRenderProxy::CreateRenderResource()
 
     mObjectConstants.EmissiveColor = Material->EmissiveColor;
     mObjectConstants.SubsurfaceColor = Material->SubsurfaceColor;
-
 
     ConstantBuffer = rhi->CreateConstantBuffer(sizeof(mObjectConstants), (uint8*)&mObjectConstants);
 
@@ -126,7 +129,7 @@ void FStaticMeshRenderProxy::CreateRenderResource()
     FPipelineStateInfo infoShadow;
     infoShadow.ShaderBindings = shaderBindings;
     infoShadow.VertexShader = Material->VertexShaderShadow;
-    infoShadow.PixelShader = nullptr;
+    infoShadow.PixelShader = Material->PixelShaderShadow;
     infoShadow.VertexLayout = &VertexLayout;
     infoShadow.DepthStencilState.bEnableDepthWrite = true;
 
@@ -226,19 +229,10 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
 
     TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(infoGPUSkin);
 
-    FPipelineStateInfo infoShadow;
-    infoShadow.ShaderBindings = shaderBindings;
-    infoShadow.VertexShader = Material->VertexShaderShadow;
-    infoShadow.PixelShader = nullptr;
-    infoShadow.VertexLayout = &VertexLayout;
-    infoShadow.DepthStencilState.bEnableDepthWrite = true;
-
-    TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(infoShadow);
-
     FPipelineStateInfo infoGPUSkinShadow;
     infoGPUSkinShadow.ShaderBindings = shaderBindings;
     infoGPUSkinShadow.VertexShader = Material->VertexShaderShadowGPUSkin;
-    infoGPUSkinShadow.PixelShader = nullptr;
+    infoGPUSkinShadow.PixelShader = Material->PixelShaderShadow;
     infoGPUSkinShadow.VertexLayout = &VertexLayout;
     infoGPUSkinShadow.DepthStencilState.bEnableDepthWrite = true;
 

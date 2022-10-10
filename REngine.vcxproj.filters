@@ -429,5 +429,11 @@
     <FxCompile Include="Engine\Shader\Bloom.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
+    <FxCompile Include="Engine\Shader\ShadowDepthPS.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\Shader\ShadowDepthCommon.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

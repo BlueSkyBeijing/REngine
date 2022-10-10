@@ -120,7 +120,7 @@ void FRenderer::drawShadowPass()
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = renderProxy->Material->VertexShaderShadow;
-        info.PixelShader = nullptr;
+        info.PixelShader = renderProxy->Material->PixelShaderShadow;
         info.VertexLayout = &(renderProxy->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = true;
 
@@ -132,6 +132,7 @@ void FRenderer::drawShadowPass()
         mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
         mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
         mRHI->SetConstantBuffer(mShadowPassConstantBuffer, 1);
+        mRHI->SetTexture2D(renderProxy->Material->BaseColor, 0);
 
         mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
 
@@ -150,7 +151,7 @@ void FRenderer::drawShadowPass()
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = renderProxy->Material->VertexShaderShadowGPUSkin;
-        info.PixelShader = nullptr;
+        info.PixelShader = renderProxy->Material->PixelShaderShadow;
         info.VertexLayout = &(renderProxy->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = true;
 
@@ -162,6 +163,7 @@ void FRenderer::drawShadowPass()
         mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
         mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
         mRHI->SetConstantBuffer(mShadowPassConstantBuffer, 1);
+        mRHI->SetTexture2D(renderProxy->Material->BaseColor, 0);
 
         mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
 

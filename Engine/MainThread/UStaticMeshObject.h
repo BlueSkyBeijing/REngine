@@ -42,6 +42,7 @@ struct FStaticMeshObjectData
 
     FQuat Rotation;
     FVector3 Location;
+    FVector3 Scale;
     std::string ResourceName;
     std::string MaterialName;
 };

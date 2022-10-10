@@ -17,6 +17,7 @@ public:
 public:
     FRHIShader* VertexShader;
     FRHIShader* PixelShader;
+    FRHIShader* PixelShaderShadow;
 
     FRHIShader* VertexShaderShadow;
     FRHIShader* VertexShaderGPUSkin;

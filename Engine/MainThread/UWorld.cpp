@@ -70,6 +70,7 @@ void UWorld::Load()
         FStaticMeshObjectData data;
         mapFile.read((char*)&data.Rotation, sizeof(FQuat));
         mapFile.read((char*)data.Location.data(), sizeof(FVector3));
+        mapFile.read((char*)data.Scale.data(), sizeof(FVector3));
         int32 stringSize;
         mapFile.read((char*)&stringSize, sizeof(int32));
         mapFile.read((char*)data.ResourceName.data(), stringSize);
@@ -87,6 +88,7 @@ void UWorld::Load()
         FSkeletalMeshObjectData data;
         mapFile.read((char*)&data.Rotation, sizeof(FQuat));
         mapFile.read((char*)data.Location.data(), sizeof(FVector3));
+        mapFile.read((char*)data.Scale.data(), sizeof(FVector3));
         int32 stringSize;
         mapFile.read((char*)&stringSize, sizeof(int32));
         mapFile.read((char*)data.ResourceName.data(), stringSize);
@@ -165,6 +167,7 @@ void UWorld::Load()
 
         staticMeshObject->Position = staticMeshObjectDatas[staticMeshObjectDataIndex].Location;
         staticMeshObject->Rotation = staticMeshObjectDatas[staticMeshObjectDataIndex].Rotation;
+        staticMeshObject->Scale = staticMeshObjectDatas[staticMeshObjectDataIndex].Scale;
         staticMeshObject->FullResourcePath = FConfigManager::DefaultStaticMeshPath +
             std::string(staticMeshObjectDatas[staticMeshObjectDataIndex].ResourceName.c_str()) +
             FConfigManager::DefaultStaticMeshFileSuffix;
@@ -188,6 +191,7 @@ void UWorld::Load()
 
         skeletalMeshObject->Position = skeletalMeshObjectDatas[skeletalMeshObjectDataIndex].Location;
         skeletalMeshObject->Rotation = skeletalMeshObjectDatas[skeletalMeshObjectDataIndex].Rotation;
+        skeletalMeshObject->Scale = skeletalMeshObject[staticMeshObjectDataIndex].Scale;
         skeletalMeshObject->FullResourcePath = FConfigManager::DefaultSkeletalMeshPath +
             std::string(skeletalMeshObjectDatas[skeletalMeshObjectDataIndex].ResourceName.c_str()) +
             FConfigManager::DefaultSkeletalMeshFileSuffix;

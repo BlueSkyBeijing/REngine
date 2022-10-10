@@ -40,7 +40,12 @@ float4 PSMain(VertexShaderOutput pixelIn) : SV_Target
     lighting += envDiffuseColor;
     
     outColor.rgb = lighting;
-    outColor.a = Opacity;
+    outColor.a = baseColor.a * Opacity;
     
+    #if MATERIALBLENDING_MASKED
+    const float maskClipValue = 0.33f;
+    clip(outColor.a - maskClipValue);
+    #endif
+
     return outColor;
 }

@@ -474,13 +474,14 @@ FRHIShader* FD3D12RHI::GetOrCreate(const FShaderInfo& shaderInfo)
             define.Name = it->first.c_str();
             define.Definition = it->second.c_str();
             shaderDefines[index] = define;
+            index++;
         }
 
         D3D_SHADER_MACRO defineEnd;
         defineEnd.Name = NULL;
         defineEnd.Definition = NULL;
 
-        shaderDefines[index + 1] = defineEnd;
+        shaderDefines[index] = defineEnd;
     }
 
     D3DCompileFromFile(shaderInfo.FilePathName.c_str(), shaderDefines, D3D_COMPILE_STANDARD_FILE_INCLUDE, shaderInfo.EnterPoint.c_str(), shaderInfo.Target.c_str(), compileFlags, 0, &shader->mShader, &errors);
