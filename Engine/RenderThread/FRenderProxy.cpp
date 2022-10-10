@@ -82,9 +82,13 @@ void FStaticMeshRenderProxy::CreateRenderResource()
     FMatrix3x3 rotation = Rotation.toRotationMatrix();
     mObjectConstants.World.block<3, 3>(0, 0) = rotation;
     mObjectConstants.World.block<1, 3>(3, 0) = Position;
-    //mObjectConstants.World(0, 0) = Scale(0);
-    //mObjectConstants.World(1, 1) = Scale(1);
-    //mObjectConstants.World(2, 2) = Scale(2);
+
+    FMatrix4x4 scaleMatrix;
+    scaleMatrix.setIdentity();
+    scaleMatrix(0, 0) = Scale(0);
+    scaleMatrix(1, 1) = Scale(1);
+    scaleMatrix(2, 2) = Scale(2);
+    mObjectConstants.World = scaleMatrix * mObjectConstants.World;
 
     mObjectConstants.Metallic = Material->Metallic;
     mObjectConstants.Specular = Material->Specular;
