@@ -18,38 +18,6 @@
 #define REFLECTION_CAPTURE_ROUGHNESS_MIP_SCALE 1.2
 
 
-/** 
- * Compute absolute mip for a reflection capture cubemap given a roughness.
- */
-float ComputeReflectionCaptureMipFromRoughness(float Roughness, float CubemapMaxMip)
-{
-	// Heuristic that maps roughness to mip level
-	// This is done in a way such that a certain mip level will always have the same roughness, regardless of how many mips are in the texture
-	// Using more mips in the cubemap just allows sharper reflections to be supported
-    float LevelFrom1x1 = REFLECTION_CAPTURE_ROUGHEST_MIP - REFLECTION_CAPTURE_ROUGHNESS_MIP_SCALE * log2(Roughness);
-    return CubemapMaxMip - 1 - LevelFrom1x1;
-}
-
-//---------------
-// EnvBRDF
-//---------------
-float3 EnvBRDFApprox(float3 SpecularColor, float Roughness, float NoV)
-{
-	// [ Lazarov 2013, "Getting More Physical in Call of Duty: Black Ops II" ]
-	// Adaptation to fit our G term.
-    const float4 c0 = { -1, -0.0275, -0.572, 0.022 };
-    const float4 c1 = { 1, 0.0425, 1.04, -0.04 };
-    float4 r = Roughness * c0 + c1;
-    float a004 = min(r.x * r.x, exp2(-9.28 * NoV)) * r.x + r.y;
-    float2 AB = float2(-1.04, 1.04) * a004 + r.zw;
-
-	// Anything less than 2% is physically impossible and is instead considered to be shadowing
-	// Note: this is needed for the 'specular' show flag to work, since it uses a SpecularColor of 0
-    AB.y *= saturate(50.0 * SpecularColor.g);
-
-    return SpecularColor * AB.x + AB.y;
-}
-
 // Blinn-Phong
 // from: https://en.wikipedia.org/wiki/Blinn%E2%80%93Phong_reflection_model
 float3 BlinnPhong(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float shadow)
@@ -71,7 +39,6 @@ float3 BlinnPhong(float3 normal, float3 lightDir, float3 lightColor, float light
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 float DielectricSpecularToF0(float specular)
 {
 	return 0.08f * specular;
@@ -105,8 +72,6 @@ void Init(inout BxDFContext context, half3 normal, half3 viewDir, half3 lightDir
     float InvLenH = rsqrt(2 + 2 * context.VoL);
     context.NoH = saturate((context.NoL + context.NoV) * InvLenH);
     context.VoH = saturate(InvLenH + InvLenH * context.VoL);
-	//NoL = saturate( NoL );
-	//NoV = saturate( abs( NoV ) + 1e-5 );
 
     context.XoV = 0.0f;
     context.XoL = 0.0f;
@@ -136,7 +101,7 @@ float Vis_SmithJointApprox(float a2, float NoV, float NoL)
     float a = sqrt(a2);
     float Vis_SmithV = NoL * (NoV * (1 - a) + a);
     float Vis_SmithL = NoV * (NoL * (1 - a) + a);
-    return 0.5 * rcp(Vis_SmithV + Vis_SmithL);
+    return saturate(0.5 * rcp(Vis_SmithV + Vis_SmithL));
 }
 
 // [Schlick 1994, "An Inexpensive BRDF Model for Physically-Based Rendering"]
@@ -178,7 +143,7 @@ float3 DefaultLitBxDF(float3 normal, float3 lightDir, float3 lightColor, float l
     float NoL = max(dot(lightDir, normal), 0.00001);
 
     float3 diffuse = NoL * Diffuse_Lambert(diffuseColor) * lightColor;
-    float3 specular = NoL * SpecularGGX(roughness, specularColor, context, NoL) * lightColor;
+    float3 specular = NoL * SpecularGGX(roughness, specularColor, context, NoL);
     
     return (diffuse + specular) * shadow;
 }
@@ -206,23 +171,23 @@ float3 SubsurfaceBxDF(float3 normal, float3 lightDir, float3 lightColor, float l
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-float3 CalcThinTransmission(float NoL, float NoV, float3 BaseColor, float Metallic)
+float3 CalcThinTransmission(float NoL, float NoV, float3 baseColor, float metallic)
 {
     float3 transmission = 1.0;
 
-    float AbsorptionMix = Metallic;
-    if (AbsorptionMix > 0.0)
+    float absorptionMix = metallic;
+    if (absorptionMix > 0.0)
     {
-        float LayerThickness = 1.0; // Assume normalized thickness
-        float ThinDistance = LayerThickness * (rcp(NoV) + rcp(NoL));
+        float layerThickness = 1.0; // Assume normalized thickness
+        float thinDistance = layerThickness * (rcp(NoV) + rcp(NoL));
 
 		// Base color represents reflected color viewed at 0 incidence angle, after being absorbed through the substrate.
 		// Because of this, extinction is normalized by traveling through layer thickness twice
-        float3 TransmissionColor = Diffuse_Lambert(BaseColor);
-        float3 ExtinctionCoefficient = -log(TransmissionColor) / (2.0 * LayerThickness);
-        float3 OpticalDepth = ExtinctionCoefficient * max(ThinDistance - 2.0 * LayerThickness, 0.0);
-        transmission = exp(-OpticalDepth);
-        transmission = lerp(1.0, transmission, AbsorptionMix);
+        float3 transmissionColor = Diffuse_Lambert(baseColor);
+        float3 extinctionCoefficient = -log(transmissionColor) / (2.0 * layerThickness);
+        float3 opticalDepth = extinctionCoefficient * max(thinDistance - 2.0 * layerThickness, 0.0);
+        transmission = exp(-opticalDepth);
+        transmission = lerp(1.0, transmission, absorptionMix);
     }
     return transmission;
 }
@@ -243,16 +208,16 @@ BxDFContext RefractClearCoatContext(BxDFContext context)
 	//  NoV2 = Eta * NoV - RefractBlend(VoH, Eta) * NoH
 	//  NoV2 = 1.0 / 1.5 * NoV - RefractBlendClearCoatApprox(VoH) * NoH
 
-    BxDFContext RefractedContext = context;
-    float Eta = 1.0 / 1.5;
-    float RefractionBlendFactor = RefractBlendClearCoatApprox(context.VoH);
-    float RefractionProjectionTerm = RefractionBlendFactor * context.NoH;
-    RefractedContext.NoV = clamp(Eta * context.NoV - RefractionProjectionTerm, 0.001, 1.0); // Due to CalcThinTransmission and Vis_SmithJointAniso, we need to make sure
-    RefractedContext.NoL = clamp(Eta * context.NoL - RefractionProjectionTerm, 0.001, 1.0); // those values are not 0s to avoid NaNs.
-    RefractedContext.VoH = saturate(Eta * context.VoH - RefractionBlendFactor);
-    RefractedContext.VoL = 2.0 * RefractedContext.VoH * RefractedContext.VoH - 1.0;
-    RefractedContext.NoH = context.NoH;
-    return RefractedContext;
+    BxDFContext refractedContext = context;
+    float eta = 1.0 / 1.5;
+    float refractionBlendFactor = RefractBlendClearCoatApprox(context.VoH);
+    float RefractionProjectionTerm = refractionBlendFactor * context.NoH;
+    refractedContext.NoV = clamp(eta * context.NoV - RefractionProjectionTerm, 0.001, 1.0); // Due to CalcThinTransmission and Vis_SmithJointAniso, we need to make sure
+    refractedContext.NoL = clamp(eta * context.NoL - RefractionProjectionTerm, 0.001, 1.0); // those values are not 0s to avoid NaNs.
+    refractedContext.VoH = saturate(eta * context.VoH - refractionBlendFactor);
+    refractedContext.VoL = 2.0 * refractedContext.VoH * refractedContext.VoH - 1.0;
+    refractedContext.NoH = context.NoH;
+    return refractedContext;
 }
 
 float3 ClearCoatBxDF(half3 normal, half3 viewDir, half3 lightDir,float3 fuzzColor, float cloth, float roughness, float metallic, float3 diffuseColor, float3 specularColor)
@@ -382,8 +347,9 @@ float Vis_Cloth(float NoV, float NoL)
     return rcp(4 * (NoL + NoV - NoL * NoV));
 }
 
-float3 ClothBxDF(float3 normal, float3 viewDir, float3 lightDir, float3 fuzzColor, float cloth, float roughness, float3 diffuseColor, float3 specularColor)
+float3 ClothBxDF(float3 normal, float3 viewDir, float3 lightDir, float3 lightColor, float lightIntensity, float3 fuzzColor, float cloth, float roughness, float3 diffuseColor, float3 specularColor)
 {
+    lightColor *= lightIntensity;
     float NoL = max(dot(lightDir, normal), 0.00001);
 
     BxDFContext context;
@@ -398,8 +364,8 @@ float3 ClothBxDF(float3 normal, float3 viewDir, float3 lightDir, float3 fuzzColo
     float3 f2 = F_Schlick(fuzzColor, context.VoH);
     float3 spec2 = NoL * (d2 * vis2) * f2;
 	
-    float3 diffuse = NoL * Diffuse_Lambert(diffuseColor);
-    float3 specular = lerp(spec1, spec2, cloth);
+    float3 diffuse = lightColor * NoL * Diffuse_Lambert(diffuseColor);
+    float3 specular = lightColor * lerp(spec1, spec2, cloth);
 
     return diffuse + specular;
 }
@@ -463,7 +429,6 @@ float3 EyeBxDF(half3 normal, half3 viewDir, half3 lightDir, float specular, floa
     
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Texture2D PreIntegratedBRDF : register(t3);
 SamplerState PreIntegratedBRDFSampler : register(s3);
@@ -507,7 +472,7 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
 #elif SHADING_MODEL == SHADING_MODEL_CLOTH
     float3 fuzzColor = float3(1, 0, 0);
     float cloth = 1;
-    return ClothBxDF(normal, viewDir, lightDir, fuzzColor, cloth, roughness, diffuseColor, specularColor) * shadow;
+    return ClothBxDF(normal, viewDir, lightDir, lightColor, lightIntensity, fuzzColor, cloth, roughness, diffuseColor, specularColor) * shadow;
 #elif SHADING_MODEL == SHADING_MODEL_EYE
     return EyeBxDF(normal, viewDir, lightDir, 0, specularColor, diffuseColor, roughness, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_SIGLE_LAYER_WATER
@@ -540,6 +505,39 @@ float3 PointLighting(LightingContext litContext, MaterialContext matContext)
     
     float lightIntensityPixel = saturate(1 - (distanceSqr * litContext.LightRadius * litContext.LightRadius)) * litContext.LightIntensity;
     return Lighting(litContext.Normal, litContext.LightDir, litContext.LightColor, lightIntensityPixel, litContext.ViewDir, matContext.DiffuseColor, matContext.Roughness, matContext.Opacity, matContext.SpecularColor, matContext.SubsurfaceColor, matContext.Metallic, 1, litContext.Thickness);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** 
+ * Compute absolute mip for a reflection capture cubemap given a roughness.
+ */
+float ComputeReflectionCaptureMipFromRoughness(float roughness, float cubemapMaxMip)
+{
+	// Heuristic that maps roughness to mip level
+	// This is done in a way such that a certain mip level will always have the same roughness, regardless of how many mips are in the texture
+	// Using more mips in the cubemap just allows sharper reflections to be supported
+    float levelFrom1x1 = REFLECTION_CAPTURE_ROUGHEST_MIP - REFLECTION_CAPTURE_ROUGHNESS_MIP_SCALE * log2(roughness);
+    return cubemapMaxMip - 1 - levelFrom1x1;
+}
+
+//---------------
+// EnvBRDF
+//---------------
+float3 EnvBRDFApprox(float3 specularColor, float roughness, float NoV)
+{
+	// [ Lazarov 2013, "Getting More Physical in Call of Duty: Black Ops II" ]
+	// Adaptation to fit our G term.
+    const float4 c0 = { -1, -0.0275, -0.572, 0.022 };
+    const float4 c1 = { 1, 0.0425, 1.04, -0.04 };
+    float4 r = roughness * c0 + c1;
+    float a004 = min(r.x * r.x, exp2(-9.28 * NoV)) * r.x + r.y;
+    float2 ab = float2(-1.04, 1.04) * a004 + r.zw;
+
+	// Anything less than 2% is physically impossible and is instead considered to be shadowing
+	// Note: this is needed for the 'specular' show flag to work, since it uses a SpecularColor of 0
+    ab.y *= saturate(50.0 * specularColor.g);
+
+    return specularColor * ab.x + ab.y;
 }
 
 TextureCube EnvironmentMap : register(t1);

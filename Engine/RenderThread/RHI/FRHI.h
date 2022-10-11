@@ -364,6 +364,12 @@ struct FSamplerStateInfo
 
 struct FRasterizerStateInfo
 {
+public:
+    FRasterizerStateInfo(
+    )
+        : CullMode(CM_CCW)
+    {}
+
     ERasterizerFillMode FillMode;
     ERasterizerCullMode CullMode;
     float DepthBias;

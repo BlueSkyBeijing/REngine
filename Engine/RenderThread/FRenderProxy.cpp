@@ -136,6 +136,7 @@ void FStaticMeshRenderProxy::CreateRenderResource()
     infoShadow.PixelShader = Material->PixelShaderShadow;
     infoShadow.VertexLayout = &VertexLayout;
     infoShadow.DepthStencilState.bEnableDepthWrite = true;
+    infoShadow.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
     TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(infoShadow);
 
@@ -239,6 +240,7 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
     infoGPUSkinShadow.PixelShader = Material->PixelShaderShadow;
     infoGPUSkinShadow.VertexLayout = &VertexLayout;
     infoGPUSkinShadow.DepthStencilState.bEnableDepthWrite = true;
+    infoGPUSkinShadow.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
     TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(infoGPUSkinShadow);
 

@@ -123,6 +123,7 @@ void FRenderer::drawShadowPass()
         info.PixelShader = renderProxy->Material->PixelShaderShadow;
         info.VertexLayout = &(renderProxy->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = true;
+        info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
@@ -154,6 +155,7 @@ void FRenderer::drawShadowPass()
         info.PixelShader = renderProxy->Material->PixelShaderShadow;
         info.VertexLayout = &(renderProxy->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = true;
+        info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
