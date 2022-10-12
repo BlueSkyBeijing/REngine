@@ -211,21 +211,20 @@ BxDFContext RefractClearCoatContext(BxDFContext context)
     BxDFContext refractedContext = context;
     float eta = 1.0 / 1.5;
     float refractionBlendFactor = RefractBlendClearCoatApprox(context.VoH);
-    float RefractionProjectionTerm = refractionBlendFactor * context.NoH;
-    refractedContext.NoV = clamp(eta * context.NoV - RefractionProjectionTerm, 0.001, 1.0); // Due to CalcThinTransmission and Vis_SmithJointAniso, we need to make sure
-    refractedContext.NoL = clamp(eta * context.NoL - RefractionProjectionTerm, 0.001, 1.0); // those values are not 0s to avoid NaNs.
+    float refractionProjectionTerm = refractionBlendFactor * context.NoH;
+    refractedContext.NoV = clamp(eta * context.NoV - refractionProjectionTerm, 0.001, 1.0); // Due to CalcThinTransmission and Vis_SmithJointAniso, we need to make sure
+    refractedContext.NoL = clamp(eta * context.NoL - refractionProjectionTerm, 0.001, 1.0); // those values are not 0s to avoid NaNs.
     refractedContext.VoH = saturate(eta * context.VoH - refractionBlendFactor);
     refractedContext.VoL = 2.0 * refractedContext.VoH * refractedContext.VoH - 1.0;
     refractedContext.NoH = context.NoH;
     return refractedContext;
 }
 
-float3 ClearCoatBxDF(half3 normal, half3 viewDir, half3 lightDir,float3 fuzzColor, float cloth, float roughness, float metallic, float3 diffuseColor, float3 specularColor)
+float3 ClearCoatBxDF(half3 normal, half3 viewDir, half3 lightDir, float clearCoat, float clearCoatRoughness, float roughness, float metallic, float3 diffuseColor, float3 specularColor)
 {
     float NoL = max(dot(lightDir, normal), 0.00001);
 
-    const float clearCoat = 1.0f;
-    const float clearCoatRoughness = max(0.1, 0.02f);
+    clearCoatRoughness = max(clearCoatRoughness, 0.02f);
     const float film = 1 * clearCoat;
     const float metalSpec = 0.9;
     float3 lighting;
@@ -462,15 +461,15 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
 #elif SHADING_MODEL == SHADING_MODEL_PREINTEGRATED_SKIN
     return PreintegratedSkinBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, opacity, specularColor, subsurfaceColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_CLEAR_COAT
-    float cloth = 0.5;
-    float3 fuzzColor = float3(1, 0, 0);
-    return ClearCoatBxDF(normal, viewDir, lightDir, fuzzColor, cloth, roughness, metallic, diffuseColor, specularColor) * shadow;
+    const float clearCoat = 1.0f;
+    const float clearCoatRoughness = 0.1f;
+    return ClearCoatBxDF(normal, viewDir, lightDir, clearCoat, clearCoatRoughness, roughness, metallic, diffuseColor, specularColor) * shadow;
 #elif SHADING_MODEL == SHADING_MODEL_TWO_SIDE_FOLIAGE
     return TwoSidedBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, specularColor, subsurfaceColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_HAIR
     return DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, specularColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_CLOTH
-    float3 fuzzColor = float3(1, 0, 0);
+    float3 fuzzColor = float3(1, 1, 1);
     float cloth = 1;
     return ClothBxDF(normal, viewDir, lightDir, lightColor, lightIntensity, fuzzColor, cloth, roughness, diffuseColor, specularColor) * shadow;
 #elif SHADING_MODEL == SHADING_MODEL_EYE
@@ -568,7 +567,7 @@ float3 GetImageBasedReflectionLighting(LightingContext litContext, MaterialConte
 
 float3 GetImageBasedDiffuseLighting(LightingContext litContext, MaterialContext matContext)
 {
-    float3 diffuseLighting = matContext.DiffuseColor.rgb * 0.15;
+    float3 diffuseLighting = matContext.DiffuseColor.rgb * 0.1;
 
     return diffuseLighting;
 }

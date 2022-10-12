@@ -13,9 +13,10 @@ float4 PSMain(VertexShaderOutput pixelIn) : SV_Target
     const float3 viewDir = normalize(CameraPos - pixelIn.PosW.xyz); 
     const float4 baseColor = DiffuseMap.Sample(DiffuseSamplerState, pixelIn.UV);
     const float2 shadowAndThickness = DirectionalLightShadow(pixelIn.ShadowPosH);
+    const float opacity = baseColor.a * Opacity;
     
     MaterialContext matContext;
-    InitMaterialContext(matContext, baseColor.rgb, Metallic, Specular, Roughness, Opacity, EmissiveColor.rgb, SubsurfaceColor.rgb);
+    InitMaterialContext(matContext, baseColor.rgb, Metallic, Specular, Roughness, opacity, EmissiveColor.rgb, SubsurfaceColor.rgb);
     CalculateDiffuseAndSpecularColor(matContext.Specular, matContext.Metallic, matContext.DiffuseColor, matContext.SpecularColor);
 
     LightingContext litContextDirectional;
@@ -40,7 +41,7 @@ float4 PSMain(VertexShaderOutput pixelIn) : SV_Target
     lighting += envDiffuseColor;
     
     outColor.rgb = lighting;
-    outColor.a = baseColor.a * Opacity;
+    outColor.a = opacity;
     
     #if MATERIALBLENDING_MASKED
     const float maskClipValue = 0.33f;
