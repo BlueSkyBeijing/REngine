@@ -17,7 +17,7 @@ const std::string FConfigManager::DefaultStaticMeshFileSuffix = ".stm";
 const std::string FConfigManager::DefaultSkeletalMeshFileSuffix = ".skm";
 const std::string FConfigManager::DefaultSkeletonFileSuffix = ".skt";
 const std::string FConfigManager::DefaultAnimSequenceFileSuffix = ".anm";
-const std::string FConfigManager::DefaultMaterialFileSuffix = ".mat";
+const std::string FConfigManager::DefaultMaterialFileSuffix = ".mtl";
 const std::string FConfigManager::DefaultTextureFileSuffix = ".dds";
 
 const int32 FConfigManager::FrameBufferNum = 2;
