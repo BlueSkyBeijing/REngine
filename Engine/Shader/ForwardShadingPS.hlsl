@@ -8,6 +8,7 @@ SamplerState DiffuseSamplerState : register(s0);
 float4 PSMain(VertexShaderOutput pixelIn, bool IsFrontFace: SV_IsFrontFace) : SV_Target
 {
     float twoSideSign = IsFrontFace ? -1 : 1;
+    float3 worldNormal = twoSideSign * pixelIn.Normal;
     float4 outColor;
     
     //view dir is different from camare dir,it's diffent in every pixel
@@ -21,7 +22,7 @@ float4 PSMain(VertexShaderOutput pixelIn, bool IsFrontFace: SV_IsFrontFace) : SV
     CalculateDiffuseAndSpecularColor(matContext.Specular, matContext.Metallic, matContext.DiffuseColor, matContext.SpecularColor);
 
     LightingContext litContextDirectional;
-    InitLightingContext(litContextDirectional, DirectionalLightDir, DirectionalLightIntensity, DirectionalLightColor, twoSideSign * pixelIn.Normal, viewDir, CameraPos, 0, 0, 0, shadowAndThickness.x, shadowAndThickness.y);
+    InitLightingContext(litContextDirectional, DirectionalLightDir, DirectionalLightIntensity, DirectionalLightColor, worldNormal, viewDir, CameraPos, 0, 0, 0, shadowAndThickness.x, shadowAndThickness.y);
 
     float3 lighting = DirectionalLighting(litContextDirectional, matContext);
     for (int i = 0; i < PointLightNum; ++i)
@@ -29,8 +30,13 @@ float4 PSMain(VertexShaderOutput pixelIn, bool IsFrontFace: SV_IsFrontFace) : SV
         uint indexArray = (uint)i/(MAX_POINT_LIGHT_NUM/4);
         uint indexComp = (uint)i%(MAX_POINT_LIGHT_NUM/4);
         float pointLightIntensity = PointLightIntensity[indexArray][indexComp];
+        float3 toLight = PointLightPositionAndInvRadius[i].xyz - pixelIn.PosW.xyz;
+        float distanceSqr = dot(toLight, toLight);
+        float3 lightDir = toLight * rsqrt(distanceSqr);
+        float lightIntensityPixel = saturate(1 - (distanceSqr * PointLightPositionAndInvRadius[i].w * PointLightPositionAndInvRadius[i].w)) * pointLightIntensity;
+        
         LightingContext litContextPoint;
-        InitLightingContext(litContextPoint, DirectionalLightDir, pointLightIntensity, PointLightColorAndFalloffExponent[i].xyz, pixelIn.Normal, viewDir, CameraPos, PointLightPositionAndInvRadius[i].xyz, PointLightPositionAndInvRadius[i].w, pixelIn.PosW.xyz, shadowAndThickness.x, shadowAndThickness.y);
+        InitLightingContext(litContextPoint, lightDir, lightIntensityPixel, PointLightColorAndFalloffExponent[i].xyz, worldNormal, viewDir, CameraPos, PointLightPositionAndInvRadius[i].xyz, PointLightPositionAndInvRadius[i].w, pixelIn.PosW.xyz, shadowAndThickness.x, shadowAndThickness.y);
 
         lighting += PointLighting(litContextPoint, matContext);
     }

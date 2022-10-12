@@ -143,7 +143,7 @@ float3 DefaultLitBxDF(float3 normal, float3 lightDir, float3 lightColor, float l
     float NoL = max(dot(lightDir, normal), 0.00001);
 
     float3 diffuse = NoL * Diffuse_Lambert(diffuseColor) * lightColor;
-    float3 specular = NoL * SpecularGGX(roughness, specularColor, context, NoL);
+    float3 specular = NoL * SpecularGGX(roughness, specularColor, context, NoL) * lightColor;
     
     return (diffuse + specular) * shadow;
 }
@@ -164,7 +164,7 @@ float3 SubsurfaceBxDF(float3 normal, float3 lightDir, float3 lightColor, float l
     float backScatter = normalContribution / (PI * 2);
 	
 	// lerp to never exceed 1 (energy conserving)
-    float3 transmission = lerp(backScatter, 1, inScatter) * subsurfaceColor * thickness;
+    float3 transmission = lightColor * lightIntensity * lerp(backScatter, 1, inScatter) * subsurfaceColor * thickness;
 
     return lighting * shadow + transmission;
 }
@@ -220,7 +220,7 @@ BxDFContext RefractClearCoatContext(BxDFContext context)
     return refractedContext;
 }
 
-float3 ClearCoatBxDF(half3 normal, half3 viewDir, half3 lightDir, float clearCoat, float clearCoatRoughness, float roughness, float metallic, float3 diffuseColor, float3 specularColor)
+float3 ClearCoatBxDF(half3 normal, half3 viewDir, half3 lightDir, float3 lightColor, float lightIntensity, float clearCoat, float clearCoatRoughness, float roughness, float metallic, float3 diffuseColor, float3 specularColor)
 {
     float NoL = max(dot(lightDir, normal), 0.00001);
 
@@ -311,6 +311,8 @@ float3 ClearCoatBxDF(half3 normal, half3 viewDir, half3 lightDir, float clearCoa
     float3 refractedSpecular = fresnelCoeff * transmission * F;
     specular += commonSpecular * lerp(defaultSpecular, refractedSpecular, clearCoat);
     lighting = diffuse + specular;
+    lighting *= lightColor * lightIntensity;
+    
     return lighting;
 }
 
@@ -327,7 +329,7 @@ float3 TwoSidedBxDF(float3 normal, float3 lightDir, float3 lightColor, float lig
 	float VoL = dot(viewDir, lightDir);
 	float scatter = D_GGX( 0.6*0.6, saturate( -VoL ) );
 
-	float3 transmission = (wrapNoL * scatter) * subsurfaceColor;
+	float3 transmission = lightColor * lightIntensity * (wrapNoL * scatter) * subsurfaceColor;
 
     lighting += transmission;
     return lighting;
@@ -378,7 +380,7 @@ float3 OctahedronToUnitVector( float2 oct )
 	return normalize(normal);
 }
 
-float3 EyeBxDF(half3 normal, half3 viewDir, half3 lightDir, float specular, float3 specularColor, float3 diffuseColor, float roughness, float shadow )
+float3 EyeBxDF(half3 normal, half3 viewDir, half3 lightDir, float3 lightColor, float lightIntensity, float specular, float3 specularColor, float3 diffuseColor, float roughness, float shadow )
 {
     float NoL = max(dot(lightDir, normal), 0.00001);
 
@@ -423,7 +425,8 @@ float3 EyeBxDF(half3 normal, half3 viewDir, half3 lightDir, float specular, floa
 	float3 diffuse = 0;
 	float3 transmission = (lerp( sclera, iris, irisMask ) * energyPreservation ) * Diffuse_Lambert(diffuseColor );
 	float3 lighting = diffuse + specularLighting + transmission;
-    
+    lighting *= lightColor * lightIntensity;
+   
     return lighting;
     
 }
@@ -463,7 +466,7 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
 #elif SHADING_MODEL == SHADING_MODEL_CLEAR_COAT
     const float clearCoat = 1.0f;
     const float clearCoatRoughness = 0.1f;
-    return ClearCoatBxDF(normal, viewDir, lightDir, clearCoat, clearCoatRoughness, roughness, metallic, diffuseColor, specularColor) * shadow;
+    return ClearCoatBxDF(normal, viewDir, lightDir, lightColor, lightIntensity, clearCoat, clearCoatRoughness, roughness, metallic, diffuseColor, specularColor) * shadow;
 #elif SHADING_MODEL == SHADING_MODEL_TWO_SIDE_FOLIAGE
     return TwoSidedBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, specularColor, subsurfaceColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_HAIR
@@ -473,7 +476,7 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
     float cloth = 1;
     return ClothBxDF(normal, viewDir, lightDir, lightColor, lightIntensity, fuzzColor, cloth, roughness, diffuseColor, specularColor) * shadow;
 #elif SHADING_MODEL == SHADING_MODEL_EYE
-    return EyeBxDF(normal, viewDir, lightDir, 0, specularColor, diffuseColor, roughness, shadow);
+    return EyeBxDF(normal, viewDir, lightDir, lightColor, lightIntensity, 0, specularColor, diffuseColor, roughness, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_SIGLE_LAYER_WATER
     return DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, specularColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_THIN_TRANSLUCENT
@@ -498,12 +501,9 @@ float3 DirectionalLighting(LightingContext litContext, MaterialContext matContex
 
 float3 PointLighting(LightingContext litContext, MaterialContext matContext)
 {
-    float3 toLight = litContext.LightPos - litContext.PixelPos;
-    float distanceSqr = dot(toLight, toLight);
-    float3 lightDir = toLight * rsqrt(distanceSqr);
-    
-    float lightIntensityPixel = saturate(1 - (distanceSqr * litContext.LightRadius * litContext.LightRadius)) * litContext.LightIntensity;
-    return Lighting(litContext.Normal, litContext.LightDir, litContext.LightColor, lightIntensityPixel, litContext.ViewDir, matContext.DiffuseColor, matContext.Roughness, matContext.Opacity, matContext.SpecularColor, matContext.SubsurfaceColor, matContext.Metallic, 1, litContext.Thickness);
+    float3 lighting = Lighting(litContext.Normal, litContext.LightDir, litContext.LightColor, litContext.LightIntensity, litContext.ViewDir, matContext.DiffuseColor, matContext.Roughness, matContext.Opacity, matContext.SpecularColor, matContext.SubsurfaceColor, matContext.Metallic, 1, litContext.Thickness);
+
+    return  lighting;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -567,7 +567,7 @@ float3 GetImageBasedReflectionLighting(LightingContext litContext, MaterialConte
 
 float3 GetImageBasedDiffuseLighting(LightingContext litContext, MaterialContext matContext)
 {
-    float3 diffuseLighting = matContext.DiffuseColor.rgb * 0.1;
+    float3 diffuseLighting = matContext.DiffuseColor.rgb * 0.05;
 
     return diffuseLighting;
 }
