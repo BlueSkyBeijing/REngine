@@ -27,6 +27,7 @@ private:
     UTexture2D* mNormalMap;
     EBlendMode mBlendMode;
     EMaterialShadingModel mShadingModel;
+    bool mTwoSided;
     float mMetallic;
     float mSpecular;
     float mRoughness;

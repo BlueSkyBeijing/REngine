@@ -124,6 +124,10 @@ void FRenderer::drawShadowPass()
         info.VertexLayout = &(renderProxy->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = true;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
+        if (renderProxy->Material->TwoSided)
+        {
+            info.RasterizerState.CullMode = CM_None;
+        }
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
@@ -156,6 +160,10 @@ void FRenderer::drawShadowPass()
         info.VertexLayout = &(renderProxy->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = true;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
+        if (renderProxy->Material->TwoSided)
+        {
+            info.RasterizerState.CullMode = CM_None;
+        }
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
@@ -266,6 +274,10 @@ void FRenderer::_drawSceneColorOpaque()
         info.VertexLayout = &(renderProxy->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = true;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
+        if (renderProxy->Material->TwoSided)
+        {
+            info.RasterizerState.CullMode = CM_None;
+        }
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
@@ -300,6 +312,10 @@ void FRenderer::_drawSceneColorOpaque()
         info.VertexLayout = &(renderProxy->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = true;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
+        if (renderProxy->Material->TwoSided)
+        {
+            info.RasterizerState.CullMode = CM_None;
+        }
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
@@ -354,6 +370,10 @@ void FRenderer::_drawSceneColorTranslucent()
         info.BlendState.AlphaBlendOp = BO_Add;
         info.BlendState.AlphaSrcBlend = BF_Zero;
         info.BlendState.AlphaDestBlend = BF_One;
+        if (renderProxy->Material->TwoSided)
+        {
+            info.RasterizerState.CullMode = CM_None;
+        }
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
@@ -400,6 +420,10 @@ void FRenderer::_drawSceneColorTranslucent()
         info.BlendState.AlphaBlendOp = BO_Add;
         info.BlendState.AlphaSrcBlend = BF_Zero;
         info.BlendState.AlphaDestBlend = BF_One;
+        if (renderProxy->Material->TwoSided)
+        {
+            info.RasterizerState.CullMode = CM_None;
+        }
 
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 

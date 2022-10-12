@@ -5,8 +5,9 @@ Texture2D DiffuseMap : register(t0);
 SamplerState DiffuseSamplerState : register(s0);
 
 
-float4 PSMain(VertexShaderOutput pixelIn) : SV_Target
+float4 PSMain(VertexShaderOutput pixelIn, bool IsFrontFace: SV_IsFrontFace) : SV_Target
 {
+    float twoSideSign = IsFrontFace ? -1 : 1;
     float4 outColor;
     
     //view dir is different from camare dir,it's diffent in every pixel
@@ -20,7 +21,7 @@ float4 PSMain(VertexShaderOutput pixelIn) : SV_Target
     CalculateDiffuseAndSpecularColor(matContext.Specular, matContext.Metallic, matContext.DiffuseColor, matContext.SpecularColor);
 
     LightingContext litContextDirectional;
-    InitLightingContext(litContextDirectional, DirectionalLightDir, DirectionalLightIntensity, DirectionalLightColor, pixelIn.Normal, viewDir, CameraPos, 0, 0, 0, shadowAndThickness.x, shadowAndThickness.y);
+    InitLightingContext(litContextDirectional, DirectionalLightDir, DirectionalLightIntensity, DirectionalLightColor, twoSideSign * pixelIn.Normal, viewDir, CameraPos, 0, 0, 0, shadowAndThickness.x, shadowAndThickness.y);
 
     float3 lighting = DirectionalLighting(litContextDirectional, matContext);
     for (int i = 0; i < PointLightNum; ++i)

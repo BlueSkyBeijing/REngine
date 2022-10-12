@@ -27,6 +27,8 @@ public:
 
     EBlendMode BlendMode;
     EMaterialShadingModel ShadingModel;
+    bool TwoSided;
+
     float Metallic;
     float Specular;
     float Roughness;

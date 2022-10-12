@@ -27,9 +27,11 @@ void UMaterial::Load()
         return;
     }
 
-
     materialFile.read((char*)&mBlendMode, sizeof(int32));
     materialFile.read((char*)&mShadingModel, sizeof(int32));
+    uint8 twoSided = 0;
+    materialFile.read((char*)&twoSided, sizeof(uint8));
+    mTwoSided = twoSided;
     materialFile.read((char*)&mMetallic, sizeof(float));
     materialFile.read((char*)&mSpecular, sizeof(float));
     materialFile.read((char*)&mRoughness, sizeof(float));
@@ -52,18 +54,11 @@ void UMaterial::Load()
 
     mBaseColor = dynamic_cast<UTexture2D*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Texture, BaseColorTextureFullPathName));
 
-    //mMetallicSpecularRoughness = new UTexture2D();
-    //mMetallicSpecularRoughness->FullFilePathName = "Content\\Texture\\T_Default_Material_Gray_C.dds";
-    //mMetallicSpecularRoughness->Load();
-
-    //mEmissiveColor = new UTexture2D();
-    //mMetallicSpecularRoughness->FullFilePathName = "Content\\Texture\\T_Default_Material_Gray_C.dds";
-    //mEmissiveColor->Load();
-
     Material = new FMaterial;
     Material->BaseColorFullFilePathName = BaseColorTextureFullPathName;
     Material->BlendMode = mBlendMode;
     Material->ShadingModel = mShadingModel;
+    Material->TwoSided = mTwoSided;
     Material->Metallic = mMetallic;
     Material->Specular = mSpecular;
     Material->Roughness = mRoughness;
@@ -76,14 +71,6 @@ void UMaterial::Load()
 void UMaterial::Unload()
 {
     mBaseColor = nullptr;
-
-    //mMetallicSpecularRoughness->Unload();
-    //delete mMetallicSpecularRoughness;
-    //mMetallicSpecularRoughness = nullptr;
-
-    //mEmissiveColor->Unload();
-    //delete mEmissiveColor;
-    //mEmissiveColor = nullptr;
 
     Material->UnInit();
     delete Material;

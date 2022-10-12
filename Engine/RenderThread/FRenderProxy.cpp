@@ -127,6 +127,10 @@ void FStaticMeshRenderProxy::CreateRenderResource()
         info.BlendState.AlphaSrcBlend = BF_Zero;
         info.BlendState.AlphaDestBlend = BF_One;
     }
+    if (Material->TwoSided)
+    {
+        info.RasterizerState.CullMode = CM_None;
+    }
 
     TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
 
@@ -137,6 +141,10 @@ void FStaticMeshRenderProxy::CreateRenderResource()
     infoShadow.VertexLayout = &VertexLayout;
     infoShadow.DepthStencilState.bEnableDepthWrite = true;
     infoShadow.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
+    if (Material->TwoSided)
+    {
+        infoShadow.RasterizerState.CullMode = CM_None;
+    }
 
     TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(infoShadow);
 
@@ -221,6 +229,10 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
         info.BlendState.AlphaSrcBlend = BF_Zero;
         info.BlendState.AlphaDestBlend = BF_One;
     }
+    if (Material->TwoSided)
+    {
+        info.RasterizerState.CullMode = CM_None;
+    }
 
     TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
 
@@ -231,6 +243,10 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
     infoGPUSkin.VertexLayout = &VertexLayout;
     infoGPUSkin.DepthStencilState.bEnableDepthWrite = true;
     infoGPUSkin.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
+    if (Material->TwoSided)
+    {
+        infoGPUSkin.RasterizerState.CullMode = CM_None;
+    }
 
     TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(infoGPUSkin);
 
@@ -241,6 +257,10 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
     infoGPUSkinShadow.VertexLayout = &VertexLayout;
     infoGPUSkinShadow.DepthStencilState.bEnableDepthWrite = true;
     infoGPUSkinShadow.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
+    if (Material->TwoSided)
+    {
+        infoGPUSkinShadow.RasterizerState.CullMode = CM_None;
+    }
 
     TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(infoGPUSkinShadow);
 
