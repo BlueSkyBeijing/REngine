@@ -24,21 +24,18 @@ float4 PSMain(VertexShaderOutput pixelIn, bool IsFrontFace: SV_IsFrontFace) : SV
     LightingContext litContextDirectional;
     InitLightingContext(litContextDirectional, DirectionalLightDir, DirectionalLightIntensity, DirectionalLightColor, worldNormal, viewDir, CameraPos, 0, 0, 0, shadowAndThickness.x, shadowAndThickness.y);
 
-    float3 lighting = DirectionalLighting(litContextDirectional, matContext);
+    float3 lighting = Lighting(litContextDirectional, matContext);
     for (int i = 0; i < PointLightNum; ++i)
     {
         uint indexArray = (uint)i/(MAX_POINT_LIGHT_NUM/4);
         uint indexComp = (uint)i%(MAX_POINT_LIGHT_NUM/4);
-        float pointLightIntensity = PointLightIntensity[indexArray][indexComp];
-        float3 toLight = PointLightPositionAndInvRadius[i].xyz - pixelIn.PosW.xyz;
-        float distanceSqr = dot(toLight, toLight);
-        float3 lightDir = toLight * rsqrt(distanceSqr);
-        float lightIntensityPixel = saturate(1 - (distanceSqr * PointLightPositionAndInvRadius[i].w * PointLightPositionAndInvRadius[i].w)) * pointLightIntensity;
-        
-        LightingContext litContextPoint;
-        InitLightingContext(litContextPoint, lightDir, lightIntensityPixel, PointLightColorAndFalloffExponent[i].xyz, worldNormal, viewDir, CameraPos, PointLightPositionAndInvRadius[i].xyz, PointLightPositionAndInvRadius[i].w, pixelIn.PosW.xyz, shadowAndThickness.x, shadowAndThickness.y);
+        float pointLightIntensity = PointLightIntensity[indexArray][indexComp];     
+        float4 lightDirAndIntensity = CaculatePointLightDirAndIntensity(PointLightPositionAndInvRadius[i].xyz, pixelIn.PosW.xyz, pointLightIntensity, PointLightPositionAndInvRadius[i].w);
 
-        lighting += PointLighting(litContextPoint, matContext);
+        LightingContext litContextPoint;
+        InitLightingContext(litContextPoint, lightDirAndIntensity.xyz, lightDirAndIntensity.w, PointLightColorAndFalloffExponent[i].xyz, worldNormal, viewDir, CameraPos, PointLightPositionAndInvRadius[i].xyz, PointLightPositionAndInvRadius[i].w, pixelIn.PosW.xyz, 1, 1);
+
+        lighting += Lighting(litContextPoint, matContext);
     }
 
     float3 envReflectionColor = GetImageBasedReflectionLighting(litContextDirectional, matContext);

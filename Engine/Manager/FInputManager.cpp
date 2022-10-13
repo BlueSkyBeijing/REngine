@@ -127,7 +127,7 @@ void FInputManager::OnKeyInput(float deltaSeconds)
 {
     FEngine& engine = TSingleton<FEngine>::GetInstance();
     const float deltaScale = 1000.0f;
-    const float deltaScalePlayerMove = 100.0f;
+    const float deltaScalePlayerMove = 300.0f;
     const float deltaScaleTurn = 2.0f;
 
     if ((GetAsyncKeyState('W') & 0x8000))

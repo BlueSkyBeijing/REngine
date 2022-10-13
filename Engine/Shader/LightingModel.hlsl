@@ -64,7 +64,7 @@ struct BxDFContext
     float YoH;
 };
 
-void Init(inout BxDFContext context, half3 normal, half3 viewDir, half3 lightDir)
+void Init(inout BxDFContext context, float3 normal, float3 viewDir, float3 lightDir)
 {
     context.NoL = dot(normal, lightDir);
     context.NoV = dot(normal, viewDir);
@@ -135,17 +135,17 @@ float3 Unlit(float3 normal, float3 lightDir, float3 lightColor, float lightInten
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float3 DefaultLitBxDF(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float roughness, float3 specularColor, float shadow)
 {
-    lightColor *= lightIntensity;
-    
     BxDFContext context;
     Init(context, normal, viewDir, lightDir);
 
     float NoL = max(dot(lightDir, normal), 0.00001);
 
-    float3 diffuse = NoL * Diffuse_Lambert(diffuseColor) * lightColor;
-    float3 specular = NoL * SpecularGGX(roughness, specularColor, context, NoL) * lightColor;
+    float3 diffuse = NoL * Diffuse_Lambert(diffuseColor);
+    float3 specular = NoL * SpecularGGX(roughness, specularColor, context, NoL);
+
+    float3 lighting = (diffuse + specular)  * lightColor * lightIntensity * shadow;
     
-    return (diffuse + specular) * shadow;
+    return lighting;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -165,8 +165,10 @@ float3 SubsurfaceBxDF(float3 normal, float3 lightDir, float3 lightColor, float l
 	
 	// lerp to never exceed 1 (energy conserving)
     float3 transmission = lightColor * lightIntensity * lerp(backScatter, 1, inScatter) * subsurfaceColor * thickness;
+    
+    lighting = lighting * shadow + transmission;
 
-    return lighting * shadow + transmission;
+    return lighting;
 }
 
 
@@ -184,6 +186,8 @@ float3 CalcThinTransmission(float NoL, float NoV, float3 baseColor, float metall
 		// Base color represents reflected color viewed at 0 incidence angle, after being absorbed through the substrate.
 		// Because of this, extinction is normalized by traveling through layer thickness twice
         float3 transmissionColor = Diffuse_Lambert(baseColor);
+        //log 0 is inf, must clamp here
+        transmissionColor = max(transmissionColor, 0.00001f);
         float3 extinctionCoefficient = -log(transmissionColor) / (2.0 * layerThickness);
         float3 opticalDepth = extinctionCoefficient * max(thinDistance - 2.0 * layerThickness, 0.0);
         transmission = exp(-opticalDepth);
@@ -220,7 +224,7 @@ BxDFContext RefractClearCoatContext(BxDFContext context)
     return refractedContext;
 }
 
-float3 ClearCoatBxDF(half3 normal, half3 viewDir, half3 lightDir, float3 lightColor, float lightIntensity, float clearCoat, float clearCoatRoughness, float roughness, float metallic, float3 diffuseColor, float3 specularColor)
+float3 ClearCoatBxDF(float3 normal, float3 viewDir, float3 lightDir, float3 lightColor, float lightIntensity, float clearCoat, float clearCoatRoughness, float roughness, float metallic, float3 diffuseColor, float3 specularColor, float shadow)
 {
     float NoL = max(dot(lightDir, normal), 0.00001);
 
@@ -229,10 +233,7 @@ float3 ClearCoatBxDF(half3 normal, half3 viewDir, half3 lightDir, float3 lightCo
     const float metalSpec = 0.9;
     float3 lighting;
     BxDFContext context;
-    half3 nspec = normal;
-
-    half3 X = 0;
-    half3 Y = 0;
+    float3 nspec = normal;
 
 	//////////////////////////////
 	/// Top Layer
@@ -251,17 +252,17 @@ float3 ClearCoatBxDF(half3 normal, half3 viewDir, half3 lightDir, float3 lightCo
     context.NoV = saturate(abs(context.NoV) + 1e-5);
 
 	// Hard-coded Fresnel evaluation with IOR = 1.5 (for polyurethane cited by Disney BRDF)
-    float F0 = 0.04;
-    float Fc = Pow5(1 - context.VoH);
-    float F = Fc + (1 - Fc) * F0;
+    float f0 = 0.04;
+    float fc = Pow5(1 - context.VoH);
+    float f = fc + (1 - fc) * f0;
 
 	// Generalized microfacet specular
     float a2 = Pow2(alpha);
-    float D = D_GGX(a2, context.NoH);
-    float Vis = Vis_SmithJointApprox(a2, context.NoV, NoL);
+    float d = D_GGX(a2, context.NoH);
+    float vis = Vis_SmithJointApprox(a2, context.NoV, NoL);
 
-    float Fr1 = D * Vis * F;
-    float3 specular = clearCoat * (NoL * Fr1);
+    float fr1 = d * vis * f;
+    float3 specular = clearCoat * (NoL * fr1);
 
 	// Restore previously changed sphereSinAlpha for the top layer. 
 	// alpha needs to also be restored to the bottom layer roughness.
@@ -270,7 +271,7 @@ float3 ClearCoatBxDF(half3 normal, half3 viewDir, half3 lightDir, float3 lightCo
 	// Incoming and exiting Fresnel terms are identical to incoming Fresnel term (VoH == HoL)
 	// float fresnelCoeff = (1.0 - F1) * (1.0 - F2);
 	// Preserve old behavior when energy conservation is disabled
-    float fresnelCoeff = 1.0 - F;
+    float fresnelCoeff = 1.0 - f;
     fresnelCoeff *= fresnelCoeff;
 
 	//////////////////////////////
@@ -286,10 +287,10 @@ float3 ClearCoatBxDF(half3 normal, half3 viewDir, half3 lightDir, float3 lightCo
 	//   V2 = -V2;
 	//   BxDFContext BottomContext;
 	//   Init(BottomContext, normal, X, Y, V2, L2);
-    BxDFContext BottomContext = RefractClearCoatContext(context);
+    BxDFContext bottomContext = RefractClearCoatContext(context);
 
 	// Absorption
-	float3 transmission = CalcThinTransmission(BottomContext.NoL, BottomContext.NoV, diffuseColor, metallic);
+	float3 transmission = CalcThinTransmission(bottomContext.NoL, bottomContext.NoV, diffuseColor, metallic);
 
 	// Default Lit
     float3 defaultDiffuse = (NoL) *  Diffuse_Lambert(diffuseColor);
@@ -297,21 +298,21 @@ float3 ClearCoatBxDF(half3 normal, half3 viewDir, half3 lightDir, float3 lightCo
     float3 diffuse = lerp(defaultDiffuse, refractedDiffuse, clearCoat);
 
     a2 = Pow4(roughness);
-    float D2 = 0;
+    float d2 = 0;
     float vis2 = 0;
 
-    D2 = D_GGX(a2, BottomContext.NoH);
+    d2 = D_GGX(a2, bottomContext.NoH);
 	// NoL is chosen to provide better parity with DefaultLit when clearCoat=0
-    vis2 = Vis_SmithJointApprox(a2, BottomContext.NoV, NoL);
-    float3 F_DefaultLit = F_Schlick(specularColor, context.VoH);
+    vis2 = Vis_SmithJointApprox(a2, bottomContext.NoV, NoL);
+    float3 f_DefaultLit = F_Schlick(specularColor, context.VoH);
 		
 	// Note: reusing D and viewDir from refracted context to save computation when clearCoat < 1
-    float3 commonSpecular = (NoL * D2 * vis2);
-    float3 defaultSpecular = F_DefaultLit;
-    float3 refractedSpecular = fresnelCoeff * transmission * F;
+    float3 commonSpecular = (NoL * d2 * vis2);
+    float3 defaultSpecular = f_DefaultLit;
+    float3 refractedSpecular = fresnelCoeff * transmission * f;
     specular += commonSpecular * lerp(defaultSpecular, refractedSpecular, clearCoat);
-    lighting = diffuse + specular;
-    lighting *= lightColor * lightIntensity;
+    
+    lighting = (diffuse + specular) * lightColor * lightIntensity * shadow;
     
     return lighting;
 }
@@ -331,7 +332,8 @@ float3 TwoSidedBxDF(float3 normal, float3 lightDir, float3 lightColor, float lig
 
 	float3 transmission = lightColor * lightIntensity * (wrapNoL * scatter) * subsurfaceColor;
 
-    lighting += transmission;
+    lighting = lighting + transmission;
+    
     return lighting;
 }
 
@@ -348,9 +350,8 @@ float Vis_Cloth(float NoV, float NoL)
     return rcp(4 * (NoL + NoV - NoL * NoV));
 }
 
-float3 ClothBxDF(float3 normal, float3 viewDir, float3 lightDir, float3 lightColor, float lightIntensity, float3 fuzzColor, float cloth, float roughness, float3 diffuseColor, float3 specularColor)
+float3 ClothBxDF(float3 normal, float3 viewDir, float3 lightDir, float3 lightColor, float lightIntensity, float3 fuzzColor, float cloth, float roughness, float3 diffuseColor, float3 specularColor, float shadow)
 {
-    lightColor *= lightIntensity;
     float NoL = max(dot(lightDir, normal), 0.00001);
 
     BxDFContext context;
@@ -365,10 +366,11 @@ float3 ClothBxDF(float3 normal, float3 viewDir, float3 lightDir, float3 lightCol
     float3 f2 = F_Schlick(fuzzColor, context.VoH);
     float3 spec2 = NoL * (d2 * vis2) * f2;
 	
-    float3 diffuse = lightColor * NoL * Diffuse_Lambert(diffuseColor);
-    float3 specular = lightColor * lerp(spec1, spec2, cloth);
-
-    return diffuse + specular;
+    float3 diffuse = NoL * Diffuse_Lambert(diffuseColor);
+    float3 specular = lerp(spec1, spec2, cloth);
+    float3 lighting = (diffuse + specular) * lightColor * lightIntensity * shadow;
+    
+    return lighting;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -380,7 +382,7 @@ float3 OctahedronToUnitVector( float2 oct )
 	return normalize(normal);
 }
 
-float3 EyeBxDF(half3 normal, half3 viewDir, half3 lightDir, float3 lightColor, float lightIntensity, float specular, float3 specularColor, float3 diffuseColor, float roughness, float shadow )
+float3 EyeBxDF(float3 normal, float3 viewDir, float3 lightDir, float3 lightColor, float lightIntensity, float specular, float3 specularColor, float3 diffuseColor, float roughness, float shadow )
 {
     float NoL = max(dot(lightDir, normal), 0.00001);
 
@@ -402,17 +404,17 @@ float3 EyeBxDF(half3 normal, half3 viewDir, half3 lightDir, float3 lightColor, f
 	context.NoV = saturate( abs( context.NoV ) + 1e-5 );
 	
 	// F_Schlick
-	float F0 = specular * 0.08;
-	float Fc = Pow5( 1 - context.VoH );
-	float F = Fc + (1 - Fc) * F0;
+	float f0 = specular * 0.08;
+	float fc = Pow5( 1 - context.VoH );
+	float f = fc + (1 - fc) * f0;
 	
 	float a2 = Pow4( roughness );
 
 	// Generalized microfacet specular
-	float D = D_GGX( a2, context.NoH );
-	float Vis = Vis_SmithJointApprox( a2, context.NoV, NoL );
+	float d = D_GGX( a2, context.NoH );
+	float vis = Vis_SmithJointApprox( a2, context.NoV, NoL );
 		
-	float3 specularLighting = specularColor * NoL * D * Vis * F;
+	float3 specularLighting = specularColor * NoL * d * vis * f;
 
 	float irisNoL = saturate( dot( irisNormal, lightDir ) );
 	float power = lerp( 12, 1, irisNoL );
@@ -421,7 +423,7 @@ float3 EyeBxDF(half3 normal, half3 viewDir, half3 lightDir, float3 lightColor, f
 	float sclera = NoL;
 	
 	// Preserve old behavior when energy conservation is disabled
-	const float energyPreservation = 1.0f - F;
+	const float energyPreservation = 1.0f - f;
 	float3 diffuse = 0;
 	float3 transmission = (lerp( sclera, iris, irisMask ) * energyPreservation ) * Diffuse_Lambert(diffuseColor );
 	float3 lighting = diffuse + specularLighting + transmission;
@@ -464,9 +466,9 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
 #elif SHADING_MODEL == SHADING_MODEL_PREINTEGRATED_SKIN
     return PreintegratedSkinBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, opacity, specularColor, subsurfaceColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_CLEAR_COAT
-    const float clearCoat = 1.0f;
+    const float clearCoat = 0.5f;
     const float clearCoatRoughness = 0.1f;
-    return ClearCoatBxDF(normal, viewDir, lightDir, lightColor, lightIntensity, clearCoat, clearCoatRoughness, roughness, metallic, diffuseColor, specularColor) * shadow;
+    return ClearCoatBxDF(normal, viewDir, lightDir, lightColor, lightIntensity, clearCoat, clearCoatRoughness, roughness, metallic, diffuseColor, specularColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_TWO_SIDE_FOLIAGE
     return TwoSidedBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, specularColor, subsurfaceColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_HAIR
@@ -474,7 +476,7 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
 #elif SHADING_MODEL == SHADING_MODEL_CLOTH
     float3 fuzzColor = float3(1, 1, 1);
     float cloth = 1;
-    return ClothBxDF(normal, viewDir, lightDir, lightColor, lightIntensity, fuzzColor, cloth, roughness, diffuseColor, specularColor) * shadow;
+    return ClothBxDF(normal, viewDir, lightDir, lightColor, lightIntensity, fuzzColor, cloth, roughness, diffuseColor, specularColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_EYE
     return EyeBxDF(normal, viewDir, lightDir, lightColor, lightIntensity, 0, specularColor, diffuseColor, roughness, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_SIGLE_LAYER_WATER
@@ -488,22 +490,21 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
 #endif
 }
 
-float3 DirectionalLighting(LightingContext litContext, MaterialContext matContext)
+float3 Lighting(LightingContext litContext, MaterialContext matContext)
 {    
     float3 lighting = Lighting(litContext.Normal, litContext.LightDir, litContext.LightColor, litContext.LightIntensity, litContext.ViewDir, matContext.DiffuseColor, matContext.Roughness, matContext.Opacity, matContext.SpecularColor, matContext.SubsurfaceColor, matContext.Metallic, litContext.Shadow, litContext.Thickness);
-    
-    #if SHADING_MODEL == SHADING_MODEL_SUBSUFACE
-    lighting *= litContext.Thickness;
-    #endif
-    
+        
     return  lighting;
 }
 
-float3 PointLighting(LightingContext litContext, MaterialContext matContext)
+float4 CaculatePointLightDirAndIntensity(float3 lightPos, float3 pixelPos, float pointLightIntensity, float invRadius)
 {
-    float3 lighting = Lighting(litContext.Normal, litContext.LightDir, litContext.LightColor, litContext.LightIntensity, litContext.ViewDir, matContext.DiffuseColor, matContext.Roughness, matContext.Opacity, matContext.SpecularColor, matContext.SubsurfaceColor, matContext.Metallic, 1, litContext.Thickness);
+    float3 toLight = lightPos - pixelPos;
+    float distanceSqr = dot(toLight, toLight);
+    float3 lightDir = toLight * rsqrt(distanceSqr);
+    float lightIntensityPixel = saturate(1 - (distanceSqr * invRadius * invRadius)) * pointLightIntensity;
 
-    return  lighting;
+    return float4(lightDir, lightIntensityPixel);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -567,7 +568,7 @@ float3 GetImageBasedReflectionLighting(LightingContext litContext, MaterialConte
 
 float3 GetImageBasedDiffuseLighting(LightingContext litContext, MaterialContext matContext)
 {
-    float3 diffuseLighting = matContext.DiffuseColor.rgb * 0.05;
+    float3 diffuseLighting = matContext.DiffuseColor.rgb * 0.1;
 
     return diffuseLighting;
 }
