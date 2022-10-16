@@ -8,10 +8,7 @@
 #include "FResourceManager.h"
 #include "Utility.h"
 
-UMaterial::UMaterial() :
-    mBaseColor(nullptr),
-    mMetallicSpecularRoughness(nullptr),
-    mNormalMap(nullptr)
+UMaterial::UMaterial()
 {
 }
 
