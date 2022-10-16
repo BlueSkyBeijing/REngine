@@ -17,7 +17,6 @@ FMaterial::FMaterial() :
     PixelShader(nullptr),
     VertexShaderGPUSkin(nullptr),
     VertexShaderShadowGPUSkin(nullptr),
-    BaseColor(nullptr),
     Metallic(0.0f),
     Specular(0.5f),
     Roughness(0.5f),
@@ -31,6 +30,11 @@ FMaterial::~FMaterial()
 
 void FMaterial::Init()
 {
+    if (getInited())
+    {
+        return;
+    }
+
     FShaderInfo vertexShaderInfo;
     vertexShaderInfo.FilePathName = L"Engine\\Shader\\ForwardShadingVS.hlsl";
     vertexShaderInfo.EnterPoint = "VSMain";
@@ -79,12 +83,19 @@ void FMaterial::Init()
 
     VertexShaderShadowGPUSkin = TSingleton<FShaderManager>::GetInstance().GetOrCreate(vertexShaderShadowGPUSkinInfo);
 
-    FRHIResource* texture = TSingleton<FRHIResourceManager>::GetInstance().GetOrCreate(ERHIResourceType::RHIRT_Texture2D, BaseColorFullFilePathName);
-    BaseColor = dynamic_cast<FRHITexture2D*>(texture);
+    for (const auto& tex : mTexturePaths)
+    {
+        const std::string texName = tex.first;
+        const std::string texFile = tex.second;
+        FRHIResource* texture = TSingleton<FRHIResourceManager>::GetInstance().GetOrCreate(ERHIResourceType::RHIRT_Texture2D, texFile);
+        FRHITexture2D* texture2D = dynamic_cast<FRHITexture2D*>(texture);
+
+        mTextures.insert(std::pair<std::string, FRHITexture2D*>(texName, texture2D));
+    }
 
     const std::string envCubeTexture = "T_EnvCube";
     const std::string envMap = FConfigManager::DefaultTexturePath + envCubeTexture + FConfigManager::DefaultTextureFileSuffix;
-    texture = TSingleton<FRHIResourceManager>::GetInstance().GetOrCreate(ERHIResourceType::RHIRT_TextureCube, envMap);
+    FRHIResource* texture = TSingleton<FRHIResourceManager>::GetInstance().GetOrCreate(ERHIResourceType::RHIRT_TextureCube, envMap);
     EnvMap = dynamic_cast<FRHITextureCube*>(texture);
 
     const std::string preIntegratedBRDFTexture = "T_PreintegratedSkinBRDF";
@@ -92,6 +103,7 @@ void FMaterial::Init()
     texture = TSingleton<FRHIResourceManager>::GetInstance().GetOrCreate(ERHIResourceType::RHIRT_Texture2D, preIntegratedBRDF);
     PreIntegratedBRDF = dynamic_cast<FRHITexture2D*>(texture);
 
+    setInited(true);
 }
 
 void FMaterial::UnInit()
@@ -108,9 +120,14 @@ void FMaterial::UnInit()
 
     VertexShaderShadowGPUSkin = nullptr;
 
-    BaseColor = nullptr;
-
     EnvMap = nullptr;
 
     PreIntegratedBRDF = nullptr;
+
+    mTextures.clear();
+
+    mTexturePaths.clear();
+
+    setInited(false);
+
 }

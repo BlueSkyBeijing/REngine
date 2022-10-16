@@ -6,6 +6,7 @@
 #include "FConfigManager.h"
 #include "TSingleton.h"
 #include "FResourceManager.h"
+#include "Utility.h"
 
 UMaterial::UMaterial() :
     mBaseColor(nullptr),
@@ -40,22 +41,28 @@ void UMaterial::Load()
     materialFile.read((char*)&mEmissiveColor, sizeof(FVector4));
     materialFile.read((char*)&mSubsurfaceColor, sizeof(FVector4));
 
-    std::string BaseColorTextureName;
-    int32 stringSize;
-    materialFile.read((char*)&stringSize, sizeof(int32));
-    materialFile.read((char*)BaseColorTextureName.data(), stringSize);
+    int32 numTexture;
+    materialFile.read((char*)&numTexture, sizeof(int32));
 
-    std::string BaseColorTextureFullPathName = FConfigManager::DefaultTexturePath +
-        std::string(BaseColorTextureName.c_str()) +
-        FConfigManager::DefaultTextureFileSuffix;
+    for (int32 i = 0; i < numTexture; i++)
+    {
+        std::string texName;
+        ReadUnrealString(materialFile, texName);
 
+        std::string texFile;
+        ReadUnrealString(materialFile, texFile);
+
+        texFile = FConfigManager::DefaultTexturePath +
+            texFile +
+            FConfigManager::DefaultTextureFileSuffix;
+
+        mTexturePaths.insert(std::pair<std::string, std::string>(texName, texFile));
+    }
 
     materialFile.close();
 
-    mBaseColor = dynamic_cast<UTexture2D*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Texture, BaseColorTextureFullPathName));
-
     Material = new FMaterial;
-    Material->BaseColorFullFilePathName = BaseColorTextureFullPathName;
+    Material->mTexturePaths = mTexturePaths;
     Material->BlendMode = mBlendMode;
     Material->ShadingModel = mShadingModel;
     Material->TwoSided = mTwoSided;
@@ -70,8 +77,6 @@ void UMaterial::Load()
 
 void UMaterial::Unload()
 {
-    mBaseColor = nullptr;
-
     Material->UnInit();
     delete Material;
     Material = nullptr;

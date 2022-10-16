@@ -2,7 +2,7 @@
 
 #include "FRHIResource.h"
 
-FRHIResource::FRHIResource()
+FRHIResource::FRHIResource():mInited(false)
 {
 }
 

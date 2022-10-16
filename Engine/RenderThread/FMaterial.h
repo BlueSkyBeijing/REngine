@@ -13,6 +13,10 @@ public:
 public:
     void Init();
     void UnInit();
+    FRHITexture2D* GetTexture(std::string name)
+    {
+        return mTextures.at(name);
+    }
 
 public:
     FRHIShader* VertexShader;
@@ -22,8 +26,6 @@ public:
     FRHIShader* VertexShaderShadow;
     FRHIShader* VertexShaderGPUSkin;
     FRHIShader* VertexShaderShadowGPUSkin;
-
-    FRHITexture2D* BaseColor;
 
     EBlendMode BlendMode;
     EMaterialShadingModel ShadingModel;
@@ -40,6 +42,8 @@ public:
     FRHITextureCube* EnvMap;
     FRHITexture2D* PreIntegratedBRDF;
 
+    std::map<std::string, FRHITexture2D*> mTextures;
+    std::map<std::string, std::string> mTexturePaths;
     std::string BaseColorFullFilePathName;
 
 private:

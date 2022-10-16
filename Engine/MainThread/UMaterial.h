@@ -11,9 +11,6 @@ public:
 	virtual ~UMaterial() override;
 
 public:
-    std::string BaseColor;
-    std::string MetallicSpecularRoughness;
-    std::string EmissiveColor;
     FMaterial* Material;
     std::string FullFilePathName;
 
@@ -22,9 +19,8 @@ public:
     virtual void Unload() override;
 
 private:
-    UTexture2D* mBaseColor;
-    UTexture2D* mMetallicSpecularRoughness;
-    UTexture2D* mNormalMap;
+    std::map<std::string, std::string> mTexturePaths;
+
     EBlendMode mBlendMode;
     EMaterialShadingModel mShadingModel;
     bool mTwoSided;

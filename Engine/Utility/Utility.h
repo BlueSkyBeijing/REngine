@@ -24,3 +24,6 @@ inline std::string WStringToString(const std::wstring& wstr)
 }
 
 uint64 HashMemory(const char* Data, int32 NumBytes);
+
+
+void ReadUnrealString(std::ifstream& file, std::string& outString);

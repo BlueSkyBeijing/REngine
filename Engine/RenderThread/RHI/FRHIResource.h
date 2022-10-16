@@ -13,6 +13,17 @@ public:
 
 public:
 
+protected:
+    bool getInited()
+    {
+        return mInited;
+    }
+
+    void setInited(bool inited)
+    {
+        mInited = inited;
+    }
 private:
+    bool mInited;
 
 };

@@ -137,7 +137,7 @@ void FRenderer::drawShadowPass()
         mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
         mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
         mRHI->SetConstantBuffer(mShadowPassConstantBuffer, 1);
-        mRHI->SetTexture2D(renderProxy->Material->BaseColor, 0);
+        mRHI->SetTexture2D(renderProxy->Material->GetTexture("BaseColor"), 0);
 
         mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
 
@@ -173,7 +173,7 @@ void FRenderer::drawShadowPass()
         mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
         mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
         mRHI->SetConstantBuffer(mShadowPassConstantBuffer, 1);
-        mRHI->SetTexture2D(renderProxy->Material->BaseColor, 0);
+        mRHI->SetTexture2D(renderProxy->Material->GetTexture("BaseColor"), 0);
 
         mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
 
@@ -287,7 +287,7 @@ void FRenderer::_drawSceneColorOpaque()
         mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
         mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
         mRHI->SetConstantBuffer(mSceneColorPassConstantBuffer, 1);
-        mRHI->SetTexture2D(renderProxy->Material->BaseColor, 0);
+        mRHI->SetTexture2D(renderProxy->Material->GetTexture("BaseColor"), 0);
         mRHI->SetTextureCube(renderProxy->Material->EnvMap, 1);
         mRHI->SetTexture2D(mShadowMap->DepthStencilTarget, 2);
         mRHI->SetTexture2D(renderProxy->Material->PreIntegratedBRDF, 3);
@@ -325,7 +325,7 @@ void FRenderer::_drawSceneColorOpaque()
         mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
         mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
         mRHI->SetConstantBuffer(mSceneColorPassConstantBuffer, 1);
-        mRHI->SetTexture2D(renderProxy->Material->BaseColor, 0);
+        mRHI->SetTexture2D(renderProxy->Material->GetTexture("BaseColor"), 0);
         mRHI->SetTextureCube(renderProxy->Material->EnvMap, 1);
         mRHI->SetTexture2D(mShadowMap->DepthStencilTarget, 2);
         mRHI->SetTexture2D(renderProxy->Material->PreIntegratedBRDF, 3);
@@ -383,7 +383,7 @@ void FRenderer::_drawSceneColorTranslucent()
         mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
         mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
         mRHI->SetConstantBuffer(mSceneColorPassConstantBuffer, 1);
-        mRHI->SetTexture2D(renderProxy->Material->BaseColor, 0);
+        mRHI->SetTexture2D(renderProxy->Material->GetTexture("BaseColor"), 0);
         mRHI->SetTextureCube(renderProxy->Material->EnvMap, 1);
         mRHI->SetTexture2D(mShadowMap->DepthStencilTarget, 2);
         mRHI->SetTexture2D(renderProxy->Material->PreIntegratedBRDF, 3);
@@ -433,7 +433,7 @@ void FRenderer::_drawSceneColorTranslucent()
         mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
         mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
         mRHI->SetConstantBuffer(mSceneColorPassConstantBuffer, 1);
-        mRHI->SetTexture2D(renderProxy->Material->BaseColor, 0);
+        mRHI->SetTexture2D(renderProxy->Material->GetTexture("BaseColor"), 0);
         mRHI->SetTextureCube(renderProxy->Material->EnvMap, 1);
         mRHI->SetTexture2D(mShadowMap->DepthStencilTarget, 2);
         mRHI->SetTexture2D(renderProxy->Material->PreIntegratedBRDF, 3);

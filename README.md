@@ -89,6 +89,9 @@ WSAD控制相机前后左右移动
 
 目前仍有很多方面需要完善
 
+目前只是初步实现unlit, default lit, subsurface, preintegrated skin, two side foliage, clear coat, cloth(clear coat 和 cloth还没搞透彻, 其它的还有能量守恒部分还没有弄清楚)， 还没有仔细调效果。
+
+还剩下几个比较复杂的subsurface profile, eye, hair, water以及thin translucent还没搞清楚
 
 截图
 
