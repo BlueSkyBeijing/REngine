@@ -111,3 +111,15 @@ void InitLightingContext(inout LightingContext context,
     context.Shadow = shadow;
     context.Thickness = thickness;
 }
+
+float3 TransformTangentVectorToWorld(float3x3 tangentToWorld, float3 inTangentVector)
+{
+	// Transform directly to world space
+	// The vector transform is optimized for this case, only one vector-matrix multiply is needed
+	return mul(inTangentVector, tangentToWorld);
+}
+
+float3 TransformTangentNormalToWorld(float3x3 tangentToWorld, float3 tangentNormal)
+{
+	return normalize(float3(TransformTangentVectorToWorld(tangentToWorld, tangentNormal)));
+}

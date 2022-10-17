@@ -7,6 +7,7 @@ struct VertexShaderInput
     float3 Pos : POSITION;
     float3 Normal : NORMAL;
     float2 UV : TEXCOORD;
+    float3 Tangent : BINORMAL;
 #ifdef GPU_SKIN
     uint4 BoneIndices  : BONEINDICES;
     float4 BoneWeights : WEIGHTS;
@@ -19,6 +20,7 @@ struct VertexShaderOutput
     float4 ShadowPosH : POSITION0;
     float4 PosW : POSITION1;
     float3 Normal : NORMAL;
+    float3 Tangent : BINORMAL;
     float2 UV : TEXCOORD;
 };
 

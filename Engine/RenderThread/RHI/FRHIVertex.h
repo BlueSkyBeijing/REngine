@@ -47,6 +47,7 @@ public:
 
 public:
     FVector3 Normal;
+    FVector3 Tangent;
     FVector2 UV;
 private:
 
@@ -60,6 +61,7 @@ public:
 
 public:
     FVector3 Normal;
+    FVector3 Tangent;
     FVector2 UV;
     uint16 BoneIndices[4];
     float BoneWeights[4];

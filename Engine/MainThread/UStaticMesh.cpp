@@ -19,11 +19,13 @@ void UStaticMesh::Load()
     FInputElementDesc inputLayout[] = {
     { "POSITION", 0, EPixelFormat::PF_R32G32B32_FLOAT, 0, 0,  ICF_PerVertexData, 0 },
     { "NORMAL", 0, EPixelFormat::PF_R32G32B32_FLOAT, 0, 12, ICF_PerVertexData, 0 },
-    { "TEXCOORD", 0, EPixelFormat::PF_R32G32_FLOAT, 0, 24, ICF_PerVertexData, 0 } };
+    { "BINORMAL", 0, EPixelFormat::PF_R32G32B32_FLOAT, 0, 24, ICF_PerVertexData, 0 },
+    { "TEXCOORD", 0, EPixelFormat::PF_R32G32_FLOAT, 0, 36, ICF_PerVertexData, 0 } };
 
     layout.Elements.push_back(inputLayout[0]);
     layout.Elements.push_back(inputLayout[1]);
     layout.Elements.push_back(inputLayout[2]);
+    layout.Elements.push_back(inputLayout[3]);
 
     mVertexLayout = layout;
 

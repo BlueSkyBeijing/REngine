@@ -28,6 +28,7 @@ VertexShaderOutput VSMain(VertexShaderInput vertexIn)
     vertexOut.PosW = mul(float4(vertexIn.Pos, 1.0f), World);
     vertexOut.ShadowPosH = mul(vertexOut.PosW, ShadowTransform);
     vertexOut.Normal = normalize(mul(vertexIn.Normal, (float3x3) World));
+    vertexOut.Tangent = normalize(mul(vertexIn.Tangent, (float3x3) World));
     vertexOut.UV = vertexIn.UV;
 
     return vertexOut;
