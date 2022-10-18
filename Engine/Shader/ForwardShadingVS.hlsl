@@ -30,6 +30,11 @@ VertexShaderOutput VSMain(VertexShaderInput vertexIn)
     vertexOut.Normal = normalize(mul(vertexIn.Normal, (float3x3) World));
     vertexOut.Tangent = normalize(mul(vertexIn.Tangent, (float3x3) World));
     vertexOut.UV = vertexIn.UV;
+    
+    float3x3 TangentToLocal = CalcTangentToLocal(vertexIn.Tangent, vertexIn.Normal, 1);
+    float3x3 TangentToWorld = mul(TangentToLocal, (float3x3) World);
+    vertexOut.TangentToWorld0 = float3(TangentToWorld[0]);
+    vertexOut.TangentToWorld2 = float3(TangentToWorld[2]);
 
     return vertexOut;
 }

@@ -4,11 +4,15 @@
 Texture2D DiffuseMap : register(t0);
 SamplerState DiffuseSamplerState : register(s0);
 
+Texture2D NormalMap : register(t4);
+SamplerState NormalSamplerState : register(s4);
 
 float4 PSMain(VertexShaderOutput pixelIn, bool IsFrontFace: SV_IsFrontFace) : SV_Target
 {
     float twoSideSign = IsFrontFace ? -1 : 1;
-    float3 worldNormal = twoSideSign * pixelIn.Normal;
+    float3x3 tangentToWorld = AssembleTangentToWorld(pixelIn.TangentToWorld0, pixelIn.TangentToWorld2);
+    float4 noramlMap = NormalMap.Sample(NormalSamplerState, pixelIn.UV);
+    float3 worldNormal = twoSideSign * TransformTangentNormalToWorld(tangentToWorld, noramlMap.xyz);
     float4 outColor;
     
     //view dir is different from camare dir,it's diffent in every pixel

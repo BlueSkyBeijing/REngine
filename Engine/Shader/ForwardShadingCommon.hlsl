@@ -22,6 +22,8 @@ struct VertexShaderOutput
     float3 Normal : NORMAL;
     float3 Tangent : BINORMAL;
     float2 UV : TEXCOORD;
+    float3 TangentToWorld0 : TEXCOORD1;
+    float3 TangentToWorld2 : TEXCOORD2;
 };
 
 cbuffer ObjectConstantBuffer : register(b0)
