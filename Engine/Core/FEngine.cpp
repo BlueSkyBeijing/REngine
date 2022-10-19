@@ -10,6 +10,10 @@
 #include "UWorld.h"
 #include "UCamera.h"
 
+//disable chinese typewriting
+#include <imm.h>  
+#pragma comment (lib ,"imm32.lib") 
+
 
 FEngine::FEngine() :
     mHeartbeat(true),
@@ -156,6 +160,9 @@ void FEngine::createWindow()
         //print error
         return;
     }
+
+    //disable chinese typewriting
+    ImmAssociateContext(mWindowHandle, NULL);
 
     ShowWindow(mWindowHandle, SW_SHOW);
     UpdateWindow(mWindowHandle);
