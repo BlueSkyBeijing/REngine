@@ -5,9 +5,9 @@
 struct VertexShaderInput
 {
     float3 Pos : POSITION;
-    float3 Normal : NORMAL;
+    float4 Normal : NORMAL;
     float2 UV : TEXCOORD;
-    float3 Tangent : BINORMAL;
+    float3 Tangent : TANGENT;
 #ifdef GPU_SKIN
     uint4 BoneIndices  : BONEINDICES;
     float4 BoneWeights : WEIGHTS;
@@ -19,11 +19,12 @@ struct VertexShaderOutput
     float4 Pos : SV_POSITION;
     float4 ShadowPosH : POSITION0;
     float4 PosW : POSITION1;
-    float3 Normal : NORMAL;
-    float3 Tangent : BINORMAL;
+    float4 Normal : NORMAL;
+    float3 Tangent : TANGENT;
     float2 UV : TEXCOORD;
-    float3 TangentToWorld0 : TEXCOORD1;
-    float3 TangentToWorld2 : TEXCOORD2;
+    float3 TangentToWorld0 : TEXCOORD1_centroid;
+    float4 TangentToWorld2 : TEXCOORD2_centroid;
+
 };
 
 cbuffer ObjectConstantBuffer : register(b0)

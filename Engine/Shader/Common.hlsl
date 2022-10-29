@@ -124,27 +124,39 @@ float3 TransformTangentNormalToWorld(float3x3 tangentToWorld, float3 tangentNorm
 	return normalize(float3(TransformTangentVectorToWorld(tangentToWorld, tangentNormal)));
 }
 
-float3x3 CalcTangentToLocal(float3 tangentX, float3 tangentZ, float tangentSign)
+float3x3 CalcTangentToLocal(float3 tangentX, float4 tangentZ, inout float tangentSign)
 {
-	float3 tangentY = cross(tangentZ, tangentX) * tangentSign;
+    tangentSign = tangentZ.w;
+	float3 tangentY = cross(tangentZ.xyz, tangentX) * tangentSign;
 
 	float3x3 result;
-	result[0] = cross(tangentY, tangentZ) * tangentSign;
+	result[0] = cross(tangentY, tangentZ.xyz) * tangentSign;
 	result[1] = tangentY;
-	result[2] = tangentZ;
+	result[2] = tangentZ.xyz;
 
 	return result;
 }
 
+float3x3 CalcTangentToWorld(float3x3 localToWorld, float3x3 tangentToLocal)
+{
+    // remove scaling
+    localToWorld[0] = normalize(localToWorld[0]);
+    localToWorld[1] = normalize(localToWorld[1]);
+    localToWorld[2] = normalize(localToWorld[2]);
+    half3x3 tangentToWorld = mul(tangentToLocal, localToWorld);
+
+    return tangentToWorld;
+}
+
 /** Assemble the transform from tangent space into world space */
-float3x3 AssembleTangentToWorld( float3 tangentToWorld0, float3 tangentToWorld2)
+float3x3 AssembleTangentToWorld( float3 tangentToWorld0, float4 tangentToWorld2)
 {
 	// Will not be orthonormal after interpolation. This perfectly matches xNormal.
 	// Any mismatch with xNormal will cause distortions for baked normal maps.
 
 	// Derive the third basis vector off of the other two.
 	// Flip based on the determinant sign
-	float3 tangentToWorld1 = cross(tangentToWorld2.xyz, tangentToWorld0);
+	float3 tangentToWorld1 = cross(tangentToWorld2.xyz, tangentToWorld0) * tangentToWorld2.w;
 	// Transform from tangent space to world space
 	return float3x3(tangentToWorld0, tangentToWorld1, tangentToWorld2.xyz);
 }

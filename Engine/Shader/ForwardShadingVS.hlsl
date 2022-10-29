@@ -16,25 +16,27 @@ VertexShaderOutput VSMain(VertexShaderInput vertexIn)
     for(int i = 0; i < 4; ++i)
     {
         pos += weights[i] * mul(float4(vertexIn.Pos, 1.0f), BoneTransforms[vertexIn.BoneIndices[i]]).xyz;
-        normal += weights[i] * mul(vertexIn.Normal, (float3x3)BoneTransforms[vertexIn.BoneIndices[i]]);
+        normal.xyz += weights[i] * mul(vertexIn.Normal.xyz, (float3x3)BoneTransforms[vertexIn.BoneIndices[i]]);
     }
 
     vertexIn.Pos = pos;
-    vertexIn.Normal = normal;
+    vertexIn.Normal.xyz = normal.xyz;
 #endif
-	
+
     float4x4 worldViewProj = mul(World, ViewProj);
     vertexOut.Pos = mul(float4(vertexIn.Pos, 1.0f), worldViewProj);
     vertexOut.PosW = mul(float4(vertexIn.Pos, 1.0f), World);
     vertexOut.ShadowPosH = mul(vertexOut.PosW, ShadowTransform);
-    vertexOut.Normal = normalize(mul(vertexIn.Normal, (float3x3) World));
+    vertexOut.Normal.xyz = normalize(mul(vertexIn.Normal.xyz, (float3x3) World));
+    vertexOut.Normal.w = vertexIn.Normal.w;
     vertexOut.Tangent = normalize(mul(vertexIn.Tangent, (float3x3) World));
     vertexOut.UV = vertexIn.UV;
     
-    float3x3 TangentToLocal = CalcTangentToLocal(vertexIn.Tangent, vertexIn.Normal, 1);
-    float3x3 TangentToWorld = mul(TangentToLocal, (float3x3) World);
-    vertexOut.TangentToWorld0 = float3(TangentToWorld[0]);
-    vertexOut.TangentToWorld2 = float3(TangentToWorld[2]);
+    float tangentSign;
+    float3x3 tangentToLocal = CalcTangentToLocal(vertexIn.Tangent, vertexIn.Normal, tangentSign);
+    float3x3 tangentToWorld = CalcTangentToWorld((float3x3) World, tangentToLocal);
+    vertexOut.TangentToWorld0 = float3(tangentToWorld[0]);
+    vertexOut.TangentToWorld2 = float4(tangentToWorld[2], tangentSign);
 
     return vertexOut;
 }

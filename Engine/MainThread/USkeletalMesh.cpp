@@ -18,11 +18,11 @@ void USkeletalMesh::Load()
     FRHIVertexLayout layout;
     FInputElementDesc inputLayout[] = {
     { "POSITION", 0, EPixelFormat::PF_R32G32B32_FLOAT, 0, 0,  ICF_PerVertexData, 0 },
-    { "NORMAL", 0, EPixelFormat::PF_R32G32B32_FLOAT, 0, 12, ICF_PerVertexData, 0 },
-    { "BINORMAL", 0, EPixelFormat::PF_R32G32B32_FLOAT, 0, 24, ICF_PerVertexData, 0 },
-    { "TEXCOORD", 0, EPixelFormat::PF_R32G32_FLOAT, 0, 36, ICF_PerVertexData, 0 },
-    { "BONEINDICES", 0, EPixelFormat::PF_R16G16B16A16_UINT, 0, 44, ICF_PerVertexData, 0 },
-    { "WEIGHTS", 0, EPixelFormat::PF_R32G32B32A32_FLOAT, 0, 52, ICF_PerVertexData, 0 } };
+    { "NORMAL", 0, EPixelFormat::PF_R32G32B32A32_FLOAT, 0, 12, ICF_PerVertexData, 0 },
+    { "TANGENT", 0, EPixelFormat::PF_R32G32B32_FLOAT, 0, 28, ICF_PerVertexData, 0 },
+    { "TEXCOORD", 0, EPixelFormat::PF_R32G32_FLOAT, 0, 40, ICF_PerVertexData, 0 },
+    { "BONEINDICES", 0, EPixelFormat::PF_R16G16B16A16_UINT, 0, 48, ICF_PerVertexData, 0 },
+    { "WEIGHTS", 0, EPixelFormat::PF_R32G32B32A32_FLOAT, 0, 56, ICF_PerVertexData, 0 } };
 
 
     layout.Elements.push_back(inputLayout[0]);

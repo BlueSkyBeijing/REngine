@@ -11,7 +11,7 @@ float4 PSMain(VertexShaderOutput pixelIn, bool IsFrontFace: SV_IsFrontFace) : SV
 {
     float twoSideSign = IsFrontFace ? -1 : 1;
     float3x3 tangentToWorld = AssembleTangentToWorld(pixelIn.TangentToWorld0, pixelIn.TangentToWorld2);
-    float4 noramlMap = NormalMap.Sample(NormalSamplerState, pixelIn.UV);
+    float4 noramlMap = normalize(NormalMap.Sample(NormalSamplerState, pixelIn.UV) * 2.0 - 1.0);
     float3 worldNormal = twoSideSign * TransformTangentNormalToWorld(tangentToWorld, noramlMap.xyz);
     float4 outColor;
     
