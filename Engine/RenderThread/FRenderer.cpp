@@ -109,10 +109,10 @@ void FRenderer::drawShadowPass()
     mRHI->Clear(false, clearColor, true, 1, true, 0);
 
     //static
-    const std::vector<FStaticMeshRenderProxy*>& staticRenderProxys = mScene->GetStaticOpaqueRenderProxys();
+    const std::vector<FMeshBatch*>& staticRenderProxys = mScene->GetStaticOpaqueMeshBatchs();
     for (auto it = staticRenderProxys.begin(); it != staticRenderProxys.end(); it++)
     {
-        FRenderProxy* renderProxy = *it;
+        FMeshBatch* renderProxy = *it;
 
         mRHI->BeginEvent(renderProxy->DebugName.c_str());
 
@@ -146,10 +146,10 @@ void FRenderer::drawShadowPass()
     }
 
     //dyamic
-    const std::vector<FSkeletalMeshRenderProxy*>& dynamicRenderProxys = mScene->GetDynamicOpaqueRenderProxys();
+    const std::vector<FMeshBatch*>& dynamicRenderProxys = mScene->GetDynamicOpaqueMeshBatchs();
     for (auto it = dynamicRenderProxys.begin(); it != dynamicRenderProxys.end(); it++)
     {
-        FRenderProxy* renderProxy = *it;
+        FMeshBatch* renderProxy = *it;
 
         mRHI->BeginEvent(renderProxy->DebugName.c_str());
 
@@ -261,10 +261,10 @@ void FRenderer::_drawSceneColorOpaque()
 {
     mRHI->BeginEvent("Opaque");
 
-    const std::vector<FStaticMeshRenderProxy*>& staticRenderProxys = mScene->GetStaticOpaqueRenderProxys();
+    const std::vector<FMeshBatch*>& staticRenderProxys = mScene->GetStaticOpaqueMeshBatchs();
     for (auto it = staticRenderProxys.begin(); it != staticRenderProxys.end(); it++)
     {
-        FRenderProxy* renderProxy = *it;
+        FMeshBatch* renderProxy = *it;
 
         mRHI->BeginEvent(renderProxy->DebugName.c_str());
 
@@ -300,10 +300,10 @@ void FRenderer::_drawSceneColorOpaque()
         mRHI->EndEvent();
     }
 
-    const std::vector<FSkeletalMeshRenderProxy*>& dynamicRenderProxys = mScene->GetDynamicOpaqueRenderProxys();
+    const std::vector<FMeshBatch*>& dynamicRenderProxys = mScene->GetDynamicOpaqueMeshBatchs();
     for (auto it = dynamicRenderProxys.begin(); it != dynamicRenderProxys.end(); it++)
     {
-        FRenderProxy* renderProxy = *it;
+        FMeshBatch* renderProxy = *it;
 
         mRHI->BeginEvent(renderProxy->DebugName.c_str());
 
@@ -346,16 +346,16 @@ void FRenderer::_drawSceneColorTranslucent()
 {
     mRHI->BeginEvent("Translucent");
 
-    std::vector<FStaticMeshRenderProxy*> staticRenderProxys = mScene->GetStaticTranslucentRenderProxys();
+    std::vector<FMeshBatch*> staticRenderProxys = mScene->GetStaticTranslucentMeshBatchs();
 
     const FView* view = mView;
-    std::sort(staticRenderProxys.begin(), staticRenderProxys.end(), [view](const FStaticMeshRenderProxy* renderProxyA, const FStaticMeshRenderProxy* renderProxyB) {
+    std::sort(staticRenderProxys.begin(), staticRenderProxys.end(), [view](const FMeshBatch* renderProxyA, const FMeshBatch* renderProxyB) {
         return (renderProxyA->Position - view->Position).norm() > (renderProxyB->Position - view->Position).norm();
     });
 
     for (auto it = staticRenderProxys.begin(); it != staticRenderProxys.end(); it++)
     {
-        FRenderProxy* renderProxy = *it;
+        FMeshBatch* renderProxy = *it;
 
         mRHI->BeginEvent(renderProxy->DebugName.c_str());
 
@@ -398,15 +398,15 @@ void FRenderer::_drawSceneColorTranslucent()
         mRHI->EndEvent();
     }
 
-    std::vector<FSkeletalMeshRenderProxy*> dynamicRenderProxys = mScene->GetDynamicTranslucentRenderProxys();
+    std::vector<FMeshBatch*> dynamicRenderProxys = mScene->GetDynamicTranslucentMeshBatchs();
 
-    std::sort(dynamicRenderProxys.begin(), dynamicRenderProxys.end(), [view](const FSkeletalMeshRenderProxy* renderProxyA, const FSkeletalMeshRenderProxy* renderProxyB) {
+    std::sort(dynamicRenderProxys.begin(), dynamicRenderProxys.end(), [view](const FMeshBatch* renderProxyA, const FMeshBatch* renderProxyB) {
         return (renderProxyA->Position - view->Position).norm() > (renderProxyB->Position - view->Position).norm();
     });
 
     for (auto it = dynamicRenderProxys.begin(); it != dynamicRenderProxys.end(); it++)
     {
-        FRenderProxy* renderProxy = *it;
+        FMeshBatch* renderProxy = *it;
 
         mRHI->BeginEvent(renderProxy->DebugName.c_str());
 

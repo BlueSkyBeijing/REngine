@@ -13,7 +13,6 @@
 #include "FMaterial.h"
 
 USkeletalMeshObject::USkeletalMeshObject() :
-    mMaterial(nullptr),
     mSkeletalMesh(nullptr)
 {
 }
@@ -26,7 +25,13 @@ void USkeletalMeshObject::Load()
 {
     mSkeletalMesh = dynamic_cast<USkeletalMesh*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_SkeletalMesh, FullResourcePath));
 
-    mMaterial = dynamic_cast<UMaterial*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Material, FullMaterialPath));
+    int32 numMat = FullMaterialPaths.size();
+    for (int i = 0; i < numMat; i++)
+    {
+        UMaterial* mat = dynamic_cast<UMaterial*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Material, FullMaterialPaths[i]));
+
+        mMaterials.push_back(mat);
+    }
 
     UAnimSequence* animSequence = dynamic_cast<UAnimSequence*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Animation, FullAnimSequencePath));
     animSequence->SeSkeleton(mSkeletalMesh->GetSkeleton());
@@ -41,7 +46,7 @@ void USkeletalMeshObject::Unload()
 {
     mSkeletalMesh = nullptr;
 
-    mMaterial = nullptr;
+    mMaterials.clear();
 
     delete mAnimSequence;
     mAnimSequence = nullptr;
@@ -68,12 +73,16 @@ void USkeletalMeshObject::createRenderProxy()
     initializer.VertexLayout = mSkeletalMesh->GetVertexLayout();
     initializer.Vertexes = mSkeletalMesh->GetVertexes();
     initializer.Indexes = mSkeletalMesh->GetIndexes();
-    initializer.VertexLayout = mSkeletalMesh->GetVertexLayout();
-    initializer.Material = mMaterial->Material;
+    std::vector<FMaterial*> materials;
+    for (int i = 0; i < mMaterials.size(); i++)
+    {
+        materials.push_back(mMaterials[i]->Material);
+    }
+    initializer.Materials = materials;
     initializer.Position = Position;
     initializer.Rotation = Rotation;
     initializer.Scale = Scale;
-    initializer.BlendMode = mMaterial->Material->BlendMode;
+    initializer.mSections = mSkeletalMesh->GetSections();
 
     mRenderProxy = new FSkeletalMeshRenderProxy(initializer);
     mRenderProxy->DebugName = Name;
@@ -84,8 +93,8 @@ void USkeletalMeshObject::createRenderProxy()
 
     ENQUEUE_RENDER_COMMAND([renderThread, renderProxy]
     {
-        renderThread->AddToScene(renderProxy);
         renderProxy->CreateRenderResource();
+        renderThread->AddToScene(renderProxy);
     });
 
 }

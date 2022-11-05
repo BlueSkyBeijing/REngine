@@ -37,10 +37,17 @@ public:
     {
         return mSkeleton;
     }
+
+    inline const std::vector<FStaticMeshSection>& GetSections() const
+    {
+        return mSections;
+    }
+
 private:
     std::vector<FSkeletalMeshVertex> mVertexes;
     std::vector<uint32> mIndexes;
     FRHIVertexLayout mVertexLayout;
+    std::vector<FStaticMeshSection> mSections;
     USkeleton* mSkeleton;
 };
 

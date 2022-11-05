@@ -13,7 +13,6 @@
 #include "FMaterial.h"
 
 UStaticMeshObject::UStaticMeshObject() :
-    mMaterial(nullptr),
     mStaticMesh(nullptr)
 {
 }
@@ -26,7 +25,13 @@ void UStaticMeshObject::Load()
 {
     mStaticMesh = dynamic_cast<UStaticMesh*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_StaticMesh, FullResourcePath));
 
-    mMaterial = dynamic_cast<UMaterial*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Material, FullMaterialPath));
+    int32 numMat = FullMaterialPaths.size();
+    for (int i = 0; i < numMat; i++)
+    {
+        UMaterial* mat = dynamic_cast<UMaterial*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Material, FullMaterialPaths[i]));
+
+        mMaterials.push_back(mat);
+    }
 
     //create render proxy
     createRenderProxy();
@@ -36,7 +41,7 @@ void UStaticMeshObject::Unload()
 {
     mStaticMesh = nullptr;
 
-    mMaterial = nullptr;
+    mMaterials.clear();
 }
 
 void UStaticMeshObject::createRenderProxy()
@@ -46,12 +51,16 @@ void UStaticMeshObject::createRenderProxy()
     initializer.VertexLayout = mStaticMesh->GetVertexLayout();
     initializer.Vertexes = mStaticMesh->GetVertexes();
     initializer.Indexes = mStaticMesh->GetIndexes();
-    initializer.VertexLayout = mStaticMesh->GetVertexLayout();
-    initializer.Material = mMaterial->Material;
+    std::vector<FMaterial*> materials;
+    for (int i = 0; i < mMaterials.size(); i++)
+    {
+        materials.push_back(mMaterials[i]->Material);
+    }
+    initializer.Materials = materials;
     initializer.Position = Position;
     initializer.Rotation = Rotation;
     initializer.Scale = Scale;
-    initializer.BlendMode = mMaterial->Material->BlendMode;
+    initializer.mSections = mStaticMesh->GetSections();
 
     mRenderProxy = new FStaticMeshRenderProxy(initializer);
     mRenderProxy->DebugName = Name;
@@ -62,8 +71,8 @@ void UStaticMeshObject::createRenderProxy()
 
     ENQUEUE_RENDER_COMMAND([renderThread, renderProxy]
     {
-        renderThread->AddToScene(renderProxy);
         renderProxy->CreateRenderResource();
+        renderThread->AddToScene(renderProxy);
     });
 
 }

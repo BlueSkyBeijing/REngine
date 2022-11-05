@@ -44,8 +44,9 @@ public:
     FVector3 Position;
     FQuat Rotation;
     FVector3 Scale;
-    FMaterial* Material;
-    EBlendMode BlendMode;
+    std::vector<FMaterial*> Materials;
+    std::vector<FStaticMeshSection> mSections;
+    std::vector<FMeshBatch*> MeshBatchs;
 
 };
 
@@ -61,17 +62,17 @@ public:
     FVector3 Position;
     FQuat Rotation;
     FVector3 Scale;
-    FMaterial* Material;
-    EBlendMode BlendMode;
+    std::vector<FMaterial*> Materials;
+    std::vector<FStaticMeshSection> mSections;
+    std::vector<FMeshBatch*> MeshBatchs;
 
 };
 
-
-class FRenderProxy
+class FMeshBatch
 {
 public:
-    FRenderProxy();
-    virtual ~FRenderProxy();
+    FMeshBatch();
+    virtual ~FMeshBatch();
 
     virtual void CreateRenderResource();
     virtual void UpdateRenderResource();
@@ -92,7 +93,44 @@ public:
     FVector3 Position;
     FQuat Rotation;
     FVector3 Scale;
-    EBlendMode BlendMode;
+    FObjectConstant ObjectConstants;
+
+    std::string DebugName;
+
+};
+
+class FSkeletalMeshBatch : public FMeshBatch
+{
+public:
+    FSkeletalMeshBatch();
+    virtual ~FSkeletalMeshBatch();
+
+public:
+    std::vector<FMatrix4x4> BoneFinalTransforms;
+
+};
+
+class FRenderProxy
+{
+public:
+    FRenderProxy();
+    virtual ~FRenderProxy();
+
+    virtual void CreateRenderResource();
+    virtual void UpdateRenderResource();
+    virtual void ReleaseRenderResource();
+
+public:
+    std::vector<FMaterial*> Materials;
+    FRHIVertexBuffer* VertexBuffer;
+    FRHIIndexBuffer* IndexBuffer;
+    FRHIVertexLayout VertexLayout;
+    FVector3 Position;
+    FQuat Rotation;
+    FVector3 Scale;
+    
+
+    std::vector<FMeshBatch> MeshBatchs;
 
     std::string DebugName;
 
@@ -115,6 +153,8 @@ private:
 
     std::vector<FStaticMeshVertex> mVertexes;
     std::vector<uint32> mIndexes;
+    std::vector<FStaticMeshSection> mSections;
+
 };
 
 class FSkeletalMeshRenderProxy : public FRenderProxy
@@ -135,4 +175,6 @@ private:
 
     std::vector<FSkeletalMeshVertex> mVertexes;
     std::vector<uint32> mIndexes;
+    std::vector<FStaticMeshSection> mSections;
+
 };

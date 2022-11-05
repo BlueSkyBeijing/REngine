@@ -32,7 +32,13 @@ void UPlayer::Load()
     mSkeletalMesh = dynamic_cast<USkeletalMesh*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_SkeletalMesh, mSkeletalMeshFilePath));
     mSkeletalMesh->Name = "Player";
 
-    mMaterial = dynamic_cast<UMaterial*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Material, FullMaterialPath));
+    int32 numMat = FullMaterialPaths.size();
+    for (int i = 0; i < numMat; i++)
+    {
+        UMaterial* mat = dynamic_cast<UMaterial*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Material, FullMaterialPaths[i]));
+
+        mMaterials.push_back(mat);
+    }
 
     const std::string animFileName0 =  FConfigManager::DefaultAnimSequencePath + mStateAnimMap[EPlayerState::PS_Stand] + FConfigManager::DefaultAnimSequenceFileSuffix;
     const std::string animFileName1 = FConfigManager::DefaultAnimSequencePath + mStateAnimMap[EPlayerState::PS_Walk] + FConfigManager::DefaultAnimSequenceFileSuffix;
@@ -72,7 +78,8 @@ void UPlayer::Unload()
 
     mSkeletalMesh = nullptr;
 
-    mMaterial = nullptr;
+    mMaterials.clear();
+
 
     delete mAnimSequenceBlender;
     mAnimSequenceBlender = nullptr;
@@ -167,8 +174,12 @@ void UPlayer::createRenderProxy()
     initializer.VertexLayout = mSkeletalMesh->GetVertexLayout();
     initializer.Vertexes = mSkeletalMesh->GetVertexes();
     initializer.Indexes = mSkeletalMesh->GetIndexes();
-    initializer.VertexLayout = mSkeletalMesh->GetVertexLayout();
-    initializer.Material = mMaterial->Material;
+    std::vector<FMaterial*> materials;
+    for (int i = 0; i < mMaterials.size(); i++)
+    {
+        materials.push_back(mMaterials[i]->Material);
+    }
+    initializer.Materials = materials;
     initializer.Position = Position;
     initializer.Rotation = Rotation;
     initializer.Scale = Scale;
@@ -182,8 +193,8 @@ void UPlayer::createRenderProxy()
 
     ENQUEUE_RENDER_COMMAND([renderThread, renderProxy]
     {
-        renderThread->AddToScene(renderProxy);
         renderProxy->CreateRenderResource();
+        renderThread->AddToScene(renderProxy);
     });
 
 }

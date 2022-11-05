@@ -51,6 +51,16 @@ void USkeletalMesh::Load()
     mIndexes.resize(numIndexes);
     skeletalMeshFile.read((char*)mIndexes.data(), numIndexes * sizeof(uint32));
 
+    int32 numSection;
+    skeletalMeshFile.read((char*)&numSection, sizeof(int32));
+    for (int32 iSection = 0; iSection < numSection; iSection++)
+    {
+        FStaticMeshSection section;
+        skeletalMeshFile.read((char*)&section, sizeof(FStaticMeshSection));
+
+        mSections.push_back(section);
+    }
+
     std::string ResourceName;
     int32 stringSize;
     skeletalMeshFile.read((char*)&stringSize, sizeof(int32));

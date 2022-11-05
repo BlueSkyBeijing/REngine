@@ -54,6 +54,7 @@ class FScene;
 class FView;
 class FViewPort;
 class FRenderProxy;
+class FMeshBatch;
 class FMaterial;
 class FDirectionalLight;
 class FShaderInfo;

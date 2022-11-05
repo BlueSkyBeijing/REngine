@@ -30,8 +30,14 @@ public:
         return mVertexLayout;
     }
 
+    inline const std::vector<FStaticMeshSection>& GetSections() const
+    {
+        return mSections;
+    }
+
 private:
     std::vector<FStaticMeshVertex> mVertexes;
     std::vector<uint32> mIndexes;
     FRHIVertexLayout mVertexLayout;
+    std::vector<FStaticMeshSection> mSections;
 };

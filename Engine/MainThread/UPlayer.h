@@ -42,7 +42,7 @@ public:
 
     void Update(float deltaSeconds);
 
-    std::string FullMaterialPath;
+    std::vector<std::string> FullMaterialPaths;
 
 protected:
     virtual void createRenderProxy() override;
@@ -50,7 +50,7 @@ protected:
 private:
     std::string mSkeletalMeshFilePath;
     USkeletalMesh* mSkeletalMesh;
-    UMaterial* mMaterial;
+    std::vector<UMaterial*> mMaterials;
     FRenderProxy* mRenderProxy;
     FVector3 mOrientation;
 

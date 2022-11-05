@@ -74,8 +74,16 @@ void UWorld::Load()
         int32 stringSize;
         mapFile.read((char*)&stringSize, sizeof(int32));
         mapFile.read((char*)data.ResourceName.data(), stringSize);
-        mapFile.read((char*)&stringSize, sizeof(int32));
-        mapFile.read((char*)data.MaterialName.data(), stringSize);
+
+        int32 numMaterial;
+        mapFile.read((char*)&numMaterial, sizeof(int32));
+        for (int32 iMat = 0; iMat < numMaterial; iMat++)
+        {
+            std::string materialName;
+            mapFile.read((char*)&stringSize, sizeof(int32));
+            mapFile.read((char*)materialName.data(), stringSize);
+            data.MaterialNames.push_back(materialName);
+        }
 
         staticMeshObjectDatas.push_back(data);
     }
@@ -95,8 +103,16 @@ void UWorld::Load()
         int32 stringSizeAnim;
         mapFile.read((char*)&stringSizeAnim, sizeof(int32));
         mapFile.read((char*)data.AnimationName.data(), stringSizeAnim);
-        mapFile.read((char*)&stringSize, sizeof(int32));
-        mapFile.read((char*)data.MaterialName.data(), stringSize);
+
+        int32 numMaterial;
+        mapFile.read((char*)&numMaterial, sizeof(int32));
+        for (int32 iMat = 0; iMat < numMaterial; iMat++)
+        {
+            std::string materialName;
+            mapFile.read((char*)&stringSize, sizeof(int32));
+            mapFile.read((char*)materialName.data(), stringSize);
+            data.MaterialNames.push_back(materialName);
+        }
 
         skeletalMeshObjectDatas.push_back(data);
     }
@@ -172,9 +188,15 @@ void UWorld::Load()
             std::string(staticMeshObjectDatas[staticMeshObjectDataIndex].ResourceName.c_str()) +
             FConfigManager::DefaultStaticMeshFileSuffix;
         staticMeshObject->Name = std::string(staticMeshObjectDatas[staticMeshObjectDataIndex].ResourceName.c_str());
-        staticMeshObject->FullMaterialPath = FConfigManager::DefaultMaterialPath +
-            std::string(staticMeshObjectDatas[staticMeshObjectDataIndex].MaterialName.c_str()) +
-            FConfigManager::DefaultMaterialFileSuffix;
+        int32 numMat = staticMeshObjectDatas[staticMeshObjectDataIndex].MaterialNames.size();
+        for (int i = 0; i < numMat; i++)
+        {
+            std::string materialName = FConfigManager::DefaultMaterialPath +
+                std::string(staticMeshObjectDatas[staticMeshObjectDataIndex].MaterialNames[i].c_str()) +
+                FConfigManager::DefaultMaterialFileSuffix;
+
+            staticMeshObject->FullMaterialPaths.push_back(materialName);
+        }
 
         staticMeshObject->Load();
 
@@ -199,9 +221,15 @@ void UWorld::Load()
         skeletalMeshObject->FullAnimSequencePath = FConfigManager::DefaultAnimSequencePath +
             std::string(skeletalMeshObjectDatas[skeletalMeshObjectDataIndex].AnimationName.c_str()) +
             FConfigManager::DefaultAnimSequenceFileSuffix;
-        skeletalMeshObject->FullMaterialPath = FConfigManager::DefaultMaterialPath +
-            std::string(skeletalMeshObjectDatas[skeletalMeshObjectDataIndex].MaterialName.c_str()) +
-            FConfigManager::DefaultMaterialFileSuffix;
+        int32 numMat = skeletalMeshObjectDatas[skeletalMeshObjectDataIndex].MaterialNames.size();
+        for (int i = 0; i < numMat; i++)
+        {
+            std::string materialName = FConfigManager::DefaultMaterialPath +
+                std::string(skeletalMeshObjectDatas[skeletalMeshObjectDataIndex].MaterialNames[i].c_str()) +
+                FConfigManager::DefaultMaterialFileSuffix;
+
+            skeletalMeshObject->FullMaterialPaths.push_back(materialName);
+        }
 
         skeletalMeshObject->Load();
 
@@ -219,9 +247,16 @@ void UWorld::Load()
     });
 
     mPlayer = new UPlayer();
-    mPlayer->FullMaterialPath = FConfigManager::DefaultMaterialPath +
-        std::string(skeletalMeshObjectDatas[0].MaterialName.c_str()) +
-        FConfigManager::DefaultMaterialFileSuffix;
+    int32 numMat = skeletalMeshObjectDatas[0].MaterialNames.size();
+    for (int i = 0; i < numMat; i++)
+    {
+        std::string materialName = FConfigManager::DefaultMaterialPath +
+            std::string(skeletalMeshObjectDatas[0].MaterialNames[i].c_str()) +
+            FConfigManager::DefaultMaterialFileSuffix;
+
+        mPlayer->FullMaterialPaths.push_back(materialName);
+    }
+
     mPlayer->SetSkeletalMeshFilePath((*mSkeletalMeshObjects.begin())->FullResourcePath);
     mPlayer->Load();
     TSingleton<FPlayerController>::GetInstance().SetPlayer(mPlayer);

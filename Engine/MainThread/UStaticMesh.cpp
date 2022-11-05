@@ -46,6 +46,16 @@ void UStaticMesh::Load()
     mIndexes.resize(numIndexes);
     staticMeshFile.read((char*)mIndexes.data(), numIndexes * sizeof(uint32));
 
+    int32 numSection;
+    staticMeshFile.read((char*)&numSection, sizeof(int32));
+    for (int32 iSection = 0; iSection < numSection; iSection++)
+    {
+        FStaticMeshSection section;
+        staticMeshFile.read((char*)&section, sizeof(FStaticMeshSection));
+
+        mSections.push_back(section);
+    }
+
     staticMeshFile.close();
 }
 
