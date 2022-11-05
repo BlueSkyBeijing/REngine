@@ -93,9 +93,20 @@ public:
     FVector3 Position;
     FQuat Rotation;
     FVector3 Scale;
-    FObjectConstant ObjectConstants;
 
     std::string DebugName;
+
+};
+
+
+class FStaticMeshBatch : public FMeshBatch
+{
+public:
+    FStaticMeshBatch();
+    virtual ~FStaticMeshBatch();
+
+public:
+    FObjectConstant ObjectConstants;
 
 };
 
@@ -106,6 +117,7 @@ public:
     virtual ~FSkeletalMeshBatch();
 
 public:
+    FSkeletonMeshConstant ObjectConstants;
     std::vector<FMatrix4x4> BoneFinalTransforms;
 
 };
@@ -128,9 +140,8 @@ public:
     FVector3 Position;
     FQuat Rotation;
     FVector3 Scale;
-    
 
-    std::vector<FMeshBatch> MeshBatchs;
+    std::vector<FMeshBatch*> MeshBatchs;
 
     std::string DebugName;
 
@@ -149,8 +160,6 @@ public:
     virtual void ReleaseRenderResource() override;
 
 private:
-    FObjectConstant mObjectConstants;
-
     std::vector<FStaticMeshVertex> mVertexes;
     std::vector<uint32> mIndexes;
     std::vector<FStaticMeshSection> mSections;
@@ -168,11 +177,7 @@ public:
     virtual void UpdateRenderResource() override;
     virtual void ReleaseRenderResource() override;
 
-    std::vector<FMatrix4x4> BoneFinalTransforms;
-
 private:
-    FSkeletonMeshConstant mObjectConstants;
-
     std::vector<FSkeletalMeshVertex> mVertexes;
     std::vector<uint32> mIndexes;
     std::vector<FStaticMeshSection> mSections;

@@ -55,8 +55,11 @@ void USkeletalMeshObject::Unload()
 void USkeletalMeshObject::Update(float deltaSeconds)
 {
     mAnimSequence->Update(deltaSeconds);
-
-    dynamic_cast<FSkeletalMeshRenderProxy*>(mRenderProxy)->BoneFinalTransforms = mAnimSequence->BoneFinalTransforms;
+    for (int i = 0; i < mRenderProxy->MeshBatchs.size(); i++)
+    {
+        FSkeletalMeshBatch* meshBatch = dynamic_cast<FSkeletalMeshBatch*>(mRenderProxy->MeshBatchs[i]);
+        meshBatch->BoneFinalTransforms = mAnimSequence->BoneFinalTransforms;
+    }
 
     FRenderThread* renderThread = TSingleton<FEngine>::GetInstance().GetRenderThread();
     FRenderProxy* renderProxy = mRenderProxy;

@@ -109,22 +109,22 @@ void FRenderer::drawShadowPass()
     mRHI->Clear(false, clearColor, true, 1, true, 0);
 
     //static
-    const std::vector<FMeshBatch*>& staticRenderProxys = mScene->GetStaticOpaqueMeshBatchs();
-    for (auto it = staticRenderProxys.begin(); it != staticRenderProxys.end(); it++)
+    const std::vector<FMeshBatch*>& staticMeshBatches = mScene->GetStaticOpaqueMeshBatchs();
+    for (auto it = staticMeshBatches.begin(); it != staticMeshBatches.end(); it++)
     {
-        FMeshBatch* renderProxy = *it;
+        FMeshBatch* meshBatch = *it;
 
-        mRHI->BeginEvent(renderProxy->DebugName.c_str());
+        mRHI->BeginEvent(meshBatch->DebugName.c_str());
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = renderProxy->Material->VertexShaderShadow;
-        info.PixelShader = renderProxy->Material->PixelShaderShadow;
-        info.VertexLayout = &(renderProxy->VertexLayout);
+        info.VertexShader = meshBatch->Material->VertexShaderShadow;
+        info.PixelShader = meshBatch->Material->PixelShaderShadow;
+        info.VertexLayout = &(meshBatch->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = true;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
-        if (renderProxy->Material->TwoSided)
+        if (meshBatch->Material->TwoSided)
         {
             info.RasterizerState.CullMode = CM_None;
         }
@@ -133,35 +133,35 @@ void FRenderer::drawShadowPass()
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
-        mRHI->SetVertexBuffer(renderProxy->VertexBuffer);
-        mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
-        mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
+        mRHI->SetVertexBuffer(meshBatch->VertexBuffer);
+        mRHI->SetIndexBuffer(meshBatch->IndexBuffer);
+        mRHI->SetConstantBuffer(meshBatch->ConstantBuffer, 0);
         mRHI->SetConstantBuffer(mShadowPassConstantBuffer, 1);
-        mRHI->SetTexture2D(renderProxy->Material->GetTexture("BaseColor"), 0);
-        mRHI->SetTexture2D(renderProxy->Material->GetTexture("NormalMap"), 4);
+        mRHI->SetTexture2D(meshBatch->Material->GetTexture("BaseColor"), 0);
+        mRHI->SetTexture2D(meshBatch->Material->GetTexture("NormalMap"), 4);
 
-        mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
+        mRHI->DrawIndexedInstanced(meshBatch->IndexCountPerInstance, meshBatch->InstanceCount, meshBatch->StartIndexLocation, meshBatch->BaseVertexLocation, meshBatch->StartInstanceLocation);
 
         mRHI->EndEvent();
     }
 
     //dyamic
-    const std::vector<FMeshBatch*>& dynamicRenderProxys = mScene->GetDynamicOpaqueMeshBatchs();
-    for (auto it = dynamicRenderProxys.begin(); it != dynamicRenderProxys.end(); it++)
+    const std::vector<FMeshBatch*>& dynamicMeshBatches = mScene->GetDynamicOpaqueMeshBatchs();
+    for (auto it = dynamicMeshBatches.begin(); it != dynamicMeshBatches.end(); it++)
     {
-        FMeshBatch* renderProxy = *it;
+        FMeshBatch* meshBatch = *it;
 
-        mRHI->BeginEvent(renderProxy->DebugName.c_str());
+        mRHI->BeginEvent(meshBatch->DebugName.c_str());
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = renderProxy->Material->VertexShaderShadowGPUSkin;
-        info.PixelShader = renderProxy->Material->PixelShaderShadow;
-        info.VertexLayout = &(renderProxy->VertexLayout);
+        info.VertexShader = meshBatch->Material->VertexShaderShadowGPUSkin;
+        info.PixelShader = meshBatch->Material->PixelShaderShadow;
+        info.VertexLayout = &(meshBatch->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = true;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
-        if (renderProxy->Material->TwoSided)
+        if (meshBatch->Material->TwoSided)
         {
             info.RasterizerState.CullMode = CM_None;
         }
@@ -170,14 +170,14 @@ void FRenderer::drawShadowPass()
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
-        mRHI->SetVertexBuffer(renderProxy->VertexBuffer);
-        mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
-        mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
+        mRHI->SetVertexBuffer(meshBatch->VertexBuffer);
+        mRHI->SetIndexBuffer(meshBatch->IndexBuffer);
+        mRHI->SetConstantBuffer(meshBatch->ConstantBuffer, 0);
         mRHI->SetConstantBuffer(mShadowPassConstantBuffer, 1);
-        mRHI->SetTexture2D(renderProxy->Material->GetTexture("BaseColor"), 0);
-        mRHI->SetTexture2D(renderProxy->Material->GetTexture("NormalMap"), 4);
+        mRHI->SetTexture2D(meshBatch->Material->GetTexture("BaseColor"), 0);
+        mRHI->SetTexture2D(meshBatch->Material->GetTexture("NormalMap"), 4);
 
-        mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
+        mRHI->DrawIndexedInstanced(meshBatch->IndexCountPerInstance, meshBatch->InstanceCount, meshBatch->StartIndexLocation, meshBatch->BaseVertexLocation, meshBatch->StartInstanceLocation);
 
         mRHI->EndEvent();
     }
@@ -261,22 +261,22 @@ void FRenderer::_drawSceneColorOpaque()
 {
     mRHI->BeginEvent("Opaque");
 
-    const std::vector<FMeshBatch*>& staticRenderProxys = mScene->GetStaticOpaqueMeshBatchs();
-    for (auto it = staticRenderProxys.begin(); it != staticRenderProxys.end(); it++)
+    const std::vector<FMeshBatch*>& staticMeshBatches = mScene->GetStaticOpaqueMeshBatchs();
+    for (auto it = staticMeshBatches.begin(); it != staticMeshBatches.end(); it++)
     {
-        FMeshBatch* renderProxy = *it;
+        FMeshBatch* meshBatch = *it;
 
-        mRHI->BeginEvent(renderProxy->DebugName.c_str());
+        mRHI->BeginEvent(meshBatch->DebugName.c_str());
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = renderProxy->Material->VertexShader;
-        info.PixelShader = renderProxy->Material->PixelShader;
-        info.VertexLayout = &(renderProxy->VertexLayout);
+        info.VertexShader = meshBatch->Material->VertexShader;
+        info.PixelShader = meshBatch->Material->PixelShader;
+        info.VertexLayout = &(meshBatch->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = true;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
-        if (renderProxy->Material->TwoSided)
+        if (meshBatch->Material->TwoSided)
         {
             info.RasterizerState.CullMode = CM_None;
         }
@@ -285,37 +285,37 @@ void FRenderer::_drawSceneColorOpaque()
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
-        mRHI->SetVertexBuffer(renderProxy->VertexBuffer);
-        mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
-        mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
+        mRHI->SetVertexBuffer(meshBatch->VertexBuffer);
+        mRHI->SetIndexBuffer(meshBatch->IndexBuffer);
+        mRHI->SetConstantBuffer(meshBatch->ConstantBuffer, 0);
         mRHI->SetConstantBuffer(mSceneColorPassConstantBuffer, 1);
-        mRHI->SetTexture2D(renderProxy->Material->GetTexture("BaseColor"), 0);
-        mRHI->SetTextureCube(renderProxy->Material->EnvMap, 1);
+        mRHI->SetTexture2D(meshBatch->Material->GetTexture("BaseColor"), 0);
+        mRHI->SetTextureCube(meshBatch->Material->EnvMap, 1);
         mRHI->SetTexture2D(mShadowMap->DepthStencilTarget, 2);
-        mRHI->SetTexture2D(renderProxy->Material->PreIntegratedBRDF, 3);
-        mRHI->SetTexture2D(renderProxy->Material->GetTexture("NormalMap"), 4);
+        mRHI->SetTexture2D(meshBatch->Material->PreIntegratedBRDF, 3);
+        mRHI->SetTexture2D(meshBatch->Material->GetTexture("NormalMap"), 4);
 
-        mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
+        mRHI->DrawIndexedInstanced(meshBatch->IndexCountPerInstance, meshBatch->InstanceCount, meshBatch->StartIndexLocation, meshBatch->BaseVertexLocation, meshBatch->StartInstanceLocation);
 
         mRHI->EndEvent();
     }
 
-    const std::vector<FMeshBatch*>& dynamicRenderProxys = mScene->GetDynamicOpaqueMeshBatchs();
-    for (auto it = dynamicRenderProxys.begin(); it != dynamicRenderProxys.end(); it++)
+    const std::vector<FMeshBatch*>& dynamicMeshBatches = mScene->GetDynamicOpaqueMeshBatchs();
+    for (auto it = dynamicMeshBatches.begin(); it != dynamicMeshBatches.end(); it++)
     {
-        FMeshBatch* renderProxy = *it;
+        FMeshBatch* meshBatch = *it;
 
-        mRHI->BeginEvent(renderProxy->DebugName.c_str());
+        mRHI->BeginEvent(meshBatch->DebugName.c_str());
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = renderProxy->Material->VertexShaderGPUSkin;
-        info.PixelShader = renderProxy->Material->PixelShader;
-        info.VertexLayout = &(renderProxy->VertexLayout);
+        info.VertexShader = meshBatch->Material->VertexShaderGPUSkin;
+        info.PixelShader = meshBatch->Material->PixelShader;
+        info.VertexLayout = &(meshBatch->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = true;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
-        if (renderProxy->Material->TwoSided)
+        if (meshBatch->Material->TwoSided)
         {
             info.RasterizerState.CullMode = CM_None;
         }
@@ -324,17 +324,17 @@ void FRenderer::_drawSceneColorOpaque()
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
-        mRHI->SetVertexBuffer(renderProxy->VertexBuffer);
-        mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
-        mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
+        mRHI->SetVertexBuffer(meshBatch->VertexBuffer);
+        mRHI->SetIndexBuffer(meshBatch->IndexBuffer);
+        mRHI->SetConstantBuffer(meshBatch->ConstantBuffer, 0);
         mRHI->SetConstantBuffer(mSceneColorPassConstantBuffer, 1);
-        mRHI->SetTexture2D(renderProxy->Material->GetTexture("BaseColor"), 0);
-        mRHI->SetTextureCube(renderProxy->Material->EnvMap, 1);
+        mRHI->SetTexture2D(meshBatch->Material->GetTexture("BaseColor"), 0);
+        mRHI->SetTextureCube(meshBatch->Material->EnvMap, 1);
         mRHI->SetTexture2D(mShadowMap->DepthStencilTarget, 2);
-        mRHI->SetTexture2D(renderProxy->Material->PreIntegratedBRDF, 3);
-        mRHI->SetTexture2D(renderProxy->Material->GetTexture("NormalMap"), 4);
+        mRHI->SetTexture2D(meshBatch->Material->PreIntegratedBRDF, 3);
+        mRHI->SetTexture2D(meshBatch->Material->GetTexture("NormalMap"), 4);
 
-        mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
+        mRHI->DrawIndexedInstanced(meshBatch->IndexCountPerInstance, meshBatch->InstanceCount, meshBatch->StartIndexLocation, meshBatch->BaseVertexLocation, meshBatch->StartInstanceLocation);
 
         mRHI->EndEvent();
     }
@@ -346,25 +346,25 @@ void FRenderer::_drawSceneColorTranslucent()
 {
     mRHI->BeginEvent("Translucent");
 
-    std::vector<FMeshBatch*> staticRenderProxys = mScene->GetStaticTranslucentMeshBatchs();
+    std::vector<FMeshBatch*> staticMeshBatches = mScene->GetStaticTranslucentMeshBatchs();
 
     const FView* view = mView;
-    std::sort(staticRenderProxys.begin(), staticRenderProxys.end(), [view](const FMeshBatch* renderProxyA, const FMeshBatch* renderProxyB) {
+    std::sort(staticMeshBatches.begin(), staticMeshBatches.end(), [view](const FMeshBatch* renderProxyA, const FMeshBatch* renderProxyB) {
         return (renderProxyA->Position - view->Position).norm() > (renderProxyB->Position - view->Position).norm();
     });
 
-    for (auto it = staticRenderProxys.begin(); it != staticRenderProxys.end(); it++)
+    for (auto it = staticMeshBatches.begin(); it != staticMeshBatches.end(); it++)
     {
-        FMeshBatch* renderProxy = *it;
+        FMeshBatch* meshBatch = *it;
 
-        mRHI->BeginEvent(renderProxy->DebugName.c_str());
+        mRHI->BeginEvent(meshBatch->DebugName.c_str());
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = renderProxy->Material->VertexShader;
-        info.PixelShader = renderProxy->Material->PixelShader;
-        info.VertexLayout = &(renderProxy->VertexLayout);
+        info.VertexShader = meshBatch->Material->VertexShader;
+        info.PixelShader = meshBatch->Material->PixelShader;
+        info.VertexLayout = &(meshBatch->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = false;
         info.DepthStencilState.DepthTest = CF_Less;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
@@ -374,7 +374,7 @@ void FRenderer::_drawSceneColorTranslucent()
         info.BlendState.AlphaBlendOp = BO_Add;
         info.BlendState.AlphaSrcBlend = BF_Zero;
         info.BlendState.AlphaDestBlend = BF_One;
-        if (renderProxy->Material->TwoSided)
+        if (meshBatch->Material->TwoSided)
         {
             info.RasterizerState.CullMode = CM_None;
         }
@@ -383,39 +383,39 @@ void FRenderer::_drawSceneColorTranslucent()
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
-        mRHI->SetVertexBuffer(renderProxy->VertexBuffer);
-        mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
-        mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
+        mRHI->SetVertexBuffer(meshBatch->VertexBuffer);
+        mRHI->SetIndexBuffer(meshBatch->IndexBuffer);
+        mRHI->SetConstantBuffer(meshBatch->ConstantBuffer, 0);
         mRHI->SetConstantBuffer(mSceneColorPassConstantBuffer, 1);
-        mRHI->SetTexture2D(renderProxy->Material->GetTexture("BaseColor"), 0);
-        mRHI->SetTextureCube(renderProxy->Material->EnvMap, 1);
+        mRHI->SetTexture2D(meshBatch->Material->GetTexture("BaseColor"), 0);
+        mRHI->SetTextureCube(meshBatch->Material->EnvMap, 1);
         mRHI->SetTexture2D(mShadowMap->DepthStencilTarget, 2);
-        mRHI->SetTexture2D(renderProxy->Material->PreIntegratedBRDF, 3);
-        mRHI->SetTexture2D(renderProxy->Material->GetTexture("NormalMap"), 4);
+        mRHI->SetTexture2D(meshBatch->Material->PreIntegratedBRDF, 3);
+        mRHI->SetTexture2D(meshBatch->Material->GetTexture("NormalMap"), 4);
 
-        mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
+        mRHI->DrawIndexedInstanced(meshBatch->IndexCountPerInstance, meshBatch->InstanceCount, meshBatch->StartIndexLocation, meshBatch->BaseVertexLocation, meshBatch->StartInstanceLocation);
 
         mRHI->EndEvent();
     }
 
-    std::vector<FMeshBatch*> dynamicRenderProxys = mScene->GetDynamicTranslucentMeshBatchs();
+    std::vector<FMeshBatch*> dynamicMeshBatches = mScene->GetDynamicTranslucentMeshBatchs();
 
-    std::sort(dynamicRenderProxys.begin(), dynamicRenderProxys.end(), [view](const FMeshBatch* renderProxyA, const FMeshBatch* renderProxyB) {
+    std::sort(dynamicMeshBatches.begin(), dynamicMeshBatches.end(), [view](const FMeshBatch* renderProxyA, const FMeshBatch* renderProxyB) {
         return (renderProxyA->Position - view->Position).norm() > (renderProxyB->Position - view->Position).norm();
     });
 
-    for (auto it = dynamicRenderProxys.begin(); it != dynamicRenderProxys.end(); it++)
+    for (auto it = dynamicMeshBatches.begin(); it != dynamicMeshBatches.end(); it++)
     {
-        FMeshBatch* renderProxy = *it;
+        FMeshBatch* meshBatch = *it;
 
-        mRHI->BeginEvent(renderProxy->DebugName.c_str());
+        mRHI->BeginEvent(meshBatch->DebugName.c_str());
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = renderProxy->Material->VertexShaderGPUSkin;
-        info.PixelShader = renderProxy->Material->PixelShader;
-        info.VertexLayout = &(renderProxy->VertexLayout);
+        info.VertexShader = meshBatch->Material->VertexShaderGPUSkin;
+        info.PixelShader = meshBatch->Material->PixelShader;
+        info.VertexLayout = &(meshBatch->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = false;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
         info.BlendState.ColorBlendOp = BO_Add;
@@ -425,7 +425,7 @@ void FRenderer::_drawSceneColorTranslucent()
         info.BlendState.AlphaBlendOp = BO_Add;
         info.BlendState.AlphaSrcBlend = BF_Zero;
         info.BlendState.AlphaDestBlend = BF_One;
-        if (renderProxy->Material->TwoSided)
+        if (meshBatch->Material->TwoSided)
         {
             info.RasterizerState.CullMode = CM_None;
         }
@@ -434,17 +434,17 @@ void FRenderer::_drawSceneColorTranslucent()
 
         mRHI->SetPipelineState(pipelineState);
         mRHI->SetPrimitiveType(EPrimitiveType::PT_TriangleList);
-        mRHI->SetVertexBuffer(renderProxy->VertexBuffer);
-        mRHI->SetIndexBuffer(renderProxy->IndexBuffer);
-        mRHI->SetConstantBuffer(renderProxy->ConstantBuffer, 0);
+        mRHI->SetVertexBuffer(meshBatch->VertexBuffer);
+        mRHI->SetIndexBuffer(meshBatch->IndexBuffer);
+        mRHI->SetConstantBuffer(meshBatch->ConstantBuffer, 0);
         mRHI->SetConstantBuffer(mSceneColorPassConstantBuffer, 1);
-        mRHI->SetTexture2D(renderProxy->Material->GetTexture("BaseColor"), 0);
-        mRHI->SetTextureCube(renderProxy->Material->EnvMap, 1);
+        mRHI->SetTexture2D(meshBatch->Material->GetTexture("BaseColor"), 0);
+        mRHI->SetTextureCube(meshBatch->Material->EnvMap, 1);
         mRHI->SetTexture2D(mShadowMap->DepthStencilTarget, 2);
-        mRHI->SetTexture2D(renderProxy->Material->PreIntegratedBRDF, 3);
-        mRHI->SetTexture2D(renderProxy->Material->GetTexture("NormalMap"), 4);
+        mRHI->SetTexture2D(meshBatch->Material->PreIntegratedBRDF, 3);
+        mRHI->SetTexture2D(meshBatch->Material->GetTexture("NormalMap"), 4);
 
-        mRHI->DrawIndexedInstanced(renderProxy->IndexCountPerInstance, renderProxy->InstanceCount, renderProxy->StartIndexLocation, renderProxy->BaseVertexLocation, renderProxy->StartInstanceLocation);
+        mRHI->DrawIndexedInstanced(meshBatch->IndexCountPerInstance, meshBatch->InstanceCount, meshBatch->StartIndexLocation, meshBatch->BaseVertexLocation, meshBatch->StartInstanceLocation);
 
         mRHI->EndEvent();
     }

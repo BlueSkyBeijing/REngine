@@ -32,7 +32,7 @@ void UPlayer::Load()
     mSkeletalMesh = dynamic_cast<USkeletalMesh*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_SkeletalMesh, mSkeletalMeshFilePath));
     mSkeletalMesh->Name = "Player";
 
-    int32 numMat = FullMaterialPaths.size();
+    int32 numMat = (int32)FullMaterialPaths.size();
     for (int i = 0; i < numMat; i++)
     {
         UMaterial* mat = dynamic_cast<UMaterial*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Material, FullMaterialPaths[i]));
@@ -136,7 +136,12 @@ void UPlayer::Update(float deltaSeconds)
     mAnimSequenceBlender->Blend(mAnimTimeRing[mSrcState], mAnimWeightRing[mSrcState], mAnimTimeRing[mDestState], mAnimWeightRing[mDestState]);
 
     FSkeletalMeshRenderProxy* proxy = dynamic_cast<FSkeletalMeshRenderProxy*>(mRenderProxy);
-    proxy->BoneFinalTransforms = mAnimSequenceBlender->BoneFinalTransforms;
+    for (int i = 0; i < proxy->MeshBatchs.size(); i++)
+    {
+        FSkeletalMeshBatch* meshBatch = dynamic_cast<FSkeletalMeshBatch*>(mRenderProxy->MeshBatchs[i]);
+        meshBatch->BoneFinalTransforms = mAnimSequenceBlender->BoneFinalTransforms;
+    }
+
     proxy->Position = Position;
     proxy->Rotation = Rotation;
 
@@ -183,6 +188,7 @@ void UPlayer::createRenderProxy()
     initializer.Position = Position;
     initializer.Rotation = Rotation;
     initializer.Scale = Scale;
+    initializer.mSections = mSkeletalMesh->GetSections();
 
     mRenderProxy = new FSkeletalMeshRenderProxy(initializer);
     mRenderProxy->DebugName = Name;

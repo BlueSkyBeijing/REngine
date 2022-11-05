@@ -47,6 +47,8 @@ public:
     }
 
 private:
+    std::vector<FRenderProxy*> mRenderProxys;
+
     std::vector<FMeshBatch*> mStaticOpaqueMeshBatchs;
     std::vector<FMeshBatch*> mDynamicOpaqueMeshBatchs;
 

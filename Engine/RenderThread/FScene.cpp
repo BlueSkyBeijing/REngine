@@ -23,27 +23,36 @@ void FScene::UnInit()
 {
     for (auto it = mStaticTranslucentMeshBatchs.begin(); it != mStaticTranslucentMeshBatchs.end(); it++)
     {
-        FMeshBatch* renderProxy = *it;
-        renderProxy->ReleaseRenderResource();
-        delete renderProxy;
+        FMeshBatch* meshBatch = *it;
+        meshBatch->ReleaseRenderResource();
+        delete meshBatch;
     }
     mStaticTranslucentMeshBatchs.clear();
 
     for (auto it = mStaticOpaqueMeshBatchs.begin(); it != mStaticOpaqueMeshBatchs.end(); it++)
     {
-        FMeshBatch* renderProxy = *it;
-        renderProxy->ReleaseRenderResource();
-        delete renderProxy;
+        FMeshBatch* meshBatch = *it;
+        meshBatch->ReleaseRenderResource();
+        delete meshBatch;
     }
     mStaticOpaqueMeshBatchs.clear();
 
     for (auto it = mDynamicOpaqueMeshBatchs.begin(); it != mDynamicOpaqueMeshBatchs.end(); it++)
     {
-        FMeshBatch* renderProxy = *it;
+        FMeshBatch* meshBatch = *it;
+        meshBatch->ReleaseRenderResource();
+        delete meshBatch;
+    }
+    mDynamicOpaqueMeshBatchs.clear();
+
+    for (auto it = mRenderProxys.begin(); it != mRenderProxys.end(); it++)
+    {
+        FRenderProxy* renderProxy = *it;
         renderProxy->ReleaseRenderResource();
         delete renderProxy;
     }
-    mDynamicOpaqueMeshBatchs.clear();
+    mRenderProxys.clear();
+
 
     for (auto it = mPointLights.begin(); it != mPointLights.end(); it++)
     {
@@ -62,6 +71,8 @@ void FScene::UnInit()
 void FScene::AddRenderable(FRenderProxy* renderProxy)
 {
     assert(renderProxy != nullptr);
+    mRenderProxys.push_back(renderProxy);
+
     FStaticMeshRenderProxy* staticRenderProxy = dynamic_cast<FStaticMeshRenderProxy*>(renderProxy);
     if (staticRenderProxy != nullptr)
     {
@@ -70,11 +81,11 @@ void FScene::AddRenderable(FRenderProxy* renderProxy)
             FMaterial* mat = staticRenderProxy->Materials[i];
             if (mat->BlendMode == BM_Translucent)
             {
-                mStaticTranslucentMeshBatchs.push_back(&staticRenderProxy->MeshBatchs[i]);
+                mStaticTranslucentMeshBatchs.push_back(staticRenderProxy->MeshBatchs[i]);
             }
             else
             {
-                mStaticOpaqueMeshBatchs.push_back(&staticRenderProxy->MeshBatchs[i]);
+                mStaticOpaqueMeshBatchs.push_back(staticRenderProxy->MeshBatchs[i]);
             }
 
         }
@@ -89,11 +100,11 @@ void FScene::AddRenderable(FRenderProxy* renderProxy)
             FMaterial* mat = dynamicRenderProxy->Materials[i];
             if (mat->BlendMode == BM_Translucent)
             {
-                mDynamicTranslucentMeshBatchs.push_back(&dynamicRenderProxy->MeshBatchs[i]);
+                mDynamicTranslucentMeshBatchs.push_back(dynamicRenderProxy->MeshBatchs[i]);
             }
             else
             {
-                mDynamicOpaqueMeshBatchs.push_back(&dynamicRenderProxy->MeshBatchs[i]);
+                mDynamicOpaqueMeshBatchs.push_back(dynamicRenderProxy->MeshBatchs[i]);
             }
         }
     }

@@ -50,7 +50,24 @@ void FMeshBatch::UpdateRenderResource()
 
 void FMeshBatch::ReleaseRenderResource()
 {
+    delete  ConstantBuffer;
+    ConstantBuffer = nullptr;
+}
 
+FStaticMeshBatch::FStaticMeshBatch()
+{
+}
+
+FStaticMeshBatch::~FStaticMeshBatch()
+{
+}
+
+FSkeletalMeshBatch::FSkeletalMeshBatch()
+{
+}
+
+FSkeletalMeshBatch::~FSkeletalMeshBatch()
+{
 }
 
 
@@ -104,50 +121,54 @@ void FStaticMeshRenderProxy::CreateRenderResource()
     MeshBatchs.resize(mSections.size());
     for (int i = 0; i < mSections.size(); i++)
     {
-        MeshBatchs[i].VertexLayout = VertexLayout;
-        MeshBatchs[i].VertexBuffer = VertexBuffer;
-        MeshBatchs[i].IndexBuffer = IndexBuffer;
+        FStaticMeshBatch* meshBatch = new FStaticMeshBatch();
+        MeshBatchs[i] = meshBatch;
+        meshBatch->VertexLayout = VertexLayout;
+        meshBatch->VertexBuffer = VertexBuffer;
+        meshBatch->IndexBuffer = IndexBuffer;
 
-        MeshBatchs[i].ObjectConstants.World.setIdentity();
+        meshBatch->ObjectConstants.World.setIdentity();
         FMatrix3x3 rotation = Rotation.toRotationMatrix();
-        MeshBatchs[i].ObjectConstants.World.block<3, 3>(0, 0) = rotation;
-        MeshBatchs[i].ObjectConstants.World.block<1, 3>(3, 0) = Position;
+        meshBatch->ObjectConstants.World.block<3, 3>(0, 0) = rotation;
+        meshBatch->ObjectConstants.World.block<1, 3>(3, 0) = Position;
 
         FMatrix4x4 scaleMatrix;
         scaleMatrix.setIdentity();
         scaleMatrix(0, 0) = Scale(0);
         scaleMatrix(1, 1) = Scale(1);
         scaleMatrix(2, 2) = Scale(2);
-        MeshBatchs[i].ObjectConstants.World = scaleMatrix * MeshBatchs[i].ObjectConstants.World;
+        meshBatch->ObjectConstants.World = scaleMatrix * meshBatch->ObjectConstants.World;
 
         FMaterial* material = Materials[mSections[i].MaterialIndex];
-        MeshBatchs[i].ObjectConstants.Metallic = material->Metallic;
-        MeshBatchs[i].ObjectConstants.Specular = material->Specular;
-        MeshBatchs[i].ObjectConstants.Roughness = material->Roughness;
-        MeshBatchs[i].ObjectConstants.Opacity = material->Opacity;
+        meshBatch->ObjectConstants.Metallic = material->Metallic;
+        meshBatch->ObjectConstants.Specular = material->Specular;
+        meshBatch->ObjectConstants.Roughness = material->Roughness;
+        meshBatch->ObjectConstants.Opacity = material->Opacity;
 
-        MeshBatchs[i].ObjectConstants.EmissiveColor = material->EmissiveColor;
-        MeshBatchs[i].ObjectConstants.SubsurfaceColor = material->SubsurfaceColor;
+        meshBatch->ObjectConstants.EmissiveColor = material->EmissiveColor;
+        meshBatch->ObjectConstants.SubsurfaceColor = material->SubsurfaceColor;
 
-        MeshBatchs[i].ConstantBuffer = rhi->CreateConstantBuffer(sizeof(MeshBatchs[i].ObjectConstants), (uint8*)&MeshBatchs[i].ObjectConstants);
+        meshBatch->ConstantBuffer = rhi->CreateConstantBuffer(sizeof(meshBatch->ObjectConstants), (uint8*)&meshBatch->ObjectConstants);
 
         material->Init();
 
+        meshBatch->DebugName = DebugName;
+
         const bool isTranslucent = material->BlendMode == BM_Translucent;
 
-        MeshBatchs[i].Material = material;
-        MeshBatchs[i].IndexCountPerInstance = static_cast<uint32>(mIndexes.size());
-        MeshBatchs[i].InstanceCount = 1;
-        MeshBatchs[i].StartIndexLocation = 0;
-        MeshBatchs[i].BaseVertexLocation = 0;
-        MeshBatchs[i].StartInstanceLocation = 0;
+        meshBatch->Material = material;
+        meshBatch->IndexCountPerInstance = static_cast<uint32>(mIndexes.size());
+        meshBatch->InstanceCount = 1;
+        meshBatch->StartIndexLocation = 0;
+        meshBatch->BaseVertexLocation = 0;
+        meshBatch->StartInstanceLocation = 0;
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = material->VertexShader;
         info.PixelShader = material->PixelShader;
-        info.VertexLayout = &MeshBatchs[i].VertexLayout;
+        info.VertexLayout = &meshBatch->VertexLayout;
         info.DepthStencilState.bEnableDepthWrite = !isTranslucent;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
         if (isTranslucent)
@@ -170,7 +191,7 @@ void FStaticMeshRenderProxy::CreateRenderResource()
         infoShadow.ShaderBindings = shaderBindings;
         infoShadow.VertexShader = material->VertexShaderShadow;
         infoShadow.PixelShader = material->PixelShaderShadow;
-        infoShadow.VertexLayout = &MeshBatchs[i].VertexLayout;
+        infoShadow.VertexLayout = &meshBatch->VertexLayout;
         infoShadow.DepthStencilState.bEnableDepthWrite = true;
         infoShadow.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
         if (material->TwoSided)
@@ -193,12 +214,7 @@ void FStaticMeshRenderProxy::ReleaseRenderResource()
     delete IndexBuffer;
     IndexBuffer = nullptr;
 
-    for (int i = 0; i < MeshBatchs.size(); i++)
-    {
-        delete  MeshBatchs[i].ConstantBuffer;
-        MeshBatchs[i].ConstantBuffer = nullptr;
-    }
-
+    MeshBatchs.clear();
 }
 
 FSkeletalMeshRenderProxy::FSkeletalMeshRenderProxy(const FSkeletalMeshRenderProxyInitializer& initializer)
@@ -228,43 +244,47 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
     MeshBatchs.resize(mSections.size());
     for (int i = 0; i < mSections.size(); i++)
     {
-        MeshBatchs[i].VertexLayout = VertexLayout;
-        MeshBatchs[i].VertexBuffer = VertexBuffer;
-        MeshBatchs[i].IndexBuffer = IndexBuffer;
+        FSkeletalMeshBatch* meshBatch = new FSkeletalMeshBatch();
+        MeshBatchs[i] = meshBatch;
+
+        meshBatch->VertexLayout = VertexLayout;
+        meshBatch->VertexBuffer = VertexBuffer;
+        meshBatch->IndexBuffer = IndexBuffer;
 
         FMaterial* material = Materials[mSections[i].MaterialIndex];
-        MeshBatchs[i].Material = material;
+        meshBatch->Material = material;
+        meshBatch->DebugName = DebugName;
 
-        MeshBatchs[i].ObjectConstants.World.setIdentity();
+        meshBatch->ObjectConstants.World.setIdentity();
         FMatrix3x3 rotation = Rotation.toRotationMatrix();
-        MeshBatchs[i].ObjectConstants.World.block<3, 3>(0, 0) = rotation;
-        MeshBatchs[i].ObjectConstants.World.block<1, 3>(3, 0) = Position;
-        MeshBatchs[i].ObjectConstants.Metallic = material->Metallic;
-        MeshBatchs[i].ObjectConstants.Specular = material->Specular;
-        MeshBatchs[i].ObjectConstants.Roughness = material->Roughness;
-        MeshBatchs[i].ObjectConstants.Opacity = material->Opacity;
+        meshBatch->ObjectConstants.World.block<3, 3>(0, 0) = rotation;
+        meshBatch->ObjectConstants.World.block<1, 3>(3, 0) = Position;
+        meshBatch->ObjectConstants.Metallic = material->Metallic;
+        meshBatch->ObjectConstants.Specular = material->Specular;
+        meshBatch->ObjectConstants.Roughness = material->Roughness;
+        meshBatch->ObjectConstants.Opacity = material->Opacity;
 
-        MeshBatchs[i].ObjectConstants.EmissiveColor = material->EmissiveColor;
-        MeshBatchs[i].ObjectConstants.SubsurfaceColor = material->SubsurfaceColor;
+        meshBatch->ObjectConstants.EmissiveColor = material->EmissiveColor;
+        meshBatch->ObjectConstants.SubsurfaceColor = material->SubsurfaceColor;
 
-        MeshBatchs[i].ConstantBuffer = rhi->CreateConstantBuffer(sizeof(MeshBatchs[i].ObjectConstants), (uint8*)&MeshBatchs[i].ObjectConstants);
+        meshBatch->ConstantBuffer = rhi->CreateConstantBuffer(sizeof(meshBatch->ObjectConstants), (uint8*)&meshBatch->ObjectConstants);
 
         material->Init();
 
         const bool isTranslucent = material->BlendMode == BM_Translucent;
 
-        MeshBatchs[i].IndexCountPerInstance = static_cast<uint32>(mIndexes.size());
-        MeshBatchs[i].InstanceCount = 1;
-        MeshBatchs[i].StartIndexLocation = 0;
-        MeshBatchs[i].BaseVertexLocation = 0;
-        MeshBatchs[i].StartInstanceLocation = 0;
+        meshBatch->IndexCountPerInstance = static_cast<uint32>(mIndexes.size());
+        meshBatch->InstanceCount = 1;
+        meshBatch->StartIndexLocation = 0;
+        meshBatch->BaseVertexLocation = 0;
+        meshBatch->StartInstanceLocation = 0;
 
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = material->VertexShader;
         info.PixelShader = material->PixelShader;
-        info.VertexLayout = &MeshBatchs[i].VertexLayout;
+        info.VertexLayout = &meshBatch->VertexLayout;
         info.DepthStencilState.bEnableDepthWrite = !isTranslucent;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
         if (isTranslucent)
@@ -287,7 +307,7 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
         infoGPUSkin.ShaderBindings = shaderBindings;
         infoGPUSkin.VertexShader = material->VertexShaderGPUSkin;
         infoGPUSkin.PixelShader = material->PixelShader;
-        infoGPUSkin.VertexLayout = &MeshBatchs[i].VertexLayout;
+        infoGPUSkin.VertexLayout = &meshBatch->VertexLayout;
         infoGPUSkin.DepthStencilState.bEnableDepthWrite = true;
         infoGPUSkin.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
         if (material->TwoSided)
@@ -301,7 +321,7 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
         infoGPUSkinShadow.ShaderBindings = shaderBindings;
         infoGPUSkinShadow.VertexShader = material->VertexShaderShadowGPUSkin;
         infoGPUSkinShadow.PixelShader = material->PixelShaderShadow;
-        infoGPUSkinShadow.VertexLayout = &MeshBatchs[i].VertexLayout;
+        infoGPUSkinShadow.VertexLayout = &meshBatch->VertexLayout;
         infoGPUSkinShadow.DepthStencilState.bEnableDepthWrite = true;
         infoGPUSkinShadow.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
         if (material->TwoSided)
@@ -321,24 +341,26 @@ void FSkeletalMeshRenderProxy::UpdateRenderResource()
     FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
     for (int i = 0; i < MeshBatchs.size(); i++)
     {
-        MeshBatchs[i].ObjectConstants.World.setIdentity();
+        FSkeletalMeshBatch* meshBatch = dynamic_cast<FSkeletalMeshBatch*>(MeshBatchs[i]);
+
+        meshBatch->ObjectConstants.World.setIdentity();
         FMatrix3x3 rotation = Rotation.toRotationMatrix();
-        MeshBatchs[i].ObjectConstants.World.block<3, 3>(0, 0) = rotation;
-        MeshBatchs[i].ObjectConstants.World.block<1, 3>(3, 0) = Position;
+        meshBatch->ObjectConstants.World.block<3, 3>(0, 0) = rotation;
+        meshBatch->ObjectConstants.World.block<1, 3>(3, 0) = Position;
 
         int32 boneIndex = 0;
-        for (FMatrix4x4& BoneTransform : mObjectConstants.BoneTransforms)
+        for (FMatrix4x4& BoneTransform : meshBatch->ObjectConstants.BoneTransforms)
         {
-            if (boneIndex < BoneFinalTransforms.size())
+            if (boneIndex < meshBatch->BoneFinalTransforms.size())
             {
-                BoneTransform = BoneFinalTransforms[boneIndex];
+                BoneTransform = meshBatch->BoneFinalTransforms[boneIndex];
                 boneIndex++;
             }
         }
 
-        if (MeshBatchs[i].ConstantBuffer != nullptr)
+        if (meshBatch->ConstantBuffer != nullptr)
         {
-            rhi->UpdateConstantBuffer(MeshBatchs[i].ConstantBuffer, sizeof(MeshBatchs[i].ObjectConstants), (uint8*)&MeshBatchs[i].ObjectConstants);
+            rhi->UpdateConstantBuffer(meshBatch->ConstantBuffer, sizeof(meshBatch->ObjectConstants), (uint8*)&meshBatch->ObjectConstants);
         }
     }
 }
@@ -351,10 +373,5 @@ void FSkeletalMeshRenderProxy::ReleaseRenderResource()
     delete IndexBuffer;
     IndexBuffer = nullptr;
 
-    for (int i = 0; i < MeshBatchs.size(); i++)
-    {
-        delete  MeshBatchs[i].ConstantBuffer;
-        MeshBatchs[i].ConstantBuffer = nullptr;
-    }
-
+    MeshBatchs.clear();
 }
