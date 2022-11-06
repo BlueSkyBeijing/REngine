@@ -78,7 +78,7 @@ void FScene::AddRenderable(FRenderProxy* renderProxy)
     {
         for (int i = 0; i < staticRenderProxy->MeshBatchs.size(); i++)
         {
-            FMaterial* mat = staticRenderProxy->Materials[i];
+            FMaterial* mat = staticRenderProxy->MeshBatchs[i]->Material;
             if (mat->BlendMode == BM_Translucent)
             {
                 mStaticTranslucentMeshBatchs.push_back(staticRenderProxy->MeshBatchs[i]);
@@ -97,7 +97,7 @@ void FScene::AddRenderable(FRenderProxy* renderProxy)
 
         for (int i = 0; i < dynamicRenderProxy->MeshBatchs.size(); i++)
         {
-            FMaterial* mat = dynamicRenderProxy->Materials[i];
+            FMaterial* mat = dynamicRenderProxy->MeshBatchs[i]->Material;
             if (mat->BlendMode == BM_Translucent)
             {
                 mDynamicTranslucentMeshBatchs.push_back(dynamicRenderProxy->MeshBatchs[i]);

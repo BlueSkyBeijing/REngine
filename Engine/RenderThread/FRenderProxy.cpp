@@ -157,9 +157,9 @@ void FStaticMeshRenderProxy::CreateRenderResource()
         const bool isTranslucent = material->BlendMode == BM_Translucent;
 
         meshBatch->Material = material;
-        meshBatch->IndexCountPerInstance = static_cast<uint32>(mIndexes.size());
+        meshBatch->IndexCountPerInstance = mSections[i].NumTriangles * 3;
         meshBatch->InstanceCount = 1;
-        meshBatch->StartIndexLocation = 0;
+        meshBatch->StartIndexLocation = mSections[i].FirstIndex;
         meshBatch->BaseVertexLocation = 0;
         meshBatch->StartInstanceLocation = 0;
 
@@ -273,9 +273,9 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
 
         const bool isTranslucent = material->BlendMode == BM_Translucent;
 
-        meshBatch->IndexCountPerInstance = static_cast<uint32>(mIndexes.size());
+        meshBatch->IndexCountPerInstance = mSections[i].NumTriangles * 3;
         meshBatch->InstanceCount = 1;
-        meshBatch->StartIndexLocation = 0;
+        meshBatch->StartIndexLocation = mSections[i].FirstIndex;
         meshBatch->BaseVertexLocation = 0;
         meshBatch->StartInstanceLocation = 0;
 
