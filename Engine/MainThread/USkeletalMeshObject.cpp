@@ -25,7 +25,7 @@ void USkeletalMeshObject::Load()
 {
     mSkeletalMesh = dynamic_cast<USkeletalMesh*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_SkeletalMesh, FullResourcePath));
 
-    int32 numMat = FullMaterialPaths.size();
+    int32 numMat = int32(FullMaterialPaths.size());
     for (int i = 0; i < numMat; i++)
     {
         UMaterial* mat = dynamic_cast<UMaterial*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Material, FullMaterialPaths[i]));

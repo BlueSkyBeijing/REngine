@@ -311,7 +311,7 @@ void FRenderer::_drawSceneColorOpaque()
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = meshBatch->Material->VertexShaderGPUSkin;
-        info.PixelShader = meshBatch->Material->PixelShader;
+        info.PixelShader = meshBatch->Material->PixelShaderGPUSkin;
         info.VertexLayout = &(meshBatch->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = true;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
@@ -414,7 +414,7 @@ void FRenderer::_drawSceneColorTranslucent()
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
         info.VertexShader = meshBatch->Material->VertexShaderGPUSkin;
-        info.PixelShader = meshBatch->Material->PixelShader;
+        info.PixelShader = meshBatch->Material->PixelShaderGPUSkin;
         info.VertexLayout = &(meshBatch->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = false;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;

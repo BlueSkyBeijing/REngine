@@ -306,7 +306,7 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
         FPipelineStateInfo infoGPUSkin;
         infoGPUSkin.ShaderBindings = shaderBindings;
         infoGPUSkin.VertexShader = material->VertexShaderGPUSkin;
-        infoGPUSkin.PixelShader = material->PixelShader;
+        infoGPUSkin.PixelShader = material->PixelShaderGPUSkin;
         infoGPUSkin.VertexLayout = &meshBatch->VertexLayout;
         infoGPUSkin.DepthStencilState.bEnableDepthWrite = true;
         infoGPUSkin.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;

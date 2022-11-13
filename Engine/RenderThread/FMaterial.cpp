@@ -59,6 +59,15 @@ void FMaterial::Init()
 
     PixelShaderShadow = TSingleton<FShaderManager>::GetInstance().GetOrCreate(pixelShaderShadowInfo);
 
+    FShaderInfo pixelShaderGPUSkinInfo;
+    pixelShaderGPUSkinInfo.FilePathName = L"Engine\\Shader\\ForwardShadingPS.hlsl";
+    pixelShaderGPUSkinInfo.EnterPoint = "PSMain";
+    pixelShaderGPUSkinInfo.Target = "ps_5_0";
+    pixelShaderGPUSkinInfo.Defines.insert(std::make_pair("SHADING_MODEL", std::to_string(ShadingModel)));
+    pixelShaderGPUSkinInfo.Defines.insert(std::make_pair("MATERIALBLENDING_MASKED", std::to_string(int(BlendMode == BM_Masked))));
+    pixelShaderGPUSkinInfo.Defines.insert(std::make_pair("GPU_SKIN", "1"));
+
+    PixelShaderGPUSkin = TSingleton<FShaderManager>::GetInstance().GetOrCreate(pixelShaderGPUSkinInfo);
 
     FShaderInfo vertexShaderShadowInfo;
     vertexShaderShadowInfo.FilePathName = L"Engine\\Shader\\ShadowDepthVS.hlsl";

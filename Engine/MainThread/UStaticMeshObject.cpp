@@ -25,7 +25,7 @@ void UStaticMeshObject::Load()
 {
     mStaticMesh = dynamic_cast<UStaticMesh*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_StaticMesh, FullResourcePath));
 
-    int32 numMat = FullMaterialPaths.size();
+    int32 numMat = int32(FullMaterialPaths.size());
     for (int i = 0; i < numMat; i++)
     {
         UMaterial* mat = dynamic_cast<UMaterial*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Material, FullMaterialPaths[i]));
