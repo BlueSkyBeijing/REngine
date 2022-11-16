@@ -157,7 +157,6 @@ void UPlayer::Update(float deltaSeconds)
 void UPlayer::MoveStraight(float deltaDistance)
 {
     Position += mOrientation * deltaDistance;
-
 }
 
 void UPlayer::Turn(float deltaAngle)

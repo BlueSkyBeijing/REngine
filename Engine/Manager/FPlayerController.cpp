@@ -4,7 +4,8 @@
 #include "UPlayer.h"
 #include "UCamera.h"
 
-FPlayerController::FPlayerController()
+FPlayerController::FPlayerController():
+    mNeedUpdate(false)
 {
 }
 
@@ -24,6 +25,9 @@ void FPlayerController::UnInit()
 
 void FPlayerController::Update(float deltaSeconds)
 {
+    if (!mNeedUpdate)
+        return;
+
     //update camera
     FMatrix3x3 rotationMatrix;
     FVector3 axis = mPlayer->GetOrientation().cross(FVector3(0.0f, 0.0f, 1.0f));
@@ -41,19 +45,26 @@ void FPlayerController::Update(float deltaSeconds)
     mCamera->Up = FVector3(0.0f, 0.0f, 1.0f);
     mCamera->Right = mCamera->Up.cross(mCamera->Look).normalized();
 
+    mNeedUpdate = false;
 }
 
 void FPlayerController::MoveStraight(float deltaDistance)
 {
     mPlayer->MoveStraight(deltaDistance);
+
+    mNeedUpdate = true;
 }
 
 void FPlayerController::Turn(float deltaAngle)
 {
     mPlayer->Turn(deltaAngle);
+
+    mNeedUpdate = true;
 }
 
 void FPlayerController::AdjustPitch(float deltaPitch)
 {
     mCameraPitchAngle += deltaPitch;
+
+    mNeedUpdate = true;
 }

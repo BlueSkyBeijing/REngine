@@ -24,6 +24,7 @@ void FInputManager::Init()
 {
     mKeyDown = false;
     mTriggerMove = false;
+    mEject = true;
 }
 
 void FInputManager::UnInit()
@@ -115,8 +116,17 @@ void FInputManager::OnMouseMove(WPARAM btnState, int32 x, int32 y)
         float dx = -(deltaScale * static_cast<float>(x - mLastMousePos.x()));
         float dy = -(deltaScale * static_cast<float>(y - mLastMousePos.y()));
 
-        TSingleton<FPlayerController>::GetInstance().AdjustPitch(dy);
-        TSingleton<FPlayerController>::GetInstance().Turn(dx);
+        if (mEject)
+        {
+            engine.GetWorld()->GetCamera()->AdjustPitch(-dy);
+            engine.GetWorld()->GetCamera()->AdjustYaw(-dx);
+        }
+        else
+        {
+            TSingleton<FPlayerController>::GetInstance().AdjustPitch(dy);
+            TSingleton<FPlayerController>::GetInstance().Turn(dx);
+        }
+
     }
 
     mLastMousePos.x() = x;
@@ -130,17 +140,36 @@ void FInputManager::OnKeyInput(float deltaSeconds)
     const float deltaScalePlayerMove = 300.0f;
     const float deltaScaleTurn = 2.0f;
 
-    if ((GetAsyncKeyState('W') & 0x8000))
+    if ((GetAsyncKeyState('E') & 0x8000))
     {
-        TSingleton<FPlayerController>::GetInstance().MoveStraight(deltaSeconds * deltaScalePlayerMove);
+        mEject = !mEject;
     }
 
-    if ((GetAsyncKeyState('S') & 0x8000))
+    if ((GetAsyncKeyState('W') & 0x8000) || (GetAsyncKeyState(VK_UP) & 0x8000))
     {
-        TSingleton<FPlayerController>::GetInstance().MoveStraight(-deltaSeconds * deltaScalePlayerMove);
+        if (mEject)
+        {
+            engine.GetWorld()->GetCamera()->AdjustMoveStraight(deltaSeconds * deltaScale);
+        }
+        else
+        {
+            TSingleton<FPlayerController>::GetInstance().MoveStraight(deltaSeconds * deltaScalePlayerMove);
+        }
     }
 
-    if ((GetAsyncKeyState('W') & 0x8000) || (GetAsyncKeyState('S') & 0x8000))
+    if ((GetAsyncKeyState('S') & 0x8000) || (GetAsyncKeyState(VK_DOWN) & 0x8000))
+    {
+        if (mEject)
+        {
+            engine.GetWorld()->GetCamera()->AdjustMoveStraight(-deltaSeconds * deltaScale);
+        }
+        else
+        {
+            TSingleton<FPlayerController>::GetInstance().MoveStraight(-deltaSeconds * deltaScalePlayerMove);
+        }
+    }
+
+    if ((GetAsyncKeyState('W') & 0x8000) || (GetAsyncKeyState('S') & 0x8000) || (GetAsyncKeyState(VK_UP) & 0x8000) || (GetAsyncKeyState(VK_DOWN) & 0x8000))
     {
         if (!mTriggerMove)
         {
@@ -159,34 +188,28 @@ void FInputManager::OnKeyInput(float deltaSeconds)
         }
     }
 
-    if (GetAsyncKeyState('A') & 0x8000)
+    if ((GetAsyncKeyState('A') & 0x8000) || (GetAsyncKeyState(VK_LEFT) & 0x8000))
     {
-        TSingleton<FPlayerController>::GetInstance().Turn(deltaSeconds * deltaScaleTurn);
+        if (mEject)
+        {
+            engine.GetWorld()->GetCamera()->AdjustYaw(-deltaSeconds);
+        }
+        else
+        {
+            TSingleton<FPlayerController>::GetInstance().MoveStraight(-deltaSeconds * deltaScalePlayerMove);
+        }
     }
 
-    if (GetAsyncKeyState('D') & 0x8000)
+    if ((GetAsyncKeyState('D') & 0x8000) || (GetAsyncKeyState(VK_RIGHT) & 0x8000))
     {
-        TSingleton<FPlayerController>::GetInstance().Turn(-deltaSeconds * deltaScaleTurn);
-    }
-
-    if (GetAsyncKeyState(VK_UP) & 0x8000)
-    {
-        engine.GetWorld()->GetCamera()->AdjustMoveStraight(deltaSeconds * deltaScale);
-    }
-
-    if (GetAsyncKeyState(VK_DOWN) & 0x8000)
-    {
-        engine.GetWorld()->GetCamera()->AdjustMoveStraight(-deltaSeconds * deltaScale);
-    }
-
-    if (GetAsyncKeyState(VK_LEFT) & 0x8000)
-    {
-        engine.GetWorld()->GetCamera()->AdjustYaw(-deltaSeconds);
-    }
-
-    if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
-    {
-        engine.GetWorld()->GetCamera()->AdjustYaw(deltaSeconds);
+        if (mEject)
+        {
+            engine.GetWorld()->GetCamera()->AdjustYaw(deltaSeconds);
+        }
+        else
+        {
+            TSingleton<FPlayerController>::GetInstance().MoveStraight(-deltaSeconds * deltaScalePlayerMove);
+        }
     }
 }
 

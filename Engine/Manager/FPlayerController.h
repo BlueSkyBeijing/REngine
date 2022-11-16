@@ -48,4 +48,5 @@ private:
     UCamera* mCamera;
     float mCameraArmLength;
     float mCameraPitchAngle;
+    bool mNeedUpdate;
 };

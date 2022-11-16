@@ -36,5 +36,6 @@ private:
     FVector2i mLastMousePos;
     bool mKeyDown;
     bool mTriggerMove;
+    bool mEject;
 
 };
