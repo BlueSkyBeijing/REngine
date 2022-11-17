@@ -23,6 +23,7 @@ public:
     void OnMouseDown(WPARAM btnState, int32 x, int32 y);
     void OnMouseUp(WPARAM btnState, int32 x, int32 y);
     void OnMouseMove(WPARAM btnState, int32 x, int32 y);
+    void OnMouseWheel(WPARAM btnState, int32 x, int32 y);
     void OnKeyInput(float deltaTime);
     void OnResize(LPARAM lParam);
 
@@ -37,5 +38,5 @@ private:
     bool mKeyDown;
     bool mTriggerMove;
     bool mEject;
-
+    float mDeltaScale;
 };

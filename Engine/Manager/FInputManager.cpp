@@ -12,7 +12,8 @@
 #include "FRenderCommand.h"
 #include "FPlayerController.h"
 
-FInputManager::FInputManager()
+FInputManager::FInputManager():
+    mDeltaScale(1000.0f)
 {
 }
 
@@ -67,6 +68,9 @@ LRESULT CALLBACK FInputManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
         break;
     case WM_MOUSEMOVE:
         inputManager->OnMouseMove(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+        break;
+    case WM_MOUSEWHEEL:
+        inputManager->OnMouseWheel(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
         break;
     case WM_SIZE:
         inputManager->OnResize(lParam);
@@ -133,10 +137,21 @@ void FInputManager::OnMouseMove(WPARAM btnState, int32 x, int32 y)
     mLastMousePos.y() = y;
 }
 
+void FInputManager::OnMouseWheel(WPARAM btnState, int32 x, int32 y)
+{
+    FEngine& engine = TSingleton<FEngine>::GetInstance();
+
+    int loVal = LOWORD(btnState);
+    short hiVal = HIWORD(btnState);
+
+    mDeltaScale += hiVal*0.1f;
+    mDeltaScale = std::max(0.1f, mDeltaScale);
+}
+
 void FInputManager::OnKeyInput(float deltaSeconds)
 {
     FEngine& engine = TSingleton<FEngine>::GetInstance();
-    const float deltaScale = 1000.0f;
+    const float deltaScale = mDeltaScale;
     const float deltaScalePlayerMove = 300.0f;
     const float deltaScaleTurn = 2.0f;
 
