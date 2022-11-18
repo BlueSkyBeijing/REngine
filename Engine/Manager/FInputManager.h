@@ -39,4 +39,5 @@ private:
     bool mTriggerMove;
     bool mEject;
     float mDeltaScale;
+    bool mPan;
 };

@@ -56,6 +56,14 @@ void UCamera::AdjustYaw(float deltaYaw)
     Look = rotationMatrix * Look;
 }
 
+void UCamera::Pan(float deltaX, float deltaY)
+{
+    FVector3 up = FVector3(0.0f, 0.0f, 1.0f);
+    FVector3 right = -Right;
+
+    Position += FVector3(right[0] * deltaX, right[1] * deltaX, up[2] * deltaY);
+}
+
 void UCamera::Update()
 {
     FView* view = new FView();

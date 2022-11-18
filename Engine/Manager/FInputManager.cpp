@@ -13,7 +13,8 @@
 #include "FPlayerController.h"
 
 FInputManager::FInputManager():
-    mDeltaScale(1000.0f)
+    mDeltaScale(1000.0f),
+    mPan(false)
 {
 }
 
@@ -61,9 +62,13 @@ LRESULT CALLBACK FInputManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
         inputManager->ProcessQuit();
         break;
     case WM_LBUTTONDOWN:
+    case WM_MBUTTONDOWN:
+    case WM_RBUTTONDOWN:
         inputManager->OnMouseDown(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
         break;
     case WM_LBUTTONUP:
+    case WM_MBUTTONUP:
+    case WM_RBUTTONUP:
         inputManager->OnMouseUp(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
         break;
     case WM_MOUSEMOVE:
@@ -100,6 +105,8 @@ void FInputManager::OnKeyUp(WPARAM btnState)
 
 void FInputManager::OnMouseDown(WPARAM btnState, int32 x, int32 y)
 {
+    mPan = btnState & MK_MBUTTON;
+
     mLastMousePos.x() = x;
     mLastMousePos.y() = y;
     SetCapture(TSingleton<FEngine>::GetInstance().GetWindowHandle());
@@ -114,7 +121,7 @@ void FInputManager::OnMouseMove(WPARAM btnState, int32 x, int32 y)
 {
     FEngine& engine = TSingleton<FEngine>::GetInstance();
 
-    if ((btnState & MK_LBUTTON) != 0)
+    if ((btnState & MK_LBUTTON) || (btnState & MK_MBUTTON))
     {
         const float deltaScale = 0.0025f;
         float dx = -(deltaScale * static_cast<float>(x - mLastMousePos.x()));
@@ -122,8 +129,16 @@ void FInputManager::OnMouseMove(WPARAM btnState, int32 x, int32 y)
 
         if (mEject)
         {
-            engine.GetWorld()->GetCamera()->AdjustPitch(-dy);
-            engine.GetWorld()->GetCamera()->AdjustYaw(-dx);
+            if (mPan)
+            {
+                const float panScale = 0.5f * mDeltaScale;
+                engine.GetWorld()->GetCamera()->Pan(dx * panScale, dy * panScale);
+            }
+            else
+            {
+                engine.GetWorld()->GetCamera()->AdjustPitch(-dy);
+                engine.GetWorld()->GetCamera()->AdjustYaw(-dx);
+            }
         }
         else
         {
