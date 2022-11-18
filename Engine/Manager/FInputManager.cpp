@@ -121,7 +121,7 @@ void FInputManager::OnMouseMove(WPARAM btnState, int32 x, int32 y)
 {
     FEngine& engine = TSingleton<FEngine>::GetInstance();
 
-    if ((btnState & MK_LBUTTON) || (btnState & MK_MBUTTON))
+    if ((btnState & MK_LBUTTON) || (btnState & MK_MBUTTON) || (btnState & MK_RBUTTON))
     {
         const float deltaScale = 0.0025f;
         float dx = -(deltaScale * static_cast<float>(x - mLastMousePos.x()));
@@ -136,8 +136,16 @@ void FInputManager::OnMouseMove(WPARAM btnState, int32 x, int32 y)
             }
             else
             {
-                engine.GetWorld()->GetCamera()->AdjustPitch(-dy);
-                engine.GetWorld()->GetCamera()->AdjustYaw(-dx);
+                if (btnState & MK_RBUTTON)
+                {
+                    engine.GetWorld()->GetCamera()->AdjustPitch(-dy);
+                    engine.GetWorld()->GetCamera()->AdjustYaw(-dx);
+                }
+                else
+                {
+                    engine.GetWorld()->GetCamera()->AdjustMoveStraight(dy * 1000.0f);
+                    engine.GetWorld()->GetCamera()->AdjustYaw(-dx);
+                }
             }
         }
         else
