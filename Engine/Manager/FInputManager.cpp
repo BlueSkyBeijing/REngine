@@ -154,13 +154,22 @@ void FInputManager::OnMouseMove(WPARAM btnState, int32 x, int32 y)
 
 void FInputManager::OnMouseWheel(WPARAM btnState, int32 x, int32 y)
 {
-    FEngine& engine = TSingleton<FEngine>::GetInstance();
-
     int loVal = LOWORD(btnState);
     short hiVal = HIWORD(btnState);
+    if (mKeyDown)
+    {
+        mDeltaScale += hiVal * 0.1f;
+        mDeltaScale = std::max(0.1f, mDeltaScale);
+    }
 
-    mDeltaScale += hiVal*0.1f;
-    mDeltaScale = std::max(0.1f, mDeltaScale);
+    if (mEject)
+    {
+        const float deltaScale = mDeltaScale;
+
+        FEngine& engine = TSingleton<FEngine>::GetInstance();
+        engine.GetWorld()->GetCamera()->AdjustMoveStraight(0.0005f * mDeltaScale * hiVal);
+    }
+
 }
 
 void FInputManager::OnKeyInput(float deltaSeconds)
