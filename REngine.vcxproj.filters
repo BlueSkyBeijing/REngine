@@ -203,6 +203,9 @@
     <ClCompile Include="Engine\Manager\FRHIResourceManager.cpp">
       <Filter>Engine\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Manager\FConsoleVariableManager.cpp">
+      <Filter>Engine\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Manager\FInputManager.h">
@@ -383,6 +386,9 @@
       <Filter>Engine\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Manager\FRHIResourceManager.h">
+      <Filter>Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Manager\FConsoleVariableManager.h">
       <Filter>Engine\Manager</Filter>
     </ClInclude>
   </ItemGroup>

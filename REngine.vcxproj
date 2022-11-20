@@ -33,6 +33,7 @@
     <ClCompile Include="Engine\MainThread\UTexture.cpp" />
     <ClCompile Include="Engine\MainThread\UWorld.cpp" />
     <ClCompile Include="Engine\Manager\FConfigManager.cpp" />
+    <ClCompile Include="Engine\Manager\FConsoleVariableManager.cpp" />
     <ClCompile Include="Engine\Manager\FInputManager.cpp" />
     <ClCompile Include="Engine\Manager\FLogManager.cpp" />
     <ClCompile Include="Engine\Manager\FPipelineStateManager.cpp" />
@@ -94,6 +95,7 @@
     <ClInclude Include="Engine\MainThread\UTexture.h" />
     <ClInclude Include="Engine\MainThread\UWorld.h" />
     <ClInclude Include="Engine\Manager\FConfigManager.h" />
+    <ClInclude Include="Engine\Manager\FConsoleVariableManager.h" />
     <ClInclude Include="Engine\Manager\FInputManager.h" />
     <ClInclude Include="Engine\Manager\FLogManager.h" />
     <ClInclude Include="Engine\Manager\FPipelineStateManager.h" />

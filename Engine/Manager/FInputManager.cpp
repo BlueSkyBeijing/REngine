@@ -11,6 +11,7 @@
 #include "FView.h"
 #include "FRenderCommand.h"
 #include "FPlayerController.h"
+#include "FConsoleVariableManager.h"
 
 FInputManager::FInputManager():
     mDeltaScale(1000.0f),
@@ -243,7 +244,7 @@ void FInputManager::OnKeyInput(float deltaSeconds)
         }
         else
         {
-            TSingleton<FPlayerController>::GetInstance().MoveStraight(-deltaSeconds * deltaScalePlayerMove);
+            TSingleton<FPlayerController>::GetInstance().Turn(deltaSeconds * deltaScaleTurn);
         }
     }
 
@@ -255,9 +256,15 @@ void FInputManager::OnKeyInput(float deltaSeconds)
         }
         else
         {
-            TSingleton<FPlayerController>::GetInstance().MoveStraight(-deltaSeconds * deltaScalePlayerMove);
+            TSingleton<FPlayerController>::GetInstance().Turn(-deltaSeconds * deltaScaleTurn);
         }
     }
+
+    //if ((GetAsyncKeyState(VK_OEM_3) & 0x8000))
+    //{
+    //    TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand();
+    //}
+
 }
 
 void FInputManager::OnResize(LPARAM lParam)

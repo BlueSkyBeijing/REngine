@@ -6,6 +6,7 @@
 
 #include "FEngine.h"
 #include "TSingleton.h"
+#include "FConsoleVariableManager.h"
 
 std::mutex EngineMutex;
 std::condition_variable EngineExitCondition;
@@ -39,6 +40,19 @@ static BOOL CALLBACK CosonleHandler(DWORD event)
     return returnValue;
 }
 
+LRESULT CALLBACK ConsoleVariableProc(int code, WPARAM wParam, LPARAM lParam)
+{
+    KBDLLHOOKSTRUCT* kbd = (KBDLLHOOKSTRUCT*)lParam;
+
+    long ret = 0;
+    if ((WM_KEYUP == wParam) && (kbd->vkCode == VK_RETURN))
+    {
+        TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand();
+        ret = 1;
+    }
+    return ret;
+}
+
 int main()
 {
     //enable run-time memory check for debug builds.
@@ -52,6 +66,8 @@ int main()
         printf("unable to install handler!");
         return -1;
     }
+
+    SetWindowsHookEx(WH_KEYBOARD_LL, ConsoleVariableProc, NULL, 0);
 
     TSingleton<FEngine>::GetInstance().Launch();
 
