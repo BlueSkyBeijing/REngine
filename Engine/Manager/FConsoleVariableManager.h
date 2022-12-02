@@ -17,6 +17,12 @@ public:
 
     void ProcessCommand();
 
+    template <typename... Args>
+    void BindCommand(const std::string& commandName, std::function<void(Args...)> fun, const std::string& help = "")
+    {
+        mConsole->bindCommand(commandName, fun, help);
+    };
+
 private:
     FConsoleVariableManager();
     virtual ~FConsoleVariableManager();
@@ -25,4 +31,15 @@ private:
     Virtuoso::QuakeStyleConsole* mConsole;
     std::string mCommandHistoryFileName;
 
+};
+
+//template <typename T>
+class FConsoleVariable
+{
+public:
+    template <typename... Args>
+    FConsoleVariable(const std::string& commandName, std::function<void(Args...)> fun, const std::string& help = "")
+    {
+        TSingleton<FConsoleVariableManager>::GetInstance().BindCommand(commandName, fun, help);
+    }
 };

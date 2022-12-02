@@ -80,6 +80,11 @@ void FRenderThread::AddLight(FLight* light)
     mScene->AddlLight(light);
 }
 
+void FRenderThread::UnInitScene()
+{
+    mScene->UnInit();
+} 
+
 void FRenderThread::OnProduceOneFrame()
 {
     std::unique_lock<std::mutex> RenderLock(mRenderMutex);

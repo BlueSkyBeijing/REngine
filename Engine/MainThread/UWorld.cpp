@@ -12,10 +12,21 @@
 #include "FRenderCommand.h"
 #include "FPlayerController.h"
 #include "UPlayer.h"
+#include "FConsoleVariableManager.h"
+
+
 
 UWorld::UWorld(FEngine* engine) :
     mEngine(engine)
 {
+    std::function <void(std::string&)> printHistory = [](std::string& fileName)
+    {
+        UWorld* world = TSingleton<FEngine>::GetInstance().GetWorld();
+        world->LoadWorld(fileName);
+    };
+
+    FConsoleVariable GLoadMap(std::string("load").c_str(), printHistory);
+
 }
 
 UWorld::~UWorld()
@@ -24,8 +35,93 @@ UWorld::~UWorld()
 
 void UWorld::Load()
 {
-    FullFilePathName = TSingleton<FConfigManager>::GetInstance().DefaultMapPath +
-        TSingleton<FConfigManager>::GetInstance().DefaultMap;
+    loadFromFile(TSingleton<FConfigManager>::GetInstance().DefaultMap);
+
+    //tell render thread load completed
+    FRenderThread* renderThread = TSingleton<FEngine>::GetInstance().GetRenderThread();
+
+    ENQUEUE_RENDER_COMMAND([renderThread]
+    {
+        renderThread->MarkLoadCompleted();
+    });
+}
+
+void UWorld::Unload()
+{
+    for (auto it = mCameras.begin(); it != mCameras.end(); it++)
+    {
+        UCamera* camera = *it;
+        camera->Unload();
+        delete camera;
+    }
+    mCameras.clear();
+
+    for (auto it = mDirectionalLights.begin(); it != mDirectionalLights.end(); it++)
+    {
+        UDirectionalLight* directionalLight = *it;
+        directionalLight->Unload();
+        delete directionalLight;
+    }
+    mDirectionalLights.clear();
+
+    for (auto it = mPointLights.begin(); it != mPointLights.end(); it++)
+    {
+        UPointLight* pointLight = *it;
+        pointLight->Unload();
+        delete pointLight;
+    }
+    mPointLights.clear();
+
+    for (auto it = mStaticMeshObjects.begin(); it != mStaticMeshObjects.end(); it++)
+    {
+        UStaticMeshObject* staticMeshObject = *it;
+        staticMeshObject->Unload();
+        delete staticMeshObject;
+    }
+    mStaticMeshObjects.clear();
+
+    for (auto it = mSkeletalMeshObjects.begin(); it != mSkeletalMeshObjects.end(); it++)
+    {
+        USkeletalMeshObject* skeletalMeshObject = *it;
+        skeletalMeshObject->Unload();
+        delete skeletalMeshObject;
+    }
+    mSkeletalMeshObjects.clear();
+
+    mPlayer->Unload();
+    delete mPlayer;
+    mPlayer = nullptr;
+}
+
+void UWorld::Update(float deltaSeconds)
+{
+    GetCamera()->Update();
+
+    for (auto it = mSkeletalMeshObjects.begin(); it != mSkeletalMeshObjects.end(); it++)
+    {
+        USkeletalMeshObject* skeletalMeshObject = *it;
+        skeletalMeshObject->Update(deltaSeconds);
+    }
+
+    mPlayer->Update(deltaSeconds);
+}
+
+void UWorld::LoadWorld(std::string fileName)
+{
+    Unload();
+
+    FRenderThread* renderThread = TSingleton<FEngine>::GetInstance().GetRenderThread();
+    ENQUEUE_RENDER_COMMAND([renderThread]
+    {
+        renderThread->UnInitScene();
+    });
+
+    loadFromFile(fileName);
+}
+
+void UWorld::loadFromFile(std::string fileName)
+{
+    FullFilePathName = TSingleton<FConfigManager>::GetInstance().DefaultMapPath + fileName;
 
     //load from file
     std::ifstream mapFile(FullFilePathName, std::ios::in | std::ios::binary);
@@ -238,14 +334,6 @@ void UWorld::Load()
         skeletalMeshObjectDataIndex++;
     }
 
-    //tell render thread load completed
-    FRenderThread* renderThread = TSingleton<FEngine>::GetInstance().GetRenderThread();
-
-    ENQUEUE_RENDER_COMMAND([renderThread]
-    {
-        renderThread->MarkLoadCompleted();
-    });
-
     mPlayer = new UPlayer();
     int32 numMat = int32(skeletalMeshObjectDatas[0].MaterialNames.size());
     for (int i = 0; i < numMat; i++)
@@ -261,64 +349,6 @@ void UWorld::Load()
     mPlayer->Load();
     TSingleton<FPlayerController>::GetInstance().SetPlayer(mPlayer);
     TSingleton<FPlayerController>::GetInstance().SetCamera(GetCamera());
-}
 
-void UWorld::Unload()
-{
-    for (auto it = mCameras.begin(); it != mCameras.end(); it++)
-    {
-        UCamera* camera = *it;
-        camera->Unload();
-        delete camera;
-    }
-    mCameras.clear();
 
-    for (auto it = mDirectionalLights.begin(); it != mDirectionalLights.end(); it++)
-    {
-        UDirectionalLight* directionalLight = *it;
-        directionalLight->Unload();
-        delete directionalLight;
-    }
-    mDirectionalLights.clear();
-
-    for (auto it = mPointLights.begin(); it != mPointLights.end(); it++)
-    {
-        UPointLight* pointLight = *it;
-        pointLight->Unload();
-        delete pointLight;
-    }
-    mPointLights.clear();
-
-    for (auto it = mStaticMeshObjects.begin(); it != mStaticMeshObjects.end(); it++)
-    {
-        UStaticMeshObject* staticMeshObject = *it;
-        staticMeshObject->Unload();
-        delete staticMeshObject;
-    }
-    mStaticMeshObjects.clear();
-
-    for (auto it = mSkeletalMeshObjects.begin(); it != mSkeletalMeshObjects.end(); it++)
-    {
-        USkeletalMeshObject* skeletalMeshObject = *it;
-        skeletalMeshObject->Unload();
-        delete skeletalMeshObject;
-    }
-    mSkeletalMeshObjects.clear();
-
-    mPlayer->Unload();
-    delete mPlayer;
-    mPlayer = nullptr;
-}
-
-void UWorld::Update(float deltaSeconds)
-{
-    GetCamera()->Update();
-
-    for (auto it = mSkeletalMeshObjects.begin(); it != mSkeletalMeshObjects.end(); it++)
-    {
-        USkeletalMeshObject* skeletalMeshObject = *it;
-        skeletalMeshObject->Update(deltaSeconds);
-    }
-
-    mPlayer->Update(deltaSeconds);
 }

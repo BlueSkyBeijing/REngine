@@ -19,6 +19,11 @@ public:
         return *(mCameras.begin());
     }
 
+    virtual void LoadWorld(std::string fileName);
+
+protected:
+    virtual void loadFromFile(std::string fileName);
+
 private:
     std::vector<UCamera*> mCameras;
     std::vector<UDirectionalLight*> mDirectionalLights;

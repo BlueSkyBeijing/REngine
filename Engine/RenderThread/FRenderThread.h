@@ -20,6 +20,8 @@ public:
 
     void AddLight(FLight* light);
 
+    void UnInitScene();
+
     void OnProduceOneFrame();
 
     void OnWindowResize(int32 newWidth, int32 newHeight);

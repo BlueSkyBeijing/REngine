@@ -79,6 +79,7 @@ class FRenderCommand;
 class FPostProcessing;
 class FScreenVertex;
 class FPlayerController;
+class FConsoleVariableManager;
 
 class FRHI;
 class FRHIResource;
