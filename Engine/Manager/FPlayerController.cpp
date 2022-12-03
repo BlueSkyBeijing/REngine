@@ -26,7 +26,14 @@ void FPlayerController::UnInit()
 void FPlayerController::Update(float deltaSeconds)
 {
     if (!mNeedUpdate)
+    {
         return;
+    }
+
+    if (!mPlayer)
+    {
+        return;
+    }
 
     //update camera
     FMatrix3x3 rotationMatrix;
@@ -50,6 +57,11 @@ void FPlayerController::Update(float deltaSeconds)
 
 void FPlayerController::MoveStraight(float deltaDistance)
 {
+    if (!mPlayer)
+    {
+        return;
+    }
+
     mPlayer->MoveStraight(deltaDistance);
 
     mNeedUpdate = true;
@@ -57,6 +69,11 @@ void FPlayerController::MoveStraight(float deltaDistance)
 
 void FPlayerController::Turn(float deltaAngle)
 {
+    if (!mPlayer)
+    {
+        return;
+    }
+
     mPlayer->Turn(deltaAngle);
 
     mNeedUpdate = true;

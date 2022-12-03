@@ -16,11 +16,21 @@ public:
 
     void EnterMoveState()
     {
+        if (!mPlayer)
+        {
+            return;
+        }
+
         mPlayer->SetState(EPlayerState::PS_Walk);
     }
 
     void EnterStandState()
     {
+        if (!mPlayer)
+        {
+            return;
+        }
+
         mPlayer->SetState(EPlayerState::PS_Stand);
     }
 

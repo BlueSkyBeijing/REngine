@@ -88,9 +88,12 @@ void UWorld::Unload()
     }
     mSkeletalMeshObjects.clear();
 
-    mPlayer->Unload();
-    delete mPlayer;
-    mPlayer = nullptr;
+    if (mPlayer)
+    {
+        mPlayer->Unload();
+        delete mPlayer;
+        mPlayer = nullptr;
+    }
 }
 
 void UWorld::Update(float deltaSeconds)
@@ -103,7 +106,10 @@ void UWorld::Update(float deltaSeconds)
         skeletalMeshObject->Update(deltaSeconds);
     }
 
-    mPlayer->Update(deltaSeconds);
+    if(mPlayer)
+    {
+        mPlayer->Update(deltaSeconds);
+    }
 }
 
 void UWorld::LoadWorld(std::string fileName)
@@ -334,21 +340,23 @@ void UWorld::loadFromFile(std::string fileName)
         skeletalMeshObjectDataIndex++;
     }
 
-    mPlayer = new UPlayer();
-    int32 numMat = int32(skeletalMeshObjectDatas[0].MaterialNames.size());
-    for (int i = 0; i < numMat; i++)
+    if (skeletalMeshObjectDatas.size() > 0)
     {
-        std::string materialName = FConfigManager::DefaultMaterialPath +
-            std::string(skeletalMeshObjectDatas[0].MaterialNames[i].c_str()) +
-            FConfigManager::DefaultMaterialFileSuffix;
+        mPlayer = new UPlayer();
+        int32 numMat = int32(skeletalMeshObjectDatas[0].MaterialNames.size());
+        for (int i = 0; i < numMat; i++)
+        {
+            std::string materialName = FConfigManager::DefaultMaterialPath +
+                std::string(skeletalMeshObjectDatas[0].MaterialNames[i].c_str()) +
+                FConfigManager::DefaultMaterialFileSuffix;
 
-        mPlayer->FullMaterialPaths.push_back(materialName);
+            mPlayer->FullMaterialPaths.push_back(materialName);
+        }
+
+        mPlayer->SetSkeletalMeshFilePath((*mSkeletalMeshObjects.begin())->FullResourcePath);
+        mPlayer->Load();
+        TSingleton<FPlayerController>::GetInstance().SetPlayer(mPlayer);
+        TSingleton<FPlayerController>::GetInstance().SetCamera(GetCamera());
     }
-
-    mPlayer->SetSkeletalMeshFilePath((*mSkeletalMeshObjects.begin())->FullResourcePath);
-    mPlayer->Load();
-    TSingleton<FPlayerController>::GetInstance().SetPlayer(mPlayer);
-    TSingleton<FPlayerController>::GetInstance().SetCamera(GetCamera());
-
 
 }
