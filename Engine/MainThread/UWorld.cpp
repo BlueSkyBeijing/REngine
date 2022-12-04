@@ -222,22 +222,38 @@ void UWorld::loadFromFile(std::string fileName)
     mapFile.close();
 
     //init from import data
-    mCameras.resize(numCamera);
-    int32 camerDataIndex = 0;
-    for (auto it = mCameras.begin(); it != mCameras.end(); it++)
+    if (numCamera > 0)
+    {
+        mCameras.resize(numCamera);
+        int32 camerDataIndex = 0;
+        for (auto it = mCameras.begin(); it != mCameras.end(); it++)
+        {
+            UCamera* camera = new UCamera();
+
+            camera->Position = cameraDatas[camerDataIndex].Position;
+            camera->Target = cameraDatas[camerDataIndex].Target;
+            camera->FOV = cameraDatas[camerDataIndex].FOV;
+            camera->AspectRatio = cameraDatas[camerDataIndex].AspectRatio;
+
+            camera->Load();
+
+            *it = camera;
+
+            camerDataIndex++;
+        }
+    }
+    else
     {
         UCamera* camera = new UCamera();
 
-        camera->Position = cameraDatas[camerDataIndex].Position;
-        camera->Target = cameraDatas[camerDataIndex].Target;
-        camera->FOV = cameraDatas[camerDataIndex].FOV;
-        camera->AspectRatio = cameraDatas[camerDataIndex].AspectRatio;
+        camera->Position = FVector3(500.0f, 500.0f, 500.0f);
+        camera->Target = FVector3(0.0f, 0.0f, 0.0f);
+        camera->FOV = 45.0f;
+        camera->AspectRatio = 1.77777f;
 
         camera->Load();
 
-        *it = camera;
-
-        camerDataIndex++;
+        mCameras.push_back(camera);
     }
 
     mDirectionalLights.resize(numDirectionalLight);
