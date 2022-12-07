@@ -45,7 +45,7 @@ LRESULT CALLBACK ConsoleVariableProc(int code, WPARAM wParam, LPARAM lParam)
     KBDLLHOOKSTRUCT* kbd = (KBDLLHOOKSTRUCT*)lParam;
 
     long ret = 0;
-    if ((WM_KEYUP == wParam) && (kbd->vkCode == VK_RETURN))
+    if ((WM_KEYUP == wParam) && (kbd->vkCode == VK_TAB))
     {
         TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand();
         ret = 1;
