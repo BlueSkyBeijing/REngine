@@ -790,9 +790,9 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
             msRTVCount++;
 
             D3D12_CLEAR_VALUE clearValue;
-            clearValue.Color[0] = 0.5f;
-            clearValue.Color[1] = 0.5f;
-            clearValue.Color[2] = 0.5f;
+            clearValue.Color[0] = 0.0f;
+            clearValue.Color[1] = 0.0f;
+            clearValue.Color[2] = 0.0f;
             clearValue.Color[3] = 1.0f;
             clearValue.Format = pixelFormat;
             CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_DEFAULT);

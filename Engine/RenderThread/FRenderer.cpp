@@ -105,7 +105,7 @@ void FRenderer::drawShadowPass()
     const FRHITransitionInfo infoDepthBegin(mShadowMap->DepthStencilTarget, ACCESS_GENERIC_READ, ACCESS_DEPTH_WRITE);
     mRHI->TransitionResource(infoDepthBegin);
 
-    const FVector4 clearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    const FVector4 clearColor(0.0f, 0.0f, 0.0f, 1.0f);
     mRHI->Clear(false, clearColor, true, 1, true, 0);
 
     //static
@@ -472,7 +472,7 @@ void FRenderer::drawSceneColorPass()
     const FRHITransitionInfo infoDepthStencilBegin(mSceneColor->DepthStencilTarget, ACCESS_GENERIC_READ, ACCESS_DEPTH_WRITE);
     mRHI->TransitionResource(infoDepthStencilBegin);
 
-    const FVector4 clearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    const FVector4 clearColor(0.0f, 0.0f, 0.0f, 1.0f);
     mRHI->Clear(true, clearColor, true, 1, true, 0);
 
     mRHI->SetViewPort(0.0f, 0.0f, 0.0f, static_cast<float>(mRenderTarget->Width), static_cast<float>(mRenderTarget->Height), 1.0f);
