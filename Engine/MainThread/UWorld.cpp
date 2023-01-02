@@ -146,8 +146,17 @@ void UWorld::loadFromFile(std::string fileName)
     int32 numDirectionalLight;
     std::vector<FDirectionalLightData> directionalLightDatas;
     mapFile.read((char*)&numDirectionalLight, sizeof(int32));
-    directionalLightDatas.resize(numDirectionalLight);
-    mapFile.read((char*)directionalLightDatas.data(), numDirectionalLight * sizeof(FDirectionalLightData));
+    for (int32 i = 0; i < numDirectionalLight; i++)
+    {
+        FDirectionalLightData data;
+        mapFile.read((char*)data.Color.data(), sizeof(FVector4));
+        mapFile.read((char*)data.Direction.data(), sizeof(FVector3));
+        mapFile.read((char*)&data.Intensity, sizeof(float));
+        mapFile.read((char*)&data.ShadowDistance, sizeof(float));
+        mapFile.read((char*)&data.ShadowBias, sizeof(float));
+
+        directionalLightDatas.push_back(data);
+    }
 
     int32 numPointLight;
     std::vector<FPointLightData> pointLightDatas;
@@ -265,6 +274,8 @@ void UWorld::loadFromFile(std::string fileName)
         directionalLight->Color = directionalLightDatas[directionalLightDataIndex].Color;
         directionalLight->Direction = directionalLightDatas[directionalLightDataIndex].Direction;
         directionalLight->Intensity = directionalLightDatas[directionalLightDataIndex].Intensity;
+        directionalLight->ShadowDistance = directionalLightDatas[directionalLightDataIndex].ShadowDistance;
+        directionalLight->ShadowBias = directionalLightDatas[directionalLightDataIndex].ShadowBias;
 
         directionalLight->Load();
 

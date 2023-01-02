@@ -34,6 +34,8 @@ void UDirectionalLight::Load()
     light->Color = Color;
     light->Direction = Direction;
     light->Intensity = Intensity;
+    light->ShadowDistance = ShadowDistance;
+    light->ShadowBias = ShadowBias;
 
     FRenderThread* renderThread = TSingleton<FEngine>::GetInstance().GetRenderThread();
 

@@ -219,7 +219,7 @@ void FRenderer::_createShadowPassConstant(FShadowPassConstant& constant)
 {
     FDirectionalLight* light = mScene->GetDirectionalLight();
     //should use negative value of camera direction in shader
-    const float sceneBoundsRadius = 2000.0f;
+    const float sceneBoundsRadius = light->ShadowDistance;
     const FVector3 sceneBoundsCenter(0.0f, 0.0f, 0.0f);
     FVector3 lightDir = light->Direction;
     FVector3 lightPos = -sceneBoundsRadius * lightDir * 0.8f;

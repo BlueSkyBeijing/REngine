@@ -23,7 +23,8 @@ public:
 
 public:
     FVector3 Direction;
-
+    float ShadowDistance;
+    float ShadowBias;
 private:
 
 };

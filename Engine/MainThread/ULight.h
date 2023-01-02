@@ -29,6 +29,8 @@ public:
 
 public:
     FVector3 Direction;
+    float ShadowDistance;
+    float ShadowBias;
 
 private:
 };
@@ -58,6 +60,9 @@ struct FDirectionalLightData
     FVector4 Color;
     FVector3 Direction;
     float Intensity;
+    float ShadowDistance;
+    float ShadowBias;
+
 };
 
 struct FPointLightData
