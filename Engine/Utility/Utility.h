@@ -27,3 +27,5 @@ uint64 HashMemory(const char* Data, int32 NumBytes);
 
 
 void ReadUnrealString(std::ifstream& file, std::string& outString);
+
+void ReplaceSubString(std::string& str, const std::string& before, const std::string& after);
