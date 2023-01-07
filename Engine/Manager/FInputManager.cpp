@@ -79,13 +79,13 @@ LRESULT CALLBACK FInputManager::WndProc(HWND hWnd, UINT message, WPARAM wParam, 
         inputManager->OnMouseWheel(wParam, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
         break;
     case WM_SIZE:
-        inputManager->OnResize(lParam);
+        inputManager->OnResize(wParam);
         break;
     case WM_KEYDOWN:
-        inputManager->OnKeyDown(lParam);
+        inputManager->OnKeyDown(wParam);
         break;
     case WM_KEYUP:
-        inputManager->OnKeyUp(lParam);
+        inputManager->OnKeyUp(wParam);
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
@@ -102,6 +102,74 @@ void FInputManager::OnKeyDown(WPARAM btnState)
 void FInputManager::OnKeyUp(WPARAM btnState)
 {
     mKeyDown = false;
+
+    int loVal = LOWORD(btnState);
+
+    switch (btnState)
+    {
+        case 0x30:
+        {
+            std::string cmd = TSingleton<FConfigManager>::GetInstance().KeyNum0Cmd;
+            TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand(cmd);
+        }
+        break;
+        case 0x31:
+        {
+            std::string cmd = TSingleton<FConfigManager>::GetInstance().KeyNum1Cmd;
+            TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand(cmd);
+        }
+        break;
+        case 0x32:
+        {
+            std::string cmd = TSingleton<FConfigManager>::GetInstance().KeyNum2Cmd;
+            TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand(cmd);
+        }
+        break;
+        case 0x33:
+        {
+            std::string cmd = TSingleton<FConfigManager>::GetInstance().KeyNum3Cmd;
+            TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand(cmd);
+        }
+        break;
+        case 0x34:
+        {
+            std::string cmd = TSingleton<FConfigManager>::GetInstance().KeyNum4Cmd;
+            TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand(cmd);
+        }
+        break;
+        case 0x35:
+        {
+            std::string cmd = TSingleton<FConfigManager>::GetInstance().KeyNum5Cmd;
+            TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand(cmd);
+        }
+        break;
+        case 0x36:
+        {
+            std::string cmd = TSingleton<FConfigManager>::GetInstance().KeyNum6Cmd;
+            TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand(cmd);
+        }
+        break;
+        case 0x37:
+        {
+            std::string cmd = TSingleton<FConfigManager>::GetInstance().KeyNum7Cmd;
+            TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand(cmd);
+        }
+        break;
+        case 0x38:
+        {
+            std::string cmd = TSingleton<FConfigManager>::GetInstance().KeyNum8Cmd;
+            TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand(cmd);
+        }
+        break;
+        case 0x39:
+        {
+            std::string cmd = TSingleton<FConfigManager>::GetInstance().KeyNum9Cmd;
+            TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand(cmd);
+        }
+        break;
+        default:
+        break;
+    }
 }
 
 void FInputManager::OnMouseDown(WPARAM btnState, int32 x, int32 y)
@@ -130,23 +198,27 @@ void FInputManager::OnMouseMove(WPARAM btnState, int32 x, int32 y)
 
         if (mEject)
         {
-            if (mPan)
+            if (UCamera* cam = engine.GetWorld()->GetCamera())
             {
-                const float panScale = 0.5f * mDeltaScale;
-                engine.GetWorld()->GetCamera()->Pan(dx * panScale, dy * panScale);
-            }
-            else
-            {
-                if (btnState & MK_RBUTTON)
+                if (mPan)
                 {
-                    engine.GetWorld()->GetCamera()->AdjustPitch(-dy);
-                    engine.GetWorld()->GetCamera()->AdjustYaw(-dx);
+                    const float panScale = 0.5f * mDeltaScale;
+                    cam->Pan(dx * panScale, dy * panScale);
                 }
                 else
                 {
-                    engine.GetWorld()->GetCamera()->AdjustMoveStraight(dy * 1000.0f);
-                    engine.GetWorld()->GetCamera()->AdjustYaw(-dx);
+                    if (btnState & MK_RBUTTON)
+                    {
+                        cam->AdjustPitch(-dy);
+                        cam->AdjustYaw(-dx);
+                    }
+                    else
+                    {
+                        cam->AdjustMoveStraight(dy * 1000.0f);
+                        cam->AdjustYaw(-dx);
+                    }
                 }
+
             }
         }
         else
@@ -176,7 +248,10 @@ void FInputManager::OnMouseWheel(WPARAM btnState, int32 x, int32 y)
         const float deltaScale = mDeltaScale;
 
         FEngine& engine = TSingleton<FEngine>::GetInstance();
-        engine.GetWorld()->GetCamera()->AdjustMoveStraight(0.0005f * mDeltaScale * hiVal);
+        if (UCamera* cam = engine.GetWorld()->GetCamera())
+        {
+            cam->AdjustMoveStraight(0.0005f * mDeltaScale * hiVal);
+        }
     }
 
 }

@@ -16,7 +16,12 @@ public:
 
     inline UCamera* GetCamera() const
     {
-        return *(mCameras.begin());
+        if (mCameras.size() > 0)
+        {
+            return *(mCameras.begin());
+        }
+
+        return nullptr;
     }
 
     virtual void LoadWorld(std::string fileName);

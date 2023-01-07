@@ -98,7 +98,10 @@ void UWorld::Unload()
 
 void UWorld::Update(float deltaSeconds)
 {
-    GetCamera()->Update();
+    if (UCamera* cam = GetCamera())
+    {
+        cam->Update();
+    }
 
     for (auto it = mSkeletalMeshObjects.begin(); it != mSkeletalMeshObjects.end(); it++)
     {

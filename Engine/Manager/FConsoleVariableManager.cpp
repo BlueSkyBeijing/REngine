@@ -47,3 +47,8 @@ void FConsoleVariableManager::ProcessCommand()
     std::cout << "\nplease input your command:" << std::endl;
     mConsole->commandExecute(std::cin, std::clog);
 }
+
+void FConsoleVariableManager::ProcessCommand(std::string& cmd)
+{
+    mConsole->commandExecute(cmd, std::clog);
+}

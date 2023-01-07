@@ -37,6 +37,17 @@ public:
     static int32 ShadowMapWidth;
     static int32 ShadowMapHeight;
 
+    static std::string KeyNum1Cmd;
+    static std::string KeyNum2Cmd;
+    static std::string KeyNum3Cmd;
+    static std::string KeyNum4Cmd;
+    static std::string KeyNum5Cmd;
+    static std::string KeyNum6Cmd;
+    static std::string KeyNum7Cmd;
+    static std::string KeyNum8Cmd;
+    static std::string KeyNum9Cmd;
+    static std::string KeyNum0Cmd;
+
 private:
     FConfigManager();
     virtual ~FConfigManager();

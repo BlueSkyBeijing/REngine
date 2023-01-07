@@ -17,6 +17,8 @@ public:
 
     void ProcessCommand();
 
+    void ProcessCommand(std::string& cmd);
+
     template <typename... Args>
     void BindCommand(const std::string& commandName, std::function<void(Args...)> fun, const std::string& help = "")
     {

@@ -1,6 +1,7 @@
 ﻿#include "PrecompiledHeader.h"
 
 #include "FConfigManager.h"
+#include "Utility.h"
 
 const std::string FConfigManager::ContentPath = "Content\\";
 
@@ -29,6 +30,17 @@ int32 FConfigManager::WindowHeight = 768;
 
 int32 FConfigManager::ShadowMapWidth = 1024;
 int32 FConfigManager::ShadowMapHeight = 1024;
+
+std::string FConfigManager::KeyNum1Cmd = "";
+std::string FConfigManager::KeyNum2Cmd = "";
+std::string FConfigManager::KeyNum3Cmd = "";
+std::string FConfigManager::KeyNum4Cmd = "";
+std::string FConfigManager::KeyNum5Cmd = "";
+std::string FConfigManager::KeyNum6Cmd = "";
+std::string FConfigManager::KeyNum7Cmd = "";
+std::string FConfigManager::KeyNum8Cmd = "";
+std::string FConfigManager::KeyNum9Cmd = "";
+std::string FConfigManager::KeyNum0Cmd = "";
 
 FConfigManager::FConfigManager()
 {
@@ -67,6 +79,46 @@ void FConfigManager::Init()
 
     std::stringstream streamShadowMapHeight(engineConfig.GetValue("Render", "ShadowMapHeight", "1024"));
     streamShadowMapHeight >> ShadowMapHeight;
+
+    std::stringstream streamKeyNum1Cmd(engineConfig.GetValue("Key", "KeyNum1Cmd", ""));
+    streamKeyNum1Cmd >> KeyNum1Cmd;
+    ReplaceSubString(KeyNum1Cmd, "\\_", " ");
+
+    std::stringstream streamKeyNum2Cmd(engineConfig.GetValue("Key", "KeyNum2Cmd", ""));
+    streamKeyNum2Cmd >> KeyNum2Cmd;
+    ReplaceSubString(KeyNum2Cmd, "\\_", " ");
+
+    std::stringstream streamKeyNum3Cmd(engineConfig.GetValue("Key", "KeyNum3Cmd", ""));
+    streamKeyNum3Cmd >> KeyNum3Cmd;
+    ReplaceSubString(KeyNum3Cmd, "\\_", " ");
+
+    std::stringstream streamKeyNum4Cmd(engineConfig.GetValue("Key", "KeyNum4Cmd", ""));
+    streamKeyNum4Cmd >> KeyNum4Cmd;
+    ReplaceSubString(KeyNum4Cmd, "\\_", " ");
+
+    std::stringstream streamKeyNum5Cmd(engineConfig.GetValue("Key", "KeyNum5Cmd", ""));
+    streamKeyNum5Cmd >> KeyNum5Cmd;
+    ReplaceSubString(KeyNum5Cmd, "\\_", " ");
+
+    std::stringstream streamKeyNum6Cmd(engineConfig.GetValue("Key", "KeyNum6Cmd", ""));
+    streamKeyNum6Cmd >> KeyNum6Cmd;
+    ReplaceSubString(KeyNum6Cmd, "\\_", " ");
+
+    std::stringstream streamKeyNum7Cmd(engineConfig.GetValue("Key", "KeyNum7Cmd", ""));
+    streamKeyNum7Cmd >> KeyNum7Cmd;
+    ReplaceSubString(KeyNum7Cmd, "\\_", " ");
+
+    std::stringstream streamKeyNum8Cmd(engineConfig.GetValue("Key", "KeyNum8Cmd", ""));
+    streamKeyNum8Cmd >> KeyNum8Cmd;
+    ReplaceSubString(KeyNum8Cmd, "\\_", " ");
+
+    std::stringstream streamKeyNum9Cmd(engineConfig.GetValue("Key", "KeyNum9Cmd", ""));
+    streamKeyNum9Cmd >> KeyNum9Cmd;
+    ReplaceSubString(KeyNum9Cmd, "\\_", " ");
+
+    std::stringstream streamKeyNum0Cmd(engineConfig.GetValue("Key", "KeyNum0Cmd", ""));
+    streamKeyNum0Cmd >> KeyNum0Cmd;
+    ReplaceSubString(KeyNum0Cmd, "\\_", " ");
 
 }
 
