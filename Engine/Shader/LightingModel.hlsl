@@ -466,7 +466,7 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
 #elif SHADING_MODEL == SHADING_MODEL_PREINTEGRATED_SKIN
     return PreintegratedSkinBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, opacity, specularColor, subsurfaceColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_CLEAR_COAT
-    const float clearCoat = 0.5f;
+    const float clearCoat = 1.0f;
     const float clearCoatRoughness = 0.1f;
     return ClearCoatBxDF(normal, viewDir, lightDir, lightColor, lightIntensity, clearCoat, clearCoatRoughness, roughness, metallic, diffuseColor, specularColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_TWO_SIDE_FOLIAGE
