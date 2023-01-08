@@ -127,9 +127,9 @@ float3 SpecularGGX(float roughness, float3 specularColor, BxDFContext context, f
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-float3 Unlit(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float shadow)
+float3 Unlit(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 emissiveColor, float shadow)
 {    
-    return diffuseColor;
+    return emissiveColor;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -455,10 +455,10 @@ void CalculateDiffuseAndSpecularColor(float specular, float metallic, inout floa
     diffuseColor = diffuseColor - diffuseColor * metallic;
 }
 
-float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float roughness, float opacity, float3 specularColor, float3 subsurfaceColor, float metallic, float shadow, float thickness)
+float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float roughness, float opacity, float3 specularColor, float3 emissiveColor, float3 subsurfaceColor, float metallic, float shadow, float thickness)
 {        
 #if SHADING_MODEL == SHADING_MODEL_UNLIT
-    return Unlit(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, shadow);
+    return Unlit(normal, lightDir, lightColor, lightIntensity, viewDir, emissiveColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_DEFAULT_LIT
     return DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, specularColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_SUBSUFACE
@@ -492,9 +492,22 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
 
 float3 Lighting(LightingContext litContext, MaterialContext matContext)
 {    
-    float3 lighting = Lighting(litContext.Normal, litContext.LightDir, litContext.LightColor, litContext.LightIntensity, litContext.ViewDir, matContext.DiffuseColor, matContext.Roughness, matContext.Opacity, matContext.SpecularColor, matContext.SubsurfaceColor, matContext.Metallic, litContext.Shadow, litContext.Thickness);
+    float3 lighting = Lighting(litContext.Normal,
+        litContext.LightDir, 
+        litContext.LightColor,
+        litContext.LightIntensity, 
+        litContext.ViewDir,
+        matContext.DiffuseColor, 
+        matContext.Roughness,
+        matContext.Opacity, matContext.SpecularColor,
+        matContext.EmissiveColor,
+        matContext.SubsurfaceColor, 
+        matContext.Metallic, 
+        litContext.Shadow, 
+        litContext.Thickness);
         
     return  lighting;
+
 }
 
 float4 CaculatePointLightDirAndIntensity(float3 lightPos, float3 pixelPos, float pointLightIntensity, float invRadius)

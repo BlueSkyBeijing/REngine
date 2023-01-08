@@ -42,12 +42,14 @@ float4 PSMain(VertexShaderOutput pixelIn, bool IsFrontFace: SV_IsFrontFace) : SV
         lighting += Lighting(litContextPoint, matContext);
     }
 
+#if SHADING_MODEL != SHADING_MODEL_UNLIT
     float3 envReflectionColor = GetImageBasedReflectionLighting(litContextDirectional, matContext);
     lighting += envReflectionColor;
     
     float3 envDiffuseColor = GetImageBasedDiffuseLighting(litContextDirectional, matContext);
     lighting += envDiffuseColor;
-    
+#endif
+
     outColor.rgb = lighting;
     outColor.a = opacity;
     
