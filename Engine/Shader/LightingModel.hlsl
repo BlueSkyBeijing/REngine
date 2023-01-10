@@ -166,7 +166,7 @@ float3 SubsurfaceBxDF(float3 normal, float3 lightDir, float3 lightColor, float l
 	// lerp to never exceed 1 (energy conserving)
     float3 transmission = lightColor * lightIntensity * lerp(backScatter, 1, inScatter) * subsurfaceColor * thickness;
     
-    lighting = lighting * shadow + transmission;
+    lighting = lighting + transmission;
 
     return lighting;
 }
