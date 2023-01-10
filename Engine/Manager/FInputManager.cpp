@@ -14,7 +14,7 @@
 #include "FConsoleVariableManager.h"
 
 FInputManager::FInputManager():
-    mDeltaScale(1000.0f),
+    mDeltaScale(200.0f),
     mPan(false)
 {
 }
@@ -202,7 +202,7 @@ void FInputManager::OnMouseMove(WPARAM btnState, int32 x, int32 y)
             {
                 if (mPan)
                 {
-                    const float panScale = 0.5f * mDeltaScale;
+                    const float panScale = 0.05f * mDeltaScale;
                     cam->Pan(dx * panScale, dy * panScale);
                 }
                 else
@@ -250,7 +250,7 @@ void FInputManager::OnMouseWheel(WPARAM btnState, int32 x, int32 y)
         FEngine& engine = TSingleton<FEngine>::GetInstance();
         if (UCamera* cam = engine.GetWorld()->GetCamera())
         {
-            cam->AdjustMoveStraight(0.0005f * mDeltaScale * hiVal);
+            cam->AdjustMoveStraight(0.0001f * mDeltaScale * hiVal);
         }
     }
 

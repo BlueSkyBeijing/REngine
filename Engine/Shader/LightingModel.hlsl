@@ -332,7 +332,7 @@ float3 TwoSidedBxDF(float3 normal, float3 lightDir, float3 lightColor, float lig
 
 	float3 transmission = lightColor * lightIntensity * (wrapNoL * scatter) * subsurfaceColor;
 
-    lighting = lighting + transmission;
+    lighting = lighting + transmission * shadow;
     
     return lighting;
 }

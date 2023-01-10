@@ -86,7 +86,7 @@ float4 BloomSetupPS(BloomSetupVertexShaderOutput input) : SV_TARGET
 
     float totalLuminance = Luminance(averageColor.rgb);
     float bloomLuminance = totalLuminance - BloomThreshold;
-    float amount = saturate(bloomLuminance * 0.5f);
+    float amount = saturate(bloomLuminance * 0.001f);
    
     float4 color = 1.0f;
     color.rgb = averageColor.rgb;
