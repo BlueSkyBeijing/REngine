@@ -437,13 +437,13 @@ float3 EyeBxDF(float3 normal, float3 viewDir, float3 lightDir, float3 lightColor
 Texture2D PreIntegratedBRDF : register(t3);
 SamplerState PreIntegratedBRDFSampler : register(s3);
 
-float3 PreintegratedSkinBxDF(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float roughness,  float opacity, float3 specularColor, float3 subsurfaceColor, float shadow)
+float3 PreintegratedSkinBxDF(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float roughness,  float opacity, float3 specularColor, float3 subsurfaceColor, float shadow, float thickness)
 {
     float3 lighting = DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, specularColor, shadow);
 	
 	float3 preintegratedBRDF = PreIntegratedBRDF.Sample(PreIntegratedBRDFSampler, float2(saturate(dot(normal, lightDir) * .5 + .5), 1 - opacity)).rgb;
 	float3 transmission = preintegratedBRDF * subsurfaceColor;
-    lighting += transmission;
+    lighting += transmission * thickness;
     
 	return lighting;
 }
@@ -464,7 +464,7 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
 #elif SHADING_MODEL == SHADING_MODEL_SUBSUFACE
     return SubsurfaceBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, specularColor, roughness, opacity, subsurfaceColor, shadow, thickness);
 #elif SHADING_MODEL == SHADING_MODEL_PREINTEGRATED_SKIN
-    return PreintegratedSkinBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, opacity, specularColor, subsurfaceColor, shadow);
+    return PreintegratedSkinBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, opacity, specularColor, subsurfaceColor, shadow, thickness);
 #elif SHADING_MODEL == SHADING_MODEL_CLEAR_COAT
     const float clearCoat = 1.0f;
     const float clearCoatRoughness = 0.1f;
