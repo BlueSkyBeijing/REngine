@@ -541,6 +541,7 @@ void FRenderer::_createSceneColorPassConstant(FSceneColorPassConstant& constant)
     constant.DirectionalLightDir = -light->Direction;
     constant.DirectionalLightColor = FVector3(light->Color.x(), light->Color.y(), light->Color.z());
     constant.DirectionalLightIntensity = light->Intensity;
+    constant.DirectionalLightShadowBias = light->ShadowBias;
     const int32 shadowMapWidth = TSingleton<FConfigManager>::GetInstance().ShadowMapWidth;
     const int32 shadowMapHeight = TSingleton<FConfigManager>::GetInstance().ShadowMapHeight;
     constant.InvShadowMapSize = FVector2(1.0f / (shadowMapWidth), 1.0f / (shadowMapHeight));

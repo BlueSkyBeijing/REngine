@@ -18,7 +18,7 @@ float2 DirectionalLightShadow(float4 shadowPosH)
     };
 
     float2 shadowAndThickness = float2(0, 0);
-    const float bias = 0.001f;
+    const float bias = DirectionalLightShadowBias * 0.01f;
     [unroll]
     for (int i = 0; i < PCF_COUNT; ++i)
     {
