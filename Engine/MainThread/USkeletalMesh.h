@@ -12,7 +12,7 @@ public:
     virtual ~USkeletalMesh() override;
 
 public:
-    std::string FullSkeletonPath;
+    FString FullSkeletonPath;
 
 public:
     virtual void Load() override;
@@ -53,7 +53,7 @@ private:
 
 struct FBoneInfo
 {
-    std::string Name;
+    FString Name;
     int32 ParentIndex;
 };
 

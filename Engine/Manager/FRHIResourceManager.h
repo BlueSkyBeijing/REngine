@@ -10,7 +10,7 @@ enum ERHIResourceType
     RHIRT_MaxNum
 };
 
-typedef std::map<std::string, FRHIResource*> TRHIResourceMap;
+typedef std::map<FString, FRHIResource*> TRHIResourceMap;
 
 class FRHIResourceManager
 {
@@ -20,7 +20,7 @@ public:
     void Init();
     void UnInit();
 
-    FRHIResource* GetOrCreate(ERHIResourceType resorceType, const std::string& fullFileName);
+    FRHIResource* GetOrCreate(ERHIResourceType resorceType, const FString& fullFileName);
 
 private:
     FRHIResourceManager();

@@ -466,7 +466,7 @@ FRHIShader* FD3D12RHI::GetOrCreate(const FShaderInfo& shaderInfo)
     {
         shaderDefines = new D3D_SHADER_MACRO[shaderInfo.Defines.size() + 1];
         
-        std::map<std::string, std::string>::const_iterator it = shaderInfo.Defines.begin();
+        std::map<FString, FString>::const_iterator it = shaderInfo.Defines.begin();
         int32 index = 0;
         for (; it != shaderInfo.Defines.end(); it++)
         {

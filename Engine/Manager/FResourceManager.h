@@ -15,7 +15,7 @@ enum EResourceType
     RT_MaxNum
 };
 
-typedef std::map<std::string, UResource*> TResourceMap;
+typedef std::map<FString, UResource*> TResourceMap;
 
 class FResourceManager
 {
@@ -25,7 +25,7 @@ public:
     void Init();
     void UnInit();
 
-    UResource* GetOrCreate(EResourceType resorceType, const std::string& fullFileName);
+    UResource* GetOrCreate(EResourceType resorceType, const FString& fullFileName);
 
 private:
     FResourceManager();

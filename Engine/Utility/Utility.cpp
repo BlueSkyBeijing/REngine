@@ -8,21 +8,21 @@ uint64 HashMemory(const char* Data, int32 NumBytes)
     return CityHash64(Data, NumBytes);
 }
 
-void ReadUnrealString(std::ifstream& file, std::string& outString)
+void ReadUnrealString(std::ifstream& file, FString& outString)
 {
     int32 stringSize;
     file.read((char*)&stringSize, sizeof(int32));
     file.read((char*)outString.data(), stringSize);
 
-    outString = std::string(outString.c_str());
+    outString = FString(outString.c_str());
 }
 
-void ReplaceSubString(std::string& str, const std::string& before, const std::string& after)
+void ReplaceSubString(FString& str, const FString& before, const FString& after)
 {
-    for (std::string::size_type pos(0); pos != std::string::npos; pos += after.length())
+    for (FString::size_type pos(0); pos != FString::npos; pos += after.length())
     {
         pos = str.find(before, pos);
-        if (pos != std::string::npos)
+        if (pos != FString::npos)
             str.replace(pos, before.length(), after);
         else
             break;

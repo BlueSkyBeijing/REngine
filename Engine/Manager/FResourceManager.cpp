@@ -35,7 +35,7 @@ void FResourceManager::UnInit()
 
 }
 
-UResource* FResourceManager::GetOrCreate(EResourceType resorceType, const std::string& fullFileName)
+UResource* FResourceManager::GetOrCreate(EResourceType resorceType, const FString& fullFileName)
 {
     auto iter = mResourceMaps[resorceType].find(fullFileName);
     if (iter == mResourceMaps[resorceType].end())

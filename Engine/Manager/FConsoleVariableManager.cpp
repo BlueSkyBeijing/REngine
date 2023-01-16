@@ -37,7 +37,7 @@ void FConsoleVariableManager::UnInit()
 }
 
 template <class T>
-void FConsoleVariableManager::BindCVar(const std::string& str, T& var, const std::string& help)
+void FConsoleVariableManager::BindCVar(const FString& str, T& var, const FString& help)
 {
     mConsole->bindCVar(str, var, help);
 }
@@ -48,7 +48,7 @@ void FConsoleVariableManager::ProcessCommand()
     mConsole->commandExecute(std::cin, std::clog);
 }
 
-void FConsoleVariableManager::ProcessCommand(std::string& cmd)
+void FConsoleVariableManager::ProcessCommand(FString& cmd)
 {
     mConsole->commandExecute(cmd, std::clog);
 }

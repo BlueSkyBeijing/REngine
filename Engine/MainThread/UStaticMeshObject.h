@@ -17,8 +17,8 @@ public:
     virtual ~UStaticMeshObject() override;
 
 public:
-    std::string FullResourcePath;
-    std::vector<std::string> FullMaterialPaths;
+    FString FullResourcePath;
+    std::vector<FString> FullMaterialPaths;
 
 public:
     virtual void Load() override;
@@ -43,6 +43,6 @@ struct FStaticMeshObjectData
     FQuat Rotation;
     FVector3 Location;
     FVector3 Scale;
-    std::string ResourceName;
-    std::vector<std::string> MaterialNames;
+    FString ResourceName;
+    std::vector<FString> MaterialNames;
 };

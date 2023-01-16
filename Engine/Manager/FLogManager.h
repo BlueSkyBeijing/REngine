@@ -27,5 +27,5 @@ private:
 
 private:
     spdlog::logger* mLogFile;
-    std::string mLogFileName;
+    FString mLogFileName;
 };

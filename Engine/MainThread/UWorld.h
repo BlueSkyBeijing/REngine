@@ -24,10 +24,10 @@ public:
         return nullptr;
     }
 
-    virtual void LoadWorld(std::string fileName);
+    virtual void LoadWorld(FString fileName);
 
 protected:
-    virtual void loadFromFile(std::string fileName);
+    virtual void loadFromFile(FString fileName);
 
 private:
     std::vector<UCamera*> mCameras;

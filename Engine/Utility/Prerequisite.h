@@ -21,6 +21,8 @@ typedef Eigen::Quaternionf FQuat;
 
 typedef Eigen::Vector4f FLinearColor;
 
+typedef std::string FString;
+
 enum EPixelFormat;
 enum EInputClassification;
 enum ELogLevel;

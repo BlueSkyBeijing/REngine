@@ -181,7 +181,7 @@ void FPostProcessing::Init()
 
     creatPostProcessConstantBuffer();
 
-    std::map<std::string, std::string> defines;
+    std::map<FString, FString> defines;
     {
         FShaderInfo vertexShaderBloomSetupInfo;
         vertexShaderBloomSetupInfo.FilePathName = L"Engine\\Shader\\Bloom.hlsl";

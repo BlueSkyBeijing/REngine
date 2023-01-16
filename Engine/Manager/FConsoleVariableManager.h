@@ -13,14 +13,14 @@ public:
     void UnInit();
 
     template <class T>
-    void BindCVar(const std::string& varname, T& var, const std::string& help = "");
+    void BindCVar(const FString& varname, T& var, const FString& help = "");
 
     void ProcessCommand();
 
-    void ProcessCommand(std::string& cmd);
+    void ProcessCommand(FString& cmd);
 
     template <typename... Args>
-    void BindCommand(const std::string& commandName, std::function<void(Args...)> fun, const std::string& help = "")
+    void BindCommand(const FString& commandName, std::function<void(Args...)> fun, const FString& help = "")
     {
         mConsole->bindCommand(commandName, fun, help);
     };
@@ -31,7 +31,7 @@ private:
 
 private:
     Virtuoso::QuakeStyleConsole* mConsole;
-    std::string mCommandHistoryFileName;
+    FString mCommandHistoryFileName;
 
 };
 
@@ -40,7 +40,7 @@ class FConsoleVariable
 {
 public:
     template <typename... Args>
-    FConsoleVariable(const std::string& commandName, std::function<void(Args...)> fun, const std::string& help = "")
+    FConsoleVariable(const FString& commandName, std::function<void(Args...)> fun, const FString& help = "")
     {
         TSingleton<FConsoleVariableManager>::GetInstance().BindCommand(commandName, fun, help);
     }

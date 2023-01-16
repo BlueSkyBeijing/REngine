@@ -17,9 +17,9 @@ public:
     virtual ~USkeletalMeshObject() override;
 
 public:
-    std::string FullResourcePath;
-    std::string FullAnimSequencePath;
-    std::vector<std::string> FullMaterialPaths;
+    FString FullResourcePath;
+    FString FullAnimSequencePath;
+    std::vector<FString> FullMaterialPaths;
 
 public:
     virtual void Load() override;
@@ -49,7 +49,7 @@ struct FSkeletalMeshObjectData
     FQuat Rotation;
     FVector3 Location;
     FVector3 Scale;
-    std::string ResourceName;
-    std::string AnimationName;
-    std::vector<std::string> MaterialNames;
+    FString ResourceName;
+    FString AnimationName;
+    std::vector<FString> MaterialNames;
 };

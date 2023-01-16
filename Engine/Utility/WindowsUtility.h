@@ -1,4 +1,6 @@
 #pragma once
+#include "Prerequisite.h"
+
 #include <windows.h>
 #include <string>
 #include <cassert>
@@ -17,12 +19,12 @@ public:
 	}
 
 protected:
-	inline std::string HResultToString(HRESULT hresult)
+	inline FString HResultToString(HRESULT hresult)
 	{
 		char infos[64] = {};
 		sprintf_s(infos, "HRESULT 0x%08X", static_cast<UINT>(hresult));
 
-		return std::string(infos);
+		return FString(infos);
 	}
 private:
 	const HRESULT mHResult;
@@ -35,3 +37,5 @@ private:
 		throw HResultException(hresult);				   \
 	}													   \
 }
+
+void SetThreadName(DWORD dwThreadID, LPCSTR szThreadName);

@@ -12,14 +12,14 @@ public:
 
 public:
     FMaterial* Material;
-    std::string FullFilePathName;
+    FString FullFilePathName;
 
 public:
     virtual void Load() override;
     virtual void Unload() override;
 
 private:
-    std::map<std::string, std::string> mTexturePaths;
+    std::map<FString, FString> mTexturePaths;
 
     EBlendMode mBlendMode;
     EMaterialShadingModel mShadingModel;

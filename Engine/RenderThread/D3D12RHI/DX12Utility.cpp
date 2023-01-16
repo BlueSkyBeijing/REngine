@@ -5,8 +5,8 @@
 Microsoft::WRL::ComPtr<ID3DBlob> CompileShader(
 	const std::wstring& filename,
 	const D3D_SHADER_MACRO* defines,
-	const std::string& entrypoint,
-	const std::string& target)
+	const FString& entrypoint,
+	const FString& target)
 {
 	UINT compileFlags = 0;
 #if defined(DEBUG) || defined(_DEBUG)  

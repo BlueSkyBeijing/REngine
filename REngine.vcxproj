@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Core\FEngine.cpp" />
+    <ClCompile Include="Engine\Core\FThread.cpp" />
     <ClCompile Include="Engine\Main.cpp" />
     <ClCompile Include="Engine\MainThread\UCamera.cpp" />
     <ClCompile Include="Engine\MainThread\ULight.cpp" />
@@ -80,9 +81,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Engine\Utility\Utility.cpp" />
+    <ClCompile Include="Engine\Utility\WindowsUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Core\FEngine.h" />
+    <ClInclude Include="Engine\Core\FThread.h" />
     <ClInclude Include="Engine\MainThread\UCamera.h" />
     <ClInclude Include="Engine\MainThread\ULight.h" />
     <ClInclude Include="Engine\MainThread\UMaterial.h" />

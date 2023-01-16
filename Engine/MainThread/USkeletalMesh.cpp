@@ -61,13 +61,13 @@ void USkeletalMesh::Load()
         mSections.push_back(section);
     }
 
-    std::string ResourceName;
+    FString ResourceName;
     int32 stringSize;
     skeletalMeshFile.read((char*)&stringSize, sizeof(int32));
     skeletalMeshFile.read((char*)ResourceName.data(), stringSize);
 
     FullSkeletonPath = FConfigManager::DefaultSkeletonPath +
-        std::string(ResourceName.c_str()) +
+        FString(ResourceName.c_str()) +
         FConfigManager::DefaultSkeletonFileSuffix;
 
     skeletalMeshFile.close();

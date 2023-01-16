@@ -431,9 +431,9 @@ public:
     ~FShaderInfo() {};
 
     std::wstring FilePathName;
-    std::string EnterPoint;
-    std::string Target;
-    std::map<std::string, std::string> Defines;
+    FString EnterPoint;
+    FString Target;
+    std::map<FString, FString> Defines;
 };
 
 class FPipelineStateInfo

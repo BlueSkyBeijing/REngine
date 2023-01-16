@@ -11,42 +11,42 @@ public:
     void Init();
     void UnInit();
 
-    const static std::string ContentPath;
+    const static FString ContentPath;
 
-    const static std::string DefaultMapPath;
-    const static std::string DefaultStaticMeshPath;
-    const static std::string DefaultSkeletalMeshPath;
-    const static std::string DefaultSkeletonPath;
-    const static std::string DefaultAnimSequencePath;
-    const static std::string DefaultMaterialPath;
-    const static std::string DefaultTexturePath;
+    const static FString DefaultMapPath;
+    const static FString DefaultStaticMeshPath;
+    const static FString DefaultSkeletalMeshPath;
+    const static FString DefaultSkeletonPath;
+    const static FString DefaultAnimSequencePath;
+    const static FString DefaultMaterialPath;
+    const static FString DefaultTexturePath;
 
-    const static std::string DefaultMapFileSuffix;
-    const static std::string DefaultStaticMeshFileSuffix;
-    const static std::string DefaultSkeletalMeshFileSuffix;
-    const static std::string DefaultSkeletonFileSuffix;
-    const static std::string DefaultAnimSequenceFileSuffix;
-    const static std::string DefaultMaterialFileSuffix;
-    const static std::string DefaultTextureFileSuffix;
+    const static FString DefaultMapFileSuffix;
+    const static FString DefaultStaticMeshFileSuffix;
+    const static FString DefaultSkeletalMeshFileSuffix;
+    const static FString DefaultSkeletonFileSuffix;
+    const static FString DefaultAnimSequenceFileSuffix;
+    const static FString DefaultMaterialFileSuffix;
+    const static FString DefaultTextureFileSuffix;
 
     const static int32 FrameBufferNum;
 
-    static std::string DefaultMap;
+    static FString DefaultMap;
     static int32 WindowWidth;
     static int32 WindowHeight;
     static int32 ShadowMapWidth;
     static int32 ShadowMapHeight;
 
-    static std::string KeyNum1Cmd;
-    static std::string KeyNum2Cmd;
-    static std::string KeyNum3Cmd;
-    static std::string KeyNum4Cmd;
-    static std::string KeyNum5Cmd;
-    static std::string KeyNum6Cmd;
-    static std::string KeyNum7Cmd;
-    static std::string KeyNum8Cmd;
-    static std::string KeyNum9Cmd;
-    static std::string KeyNum0Cmd;
+    static FString KeyNum1Cmd;
+    static FString KeyNum2Cmd;
+    static FString KeyNum3Cmd;
+    static FString KeyNum4Cmd;
+    static FString KeyNum5Cmd;
+    static FString KeyNum6Cmd;
+    static FString KeyNum7Cmd;
+    static FString KeyNum8Cmd;
+    static FString KeyNum9Cmd;
+    static FString KeyNum0Cmd;
 
 private:
     FConfigManager();

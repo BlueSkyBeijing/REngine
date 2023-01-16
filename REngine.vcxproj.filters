@@ -206,6 +206,12 @@
     <ClCompile Include="Engine\Manager\FConsoleVariableManager.cpp">
       <Filter>Engine\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Utility\WindowsUtility.cpp">
+      <Filter>Engine\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\FThread.cpp">
+      <Filter>Engine\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Manager\FInputManager.h">
@@ -390,6 +396,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Manager\FConsoleVariableManager.h">
       <Filter>Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\FThread.h">
+      <Filter>Engine\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

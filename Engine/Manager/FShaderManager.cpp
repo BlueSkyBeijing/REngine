@@ -65,8 +65,8 @@ uint64 FShaderManager::haskShaderInfo(const FShaderInfo& shaderInfo)
 
     for (auto iter = shaderInfo.Defines.begin(); iter != shaderInfo.Defines.end(); iter++)
     {
-        const std::string& define = iter->first;
-        const std::string& defineValue = iter->second;
+        const FString& define = iter->first;
+        const FString& defineValue = iter->second;
 
         memSize += static_cast<int32>(define.size());
         memSize += static_cast<int32>(defineValue.size());
@@ -84,8 +84,8 @@ uint64 FShaderManager::haskShaderInfo(const FShaderInfo& shaderInfo)
 
     for (auto iter = shaderInfo.Defines.begin(); iter != shaderInfo.Defines.end(); iter++)
     {
-        const std::string& define = iter->first;
-        const std::string& defineValue = iter->second;
+        const FString& define = iter->first;
+        const FString& defineValue = iter->second;
 
         memcpy(info, define.c_str(), define.size());
         info += static_cast<int32>(define.size());

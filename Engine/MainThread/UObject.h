@@ -10,7 +10,7 @@ public:
     virtual ~UObject();
 
 public:
-    std::string Name;
+    FString Name;
 
 public:
     virtual void Load() {};
@@ -26,7 +26,7 @@ public:
     virtual ~UResource();
 
 public:
-    std::string FullFilePathName;
+    FString FullFilePathName;
 
 public:
     virtual void Load() {};

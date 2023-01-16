@@ -13,7 +13,7 @@ public:
 public:
     void Init();
     void UnInit();
-    FRHITexture2D* GetTexture(std::string name)
+    FRHITexture2D* GetTexture(FString name)
     {
         return mTextures.at(name);
     }
@@ -43,9 +43,9 @@ public:
     FRHITextureCube* EnvMap;
     FRHITexture2D* PreIntegratedBRDF;
 
-    std::map<std::string, FRHITexture2D*> mTextures;
-    std::map<std::string, std::string> mTexturePaths;
-    std::string BaseColorFullFilePathName;
+    std::map<FString, FRHITexture2D*> mTextures;
+    std::map<FString, FString> mTexturePaths;
+    FString BaseColorFullFilePathName;
 
 private:
 

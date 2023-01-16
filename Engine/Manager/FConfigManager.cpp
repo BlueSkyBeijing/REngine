@@ -3,27 +3,27 @@
 #include "FConfigManager.h"
 #include "Utility.h"
 
-const std::string FConfigManager::ContentPath = "Content\\";
+const FString FConfigManager::ContentPath = "Content\\";
 
-const std::string FConfigManager::DefaultMapPath = "Content\\Map\\";
-const std::string FConfigManager::DefaultStaticMeshPath = "Content\\StaticMesh\\";
-const std::string FConfigManager::DefaultSkeletalMeshPath = "Content\\SkeletalMesh\\";
-const std::string FConfigManager::DefaultSkeletonPath = "Content\\SkeletalMesh\\Skeleton\\";
-const std::string FConfigManager::DefaultAnimSequencePath = "Content\\SkeletalMesh\\Animation\\";
-const std::string FConfigManager::DefaultMaterialPath = "Content\\Material\\";
-const std::string FConfigManager::DefaultTexturePath = "Content\\Texture\\";
+const FString FConfigManager::DefaultMapPath = "Content\\Map\\";
+const FString FConfigManager::DefaultStaticMeshPath = "Content\\StaticMesh\\";
+const FString FConfigManager::DefaultSkeletalMeshPath = "Content\\SkeletalMesh\\";
+const FString FConfigManager::DefaultSkeletonPath = "Content\\SkeletalMesh\\Skeleton\\";
+const FString FConfigManager::DefaultAnimSequencePath = "Content\\SkeletalMesh\\Animation\\";
+const FString FConfigManager::DefaultMaterialPath = "Content\\Material\\";
+const FString FConfigManager::DefaultTexturePath = "Content\\Texture\\";
 
-const std::string FConfigManager::DefaultMapFileSuffix = ".map";
-const std::string FConfigManager::DefaultStaticMeshFileSuffix = ".stm";
-const std::string FConfigManager::DefaultSkeletalMeshFileSuffix = ".skm";
-const std::string FConfigManager::DefaultSkeletonFileSuffix = ".skt";
-const std::string FConfigManager::DefaultAnimSequenceFileSuffix = ".anm";
-const std::string FConfigManager::DefaultMaterialFileSuffix = ".mtl";
-const std::string FConfigManager::DefaultTextureFileSuffix = ".dds";
+const FString FConfigManager::DefaultMapFileSuffix = ".map";
+const FString FConfigManager::DefaultStaticMeshFileSuffix = ".stm";
+const FString FConfigManager::DefaultSkeletalMeshFileSuffix = ".skm";
+const FString FConfigManager::DefaultSkeletonFileSuffix = ".skt";
+const FString FConfigManager::DefaultAnimSequenceFileSuffix = ".anm";
+const FString FConfigManager::DefaultMaterialFileSuffix = ".mtl";
+const FString FConfigManager::DefaultTextureFileSuffix = ".dds";
 
 const int32 FConfigManager::FrameBufferNum = 2;
 
-std::string FConfigManager::DefaultMap = "Default.map";
+FString FConfigManager::DefaultMap = "Default.map";
 
 int32 FConfigManager::WindowWidth = 1366;
 int32 FConfigManager::WindowHeight = 768;
@@ -31,16 +31,16 @@ int32 FConfigManager::WindowHeight = 768;
 int32 FConfigManager::ShadowMapWidth = 1024;
 int32 FConfigManager::ShadowMapHeight = 1024;
 
-std::string FConfigManager::KeyNum1Cmd = "";
-std::string FConfigManager::KeyNum2Cmd = "";
-std::string FConfigManager::KeyNum3Cmd = "";
-std::string FConfigManager::KeyNum4Cmd = "";
-std::string FConfigManager::KeyNum5Cmd = "";
-std::string FConfigManager::KeyNum6Cmd = "";
-std::string FConfigManager::KeyNum7Cmd = "";
-std::string FConfigManager::KeyNum8Cmd = "";
-std::string FConfigManager::KeyNum9Cmd = "";
-std::string FConfigManager::KeyNum0Cmd = "";
+FString FConfigManager::KeyNum1Cmd = "";
+FString FConfigManager::KeyNum2Cmd = "";
+FString FConfigManager::KeyNum3Cmd = "";
+FString FConfigManager::KeyNum4Cmd = "";
+FString FConfigManager::KeyNum5Cmd = "";
+FString FConfigManager::KeyNum6Cmd = "";
+FString FConfigManager::KeyNum7Cmd = "";
+FString FConfigManager::KeyNum8Cmd = "";
+FString FConfigManager::KeyNum9Cmd = "";
+FString FConfigManager::KeyNum0Cmd = "";
 
 FConfigManager::FConfigManager()
 {

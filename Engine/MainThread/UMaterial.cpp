@@ -43,17 +43,17 @@ void UMaterial::Load()
 
     for (int32 i = 0; i < numTexture; i++)
     {
-        std::string texName;
+        FString texName;
         ReadUnrealString(materialFile, texName);
 
-        std::string texFile;
+        FString texFile;
         ReadUnrealString(materialFile, texFile);
 
         texFile = FConfigManager::DefaultTexturePath +
             texFile +
             FConfigManager::DefaultTextureFileSuffix;
 
-        mTexturePaths.insert(std::pair<std::string, std::string>(texName, texFile));
+        mTexturePaths.insert(std::pair<FString, FString>(texName, texFile));
     }
 
     materialFile.close();

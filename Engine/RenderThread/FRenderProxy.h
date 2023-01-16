@@ -94,7 +94,7 @@ public:
     FQuat Rotation;
     FVector3 Scale;
 
-    std::string DebugName;
+    FString DebugName;
 
 };
 
@@ -143,7 +143,7 @@ public:
 
     std::vector<FMeshBatch*> MeshBatchs;
 
-    std::string DebugName;
+    FString DebugName;
 
 protected:
 

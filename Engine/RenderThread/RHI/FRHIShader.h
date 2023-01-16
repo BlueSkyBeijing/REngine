@@ -13,8 +13,8 @@ public:
 
 public:
     std::wstring FullFilePathName;
-    std::string EnterPoint;
-    std::string Target;
+    FString EnterPoint;
+    FString Target;
 
 private:
 

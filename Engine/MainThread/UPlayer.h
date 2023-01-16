@@ -21,12 +21,12 @@ public:
     virtual void Load() override;
     virtual void Unload() override;
 
-    inline void SetSkeletalMeshFilePath(const std::string& object)
+    inline void SetSkeletalMeshFilePath(const FString& object)
     {
         mSkeletalMeshFilePath = object;
     }
 
-    inline const std::string& GetSkeletalMeshFilePath() const
+    inline const FString& GetSkeletalMeshFilePath() const
     {
         return mSkeletalMeshFilePath;
     }
@@ -42,19 +42,19 @@ public:
 
     void Update(float deltaSeconds);
 
-    std::vector<std::string> FullMaterialPaths;
+    std::vector<FString> FullMaterialPaths;
 
 protected:
     virtual void createRenderProxy() override;
 
 private:
-    std::string mSkeletalMeshFilePath;
+    FString mSkeletalMeshFilePath;
     USkeletalMesh* mSkeletalMesh;
     std::vector<UMaterial*> mMaterials;
     FRenderProxy* mRenderProxy;
     FVector3 mOrientation;
 
-    std::map<EPlayerState, std::string> mStateAnimMap;
+    std::map<EPlayerState, FString> mStateAnimMap;
     UAnimSequence* mAnimRing[PLAYER_ANIMATION_RING_NUM];
     float mAnimTimeRing[PLAYER_ANIMATION_RING_NUM];
     float mAnimWeightRing[PLAYER_ANIMATION_RING_NUM];
