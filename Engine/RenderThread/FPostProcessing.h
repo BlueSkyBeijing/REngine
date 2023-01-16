@@ -57,6 +57,25 @@ public:
     ~FPostProcessing();
 
 public:
+    float BloomIntensity;
+    float BloomThreshold;
+    float BloomSizeScale;
+
+    float Bloom1Size;
+    float Bloom2Size;
+    float Bloom3Size;
+    float Bloom4Size;
+    float Bloom5Size;
+    float Bloom6Size;
+
+    FLinearColor Bloom1Tint;
+    FLinearColor Bloom2Tint;
+    FLinearColor Bloom3Tint;
+    FLinearColor Bloom4Tint;
+    FLinearColor Bloom5Tint;
+    FLinearColor Bloom6Tint;
+
+public:
     void Init();
     void UnInit();
 

@@ -19,6 +19,8 @@ typedef Eigen::Matrix3f FMatrix3x3;
 
 typedef Eigen::Quaternionf FQuat;
 
+typedef Eigen::Vector4f FLinearColor;
+
 enum EPixelFormat;
 enum EInputClassification;
 enum ELogLevel;

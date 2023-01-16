@@ -87,12 +87,29 @@ void FFullScreenQuad::Draw()
 {
 }
 
-FPostProcessing::FPostProcessing(FRHI* rhi, FRHIRenderTarget* sceneColor, FRHIRenderTarget* renderTarget) : mRHI(rhi),
+FPostProcessing::FPostProcessing(FRHI* rhi, FRHIRenderTarget* sceneColor, FRHIRenderTarget* renderTarget) : 
+mRHI(rhi),
 mSceneColor(sceneColor),
 mRenderTarget(renderTarget),
 mPostProcessConstantBuffer(nullptr),
 mFullScreenQuad(nullptr)
 {
+    BloomIntensity = 0.675f;
+    BloomThreshold = -1.0f;
+    // default is 4 to maintain old settings after fixing something that caused a factor of 4
+    BloomSizeScale = 4.0;
+    Bloom1Tint = FLinearColor(0.3465f, 0.3465f, 0.3465f, 1.0f);
+    Bloom1Size = 0.3f;
+    Bloom2Tint = FLinearColor(0.138f, 0.138f, 0.138f, 1.0f);
+    Bloom2Size = 1.0f;
+    Bloom3Tint = FLinearColor(0.1176f, 0.1176f, 0.1176f, 1.0f);
+    Bloom3Size = 2.0f;
+    Bloom4Tint = FLinearColor(0.066f, 0.066f, 0.066f, 1.0f);
+    Bloom4Size = 10.0f;
+    Bloom5Tint = FLinearColor(0.066f, 0.066f, 0.066f, 1.0f);
+    Bloom5Size = 30.0f;
+    Bloom6Tint = FLinearColor(0.061f, 0.061f, 0.061f, 1.0f);
+    Bloom6Size = 64.0f;
 }
 
 FPostProcessing::~FPostProcessing()
@@ -827,17 +844,40 @@ void FPostProcessing::creatPostProcessConstantBuffer()
     mBloomUpLastResault = mBloomDown3;
     mBloomUpSource = mBloomDown2;
     _createBloomUpConstant(bloomUpConstant0);
+    bloomUpConstant0.BloomTintA = Bloom4Tint;
+    bloomUpConstant0.BloomTintB = Bloom5Tint;
+    bloomUpConstant0.BloomTintA *= BloomIntensity;
+    bloomUpConstant0.BloomTintB *= BloomIntensity;
+
+    bloomUpConstant0.BloomTintA *= 1.0f / 8.0f;
+    bloomUpConstant0.BloomTintB *= 1.0f / 8.0f;
+
     mBloomUp0ConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FBloomUpConstant), (uint8*)&bloomUpConstant0);
 
     FBloomUpConstant bloomUpConstant1;
     mBloomUpLastResault = mBloomUp0;
     mBloomUpSource = mBloomDown1;
     _createBloomUpConstant(bloomUpConstant1);
+    bloomUpConstant1.BloomTintA = Bloom3Tint;
+    bloomUpConstant1.BloomTintB = FVector4(1.0f, 1.0f, 1.0f, 1.0f);
+    bloomUpConstant1.BloomTintA *= BloomIntensity;
+
+    bloomUpConstant1.BloomTintA *= 1.0f / 8.0f;
+    bloomUpConstant1.BloomTintB *= 1.0f / 8.0f;
+
     mBloomUp1ConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FBloomUpConstant), (uint8*)&bloomUpConstant1);
 
     FBloomUpConstant bloomUpConstant2;
     mBloomUpLastResault = mBloomUp1;
     mBloomUpSource = mBloomDown0;
+    bloomUpConstant2.BloomTintA = Bloom2Tint;
+    bloomUpConstant2.BloomTintB = FVector4(1.0, 1.0f, 1.0f, 1.0f);
+    bloomUpConstant2.BloomTintA *= BloomIntensity;
+    bloomUpConstant2.BloomTintA *= 0.5f;
+
+    bloomUpConstant2.BloomTintA *= 1.0f / 8.0f;
+    bloomUpConstant2.BloomTintB *= 1.0f / 8.0f;
+
     _createBloomUpConstant(bloomUpConstant2);
     mBloomUp2ConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FBloomUpConstant), (uint8*)&bloomUpConstant2);
 
@@ -845,6 +885,16 @@ void FPostProcessing::creatPostProcessConstantBuffer()
     mBloomUpLastResault = mBloomUp2;
     mBloomUpSource = mBloomSetup;
     _createBloomUpConstant(bloomUpConstant3);
+    float Scale3 = 1.0f / 5.0f;
+    bloomUpConstant3.BloomTintA = Bloom1Tint;
+    bloomUpConstant3.BloomTintB = FVector4(1.0, 1.0f, 1.0f, 1.0f) * Scale3;
+    bloomUpConstant3.BloomTintA *= BloomIntensity;
+    bloomUpConstant3.BloomTintA *= 0.5f;
+    bloomUpConstant3.BloomTintA *= Scale3;
+
+    bloomUpConstant3.BloomTintA *= 1.0f / 8.0f;
+    bloomUpConstant3.BloomTintB *= 1.0f / 8.0f;
+
     mBloomUp3ConstantBuffer = mRHI->CreateConstantBuffer(sizeof(FBloomUpConstant), (uint8*)&bloomUpConstant3);
 
 }
@@ -860,22 +910,21 @@ void FPostProcessing::updatePostProcessConstantBuffer()
 void FPostProcessing::_createPostProcessConstant(FPostProcessConstant& constant)
 {
     constant.SceneColorInvSize = FVector2(1.0f / mSceneColor->Width, 1.0f / mSceneColor->Height);
-    constant.BloomThreshold = -1.0f;
-    constant.BloomColor = FVector3(1.0f, 1.0f, 1.0f);
+    constant.BloomThreshold = BloomThreshold;
+    constant.BloomColor = FVector3(Bloom1Tint[0], Bloom1Tint[1], Bloom1Tint[2]) * BloomIntensity * 0.5f;
 }
 
 void FPostProcessing::_createBloomDownConstant(FBloomDownConstant& constant)
 {
     constant.BloomDownInvSize = FVector2(1.0f / mBloomDownSource->Width, 1.0f / mBloomDownSource->Height);
-    constant.BloomDownScale = 2.64f;
+    float BloomDownScale = 0.66f * 4.0f;
+    constant.BloomDownScale = BloomDownScale;
 }
 
 void FPostProcessing::_createBloomUpConstant(FBloomUpConstant& constant)
 {
-    constant.BloomTintA = FVector4(0.00992f, 0.00992f, 0.00992f, 1.0f);
-    constant.BloomTintB = FVector4(0.125f, 0.125f, 0.125f, 1.0f);
     constant.BloomLastResaultInvSize = FVector2(1.0f / mBloomUpLastResault->Width, 1.0f / mBloomUpLastResault->Height);
     constant.BloomUpSourceInvSize = FVector2(1.0f / mBloomUpSource->Width, 1.0f / mBloomUpSource->Height);
-    constant.BloomUpScales = FVector2(1.32f, 1.32f);
-
+    float BloomUpScale = 0.66f * 2.0f;
+    constant.BloomUpScales = FVector2(BloomUpScale, BloomUpScale);
 }
