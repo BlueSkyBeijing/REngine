@@ -96,20 +96,13 @@ mFullScreenQuad(nullptr)
 {
     BloomIntensity = 0.675f;
     BloomThreshold = -1.0f;
-    // default is 4 to maintain old settings after fixing something that caused a factor of 4
-    BloomSizeScale = 4.0;
+
     Bloom1Tint = FLinearColor(0.3465f, 0.3465f, 0.3465f, 1.0f);
-    Bloom1Size = 0.3f;
     Bloom2Tint = FLinearColor(0.138f, 0.138f, 0.138f, 1.0f);
-    Bloom2Size = 1.0f;
     Bloom3Tint = FLinearColor(0.1176f, 0.1176f, 0.1176f, 1.0f);
-    Bloom3Size = 2.0f;
     Bloom4Tint = FLinearColor(0.066f, 0.066f, 0.066f, 1.0f);
-    Bloom4Size = 10.0f;
     Bloom5Tint = FLinearColor(0.066f, 0.066f, 0.066f, 1.0f);
-    Bloom5Size = 30.0f;
     Bloom6Tint = FLinearColor(0.061f, 0.061f, 0.061f, 1.0f);
-    Bloom6Size = 64.0f;
 }
 
 FPostProcessing::~FPostProcessing()
