@@ -12,6 +12,7 @@ void ReadUnrealString(std::ifstream& file, FString& outString)
 {
     int32 stringSize;
     file.read((char*)&stringSize, sizeof(int32));
+    outString.resize(stringSize);
     file.read((char*)outString.data(), stringSize);
 
     outString = FString(outString.c_str());
