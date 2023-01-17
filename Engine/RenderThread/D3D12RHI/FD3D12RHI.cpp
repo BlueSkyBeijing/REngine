@@ -568,10 +568,30 @@ FRHIShaderBindings* FD3D12RHI::CreateShaderBindings()
         D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressV
         D3D12_TEXTURE_ADDRESS_MODE_CLAMP); // addressW
 
+    const CD3DX12_STATIC_SAMPLER_DESC linearClamp3(
+        5, // shaderRegister
+        D3D12_FILTER_MIN_MAG_MIP_LINEAR, // filter
+        D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressU
+        D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressV
+        D3D12_TEXTURE_ADDRESS_MODE_CLAMP); // addressW
 
-    std::array<const CD3DX12_STATIC_SAMPLER_DESC, 5> sampler = { linearWrap , shadow, linearClamp, pointClamp, linearClamp2 };
+    const CD3DX12_STATIC_SAMPLER_DESC linearClamp4(
+        6, // shaderRegister
+        D3D12_FILTER_MIN_MAG_MIP_LINEAR, // filter
+        D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressU
+        D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressV
+        D3D12_TEXTURE_ADDRESS_MODE_CLAMP); // addressW
 
-    CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc(msMaxSRVDiscriptorNum + msMaxCBVDiscriptorNum, rootParameter, 5, sampler.data(),
+    const CD3DX12_STATIC_SAMPLER_DESC linearClamp5(
+        7, // shaderRegister
+        D3D12_FILTER_MIN_MAG_MIP_LINEAR, // filter
+        D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressU
+        D3D12_TEXTURE_ADDRESS_MODE_CLAMP,  // addressV
+        D3D12_TEXTURE_ADDRESS_MODE_CLAMP); // addressW
+
+    std::array<const CD3DX12_STATIC_SAMPLER_DESC, 8> sampler = { linearWrap , shadow, linearClamp, pointClamp, linearClamp2, linearClamp3, linearClamp4, linearClamp5 };
+
+    CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc(msMaxSRVDiscriptorNum + msMaxCBVDiscriptorNum, rootParameter, 8, sampler.data(),
         D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
     Microsoft::WRL::ComPtr <ID3DBlob> signature;

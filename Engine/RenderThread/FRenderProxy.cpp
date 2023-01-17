@@ -145,6 +145,7 @@ void FStaticMeshRenderProxy::CreateRenderResource()
         meshBatch->ObjectConstants.RoughnessScale = material->RoughnessScale;
         meshBatch->ObjectConstants.OpacityScale = material->OpacityScale;
 
+        meshBatch->ObjectConstants.BaseColorScale = material->BaseColorScale;
         meshBatch->ObjectConstants.EmissiveColorScale = material->EmissiveColorScale;
         meshBatch->ObjectConstants.SubsurfaceColorScale = material->SubsurfaceColorScale;
 

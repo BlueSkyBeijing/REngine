@@ -28,6 +28,7 @@ private:
     float mSpecularScale;
     float mRoughnessScale;
     float mOpacityScale;
+    FVector4 mBaseColorScale;
     FVector4 mEmissiveColorScale;
     FVector4 mSubsurfaceColorScale;
 };

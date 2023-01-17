@@ -35,6 +35,7 @@ void UMaterial::Load()
     materialFile.read((char*)&mRoughnessScale, sizeof(float));
     materialFile.read((char*)&mOpacityScale, sizeof(float));
 
+    materialFile.read((char*)&mBaseColorScale, sizeof(FVector4));
     materialFile.read((char*)&mEmissiveColorScale, sizeof(FVector4));
     materialFile.read((char*)&mSubsurfaceColorScale, sizeof(FVector4));
 
@@ -68,6 +69,7 @@ void UMaterial::Load()
     Material->RoughnessScale = mRoughnessScale;
     Material->OpacityScale = mOpacityScale;
 
+    Material->BaseColorScale = mBaseColorScale;
     Material->EmissiveColorScale = mEmissiveColorScale;
     Material->SubsurfaceColorScale = mSubsurfaceColorScale;
 }

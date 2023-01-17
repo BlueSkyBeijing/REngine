@@ -35,13 +35,13 @@ float3 RGBMDecode( float4 rgbm )
 struct MaterialContext
 {
     float3 BaseColor;
-    float MetallicScale;
-    float SpecularScale;
-    float RoughnessScale;
-    float OpacityScale;
+    float Metallic;
+    float Specular;
+    float Roughness;
+    float Opacity;
     
-    float3 EmissiveColorScale;
-    float3 SubsurfaceColorScale;
+    float3 EmissiveColor;
+    float3 SubsurfaceColor;
     
     float3 DiffuseColor;
     float3 SpecularColor;
@@ -59,13 +59,13 @@ void InitMaterialContext(inout MaterialContext context,
 )
 {
     context.BaseColor = baseColor;
-    context.MetallicScale = metallic;
-    context.SpecularScale = specular;
-    context.RoughnessScale = roughness;
-    context.OpacityScale = opacity;
+    context.Metallic = metallic;
+    context.Specular = specular;
+    context.Roughness = roughness;
+    context.Opacity = opacity;
 
-    context.EmissiveColorScale = emissiveColor;
-    context.SubsurfaceColorScale = subsurfaceColor;
+    context.EmissiveColor = emissiveColor;
+    context.SubsurfaceColor = subsurfaceColor;
     context.DiffuseColor = baseColor;
     context.SpecularColor = float3(0,0,0);
 }

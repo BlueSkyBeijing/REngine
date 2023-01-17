@@ -37,6 +37,7 @@ public:
     float RoughnessScale;
     float OpacityScale;
 
+    FVector4 BaseColorScale;
     FVector4 EmissiveColorScale;
     FVector4 SubsurfaceColorScale;
 

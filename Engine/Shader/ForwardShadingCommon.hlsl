@@ -33,6 +33,7 @@ cbuffer ObjectConstantBuffer : register(b0)
 #ifdef GPU_SKIN
     float4x4 BoneTransforms[75];
 #endif
+    float4 BaseColorScale;
     float4 EmissiveColorScale;
     float4 SubsurfaceColorScale;
     

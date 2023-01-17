@@ -10,6 +10,7 @@
 struct FObjectConstant
 {
     FMatrix4x4 World;
+    FVector4 BaseColorScale;
     FVector4 EmissiveColorScale;
     FVector4 SubsurfaceColorScale;
 
@@ -23,6 +24,7 @@ struct FSkeletonMeshConstant
 {
     FMatrix4x4 World;
     FMatrix4x4 BoneTransforms[75];
+    FVector4 BaseColorScale;
     FVector4 EmissiveColorScale;
     FVector4 SubsurfaceColorScale;
 

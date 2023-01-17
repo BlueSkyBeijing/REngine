@@ -498,11 +498,12 @@ float3 Lighting(LightingContext litContext, MaterialContext matContext)
         litContext.LightIntensity, 
         litContext.ViewDir,
         matContext.DiffuseColor, 
-        matContext.RoughnessScale,
-        matContext.OpacityScale, matContext.SpecularColor,
-        matContext.EmissiveColorScale,
-        matContext.SubsurfaceColorScale, 
-        matContext.MetallicScale, 
+        matContext.Roughness,
+        matContext.Opacity, 
+        matContext.SpecularColor,
+        matContext.EmissiveColor,
+        matContext.SubsurfaceColor, 
+        matContext.Metallic, 
         litContext.Shadow, 
         litContext.Thickness);
         
@@ -570,10 +571,10 @@ float3 GetImageBasedReflectionSpecular(float3 viewDir, float roughness, float3 s
 
 float3 GetImageBasedReflectionLighting(LightingContext litContext, MaterialContext matContext)
 {
-    float3 specularLighting = GetImageBasedReflectionSpecular(litContext.ViewDir, matContext.RoughnessScale, matContext.SpecularColor, litContext.Normal);
+    float3 specularLighting = GetImageBasedReflectionSpecular(litContext.ViewDir, matContext.Roughness, matContext.SpecularColor, litContext.Normal);
     float NoV = max(dot(litContext.ViewDir, litContext.Normal), 0.0);
 
-    float3 specularColor = EnvBRDFApprox(matContext.SpecularColor, matContext.RoughnessScale, NoV);
+    float3 specularColor = EnvBRDFApprox(matContext.SpecularColor, matContext.Roughness, NoV);
     float3 SpecularIBL = specularLighting * specularColor;
 
     return SpecularIBL;

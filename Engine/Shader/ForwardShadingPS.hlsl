@@ -7,23 +7,43 @@ SamplerState DiffuseSamplerState : register(s0);
 Texture2D NormalMap : register(t4);
 SamplerState NormalSamplerState : register(s4);
 
+Texture2D MetallicSpecularRoughnessMap : register(t5);
+SamplerState MetallicSpecularRoughnessSamplerState : register(s5);
+
+Texture2D EmissiveColorMap : register(t6);
+SamplerState EmissiveColorSamplerState : register(s6);
+
+Texture2D SubsurfaceColorMap : register(t7);
+SamplerState SubsurfaceColorSamplerState : register(s7);
+
+
 float4 PSMain(VertexShaderOutput pixelIn, bool IsFrontFace: SV_IsFrontFace) : SV_Target
 {
     float twoSideSign = IsFrontFace ? -1 : 1;
     float3x3 tangentToWorld = AssembleTangentToWorld(pixelIn.TangentToWorld0, pixelIn.TangentToWorld2);
     float4 noramlMap = normalize(NormalMap.Sample(NormalSamplerState, pixelIn.UV) * 2.0 - 1.0);
     float3 worldNormal = twoSideSign * TransformTangentNormalToWorld(tangentToWorld, noramlMap.xyz);
+
     float4 outColor;
     
     //view dir is different from camare dir,it's diffent in every pixel
     const float3 viewDir = normalize(CameraPos - pixelIn.PosW.xyz); 
-    const float4 baseColor = DiffuseMap.Sample(DiffuseSamplerState, pixelIn.UV);
+    float4 baseColor = DiffuseMap.Sample(DiffuseSamplerState, pixelIn.UV);
+    baseColor *= BaseColorScale;
     const float2 shadowAndThickness = DirectionalLightShadow(pixelIn.ShadowPosH);
     const float opacity = baseColor.a * OpacityScale;
-    
+    const float4 metallicSpecularRoughness = MetallicSpecularRoughnessMap.Sample(MetallicSpecularRoughnessSamplerState, pixelIn.UV);
+    const float metallic = metallicSpecularRoughness.r * MetallicScale;
+    const float specular = metallicSpecularRoughness.g * SpecularScale;
+    const float roughness = metallicSpecularRoughness.b * RoughnessScale;
+    float4 emissiveColor = EmissiveColorMap.Sample(EmissiveColorSamplerState, pixelIn.UV);
+    emissiveColor *= EmissiveColorScale;
+    float4 subsurfaceColor = SubsurfaceColorMap.Sample(SubsurfaceColorSamplerState, pixelIn.UV);
+    subsurfaceColor *= SubsurfaceColorScale;
+
     MaterialContext matContext;
-    InitMaterialContext(matContext, baseColor.rgb, MetallicScale, SpecularScale, RoughnessScale, opacity, EmissiveColorScale.rgb, SubsurfaceColorScale.rgb);
-    CalculateDiffuseAndSpecularColor(matContext.SpecularScale, matContext.MetallicScale, matContext.DiffuseColor, matContext.SpecularColor);
+    InitMaterialContext(matContext, baseColor.rgb, metallic, specular, roughness, opacity, emissiveColor.rgb, subsurfaceColor.rgb);
+    CalculateDiffuseAndSpecularColor(matContext.Specular, matContext.Metallic, matContext.DiffuseColor, matContext.SpecularColor);
 
     LightingContext litContextDirectional;
     InitLightingContext(litContextDirectional, DirectionalLightDir, DirectionalLightIntensity, DirectionalLightColor, worldNormal, viewDir, CameraPos, 0, 0, 0, shadowAndThickness.x, shadowAndThickness.y);
