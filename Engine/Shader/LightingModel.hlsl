@@ -159,7 +159,7 @@ float3 SubsurfaceBxDF(float3 normal, float3 lightDir, float3 lightColor, float l
 	// hard coded pow constant
     float inScatter = pow(saturate(dot(lightDir, -viewDir)), 12) * lerp(3, .1f, opacity);
 	// wrap around lighting, /(PI*2) to be energy consistent (hack do get some view dependnt and light dependent effect)
-	// Opacity of 0 gives no normal dependent lighting, Opacity of 1 gives strong normal contribution
+	// OpacityScale of 0 gives no normal dependent lighting, OpacityScale of 1 gives strong normal contribution
     float normalContribution = saturate(dot(normal, h) * opacity + 1 - opacity);
     float backScatter = normalContribution / (PI * 2);
 	
@@ -498,11 +498,11 @@ float3 Lighting(LightingContext litContext, MaterialContext matContext)
         litContext.LightIntensity, 
         litContext.ViewDir,
         matContext.DiffuseColor, 
-        matContext.Roughness,
-        matContext.Opacity, matContext.SpecularColor,
-        matContext.EmissiveColor,
-        matContext.SubsurfaceColor, 
-        matContext.Metallic, 
+        matContext.RoughnessScale,
+        matContext.OpacityScale, matContext.SpecularColor,
+        matContext.EmissiveColorScale,
+        matContext.SubsurfaceColorScale, 
+        matContext.MetallicScale, 
         litContext.Shadow, 
         litContext.Thickness);
         
@@ -570,10 +570,10 @@ float3 GetImageBasedReflectionSpecular(float3 viewDir, float roughness, float3 s
 
 float3 GetImageBasedReflectionLighting(LightingContext litContext, MaterialContext matContext)
 {
-    float3 specularLighting = GetImageBasedReflectionSpecular(litContext.ViewDir, matContext.Roughness, matContext.SpecularColor, litContext.Normal);
+    float3 specularLighting = GetImageBasedReflectionSpecular(litContext.ViewDir, matContext.RoughnessScale, matContext.SpecularColor, litContext.Normal);
     float NoV = max(dot(litContext.ViewDir, litContext.Normal), 0.0);
 
-    float3 specularColor = EnvBRDFApprox(matContext.SpecularColor, matContext.Roughness, NoV);
+    float3 specularColor = EnvBRDFApprox(matContext.SpecularColor, matContext.RoughnessScale, NoV);
     float3 SpecularIBL = specularLighting * specularColor;
 
     return SpecularIBL;

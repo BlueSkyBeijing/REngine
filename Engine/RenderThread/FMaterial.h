@@ -32,13 +32,13 @@ public:
     EMaterialShadingModel ShadingModel;
     bool TwoSided;
 
-    float Metallic;
-    float Specular;
-    float Roughness;
-    float Opacity;
+    float MetallicScale;
+    float SpecularScale;
+    float RoughnessScale;
+    float OpacityScale;
 
-    FVector4 EmissiveColor;
-    FVector4 SubsurfaceColor;
+    FVector4 EmissiveColorScale;
+    FVector4 SubsurfaceColorScale;
 
     FRHITextureCube* EnvMap;
     FRHITexture2D* PreIntegratedBRDF;

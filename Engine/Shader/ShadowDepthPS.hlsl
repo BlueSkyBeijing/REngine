@@ -11,7 +11,7 @@ float4 PSMain(ShadowVertexOut pixelIn) : SV_Target
     const float4 baseColor = DiffuseMap.Sample(DiffuseSamplerState, pixelIn.UV);
 
     outColor.rgb = 0.0f;
-    outColor.a = baseColor.a * Opacity;
+    outColor.a = baseColor.a * OpacityScale;
     
     #if MATERIALBLENDING_MASKED
     const float maskClipValue = 0.33f;

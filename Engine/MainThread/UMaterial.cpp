@@ -30,13 +30,13 @@ void UMaterial::Load()
     uint8 twoSided = 0;
     materialFile.read((char*)&twoSided, sizeof(uint8));
     mTwoSided = twoSided;
-    materialFile.read((char*)&mMetallic, sizeof(float));
-    materialFile.read((char*)&mSpecular, sizeof(float));
-    materialFile.read((char*)&mRoughness, sizeof(float));
-    materialFile.read((char*)&mOpacity, sizeof(float));
+    materialFile.read((char*)&mMetallicScale, sizeof(float));
+    materialFile.read((char*)&mSpecularScale, sizeof(float));
+    materialFile.read((char*)&mRoughnessScale, sizeof(float));
+    materialFile.read((char*)&mOpacityScale, sizeof(float));
 
-    materialFile.read((char*)&mEmissiveColor, sizeof(FVector4));
-    materialFile.read((char*)&mSubsurfaceColor, sizeof(FVector4));
+    materialFile.read((char*)&mEmissiveColorScale, sizeof(FVector4));
+    materialFile.read((char*)&mSubsurfaceColorScale, sizeof(FVector4));
 
     int32 numTexture;
     materialFile.read((char*)&numTexture, sizeof(int32));
@@ -63,13 +63,13 @@ void UMaterial::Load()
     Material->BlendMode = mBlendMode;
     Material->ShadingModel = mShadingModel;
     Material->TwoSided = mTwoSided;
-    Material->Metallic = mMetallic;
-    Material->Specular = mSpecular;
-    Material->Roughness = mRoughness;
-    Material->Opacity = mOpacity;
+    Material->MetallicScale = mMetallicScale;
+    Material->SpecularScale = mSpecularScale;
+    Material->RoughnessScale = mRoughnessScale;
+    Material->OpacityScale = mOpacityScale;
 
-    Material->EmissiveColor = mEmissiveColor;
-    Material->SubsurfaceColor = mSubsurfaceColor;
+    Material->EmissiveColorScale = mEmissiveColorScale;
+    Material->SubsurfaceColorScale = mSubsurfaceColorScale;
 }
 
 void UMaterial::Unload()

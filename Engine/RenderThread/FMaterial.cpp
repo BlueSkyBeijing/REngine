@@ -17,10 +17,10 @@ FMaterial::FMaterial() :
     PixelShader(nullptr),
     VertexShaderGPUSkin(nullptr),
     VertexShaderShadowGPUSkin(nullptr),
-    Metallic(0.0f),
-    Specular(0.5f),
-    Roughness(0.5f),
-    Opacity(1.0f)
+    MetallicScale(0.0f),
+    SpecularScale(0.5f),
+    RoughnessScale(0.5f),
+    OpacityScale(1.0f)
 {
 }
 

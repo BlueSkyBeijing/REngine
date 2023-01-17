@@ -10,26 +10,26 @@
 struct FObjectConstant
 {
     FMatrix4x4 World;
-    FVector4 EmissiveColor;
-    FVector4 SubsurfaceColor;
+    FVector4 EmissiveColorScale;
+    FVector4 SubsurfaceColorScale;
 
-    float Metallic;
-    float Specular;
-    float Roughness;
-    float Opacity;
+    float MetallicScale;
+    float SpecularScale;
+    float RoughnessScale;
+    float OpacityScale;
 };
 
 struct FSkeletonMeshConstant
 {
     FMatrix4x4 World;
     FMatrix4x4 BoneTransforms[75];
-    FVector4 EmissiveColor;
-    FVector4 SubsurfaceColor;
+    FVector4 EmissiveColorScale;
+    FVector4 SubsurfaceColorScale;
 
-    float Metallic;
-    float Specular;
-    float Roughness;
-    float Opacity;
+    float MetallicScale;
+    float SpecularScale;
+    float RoughnessScale;
+    float OpacityScale;
 };
 
 struct FStaticMeshRenderProxyInitializer

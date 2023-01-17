@@ -19,11 +19,11 @@ float4 PSMain(VertexShaderOutput pixelIn, bool IsFrontFace: SV_IsFrontFace) : SV
     const float3 viewDir = normalize(CameraPos - pixelIn.PosW.xyz); 
     const float4 baseColor = DiffuseMap.Sample(DiffuseSamplerState, pixelIn.UV);
     const float2 shadowAndThickness = DirectionalLightShadow(pixelIn.ShadowPosH);
-    const float opacity = baseColor.a * Opacity;
+    const float opacity = baseColor.a * OpacityScale;
     
     MaterialContext matContext;
-    InitMaterialContext(matContext, baseColor.rgb, Metallic, Specular, Roughness, opacity, EmissiveColor.rgb, SubsurfaceColor.rgb);
-    CalculateDiffuseAndSpecularColor(matContext.Specular, matContext.Metallic, matContext.DiffuseColor, matContext.SpecularColor);
+    InitMaterialContext(matContext, baseColor.rgb, MetallicScale, SpecularScale, RoughnessScale, opacity, EmissiveColorScale.rgb, SubsurfaceColorScale.rgb);
+    CalculateDiffuseAndSpecularColor(matContext.SpecularScale, matContext.MetallicScale, matContext.DiffuseColor, matContext.SpecularColor);
 
     LightingContext litContextDirectional;
     InitLightingContext(litContextDirectional, DirectionalLightDir, DirectionalLightIntensity, DirectionalLightColor, worldNormal, viewDir, CameraPos, 0, 0, 0, shadowAndThickness.x, shadowAndThickness.y);

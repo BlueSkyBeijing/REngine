@@ -24,10 +24,10 @@ private:
     EBlendMode mBlendMode;
     EMaterialShadingModel mShadingModel;
     bool mTwoSided;
-    float mMetallic;
-    float mSpecular;
-    float mRoughness;
-    float mOpacity;
-    FVector4 mEmissiveColor;
-    FVector4 mSubsurfaceColor;
+    float mMetallicScale;
+    float mSpecularScale;
+    float mRoughnessScale;
+    float mOpacityScale;
+    FVector4 mEmissiveColorScale;
+    FVector4 mSubsurfaceColorScale;
 };

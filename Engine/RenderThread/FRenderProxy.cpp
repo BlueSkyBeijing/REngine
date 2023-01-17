@@ -140,13 +140,13 @@ void FStaticMeshRenderProxy::CreateRenderResource()
         meshBatch->ObjectConstants.World = scaleMatrix * meshBatch->ObjectConstants.World;
 
         FMaterial* material = Materials[mSections[i].MaterialIndex];
-        meshBatch->ObjectConstants.Metallic = material->Metallic;
-        meshBatch->ObjectConstants.Specular = material->Specular;
-        meshBatch->ObjectConstants.Roughness = material->Roughness;
-        meshBatch->ObjectConstants.Opacity = material->Opacity;
+        meshBatch->ObjectConstants.MetallicScale = material->MetallicScale;
+        meshBatch->ObjectConstants.SpecularScale = material->SpecularScale;
+        meshBatch->ObjectConstants.RoughnessScale = material->RoughnessScale;
+        meshBatch->ObjectConstants.OpacityScale = material->OpacityScale;
 
-        meshBatch->ObjectConstants.EmissiveColor = material->EmissiveColor;
-        meshBatch->ObjectConstants.SubsurfaceColor = material->SubsurfaceColor;
+        meshBatch->ObjectConstants.EmissiveColorScale = material->EmissiveColorScale;
+        meshBatch->ObjectConstants.SubsurfaceColorScale = material->SubsurfaceColorScale;
 
         meshBatch->ConstantBuffer = rhi->CreateConstantBuffer(sizeof(meshBatch->ObjectConstants), (uint8*)&meshBatch->ObjectConstants);
 
@@ -259,13 +259,13 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
         FMatrix3x3 rotation = Rotation.toRotationMatrix();
         meshBatch->ObjectConstants.World.block<3, 3>(0, 0) = rotation;
         meshBatch->ObjectConstants.World.block<1, 3>(3, 0) = Position;
-        meshBatch->ObjectConstants.Metallic = material->Metallic;
-        meshBatch->ObjectConstants.Specular = material->Specular;
-        meshBatch->ObjectConstants.Roughness = material->Roughness;
-        meshBatch->ObjectConstants.Opacity = material->Opacity;
+        meshBatch->ObjectConstants.MetallicScale = material->MetallicScale;
+        meshBatch->ObjectConstants.SpecularScale = material->SpecularScale;
+        meshBatch->ObjectConstants.RoughnessScale = material->RoughnessScale;
+        meshBatch->ObjectConstants.OpacityScale = material->OpacityScale;
 
-        meshBatch->ObjectConstants.EmissiveColor = material->EmissiveColor;
-        meshBatch->ObjectConstants.SubsurfaceColor = material->SubsurfaceColor;
+        meshBatch->ObjectConstants.EmissiveColorScale = material->EmissiveColorScale;
+        meshBatch->ObjectConstants.SubsurfaceColorScale = material->SubsurfaceColorScale;
 
         meshBatch->ConstantBuffer = rhi->CreateConstantBuffer(sizeof(meshBatch->ObjectConstants), (uint8*)&meshBatch->ObjectConstants);
 
