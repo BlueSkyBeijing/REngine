@@ -32,6 +32,15 @@ using TMap = std::map<T1, T2>;
 template<class T>
 using TSet = std::set<T>;
 
+template<class T>
+using TSharedRef = std::shared_ptr<T>;
+
+template<class T>
+using TWeakPtr = std::weak_ptr<T>;
+
+template<class T>
+using TUniquePtr = std::unique_ptr<T>;
+
 enum EPixelFormat;
 enum EInputClassification;
 enum ELogLevel;

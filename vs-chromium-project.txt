@@ -68,3 +68,4 @@ Engine/Programs/UnrealBuildTool/Log*
 **/Private_Projects/
 **/Saved/
 **/Staged/
+**/Engine/ThirdParty
