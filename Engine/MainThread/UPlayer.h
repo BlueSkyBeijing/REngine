@@ -42,7 +42,7 @@ public:
 
     void Update(float deltaSeconds);
 
-    std::vector<FString> FullMaterialPaths;
+    TArray<FString> FullMaterialPaths;
 
 protected:
     virtual void createRenderProxy() override;
@@ -50,11 +50,11 @@ protected:
 private:
     FString mSkeletalMeshFilePath;
     USkeletalMesh* mSkeletalMesh;
-    std::vector<UMaterial*> mMaterials;
+    TArray<UMaterial*> mMaterials;
     FRenderProxy* mRenderProxy;
     FVector3 mOrientation;
 
-    std::map<EPlayerState, FString> mStateAnimMap;
+    TMap<EPlayerState, FString> mStateAnimMap;
     UAnimSequence* mAnimRing[PLAYER_ANIMATION_RING_NUM];
     float mAnimTimeRing[PLAYER_ANIMATION_RING_NUM];
     float mAnimWeightRing[PLAYER_ANIMATION_RING_NUM];

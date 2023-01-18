@@ -76,7 +76,7 @@ void USkeletalMeshObject::createRenderProxy()
     initializer.VertexLayout = mSkeletalMesh->GetVertexLayout();
     initializer.Vertexes = mSkeletalMesh->GetVertexes();
     initializer.Indexes = mSkeletalMesh->GetIndexes();
-    std::vector<FMaterial*> materials;
+    TArray<FMaterial*> materials;
     for (int i = 0; i < mMaterials.size(); i++)
     {
         materials.push_back(mMaterials[i]->Material);

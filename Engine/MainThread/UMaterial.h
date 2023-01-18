@@ -19,7 +19,7 @@ public:
     virtual void Unload() override;
 
 private:
-    std::map<FString, FString> mTexturePaths;
+    TMap<FString, FString> mTexturePaths;
 
     EBlendMode mBlendMode;
     EMaterialShadingModel mShadingModel;

@@ -26,5 +26,5 @@ private:
     virtual ~FShaderBindingsManager();
 
 private:
-    std::map<int32, FRHIShaderBindings*> mShaderBindingss;
+    TMap<int32, FRHIShaderBindings*> mShaderBindingss;
 };

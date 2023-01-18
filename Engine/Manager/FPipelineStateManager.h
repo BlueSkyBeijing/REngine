@@ -21,5 +21,5 @@ private:
     virtual ~FPipelineStateManager();
 
 private:
-    std::map<uint64, FRHIPipelineState*> mPipelineStates;
+    TMap<uint64, FRHIPipelineState*> mPipelineStates;
 };

@@ -21,6 +21,6 @@ private:
     uint64 haskShaderInfo(const FShaderInfo& shaderInfo);
 
 private:
-    std::map<uint64, FRHIShader*> mShader;
+    TMap<uint64, FRHIShader*> mShader;
 
 };

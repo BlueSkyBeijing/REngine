@@ -141,13 +141,13 @@ void UWorld::loadFromFile(FString fileName)
     }
 
     int32 numCamera;
-    std::vector<FCameraData> cameraDatas;
+    TArray<FCameraData> cameraDatas;
     mapFile.read((char*)&numCamera, sizeof(int32));
     cameraDatas.resize(numCamera);
     mapFile.read((char*)cameraDatas.data(), numCamera * sizeof(FCameraData));
 
     int32 numDirectionalLight;
-    std::vector<FDirectionalLightData> directionalLightDatas;
+    TArray<FDirectionalLightData> directionalLightDatas;
     mapFile.read((char*)&numDirectionalLight, sizeof(int32));
     for (int32 i = 0; i < numDirectionalLight; i++)
     {
@@ -162,7 +162,7 @@ void UWorld::loadFromFile(FString fileName)
     }
 
     int32 numPointLight;
-    std::vector<FPointLightData> pointLightDatas;
+    TArray<FPointLightData> pointLightDatas;
     mapFile.read((char*)&numPointLight, sizeof(int32));
     for (int32 i = 0; i < numPointLight; i++)
     {
@@ -177,7 +177,7 @@ void UWorld::loadFromFile(FString fileName)
     }
 
     int32 numStaticMeshObject;
-    std::vector<FStaticMeshObjectData> staticMeshObjectDatas;
+    TArray<FStaticMeshObjectData> staticMeshObjectDatas;
     mapFile.read((char*)&numStaticMeshObject, sizeof(int32));
     for (int32 i = 0; i < numStaticMeshObject; i++)
     {
@@ -203,7 +203,7 @@ void UWorld::loadFromFile(FString fileName)
     }
 
     int32 numSkeletalMeshObject;
-    std::vector<FSkeletalMeshObjectData> skeletalMeshObjectDatas;
+    TArray<FSkeletalMeshObjectData> skeletalMeshObjectDatas;
     mapFile.read((char*)&numSkeletalMeshObject, sizeof(int32));
     for (int32 i = 0; i < numSkeletalMeshObject; i++)
     {

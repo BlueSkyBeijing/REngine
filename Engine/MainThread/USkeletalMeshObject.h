@@ -19,7 +19,7 @@ public:
 public:
     FString FullResourcePath;
     FString FullAnimSequencePath;
-    std::vector<FString> FullMaterialPaths;
+    TArray<FString> FullMaterialPaths;
 
 public:
     virtual void Load() override;
@@ -35,7 +35,7 @@ protected:
 
 private:
     USkeletalMesh* mSkeletalMesh;
-    std::vector<UMaterial*> mMaterials;
+    TArray<UMaterial*> mMaterials;
     FAnimSequenceInstance* mAnimSequence;
 
     FRenderProxy* mRenderProxy;
@@ -51,5 +51,5 @@ struct FSkeletalMeshObjectData
     FVector3 Scale;
     FString ResourceName;
     FString AnimationName;
-    std::vector<FString> MaterialNames;
+    TArray<FString> MaterialNames;
 };

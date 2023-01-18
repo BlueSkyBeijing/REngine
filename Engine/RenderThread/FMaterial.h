@@ -44,8 +44,8 @@ public:
     FRHITextureCube* EnvMap;
     FRHITexture2D* PreIntegratedBRDF;
 
-    std::map<FString, FRHITexture2D*> mTextures;
-    std::map<FString, FString> mTexturePaths;
+    TMap<FString, FRHITexture2D*> mTextures;
+    TMap<FString, FString> mTexturePaths;
     FString BaseColorFullFilePathName;
 
 private:

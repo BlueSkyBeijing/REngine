@@ -40,15 +40,15 @@ public:
     FStaticMeshRenderProxyInitializer();
     ~FStaticMeshRenderProxyInitializer();
 
-    std::vector<FStaticMeshVertex> Vertexes;
-    std::vector<uint32> Indexes;
+    TArray<FStaticMeshVertex> Vertexes;
+    TArray<uint32> Indexes;
     FRHIVertexLayout VertexLayout;
     FVector3 Position;
     FQuat Rotation;
     FVector3 Scale;
-    std::vector<FMaterial*> Materials;
-    std::vector<FStaticMeshSection> mSections;
-    std::vector<FMeshBatch*> MeshBatchs;
+    TArray<FMaterial*> Materials;
+    TArray<FStaticMeshSection> mSections;
+    TArray<FMeshBatch*> MeshBatchs;
 
 };
 
@@ -58,15 +58,15 @@ public:
     FSkeletalMeshRenderProxyInitializer();
     ~FSkeletalMeshRenderProxyInitializer();
 
-    std::vector<FSkeletalMeshVertex> Vertexes;
-    std::vector<uint32> Indexes;
+    TArray<FSkeletalMeshVertex> Vertexes;
+    TArray<uint32> Indexes;
     FRHIVertexLayout VertexLayout;
     FVector3 Position;
     FQuat Rotation;
     FVector3 Scale;
-    std::vector<FMaterial*> Materials;
-    std::vector<FStaticMeshSection> mSections;
-    std::vector<FMeshBatch*> MeshBatchs;
+    TArray<FMaterial*> Materials;
+    TArray<FStaticMeshSection> mSections;
+    TArray<FMeshBatch*> MeshBatchs;
 
 };
 
@@ -120,7 +120,7 @@ public:
 
 public:
     FSkeletonMeshConstant ObjectConstants;
-    std::vector<FMatrix4x4> BoneFinalTransforms;
+    TArray<FMatrix4x4> BoneFinalTransforms;
 
 };
 
@@ -135,7 +135,7 @@ public:
     virtual void ReleaseRenderResource();
 
 public:
-    std::vector<FMaterial*> Materials;
+    TArray<FMaterial*> Materials;
     FRHIVertexBuffer* VertexBuffer;
     FRHIIndexBuffer* IndexBuffer;
     FRHIVertexLayout VertexLayout;
@@ -143,7 +143,7 @@ public:
     FQuat Rotation;
     FVector3 Scale;
 
-    std::vector<FMeshBatch*> MeshBatchs;
+    TArray<FMeshBatch*> MeshBatchs;
 
     FString DebugName;
 
@@ -162,9 +162,9 @@ public:
     virtual void ReleaseRenderResource() override;
 
 private:
-    std::vector<FStaticMeshVertex> mVertexes;
-    std::vector<uint32> mIndexes;
-    std::vector<FStaticMeshSection> mSections;
+    TArray<FStaticMeshVertex> mVertexes;
+    TArray<uint32> mIndexes;
+    TArray<FStaticMeshSection> mSections;
 
 };
 
@@ -180,8 +180,8 @@ public:
     virtual void ReleaseRenderResource() override;
 
 private:
-    std::vector<FSkeletalMeshVertex> mVertexes;
-    std::vector<uint32> mIndexes;
-    std::vector<FStaticMeshSection> mSections;
+    TArray<FSkeletalMeshVertex> mVertexes;
+    TArray<uint32> mIndexes;
+    TArray<FStaticMeshSection> mSections;
 
 };

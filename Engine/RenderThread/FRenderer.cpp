@@ -109,7 +109,7 @@ void FRenderer::drawShadowPass()
     mRHI->Clear(false, clearColor, true, 1, true, 0);
 
     //static
-    const std::vector<FMeshBatch*>& staticMeshBatches = mScene->GetStaticOpaqueMeshBatchs();
+    const TArray<FMeshBatch*>& staticMeshBatches = mScene->GetStaticOpaqueMeshBatchs();
     for (auto it = staticMeshBatches.begin(); it != staticMeshBatches.end(); it++)
     {
         FMeshBatch* meshBatch = *it;
@@ -149,7 +149,7 @@ void FRenderer::drawShadowPass()
     }
 
     //dyamic
-    const std::vector<FMeshBatch*>& dynamicMeshBatches = mScene->GetDynamicOpaqueMeshBatchs();
+    const TArray<FMeshBatch*>& dynamicMeshBatches = mScene->GetDynamicOpaqueMeshBatchs();
     for (auto it = dynamicMeshBatches.begin(); it != dynamicMeshBatches.end(); it++)
     {
         FMeshBatch* meshBatch = *it;
@@ -267,7 +267,7 @@ void FRenderer::_drawSceneColorOpaque()
 {
     mRHI->BeginEvent("Opaque");
 
-    const std::vector<FMeshBatch*>& staticMeshBatches = mScene->GetStaticOpaqueMeshBatchs();
+    const TArray<FMeshBatch*>& staticMeshBatches = mScene->GetStaticOpaqueMeshBatchs();
     for (auto it = staticMeshBatches.begin(); it != staticMeshBatches.end(); it++)
     {
         FMeshBatch* meshBatch = *it;
@@ -309,7 +309,7 @@ void FRenderer::_drawSceneColorOpaque()
         mRHI->EndEvent();
     }
 
-    const std::vector<FMeshBatch*>& dynamicMeshBatches = mScene->GetDynamicOpaqueMeshBatchs();
+    const TArray<FMeshBatch*>& dynamicMeshBatches = mScene->GetDynamicOpaqueMeshBatchs();
     for (auto it = dynamicMeshBatches.begin(); it != dynamicMeshBatches.end(); it++)
     {
         FMeshBatch* meshBatch = *it;
@@ -358,7 +358,7 @@ void FRenderer::_drawSceneColorTranslucent()
 {
     mRHI->BeginEvent("Translucent");
 
-    std::vector<FMeshBatch*> staticMeshBatches = mScene->GetStaticTranslucentMeshBatchs();
+    TArray<FMeshBatch*> staticMeshBatches = mScene->GetStaticTranslucentMeshBatchs();
 
     const FView* view = mView;
     std::sort(staticMeshBatches.begin(), staticMeshBatches.end(), [view](const FMeshBatch* renderProxyA, const FMeshBatch* renderProxyB) {
@@ -413,7 +413,7 @@ void FRenderer::_drawSceneColorTranslucent()
         mRHI->EndEvent();
     }
 
-    std::vector<FMeshBatch*> dynamicMeshBatches = mScene->GetDynamicTranslucentMeshBatchs();
+    TArray<FMeshBatch*> dynamicMeshBatches = mScene->GetDynamicTranslucentMeshBatchs();
 
     std::sort(dynamicMeshBatches.begin(), dynamicMeshBatches.end(), [view](const FMeshBatch* renderProxyA, const FMeshBatch* renderProxyB) {
         return (renderProxyA->Position - view->Position).norm() > (renderProxyB->Position - view->Position).norm();
@@ -564,7 +564,7 @@ void FRenderer::_createSceneColorPassConstant(FSceneColorPassConstant& constant)
     const int32 shadowMapHeight = TSingleton<FConfigManager>::GetInstance().ShadowMapHeight;
     constant.InvShadowMapSize = FVector2(1.0f / (shadowMapWidth), 1.0f / (shadowMapHeight));
 
-    const std::vector<FPointLight*>& pointLight = mScene->GetPointLights();
+    const TArray<FPointLight*>& pointLight = mScene->GetPointLights();
     const int32 pointLightNum = std::min(MAX_POINT_LIGHT_NUM, static_cast<int32>(pointLight.size()));
     constant.PointLightNum = pointLightNum;
     for (int32 i = 0; i < pointLightNum; i++)

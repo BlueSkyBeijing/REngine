@@ -215,8 +215,8 @@ void FAnimSequenceInstance::Update(float deltaSeconds)
     const float oneFrameTime = mAnimSequence->GetSequenceLength() / mAnimSequence->GetNumberOfFrames();
     const float lerpFrames = (sequenceTime - oneFrameTime * keyFrame0) / oneFrameTime;
 
-    const std::vector<FBoneInfo>& boneInfos = mAnimSequence->GeSkeleton()->GetBoneInfos();
-    const std::vector<FTransform>& bonePose = mAnimSequence->GeSkeleton()->GetBonePose();
+    const TArray<FBoneInfo>& boneInfos = mAnimSequence->GeSkeleton()->GetBoneInfos();
+    const TArray<FTransform>& bonePose = mAnimSequence->GeSkeleton()->GetBonePose();
 
     for (uint32 i = 0; i < boneInfos.size(); ++i)
     {
@@ -323,8 +323,8 @@ void FAnimSequenceBlender::Blend(float time0, float weight0, float time1, float 
     const float oneFrameTimeB = mAnimSequence1->GetSequenceLength() / mAnimSequence1->GetNumberOfFrames();
     const float lerpFramesB = (sequenceTimeB - oneFrameTimeB * keyFrame0B) / oneFrameTimeB;
 
-    const std::vector<FBoneInfo>& boneInfos = mSkeleton->GetBoneInfos();
-    const std::vector<FTransform>& bonePose = mSkeleton->GetBonePose();
+    const TArray<FBoneInfo>& boneInfos = mSkeleton->GetBoneInfos();
+    const TArray<FTransform>& bonePose = mSkeleton->GetBonePose();
 
     for (uint32 i = 0; i < boneInfos.size(); ++i)
     {
@@ -340,7 +340,7 @@ void FAnimSequenceBlender::Blend(float time0, float weight0, float time1, float 
         toParentTranslationA.setZero();
 
         //get 2 frame and interpolate
-        const std::vector<FAnimSequenceTrack>& animSequenceTracksA = mAnimSequence0->GetAnimSequenceTracks();
+        const TArray<FAnimSequenceTrack>& animSequenceTracksA = mAnimSequence0->GetAnimSequenceTracks();
         const int32 rotKeyNumA = static_cast<int32>(animSequenceTracksA[i].RotKeys.size());
         if (rotKeyNumA > 0)
         {
@@ -384,7 +384,7 @@ void FAnimSequenceBlender::Blend(float time0, float weight0, float time1, float 
         toParentTranslationB.setZero();
 
         //get 2 frame and interpolate
-        const std::vector<FAnimSequenceTrack>& animSequenceTracksB = mAnimSequence1->GetAnimSequenceTracks();
+        const TArray<FAnimSequenceTrack>& animSequenceTracksB = mAnimSequence1->GetAnimSequenceTracks();
         const int32 rotKeyNumB = static_cast<int32>(animSequenceTracksB[i].RotKeys.size());
         if (rotKeyNumB > 0)
         {

@@ -18,7 +18,7 @@ public:
 
 public:
     FString FullResourcePath;
-    std::vector<FString> FullMaterialPaths;
+    TArray<FString> FullMaterialPaths;
 
 public:
     virtual void Load() override;
@@ -30,7 +30,7 @@ protected:
 private:
 
     UStaticMesh* mStaticMesh;
-    std::vector<UMaterial*> mMaterials;
+    TArray<UMaterial*> mMaterials;
 
     FRenderProxy* mRenderProxy;
 };
@@ -44,5 +44,5 @@ struct FStaticMeshObjectData
     FVector3 Location;
     FVector3 Scale;
     FString ResourceName;
-    std::vector<FString> MaterialNames;
+    TArray<FString> MaterialNames;
 };

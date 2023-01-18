@@ -23,6 +23,15 @@ typedef Eigen::Vector4f FLinearColor;
 
 typedef std::string FString;
 
+template<class T>
+using TArray = std::vector<T>;
+
+template<class T1, class T2>
+using TMap = std::map<T1, T2>;
+
+template<class T>
+using TSet = std::set<T>;
+
 enum EPixelFormat;
 enum EInputClassification;
 enum ELogLevel;

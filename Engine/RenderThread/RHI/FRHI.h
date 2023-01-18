@@ -433,7 +433,7 @@ public:
     std::wstring FilePathName;
     FString EnterPoint;
     FString Target;
-    std::map<FString, FString> Defines;
+    TMap<FString, FString> Defines;
 };
 
 class FPipelineStateInfo

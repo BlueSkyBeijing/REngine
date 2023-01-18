@@ -15,7 +15,7 @@ enum EResourceType
     RT_MaxNum
 };
 
-typedef std::map<FString, UResource*> TResourceMap;
+typedef TMap<FString, UResource*> TResourceMap;
 
 class FResourceManager
 {

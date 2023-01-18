@@ -30,11 +30,11 @@ protected:
     virtual void loadFromFile(FString fileName);
 
 private:
-    std::vector<UCamera*> mCameras;
-    std::vector<UDirectionalLight*> mDirectionalLights;
-    std::vector<UPointLight*> mPointLights;
-    std::vector<UStaticMeshObject*> mStaticMeshObjects;
-    std::vector<USkeletalMeshObject*> mSkeletalMeshObjects;
+    TArray<UCamera*> mCameras;
+    TArray<UDirectionalLight*> mDirectionalLights;
+    TArray<UPointLight*> mPointLights;
+    TArray<UStaticMeshObject*> mStaticMeshObjects;
+    TArray<USkeletalMeshObject*> mSkeletalMeshObjects;
     FEngine* mEngine;
     UPlayer* mPlayer;
 };

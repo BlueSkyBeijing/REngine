@@ -18,12 +18,12 @@ public:
     virtual void Load() override;
     virtual void Unload() override;
 
-    inline const std::vector<FSkeletalMeshVertex>& GetVertexes() const
+    inline const TArray<FSkeletalMeshVertex>& GetVertexes() const
     {
         return mVertexes;
     }
 
-    inline const std::vector<uint32>& GetIndexes() const
+    inline const TArray<uint32>& GetIndexes() const
     {
         return mIndexes;
     }
@@ -38,16 +38,16 @@ public:
         return mSkeleton;
     }
 
-    inline const std::vector<FStaticMeshSection>& GetSections() const
+    inline const TArray<FStaticMeshSection>& GetSections() const
     {
         return mSections;
     }
 
 private:
-    std::vector<FSkeletalMeshVertex> mVertexes;
-    std::vector<uint32> mIndexes;
+    TArray<FSkeletalMeshVertex> mVertexes;
+    TArray<uint32> mIndexes;
     FRHIVertexLayout mVertexLayout;
-    std::vector<FStaticMeshSection> mSections;
+    TArray<FStaticMeshSection> mSections;
     USkeleton* mSkeleton;
 };
 
@@ -67,9 +67,9 @@ struct FTransform
 struct FAnimSequenceTrack
 {
     int32 BoneIndex;
-    std::vector<FVector3> PosKeys;
-    std::vector<FQuat> RotKeys;
-    std::vector<FVector3> ScaleKeys;
+    TArray<FVector3> PosKeys;
+    TArray<FQuat> RotKeys;
+    TArray<FVector3> ScaleKeys;
 };
 
 class USkeleton : public UResource
@@ -82,19 +82,19 @@ public:
     virtual void Load() override;
     virtual void Unload() override;
 
-    inline const std::vector<FBoneInfo>& GetBoneInfos() const
+    inline const TArray<FBoneInfo>& GetBoneInfos() const
     {
         return mBoneInfos;
     }
 
-    inline const std::vector<FTransform>& GetBonePose() const
+    inline const TArray<FTransform>& GetBonePose() const
     {
         return mBonePose;
     }
 
 private:
-    std::vector<FBoneInfo> mBoneInfos;
-    std::vector<FTransform> mBonePose;
+    TArray<FBoneInfo> mBoneInfos;
+    TArray<FTransform> mBonePose;
 };
 
 class UAnimSequence : public UResource
@@ -107,7 +107,7 @@ public:
     virtual void Load() override;
     virtual void Unload() override;
 
-    inline const std::vector<FAnimSequenceTrack>& GetAnimSequenceTracks() const
+    inline const TArray<FAnimSequenceTrack>& GetAnimSequenceTracks() const
     {
         return mAnimSequenceTracks;
     }
@@ -135,7 +135,7 @@ public:
 private:
     int32 mNumberOfFrames;
     float mSequenceLength;
-    std::vector<FAnimSequenceTrack> mAnimSequenceTracks;
+    TArray<FAnimSequenceTrack> mAnimSequenceTracks;
     const USkeleton* mSkeleton;
 };
 
@@ -152,11 +152,11 @@ public:
         mElapsedSeconds = 0.0f;
     }
 
-    std::vector<FMatrix4x4> BoneFinalTransforms;
+    TArray<FMatrix4x4> BoneFinalTransforms;
 
 private:
     float mElapsedSeconds;
-    std::vector<FMatrix4x4> mBoneTransforms;
+    TArray<FMatrix4x4> mBoneTransforms;
     UAnimSequence* mAnimSequence;
 };
 
@@ -175,13 +175,13 @@ public:
     }
 
 public:
-    std::vector<FMatrix4x4> BoneFinalTransforms;
+    TArray<FMatrix4x4> BoneFinalTransforms;
 
 private:
     UAnimSequence* mAnimSequence0;
     UAnimSequence* mAnimSequence1;
     const USkeleton* mSkeleton;
-    std::vector<FMatrix4x4> mBoneTransforms;
+    TArray<FMatrix4x4> mBoneTransforms;
 
     float mTime0;
     float mTime1;

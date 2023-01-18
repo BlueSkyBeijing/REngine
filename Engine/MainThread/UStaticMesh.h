@@ -15,12 +15,12 @@ public:
     virtual void Load() override;
     virtual void Unload() override;
 
-    inline const std::vector<FStaticMeshVertex>& GetVertexes() const
+    inline const TArray<FStaticMeshVertex>& GetVertexes() const
     {
         return mVertexes;
     }
 
-    inline const std::vector<uint32>& GetIndexes() const
+    inline const TArray<uint32>& GetIndexes() const
     {
         return mIndexes;
     }
@@ -30,14 +30,14 @@ public:
         return mVertexLayout;
     }
 
-    inline const std::vector<FStaticMeshSection>& GetSections() const
+    inline const TArray<FStaticMeshSection>& GetSections() const
     {
         return mSections;
     }
 
 private:
-    std::vector<FStaticMeshVertex> mVertexes;
-    std::vector<uint32> mIndexes;
+    TArray<FStaticMeshVertex> mVertexes;
+    TArray<uint32> mIndexes;
     FRHIVertexLayout mVertexLayout;
-    std::vector<FStaticMeshSection> mSections;
+    TArray<FStaticMeshSection> mSections;
 };

@@ -15,22 +15,22 @@ public:
 
     void AddlLight(FLight* light);
 
-    const std::vector<FMeshBatch*>& GetStaticOpaqueMeshBatchs() const
+    const TArray<FMeshBatch*>& GetStaticOpaqueMeshBatchs() const
     {
         return mStaticOpaqueMeshBatchs;
     }
 
-    const std::vector<FMeshBatch*>& GetDynamicOpaqueMeshBatchs() const
+    const TArray<FMeshBatch*>& GetDynamicOpaqueMeshBatchs() const
     {
         return mDynamicOpaqueMeshBatchs;
     }
 
-    const std::vector<FMeshBatch*>& GetStaticTranslucentMeshBatchs() const
+    const TArray<FMeshBatch*>& GetStaticTranslucentMeshBatchs() const
     {
         return mStaticTranslucentMeshBatchs;
     }
 
-    const std::vector<FMeshBatch*>& GetDynamicTranslucentMeshBatchs() const
+    const TArray<FMeshBatch*>& GetDynamicTranslucentMeshBatchs() const
     {
         return mDynamicTranslucentMeshBatchs;
     }
@@ -41,21 +41,21 @@ public:
         return mDirectionalLight;
     }
 
-    const std::vector<FPointLight*>& GetPointLights() const
+    const TArray<FPointLight*>& GetPointLights() const
     {
         return mPointLights;
     }
 
 private:
-    std::vector<FRenderProxy*> mRenderProxys;
+    TArray<FRenderProxy*> mRenderProxys;
 
-    std::vector<FMeshBatch*> mStaticOpaqueMeshBatchs;
-    std::vector<FMeshBatch*> mDynamicOpaqueMeshBatchs;
+    TArray<FMeshBatch*> mStaticOpaqueMeshBatchs;
+    TArray<FMeshBatch*> mDynamicOpaqueMeshBatchs;
 
-    std::vector<FMeshBatch*> mStaticTranslucentMeshBatchs;
-    std::vector<FMeshBatch*> mDynamicTranslucentMeshBatchs;
+    TArray<FMeshBatch*> mStaticTranslucentMeshBatchs;
+    TArray<FMeshBatch*> mDynamicTranslucentMeshBatchs;
     
     FDirectionalLight* mDirectionalLight;
-    std::vector<FPointLight*> mPointLights;
+    TArray<FPointLight*> mPointLights;
 
 };

@@ -51,7 +51,7 @@ void UStaticMeshObject::createRenderProxy()
     initializer.VertexLayout = mStaticMesh->GetVertexLayout();
     initializer.Vertexes = mStaticMesh->GetVertexes();
     initializer.Indexes = mStaticMesh->GetIndexes();
-    std::vector<FMaterial*> materials;
+    TArray<FMaterial*> materials;
     for (int i = 0; i < mMaterials.size(); i++)
     {
         materials.push_back(mMaterials[i]->Material);

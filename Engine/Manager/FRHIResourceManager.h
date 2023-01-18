@@ -10,7 +10,7 @@ enum ERHIResourceType
     RHIRT_MaxNum
 };
 
-typedef std::map<FString, FRHIResource*> TRHIResourceMap;
+typedef TMap<FString, FRHIResource*> TRHIResourceMap;
 
 class FRHIResourceManager
 {

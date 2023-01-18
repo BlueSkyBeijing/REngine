@@ -21,7 +21,7 @@ public:
     ~FRHIVertexLayout();
 
 public:
-    std::vector<FInputElementDesc> Elements;
+    TArray<FInputElementDesc> Elements;
 private:
 
 };

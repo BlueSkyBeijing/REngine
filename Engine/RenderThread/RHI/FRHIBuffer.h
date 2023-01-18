@@ -30,7 +30,7 @@ public:
     virtual void Uninit() override;
 
 public:
-    std::vector<FStaticMeshVertex> Vertexes;
+    TArray<FStaticMeshVertex> Vertexes;
     FRHIVertexLayout VertexLayout;
 
 private:
@@ -47,7 +47,7 @@ public:
     virtual void Uninit() override;
 
 public:
-    std::vector<uint32> Indexes;
+    TArray<uint32> Indexes;
 
 private:
 

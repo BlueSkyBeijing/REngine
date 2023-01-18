@@ -17,7 +17,7 @@ FShaderBindingsManager::~FShaderBindingsManager()
 
 FRHIShaderBindings* FShaderBindingsManager::GetShaderBindings()
 {
-    std::map<int32, FRHIShaderBindings*>::iterator it = mShaderBindingss.begin();
+    TMap<int32, FRHIShaderBindings*>::iterator it = mShaderBindingss.begin();
     if (it != mShaderBindingss.end())
     {
         return it->second;
@@ -39,7 +39,7 @@ void FShaderBindingsManager::Init()
 
 void FShaderBindingsManager::UnInit()
 {
-    std::map<int32, FRHIShaderBindings*>::iterator it = mShaderBindingss.begin();
+    TMap<int32, FRHIShaderBindings*>::iterator it = mShaderBindingss.begin();
     if (it != mShaderBindingss.end())
     {
         if (it->second != nullptr)

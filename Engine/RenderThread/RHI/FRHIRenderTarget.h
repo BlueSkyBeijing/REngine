@@ -25,7 +25,7 @@ public:
     uint32 Height;
     uint32 NumTarget;
 
-    std::vector<FRHITexture2D*> RenderTargets;
+    TArray<FRHITexture2D*> RenderTargets;
     FRHITexture2D* DepthStencilTarget;
 
 protected:
