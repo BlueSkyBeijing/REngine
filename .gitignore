@@ -5,3 +5,6 @@
 /Engine/ThirdParty/Eigen/out
 /Engine/ThirdParty/spdlog-1.x/out
 /REngine.vcxproj.user
+/Engine/Intermediate
+/Engine/Saved
+/Engine/Binaries
