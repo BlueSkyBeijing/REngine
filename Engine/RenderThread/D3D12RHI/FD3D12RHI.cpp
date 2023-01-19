@@ -327,18 +327,18 @@ void FD3D12RHI::SetConstantBuffer(FRHIConstantBuffer* buffer, int32 registerInde
     mDX12CommandList->SetGraphicsRootDescriptorTable(msCBVTableBaseIndex + registerIndex, descriptorObject);
 }
 
-void FD3D12RHI::SetTexture2D(FRHITexture2D* texture, int32 registerIndex)
+void FD3D12RHI::SetTexture2D(FRHITexture* texture, int32 registerIndex)
 {
-    FD3D12Texture2D* textureDX12 = dynamic_cast<FD3D12Texture2D*>(texture);
+    FD3D12Texture* textureDX12 = dynamic_cast<FD3D12Texture*>(texture);
     CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
 
     descriptorObject.Offset(textureDX12->PosInHeapCBVSRVUAV, mCBVSRVVUAVDescriptorSize);
     mDX12CommandList->SetGraphicsRootDescriptorTable(msSRVTableBaseIndex + registerIndex, descriptorObject);
 }
 
-void FD3D12RHI::SetTextureCube(FRHITextureCube* texture, int32 registerIndex)
+void FD3D12RHI::SetTextureCube(FRHITexture* texture, int32 registerIndex)
 {
-    FD3D12TextureCube* textureDX12 = dynamic_cast<FD3D12TextureCube*>(texture);
+    FD3D12Texture* textureDX12 = dynamic_cast<FD3D12Texture*>(texture);
     CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
 
     descriptorObject.Offset(textureDX12->PosInHeapCBVSRVUAV, mCBVSRVVUAVDescriptorSize);
@@ -697,9 +697,9 @@ FRHIPipelineState* FD3D12RHI::CreatePipelineState(const FPipelineStateInfo& info
 
 }
 
-FRHITexture2D* FD3D12RHI::CreateTexture2D(const std::wstring& filePathName)
+FRHITexture* FD3D12RHI::CreateTexture2D(const std::wstring& filePathName)
 {
-    FD3D12Texture2D* texture2D = new FD3D12Texture2D;
+    FD3D12Texture* texture2D = new FD3D12Texture;
 
     FlushCommandQueue();
 
@@ -736,9 +736,9 @@ FRHITexture2D* FD3D12RHI::CreateTexture2D(const std::wstring& filePathName)
     return texture2D;
 }
 
-FRHITextureCube* FD3D12RHI::CreateTextureCube(const std::wstring& filePathName)
+FRHITexture* FD3D12RHI::CreateTextureCube(const std::wstring& filePathName)
 {
-    FD3D12TextureCube* textureCube = new FD3D12TextureCube;
+    FD3D12Texture* textureCube = new FD3D12Texture;
 
     FlushCommandQueue();
 
@@ -785,7 +785,7 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
     {
         for (uint32 i = 0; i < numTarget; i++)
         {
-            FD3D12Texture2D* renderTexture = new FD3D12Texture2D;
+            FD3D12Texture* renderTexture = new FD3D12Texture;
 
             renderTarget->RenderTargets[i] = renderTexture;
 
@@ -846,7 +846,7 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
 
     if (formatDepthStencil != PF_UNKNOWN)
     {
-        FD3D12Texture2D* depthStencil = new FD3D12Texture2D;
+        FD3D12Texture* depthStencil = new FD3D12Texture;
         renderTarget->DepthStencilTarget = depthStencil;
 
         //create the depth/stencil buffer and view.
@@ -942,7 +942,7 @@ FRHIRenderWindow* FD3D12RHI::CreateRenderWindow(uint32 width, uint32 hight)
 
     for (uint32 i = 0; i < renderTarget->NumTarget; i++)
     {
-        FD3D12Texture2D* renderTexture = new FD3D12Texture2D;
+        FD3D12Texture* renderTexture = new FD3D12Texture;
 
         renderTarget->RenderTargets[i] = renderTexture;
 
@@ -955,7 +955,7 @@ FRHIRenderWindow* FD3D12RHI::CreateRenderWindow(uint32 width, uint32 hight)
         msRTVCount++;
     }
 
-    FD3D12Texture2D* depthStencil = new FD3D12Texture2D;
+    FD3D12Texture* depthStencil = new FD3D12Texture;
 
     renderTarget->DepthStencilTarget = depthStencil;
 

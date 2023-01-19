@@ -97,20 +97,20 @@ void FMaterial::Init()
         const FString texName = tex.first;
         const FString texFile = tex.second;
         FRHIResource* texture = TSingleton<FRHIResourceManager>::GetInstance().GetOrCreate(ERHIResourceType::RHIRT_Texture2D, texFile);
-        FRHITexture2D* texture2D = dynamic_cast<FRHITexture2D*>(texture);
+        FRHITexture* texture2D = dynamic_cast<FRHITexture*>(texture);
 
-        mTextures.insert(std::pair<FString, FRHITexture2D*>(texName, texture2D));
+        mTextures.insert(std::pair<FString, FRHITexture*>(texName, texture2D));
     }
 
     const FString envCubeTexture = "T_EnvCube";
     const FString envMap = FConfigManager::DefaultTexturePath + envCubeTexture + FConfigManager::DefaultTextureFileSuffix;
     FRHIResource* texture = TSingleton<FRHIResourceManager>::GetInstance().GetOrCreate(ERHIResourceType::RHIRT_TextureCube, envMap);
-    EnvMap = dynamic_cast<FRHITextureCube*>(texture);
+    EnvMap = dynamic_cast<FRHITexture*>(texture);
 
     const FString preIntegratedBRDFTexture = "T_PreintegratedSkinBRDF";
     const FString preIntegratedBRDF = FConfigManager::DefaultTexturePath + preIntegratedBRDFTexture + FConfigManager::DefaultTextureFileSuffix;
     texture = TSingleton<FRHIResourceManager>::GetInstance().GetOrCreate(ERHIResourceType::RHIRT_Texture2D, preIntegratedBRDF);
-    PreIntegratedBRDF = dynamic_cast<FRHITexture2D*>(texture);
+    PreIntegratedBRDF = dynamic_cast<FRHITexture*>(texture);
 
     setInited(true);
 }

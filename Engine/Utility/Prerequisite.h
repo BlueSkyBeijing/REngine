@@ -33,7 +33,7 @@ template<class T>
 using TSet = std::set<T>;
 
 template<class T>
-using TSharedRef = std::shared_ptr<T>;
+using TSharedPtr = std::shared_ptr<T>;
 
 template<class T>
 using TWeakPtr = std::weak_ptr<T>;
@@ -107,8 +107,6 @@ class FRHI;
 class FRHIResource;
 class FRHIShader;
 class FRHITexture;
-class FRHITexture2D;
-class FRHITextureCube;
 class FRHIBuffer;
 class FRHIIndexBuffer;
 class FRHIVertexBuffer;
@@ -119,7 +117,6 @@ class FRHIPipelineState;
 class FRHIVertexBuffer;
 class FRHIIndexBuffer;
 class FRHIShaderBindings;
-class FRHITexture2D;
 class FRHIRenderWindow;
 class FRHIRenderTarget;
 class FRHIVertexLayout;
@@ -133,7 +130,7 @@ class FD3D12RenderTarget;
 class FD3D12PipelineState;
 class FD3D12VertexBuffer;
 class FD3D12ShaderBindings;
-class FD3D12Texture2D;
-class FD3D12TextureCube;
+class FD3D12Texture;
+class FD3D12Texture;
 
 #define FRAME_BUFFER_NUM 2

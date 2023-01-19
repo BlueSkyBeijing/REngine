@@ -484,6 +484,14 @@ enum EMaterialShadingModel
     MSM_NUM,
 };
 
+enum ETextureDimension
+{
+    Texture2D,
+    Texture2DArray,
+    Texture3D,
+    TextureCube,
+    TextureCubeArray
+};
 
 class FRHI
 {
@@ -511,8 +519,8 @@ public:
     virtual void SetVertexBuffer(FRHIVertexBuffer* buffer) = 0;
     virtual void SetIndexBuffer(FRHIIndexBuffer* buffer) = 0;
     virtual void SetConstantBuffer(FRHIConstantBuffer* buffer, int32 registerIndex) = 0;
-    virtual void SetTexture2D(FRHITexture2D* texture, int32 registerIndex) = 0;
-    virtual void SetTextureCube(FRHITextureCube* texture, int32 registerIndex) = 0;
+    virtual void SetTexture2D(FRHITexture* texture, int32 registerIndex) = 0;
+    virtual void SetTextureCube(FRHITexture* texture, int32 registerIndex) = 0;
 
     virtual void DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation) = 0;
 
@@ -522,8 +530,8 @@ public:
     virtual FRHIShader* GetOrCreate(const FShaderInfo& shaderInfo) = 0;
     virtual FRHIShaderBindings* CreateShaderBindings() = 0;
     virtual FRHIPipelineState* CreatePipelineState(const FPipelineStateInfo& info) = 0;
-    virtual FRHITexture2D* CreateTexture2D(const std::wstring& filePathName) = 0;
-    virtual FRHITextureCube* CreateTextureCube(const std::wstring& filePathName) = 0;
+    virtual FRHITexture* CreateTexture2D(const std::wstring& filePathName) = 0;
+    virtual FRHITexture* CreateTextureCube(const std::wstring& filePathName) = 0;
     virtual FRHIRenderTarget* CreateRenderTarget(uint32 width, uint32 hight, uint32 numTarget, EPixelFormat formatTarget, EPixelFormat formatDepthStencil) = 0;
     virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) = 0;
 

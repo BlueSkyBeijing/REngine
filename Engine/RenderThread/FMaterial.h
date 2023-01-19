@@ -13,7 +13,7 @@ public:
 public:
     void Init();
     void UnInit();
-    FRHITexture2D* GetTexture(FString name)
+    FRHITexture* GetTexture(FString name)
     {
         return mTextures.at(name);
     }
@@ -41,10 +41,10 @@ public:
     FVector4 EmissiveColorScale;
     FVector4 SubsurfaceColorScale;
 
-    FRHITextureCube* EnvMap;
-    FRHITexture2D* PreIntegratedBRDF;
+    FRHITexture* EnvMap;
+    FRHITexture* PreIntegratedBRDF;
 
-    TMap<FString, FRHITexture2D*> mTextures;
+    TMap<FString, FRHITexture*> mTextures;
     TMap<FString, FString> mTexturePaths;
     FString BaseColorFullFilePathName;
 

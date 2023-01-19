@@ -3,7 +3,7 @@
 
 #include "UObject.h"
 
-class FRHITexture2D;
+class FRHITexture;
 
 class UTexture : public UResource
 {
@@ -22,7 +22,7 @@ public:
     virtual ~UTexture2D() override;
 
 public:
-    FRHITexture2D* Texture;
+    FRHITexture* Texture;
 
 public:
     virtual void Load() override;

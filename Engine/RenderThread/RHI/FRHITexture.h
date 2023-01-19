@@ -20,31 +20,3 @@ public:
 private:
 
 };
-
-class FRHITexture2D : public FRHITexture
-{
-public:
-    FRHITexture2D();
-    virtual ~FRHITexture2D() override;
-
-public:
-    virtual void Init() override;
-    virtual void Uninit() override;
-
-private:
-
-};
-
-class FRHITextureCube : public FRHITexture
-{
-public:
-    FRHITextureCube();
-    virtual ~FRHITextureCube() override;
-
-public:
-    virtual void Init() override;
-    virtual void Uninit() override;
-
-private:
-
-};
