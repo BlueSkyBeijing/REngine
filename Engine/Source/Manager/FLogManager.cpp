@@ -3,7 +3,7 @@
 #include "FLogManager.h"
 
 FLogManager::FLogManager() :
-    mLogFileName("Saved\\Logs\\Engine.log")
+    mLogFileName("Engine\\Saved\\Logs\\Engine.log")
 {
 }
 
