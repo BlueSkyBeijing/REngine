@@ -11,6 +11,7 @@ public:
     void Init();
     void UnInit();
 
+    const static FString EngineWorkPath;
     const static FString ContentPath;
     const static FString ShaderPath;
     const static FString ConfigFile;

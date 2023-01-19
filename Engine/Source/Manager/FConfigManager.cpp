@@ -3,18 +3,19 @@
 #include "FConfigManager.h"
 #include "Utility.h"
 
-const FString FConfigManager::ContentPath = "Engine\\Content\\";
-const FString FConfigManager::ShaderPath = "Engine\\Shaders\\";
-const FString FConfigManager::ConfigFile = "Engine\\Config\\Engine.ini";
-const FString FConfigManager::LogFile = "Engine\\Saved\\Logs\\Engine.log";
+const FString FConfigManager::EngineWorkPath = "..\\..\\..\\..\\";
+const FString FConfigManager::ContentPath = FConfigManager::EngineWorkPath + "Engine\\Content\\";
+const FString FConfigManager::ShaderPath = FConfigManager::EngineWorkPath + "Engine\\Shaders\\";
+const FString FConfigManager::ConfigFile = FConfigManager::EngineWorkPath + "Engine\\Config\\Engine.ini";
+const FString FConfigManager::LogFile = FConfigManager::EngineWorkPath + "Engine\\Saved\\Logs\\Engine.log";
 
-const FString FConfigManager::DefaultMapPath = "Engine\\Content\\Map\\";
-const FString FConfigManager::DefaultStaticMeshPath = "Engine\\Content\\StaticMesh\\";
-const FString FConfigManager::DefaultSkeletalMeshPath = "Engine\\Content\\SkeletalMesh\\";
-const FString FConfigManager::DefaultSkeletonPath = "Engine\\Content\\SkeletalMesh\\Skeleton\\";
-const FString FConfigManager::DefaultAnimSequencePath = "Engine\\Content\\SkeletalMesh\\Animation\\";
-const FString FConfigManager::DefaultMaterialPath = "Engine\\Content\\Material\\";
-const FString FConfigManager::DefaultTexturePath = "Engine\\Content\\Texture\\";
+const FString FConfigManager::DefaultMapPath = FConfigManager::EngineWorkPath + "Engine\\Content\\Map\\";
+const FString FConfigManager::DefaultStaticMeshPath = FConfigManager::EngineWorkPath + "Engine\\Content\\StaticMesh\\";
+const FString FConfigManager::DefaultSkeletalMeshPath = FConfigManager::EngineWorkPath + "Engine\\Content\\SkeletalMesh\\";
+const FString FConfigManager::DefaultSkeletonPath = FConfigManager::EngineWorkPath + "Engine\\Content\\SkeletalMesh\\Skeleton\\";
+const FString FConfigManager::DefaultAnimSequencePath = FConfigManager::EngineWorkPath + "Engine\\Content\\SkeletalMesh\\Animation\\";
+const FString FConfigManager::DefaultMaterialPath = FConfigManager::EngineWorkPath + "Engine\\Content\\Material\\";
+const FString FConfigManager::DefaultTexturePath = FConfigManager::EngineWorkPath + "Engine\\Content\\Texture\\";
 
 const FString FConfigManager::DefaultMapFileSuffix = ".map";
 const FString FConfigManager::DefaultStaticMeshFileSuffix = ".stm";
