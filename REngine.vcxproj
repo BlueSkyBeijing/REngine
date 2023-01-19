@@ -37,6 +37,7 @@
     <ClCompile Include="Engine\Manager\FConsoleVariableManager.cpp" />
     <ClCompile Include="Engine\Manager\FInputManager.cpp" />
     <ClCompile Include="Engine\Manager\FLogManager.cpp" />
+    <ClCompile Include="Engine\Manager\FModuleManager.cpp" />
     <ClCompile Include="Engine\Manager\FPipelineStateManager.cpp" />
     <ClCompile Include="Engine\Manager\FPlayerController.cpp" />
     <ClCompile Include="Engine\Manager\FResourceManager.cpp" />
@@ -86,6 +87,7 @@
   <ItemGroup>
     <ClInclude Include="Engine\Core\FEngine.h" />
     <ClInclude Include="Engine\Core\FThread.h" />
+    <ClInclude Include="Engine\Core\IModuleInterface.h" />
     <ClInclude Include="Engine\MainThread\UCamera.h" />
     <ClInclude Include="Engine\MainThread\ULight.h" />
     <ClInclude Include="Engine\MainThread\UMaterial.h" />
@@ -101,6 +103,7 @@
     <ClInclude Include="Engine\Manager\FConsoleVariableManager.h" />
     <ClInclude Include="Engine\Manager\FInputManager.h" />
     <ClInclude Include="Engine\Manager\FLogManager.h" />
+    <ClInclude Include="Engine\Manager\FModuleManager.h" />
     <ClInclude Include="Engine\Manager\FPipelineStateManager.h" />
     <ClInclude Include="Engine\Manager\FPlayerController.h" />
     <ClInclude Include="Engine\Manager\FResourceManager.h" />

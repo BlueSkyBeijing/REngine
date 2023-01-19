@@ -212,6 +212,9 @@
     <ClCompile Include="Engine\Core\FThread.cpp">
       <Filter>Engine\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Manager\FModuleManager.cpp">
+      <Filter>Engine\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Manager\FInputManager.h">
@@ -398,6 +401,12 @@
       <Filter>Engine\Manager</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Core\FThread.h">
+      <Filter>Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Manager\FModuleManager.h">
+      <Filter>Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\IModuleInterface.h">
       <Filter>Engine\Core</Filter>
     </ClInclude>
   </ItemGroup>

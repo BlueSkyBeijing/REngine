@@ -88,6 +88,7 @@ class FResourceManager;
 class FAnimSequenceInstance;
 class FLight;
 class FPointLight;
+class IModuleInterface;
 
 class FSceneManager;
 class FShaderManager;

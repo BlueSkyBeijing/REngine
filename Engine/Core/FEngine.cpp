@@ -5,6 +5,7 @@
 #include "FInputManager.h"
 #include "FLogManager.h"
 #include "FConfigManager.h"
+#include "FModuleManager.h"
 #include "FPlayerController.h"
 #include "FResourceManager.h"
 #include "FConsoleVariableManager.h"
@@ -41,6 +42,7 @@ void FEngine::init()
 {
     TSingleton<FLogManager>::GetInstance().Init();
     TSingleton<FConfigManager>::GetInstance().Init();
+    TSingleton<FModuleManager>::GetInstance().Init();   
     TSingleton<FInputManager>::GetInstance().Init();
     TSingleton<FPlayerController>::GetInstance().Init();
     TSingleton<FResourceManager>::GetInstance().Init();
@@ -78,6 +80,7 @@ void FEngine::unInit()
     TSingleton<FInputManager>::GetInstance().UnInit();
     TSingleton<FConfigManager>::GetInstance().UnInit();
     TSingleton<FLogManager>::GetInstance().UnInit();
+    TSingleton<FModuleManager>::GetInstance().UnInit();
     TSingleton<FPlayerController>::GetInstance().UnInit();
     TSingleton<FResourceManager>::GetInstance().UnInit();
     TSingleton<FConsoleVariableManager>::GetInstance().UnInit();
