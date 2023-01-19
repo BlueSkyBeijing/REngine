@@ -12,6 +12,9 @@ public:
     void UnInit();
 
     const static FString ContentPath;
+    const static FString ShaderPath;
+    const static FString ConfigFile;
+    const static FString LogFile;
 
     const static FString DefaultMapPath;
     const static FString DefaultStaticMeshPath;

@@ -4,6 +4,9 @@
 #include "Utility.h"
 
 const FString FConfigManager::ContentPath = "Engine\\Content\\";
+const FString FConfigManager::ShaderPath = "Engine\\Shaders\\";
+const FString FConfigManager::ConfigFile = "Engine\\Config\\Engine.ini";
+const FString FConfigManager::LogFile = "Engine\\Saved\\Logs\\Engine.log";
 
 const FString FConfigManager::DefaultMapPath = "Engine\\Content\\Map\\";
 const FString FConfigManager::DefaultStaticMeshPath = "Engine\\Content\\StaticMesh\\";
@@ -55,7 +58,7 @@ void FConfigManager::Init()
     CSimpleIniA engineConfig;
     engineConfig.SetUnicode();
 
-    SI_Error rc = engineConfig.LoadFile("Engine\\Config\\Engine.ini");
+    SI_Error rc = engineConfig.LoadFile(FConfigManager::ConfigFile.c_str());
     if (rc < 0)
     {
         //print error

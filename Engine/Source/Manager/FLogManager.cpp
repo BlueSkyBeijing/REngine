@@ -1,9 +1,10 @@
 ﻿#include "PrecompiledHeader.h"
 
 #include "FLogManager.h"
+#include "FConfigManager.h"
 
 FLogManager::FLogManager() :
-    mLogFileName("Engine\\Saved\\Logs\\Engine.log")
+    mLogFileName(FConfigManager::LogFile)
 {
 }
 

@@ -36,14 +36,14 @@ void FMaterial::Init()
     }
 
     FShaderInfo vertexShaderInfo;
-    vertexShaderInfo.FilePathName = L"Engine\\Shaders\\ForwardShadingVS.hlsl";
+    vertexShaderInfo.FilePathName = StringToWString(FConfigManager::ShaderPath + "ForwardShadingVS.hlsl");
     vertexShaderInfo.EnterPoint = "VSMain";
     vertexShaderInfo.Target = "vs_5_0";
 
     VertexShader = TSingleton<FShaderManager>::GetInstance().GetOrCreate(vertexShaderInfo);
 
     FShaderInfo pixelShaderInfo;
-    pixelShaderInfo.FilePathName = L"Engine\\Shaders\\ForwardShadingPS.hlsl";
+    pixelShaderInfo.FilePathName = StringToWString(FConfigManager::ShaderPath + "ForwardShadingPS.hlsl");
     pixelShaderInfo.EnterPoint = "PSMain";
     pixelShaderInfo.Target = "ps_5_0";
     pixelShaderInfo.Defines.insert(std::make_pair("SHADING_MODEL", std::to_string(ShadingModel)));
@@ -52,7 +52,7 @@ void FMaterial::Init()
     PixelShader = TSingleton<FShaderManager>::GetInstance().GetOrCreate(pixelShaderInfo);
 
     FShaderInfo pixelShaderShadowInfo;
-    pixelShaderShadowInfo.FilePathName = L"Engine\\Shaders\\ShadowDepthPS.hlsl";
+    pixelShaderShadowInfo.FilePathName = StringToWString(FConfigManager::ShaderPath + "ShadowDepthPS.hlsl");
     pixelShaderShadowInfo.EnterPoint = "PSMain";
     pixelShaderShadowInfo.Target = "ps_5_0";
     pixelShaderShadowInfo.Defines.insert(std::make_pair("MATERIALBLENDING_MASKED", std::to_string(int(BlendMode == BM_Masked))));
@@ -60,7 +60,7 @@ void FMaterial::Init()
     PixelShaderShadow = TSingleton<FShaderManager>::GetInstance().GetOrCreate(pixelShaderShadowInfo);
 
     FShaderInfo pixelShaderGPUSkinInfo;
-    pixelShaderGPUSkinInfo.FilePathName = L"Engine\\Shaders\\ForwardShadingPS.hlsl";
+    pixelShaderGPUSkinInfo.FilePathName = StringToWString(FConfigManager::ShaderPath + "ForwardShadingPS.hlsl");
     pixelShaderGPUSkinInfo.EnterPoint = "PSMain";
     pixelShaderGPUSkinInfo.Target = "ps_5_0";
     pixelShaderGPUSkinInfo.Defines.insert(std::make_pair("SHADING_MODEL", std::to_string(ShadingModel)));
@@ -70,14 +70,14 @@ void FMaterial::Init()
     PixelShaderGPUSkin = TSingleton<FShaderManager>::GetInstance().GetOrCreate(pixelShaderGPUSkinInfo);
 
     FShaderInfo vertexShaderShadowInfo;
-    vertexShaderShadowInfo.FilePathName = L"Engine\\Shaders\\ShadowDepthVS.hlsl";
+    vertexShaderShadowInfo.FilePathName = StringToWString(FConfigManager::ShaderPath + "ShadowDepthVS.hlsl");
     vertexShaderShadowInfo.EnterPoint = "VSMain";
     vertexShaderShadowInfo.Target = "vs_5_0";
 
     VertexShaderShadow = TSingleton<FShaderManager>::GetInstance().GetOrCreate(vertexShaderShadowInfo);
 
     FShaderInfo vertexShaderGPUSkinInfo;
-    vertexShaderGPUSkinInfo.FilePathName = L"Engine\\Shaders\\ForwardShadingVS.hlsl";
+    vertexShaderGPUSkinInfo.FilePathName = StringToWString(FConfigManager::ShaderPath + "ForwardShadingVS.hlsl");
     vertexShaderGPUSkinInfo.EnterPoint = "VSMain";
     vertexShaderGPUSkinInfo.Target = "vs_5_0";
     vertexShaderGPUSkinInfo.Defines.insert(std::make_pair("GPU_SKIN", "1"));
@@ -85,7 +85,7 @@ void FMaterial::Init()
     VertexShaderGPUSkin = TSingleton<FShaderManager>::GetInstance().GetOrCreate(vertexShaderGPUSkinInfo);
 
     FShaderInfo vertexShaderShadowGPUSkinInfo;
-    vertexShaderShadowGPUSkinInfo.FilePathName = L"Engine\\Shaders\\ShadowDepthVS.hlsl";
+    vertexShaderShadowGPUSkinInfo.FilePathName = StringToWString(FConfigManager::ShaderPath + "ShadowDepthVS.hlsl");
     vertexShaderShadowGPUSkinInfo.EnterPoint = "VSMain";
     vertexShaderShadowGPUSkinInfo.Target = "vs_5_0";
     vertexShaderShadowGPUSkinInfo.Defines.insert(std::make_pair("GPU_SKIN", "1"));
