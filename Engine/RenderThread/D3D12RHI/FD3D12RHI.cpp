@@ -697,7 +697,7 @@ FRHIPipelineState* FD3D12RHI::CreatePipelineState(const FPipelineStateInfo& info
 
 }
 
-FRHITexture* FD3D12RHI::CreateTexture2D(const std::wstring& filePathName)
+FRHITexture* FD3D12RHI::CreateTexture(const std::wstring& filePathName, FRHITextureCreateDesc& desc)
 {
     FD3D12Texture* texture2D = new FD3D12Texture;
 
@@ -716,7 +716,7 @@ FRHITexture* FD3D12RHI::CreateTexture2D(const std::wstring& filePathName)
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
     srvDesc.Format = texture2D->mTexture->GetDesc().Format;
-    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.ViewDimension = translateTextureDimension(desc.Dimension);
     srvDesc.Texture2D.MostDetailedMip = 0;
     srvDesc.Texture2D.MipLevels = texture2D->mTexture->GetDesc().MipLevels;
     srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
@@ -734,45 +734,6 @@ FRHITexture* FD3D12RHI::CreateTexture2D(const std::wstring& filePathName)
     mDX12CommandQueue->ExecuteCommandLists(1, CommandLists);
 
     return texture2D;
-}
-
-FRHITexture* FD3D12RHI::CreateTextureCube(const std::wstring& filePathName)
-{
-    FD3D12Texture* textureCube = new FD3D12Texture;
-
-    FlushCommandQueue();
-
-    //reset command list
-    THROW_IF_FAILED(mDX12CommandList->Reset(mDX12CommandAllocator[mFrameIndex].Get(), NULL));
-
-    THROW_IF_FAILED(DirectX::CreateDDSTextureFromFile12(mDX12Device.Get(),
-        mDX12CommandList.Get(), filePathName.c_str(),
-        textureCube->mTexture, textureCube->mTextureUploadHeap));
-
-
-    CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorObj(mCBVSRVUAVHeap->GetCPUDescriptorHandleForHeapStart(), msCBVSRVUAVCount, mCBVSRVVUAVDescriptorSize);
-
-    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    srvDesc.Format = textureCube->mTexture->GetDesc().Format;
-    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
-    srvDesc.TextureCube.MostDetailedMip = 0;
-    srvDesc.TextureCube.MipLevels = textureCube->mTexture->GetDesc().MipLevels;
-    srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
-
-    mDX12Device->CreateShaderResourceView(textureCube->mTexture.Get(), &srvDesc, descriptorObj);
-
-    textureCube->PosInHeapCBVSRVUAV = msCBVSRVUAVCount;
-
-    msCBVSRVUAVCount++;
-
-    mDX12CommandList->Close();
-
-    //execute command list
-    ID3D12CommandList* CommandLists[] = { mDX12CommandList.Get() };
-    mDX12CommandQueue->ExecuteCommandLists(1, CommandLists);
-
-    return textureCube;
 }
 
 FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint32 numTarget, EPixelFormat formatTarget, EPixelFormat formatDepthStencil)
@@ -1091,9 +1052,9 @@ DXGI_FORMAT FD3D12RHI::translatePixelFormat(EPixelFormat format)
     return (DXGI_FORMAT)format;
 }
 
-D3D12_COMPARISON_FUNC FD3D12RHI::translateCompareFunction(ECompareFunction CompareFunction)
+D3D12_COMPARISON_FUNC FD3D12RHI::translateCompareFunction(ECompareFunction compareFunction)
 {
-    switch (CompareFunction)
+    switch (compareFunction)
     {
     case CF_Less: return D3D12_COMPARISON_FUNC_LESS;
     case CF_LessEqual: return D3D12_COMPARISON_FUNC_LESS_EQUAL;
@@ -1106,9 +1067,9 @@ D3D12_COMPARISON_FUNC FD3D12RHI::translateCompareFunction(ECompareFunction Compa
     };
 }
 
-D3D12_BLEND_OP FD3D12RHI::translateBlendOp(EBlendOperation BlendOp)
+D3D12_BLEND_OP FD3D12RHI::translateBlendOp(EBlendOperation blendOp)
 {
-    switch (BlendOp)
+    switch (blendOp)
     {
     case BO_Subtract: return D3D12_BLEND_OP_SUBTRACT;
     case BO_Min: return D3D12_BLEND_OP_MIN;
@@ -1118,9 +1079,9 @@ D3D12_BLEND_OP FD3D12RHI::translateBlendOp(EBlendOperation BlendOp)
     };
 }
 
-D3D12_BLEND FD3D12RHI::translateBlendFactor(EBlendFactor BlendFactor)
+D3D12_BLEND FD3D12RHI::translateBlendFactor(EBlendFactor blendFactor)
 {
-    switch (BlendFactor)
+    switch (blendFactor)
     {
     case BF_One: return D3D12_BLEND_ONE;
     case BF_SourceColor: return D3D12_BLEND_SRC_COLOR;
@@ -1137,12 +1098,25 @@ D3D12_BLEND FD3D12RHI::translateBlendFactor(EBlendFactor BlendFactor)
     };
 }
 
-D3D12_CULL_MODE FD3D12RHI::translateCullMode(ERasterizerCullMode CullMode)
+D3D12_CULL_MODE FD3D12RHI::translateCullMode(ERasterizerCullMode cullMode)
 {
-    switch (CullMode)
+    switch (cullMode)
     {
     case CM_CW: return D3D12_CULL_MODE_BACK;
     case CM_CCW: return D3D12_CULL_MODE_FRONT;
     default: return D3D12_CULL_MODE_NONE;
+    };
+}
+
+D3D12_SRV_DIMENSION FD3D12RHI::translateTextureDimension(ETextureDimension demension)
+{
+    switch (demension)
+    {
+    case Texture2D: return D3D12_SRV_DIMENSION_TEXTURE2D;
+    case Texture2DArray: return D3D12_SRV_DIMENSION_TEXTURE2DARRAY;
+    case Texture3D: return D3D12_SRV_DIMENSION_TEXTURE3D;
+    case TextureCube: return D3D12_SRV_DIMENSION_TEXTURECUBE;
+    case TextureCubeArray: return D3D12_SRV_DIMENSION_TEXTURECUBEARRAY;
+    default: return D3D12_SRV_DIMENSION_TEXTURE2D;
     };
 }

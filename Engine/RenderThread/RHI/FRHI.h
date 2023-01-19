@@ -493,6 +493,16 @@ enum ETextureDimension
     TextureCubeArray
 };
 
+struct FRHITextureCreateDesc
+{
+    FRHITextureCreateDesc(ETextureDimension InDimension)
+        : Dimension(InDimension)
+    {
+    }
+
+    ETextureDimension Dimension;
+};
+
 class FRHI
 {
 public:
@@ -530,8 +540,7 @@ public:
     virtual FRHIShader* GetOrCreate(const FShaderInfo& shaderInfo) = 0;
     virtual FRHIShaderBindings* CreateShaderBindings() = 0;
     virtual FRHIPipelineState* CreatePipelineState(const FPipelineStateInfo& info) = 0;
-    virtual FRHITexture* CreateTexture2D(const std::wstring& filePathName) = 0;
-    virtual FRHITexture* CreateTextureCube(const std::wstring& filePathName) = 0;
+    virtual FRHITexture* CreateTexture(const std::wstring& filePathName, FRHITextureCreateDesc& desc) = 0;
     virtual FRHIRenderTarget* CreateRenderTarget(uint32 width, uint32 hight, uint32 numTarget, EPixelFormat formatTarget, EPixelFormat formatDepthStencil) = 0;
     virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) = 0;
 

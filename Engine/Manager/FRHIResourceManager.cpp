@@ -46,7 +46,8 @@ FRHIResource* FRHIResourceManager::GetOrCreate(ERHIResourceType resorceType, con
         {
             FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
             const std::wstring textureFilePathName = StringToWString(fullFileName);
-            FRHIResource* texture = rhi->CreateTexture2D(textureFilePathName);
+            FRHITextureCreateDesc desc(ETextureDimension::Texture2D);
+            FRHIResource* texture = rhi->CreateTexture(textureFilePathName, desc);
 
             mResourceMaps[resorceType].insert(std::make_pair(fullFileName, texture));
 
@@ -57,7 +58,8 @@ FRHIResource* FRHIResourceManager::GetOrCreate(ERHIResourceType resorceType, con
         {
             FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
             const std::wstring textureFilePathName = StringToWString(fullFileName);
-            FRHIResource* texture = rhi->CreateTextureCube(textureFilePathName);
+            FRHITextureCreateDesc desc(ETextureDimension::TextureCube);
+            FRHIResource* texture = rhi->CreateTexture(textureFilePathName, desc);
 
             mResourceMaps[resorceType].insert(std::make_pair(fullFileName, texture));
 

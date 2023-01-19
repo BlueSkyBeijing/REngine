@@ -43,8 +43,7 @@ public:
     virtual FRHIShader* GetOrCreate(const FShaderInfo& shaderInfo) override;
     virtual FRHIShaderBindings* CreateShaderBindings() override;
     virtual FRHIPipelineState* CreatePipelineState(const FPipelineStateInfo& info) override;
-    virtual FRHITexture* CreateTexture2D(const std::wstring& filePathName) override;
-    virtual FRHITexture* CreateTextureCube(const std::wstring& filePathName) override;
+    virtual FRHITexture* CreateTexture(const std::wstring& filePathName, FRHITextureCreateDesc& desc);
     virtual FRHIRenderTarget* CreateRenderTarget(uint32 width, uint32 hight, uint32 numTarget, EPixelFormat formatTarget, EPixelFormat formatDepthStencil) override;
     virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) override;
 
@@ -66,10 +65,11 @@ protected:
     D3D_PRIMITIVE_TOPOLOGY translatePrimitiveType(EPrimitiveType primitiveType);
     D3D12_RESOURCE_STATES translateResourceTransitionAccess(EResourceTransitionAccess access);
     DXGI_FORMAT translatePixelFormat(EPixelFormat format);
-    D3D12_COMPARISON_FUNC translateCompareFunction(ECompareFunction CompareFunction);
-    D3D12_BLEND_OP translateBlendOp(EBlendOperation BlendOp);
-    D3D12_BLEND translateBlendFactor(EBlendFactor BlendFactor);
-    D3D12_CULL_MODE translateCullMode(ERasterizerCullMode CullMode);
+    D3D12_COMPARISON_FUNC translateCompareFunction(ECompareFunction compareFunction);
+    D3D12_BLEND_OP translateBlendOp(EBlendOperation blendOp);
+    D3D12_BLEND translateBlendFactor(EBlendFactor blendFactor);
+    D3D12_CULL_MODE translateCullMode(ERasterizerCullMode cullMode);
+    D3D12_SRV_DIMENSION translateTextureDimension(ETextureDimension demension);
 
 private:
     FRHIRenderTarget* mRenderTargetCurrent;
