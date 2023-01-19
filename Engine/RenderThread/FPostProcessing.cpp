@@ -438,7 +438,7 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
-        mRHI->SetTexture2D(mSceneColor->RenderTargets[0], 0);
+        mRHI->SetTexture(mSceneColor->RenderTargets[0], 0);
 
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
@@ -475,7 +475,7 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mBloomDown0ConstantBuffer, 0);
-        mRHI->SetTexture2D(mBloomSetup->RenderTargets[0], 0);
+        mRHI->SetTexture(mBloomSetup->RenderTargets[0], 0);
 
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
@@ -513,7 +513,7 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mBloomDown1ConstantBuffer, 0);
-        mRHI->SetTexture2D(mBloomDown0->RenderTargets[0], 0);
+        mRHI->SetTexture(mBloomDown0->RenderTargets[0], 0);
 
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
@@ -552,7 +552,7 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mBloomDown2ConstantBuffer, 0);
-        mRHI->SetTexture2D(mBloomDown1->RenderTargets[0], 0);
+        mRHI->SetTexture(mBloomDown1->RenderTargets[0], 0);
 
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
@@ -590,7 +590,7 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mBloomDown3ConstantBuffer, 0);
-        mRHI->SetTexture2D(mBloomDown2->RenderTargets[0], 0);
+        mRHI->SetTexture(mBloomDown2->RenderTargets[0], 0);
 
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
@@ -628,8 +628,8 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mBloomUp0ConstantBuffer, 0);
-        mRHI->SetTexture2D(mBloomDown2->RenderTargets[0], 0);
-        mRHI->SetTexture2D(mBloomDown3->RenderTargets[0], 1);
+        mRHI->SetTexture(mBloomDown2->RenderTargets[0], 0);
+        mRHI->SetTexture(mBloomDown3->RenderTargets[0], 1);
 
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
@@ -667,8 +667,8 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mBloomUp1ConstantBuffer, 0);
-        mRHI->SetTexture2D(mBloomDown1->RenderTargets[0], 0);
-        mRHI->SetTexture2D(mBloomUp0->RenderTargets[0], 1);
+        mRHI->SetTexture(mBloomDown1->RenderTargets[0], 0);
+        mRHI->SetTexture(mBloomUp0->RenderTargets[0], 1);
 
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
@@ -707,8 +707,8 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mBloomUp2ConstantBuffer, 0);
-        mRHI->SetTexture2D(mBloomDown0->RenderTargets[0], 0);
-        mRHI->SetTexture2D(mBloomUp1->RenderTargets[0], 1);
+        mRHI->SetTexture(mBloomDown0->RenderTargets[0], 0);
+        mRHI->SetTexture(mBloomUp1->RenderTargets[0], 1);
 
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
@@ -747,8 +747,8 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mBloomUp3ConstantBuffer, 0);
-        mRHI->SetTexture2D(mBloomSetup->RenderTargets[0], 0);
-        mRHI->SetTexture2D(mBloomUp2->RenderTargets[0], 1);
+        mRHI->SetTexture(mBloomSetup->RenderTargets[0], 0);
+        mRHI->SetTexture(mBloomUp2->RenderTargets[0], 1);
 
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 
@@ -789,8 +789,8 @@ void FPostProcessing::Draw()
         mRHI->SetVertexBuffer(mFullScreenQuad->VertexBuffer);
         mRHI->SetIndexBuffer(mFullScreenQuad->IndexBuffer);
         mRHI->SetConstantBuffer(mPostProcessConstantBuffer, 0);
-        mRHI->SetTexture2D(mSceneColor->RenderTargets[0], 0);
-        mRHI->SetTexture2D(mBloomUp3->RenderTargets[0], 1);
+        mRHI->SetTexture(mSceneColor->RenderTargets[0], 0);
+        mRHI->SetTexture(mBloomUp3->RenderTargets[0], 1);
 
         mRHI->DrawIndexedInstanced(6, 1, 0, 0, 0);
 

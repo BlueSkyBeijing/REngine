@@ -32,8 +32,7 @@ public:
     virtual void SetVertexBuffer(FRHIVertexBuffer* buffer) override;
     virtual void SetIndexBuffer(FRHIIndexBuffer* buffer) override;
     virtual void SetConstantBuffer(FRHIConstantBuffer* buffer, int32 registerIndex) override;
-    virtual void SetTexture2D(FRHITexture* texture, int32 registerIndex) override;
-    virtual void SetTextureCube(FRHITexture* texture, int32 registerIndex) override;
+    virtual void SetTexture(FRHITexture* texture, int32 registerIndex) override;
 
     virtual void DrawIndexedInstanced(uint32 indexCountPerInstance, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation) override;
 

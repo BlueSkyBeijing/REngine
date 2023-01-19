@@ -137,11 +137,11 @@ void FRenderer::drawShadowPass()
         mRHI->SetIndexBuffer(meshBatch->IndexBuffer);
         mRHI->SetConstantBuffer(meshBatch->ConstantBuffer, 0);
         mRHI->SetConstantBuffer(mShadowPassConstantBuffer, 1);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("BaseColor"), 0);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("NormalMap"), 4);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("MetallicSpecularRoughness"), 5);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("EmissiveColor"), 6);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("SubsurfaceColor"), 7);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("BaseColor"), 0);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("NormalMap"), 4);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("MetallicSpecularRoughness"), 5);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("EmissiveColor"), 6);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("SubsurfaceColor"), 7);
 
         mRHI->DrawIndexedInstanced(meshBatch->IndexCountPerInstance, meshBatch->InstanceCount, meshBatch->StartIndexLocation, meshBatch->BaseVertexLocation, meshBatch->StartInstanceLocation);
 
@@ -177,11 +177,11 @@ void FRenderer::drawShadowPass()
         mRHI->SetIndexBuffer(meshBatch->IndexBuffer);
         mRHI->SetConstantBuffer(meshBatch->ConstantBuffer, 0);
         mRHI->SetConstantBuffer(mShadowPassConstantBuffer, 1);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("BaseColor"), 0);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("NormalMap"), 4);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("MetallicSpecularRoughness"), 5);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("EmissiveColor"), 6);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("SubsurfaceColor"), 7);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("BaseColor"), 0);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("NormalMap"), 4);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("MetallicSpecularRoughness"), 5);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("EmissiveColor"), 6);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("SubsurfaceColor"), 7);
 
         mRHI->DrawIndexedInstanced(meshBatch->IndexCountPerInstance, meshBatch->InstanceCount, meshBatch->StartIndexLocation, meshBatch->BaseVertexLocation, meshBatch->StartInstanceLocation);
 
@@ -295,14 +295,14 @@ void FRenderer::_drawSceneColorOpaque()
         mRHI->SetIndexBuffer(meshBatch->IndexBuffer);
         mRHI->SetConstantBuffer(meshBatch->ConstantBuffer, 0);
         mRHI->SetConstantBuffer(mSceneColorPassConstantBuffer, 1);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("BaseColor"), 0);
-        mRHI->SetTextureCube(meshBatch->Material->EnvMap, 1);
-        mRHI->SetTexture2D(mShadowMap->DepthStencilTarget, 2);
-        mRHI->SetTexture2D(meshBatch->Material->PreIntegratedBRDF, 3);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("NormalMap"), 4);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("MetallicSpecularRoughness"), 5);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("EmissiveColor"), 6);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("SubsurfaceColor"), 7);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("BaseColor"), 0);
+        mRHI->SetTexture(meshBatch->Material->EnvMap, 1);
+        mRHI->SetTexture(mShadowMap->DepthStencilTarget, 2);
+        mRHI->SetTexture(meshBatch->Material->PreIntegratedBRDF, 3);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("NormalMap"), 4);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("MetallicSpecularRoughness"), 5);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("EmissiveColor"), 6);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("SubsurfaceColor"), 7);
 
         mRHI->DrawIndexedInstanced(meshBatch->IndexCountPerInstance, meshBatch->InstanceCount, meshBatch->StartIndexLocation, meshBatch->BaseVertexLocation, meshBatch->StartInstanceLocation);
 
@@ -337,14 +337,14 @@ void FRenderer::_drawSceneColorOpaque()
         mRHI->SetIndexBuffer(meshBatch->IndexBuffer);
         mRHI->SetConstantBuffer(meshBatch->ConstantBuffer, 0);
         mRHI->SetConstantBuffer(mSceneColorPassConstantBuffer, 1);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("BaseColor"), 0);
-        mRHI->SetTextureCube(meshBatch->Material->EnvMap, 1);
-        mRHI->SetTexture2D(mShadowMap->DepthStencilTarget, 2);
-        mRHI->SetTexture2D(meshBatch->Material->PreIntegratedBRDF, 3);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("NormalMap"), 4);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("MetallicSpecularRoughness"), 5);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("EmissiveColor"), 6);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("SubsurfaceColor"), 7);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("BaseColor"), 0);
+        mRHI->SetTexture(meshBatch->Material->EnvMap, 1);
+        mRHI->SetTexture(mShadowMap->DepthStencilTarget, 2);
+        mRHI->SetTexture(meshBatch->Material->PreIntegratedBRDF, 3);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("NormalMap"), 4);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("MetallicSpecularRoughness"), 5);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("EmissiveColor"), 6);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("SubsurfaceColor"), 7);
 
         mRHI->DrawIndexedInstanced(meshBatch->IndexCountPerInstance, meshBatch->InstanceCount, meshBatch->StartIndexLocation, meshBatch->BaseVertexLocation, meshBatch->StartInstanceLocation);
 
@@ -399,14 +399,14 @@ void FRenderer::_drawSceneColorTranslucent()
         mRHI->SetIndexBuffer(meshBatch->IndexBuffer);
         mRHI->SetConstantBuffer(meshBatch->ConstantBuffer, 0);
         mRHI->SetConstantBuffer(mSceneColorPassConstantBuffer, 1);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("BaseColor"), 0);
-        mRHI->SetTextureCube(meshBatch->Material->EnvMap, 1);
-        mRHI->SetTexture2D(mShadowMap->DepthStencilTarget, 2);
-        mRHI->SetTexture2D(meshBatch->Material->PreIntegratedBRDF, 3);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("NormalMap"), 4);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("MetallicSpecularRoughness"), 5);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("EmissiveColor"), 6);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("SubsurfaceColor"), 7);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("BaseColor"), 0);
+        mRHI->SetTexture(meshBatch->Material->EnvMap, 1);
+        mRHI->SetTexture(mShadowMap->DepthStencilTarget, 2);
+        mRHI->SetTexture(meshBatch->Material->PreIntegratedBRDF, 3);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("NormalMap"), 4);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("MetallicSpecularRoughness"), 5);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("EmissiveColor"), 6);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("SubsurfaceColor"), 7);
 
         mRHI->DrawIndexedInstanced(meshBatch->IndexCountPerInstance, meshBatch->InstanceCount, meshBatch->StartIndexLocation, meshBatch->BaseVertexLocation, meshBatch->StartInstanceLocation);
 
@@ -453,14 +453,14 @@ void FRenderer::_drawSceneColorTranslucent()
         mRHI->SetIndexBuffer(meshBatch->IndexBuffer);
         mRHI->SetConstantBuffer(meshBatch->ConstantBuffer, 0);
         mRHI->SetConstantBuffer(mSceneColorPassConstantBuffer, 1);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("BaseColor"), 0);
-        mRHI->SetTextureCube(meshBatch->Material->EnvMap, 1);
-        mRHI->SetTexture2D(mShadowMap->DepthStencilTarget, 2);
-        mRHI->SetTexture2D(meshBatch->Material->PreIntegratedBRDF, 3);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("NormalMap"), 4);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("MetallicSpecularRoughness"), 5);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("EmissiveColor"), 6);
-        mRHI->SetTexture2D(meshBatch->Material->GetTexture("SubsurfaceColor"), 7);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("BaseColor"), 0);
+        mRHI->SetTexture(meshBatch->Material->EnvMap, 1);
+        mRHI->SetTexture(mShadowMap->DepthStencilTarget, 2);
+        mRHI->SetTexture(meshBatch->Material->PreIntegratedBRDF, 3);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("NormalMap"), 4);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("MetallicSpecularRoughness"), 5);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("EmissiveColor"), 6);
+        mRHI->SetTexture(meshBatch->Material->GetTexture("SubsurfaceColor"), 7);
 
         mRHI->DrawIndexedInstanced(meshBatch->IndexCountPerInstance, meshBatch->InstanceCount, meshBatch->StartIndexLocation, meshBatch->BaseVertexLocation, meshBatch->StartInstanceLocation);
 

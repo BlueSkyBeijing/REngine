@@ -327,16 +327,7 @@ void FD3D12RHI::SetConstantBuffer(FRHIConstantBuffer* buffer, int32 registerInde
     mDX12CommandList->SetGraphicsRootDescriptorTable(msCBVTableBaseIndex + registerIndex, descriptorObject);
 }
 
-void FD3D12RHI::SetTexture2D(FRHITexture* texture, int32 registerIndex)
-{
-    FD3D12Texture* textureDX12 = dynamic_cast<FD3D12Texture*>(texture);
-    CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
-
-    descriptorObject.Offset(textureDX12->PosInHeapCBVSRVUAV, mCBVSRVVUAVDescriptorSize);
-    mDX12CommandList->SetGraphicsRootDescriptorTable(msSRVTableBaseIndex + registerIndex, descriptorObject);
-}
-
-void FD3D12RHI::SetTextureCube(FRHITexture* texture, int32 registerIndex)
+void FD3D12RHI::SetTexture(FRHITexture* texture, int32 registerIndex)
 {
     FD3D12Texture* textureDX12 = dynamic_cast<FD3D12Texture*>(texture);
     CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorObject(mCBVSRVUAVHeap->GetGPUDescriptorHandleForHeapStart());
