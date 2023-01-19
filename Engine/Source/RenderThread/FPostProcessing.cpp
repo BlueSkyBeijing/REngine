@@ -42,14 +42,14 @@ void FFullScreenQuad::Init()
     IndexBuffer = mRHI->CreateIndexBuffer(sizeof(uint32), 6, (uint8*)indexes);
 
     FShaderInfo vertexShaderInfo;
-    vertexShaderInfo.FilePathName = L"Engine\\Shader\\Postprocess.hlsl";
+    vertexShaderInfo.FilePathName = L"Engine\\Shaders\\Postprocess.hlsl";
     vertexShaderInfo.EnterPoint = "PostprocessVS";
     vertexShaderInfo.Target = "vs_5_0";
 
     VertexShader = TSingleton<FShaderManager>::GetInstance().GetOrCreate(vertexShaderInfo);
 
     FShaderInfo pixelShaderInfo;
-    pixelShaderInfo.FilePathName = L"Engine\\Shader\\Postprocess.hlsl";
+    pixelShaderInfo.FilePathName = L"Engine\\Shaders\\Postprocess.hlsl";
     pixelShaderInfo.EnterPoint = "PostprocessPS";
     pixelShaderInfo.Target = "ps_5_0";
 
@@ -184,14 +184,14 @@ void FPostProcessing::Init()
     TMap<FString, FString> defines;
     {
         FShaderInfo vertexShaderBloomSetupInfo;
-        vertexShaderBloomSetupInfo.FilePathName = L"Engine\\Shader\\Bloom.hlsl";
+        vertexShaderBloomSetupInfo.FilePathName = L"Engine\\Shaders\\Bloom.hlsl";
         vertexShaderBloomSetupInfo.EnterPoint = "BloomSetupVS";
         vertexShaderBloomSetupInfo.Target = "vs_5_0";
 
         VertexShaderBloomSetup = TSingleton<FShaderManager>::GetInstance().GetOrCreate(vertexShaderBloomSetupInfo);
 
         FShaderInfo pixelShaderBloomSetupInfo;
-        pixelShaderBloomSetupInfo.FilePathName = L"Engine\\Shader\\Bloom.hlsl";
+        pixelShaderBloomSetupInfo.FilePathName = L"Engine\\Shaders\\Bloom.hlsl";
         pixelShaderBloomSetupInfo.EnterPoint = "BloomSetupPS";
         pixelShaderBloomSetupInfo.Target = "ps_5_0";
 
@@ -213,14 +213,14 @@ void FPostProcessing::Init()
 
     {
         FShaderInfo vertexShaderBloomDownInfo;
-        vertexShaderBloomDownInfo.FilePathName = L"Engine\\Shader\\Bloom.hlsl";
+        vertexShaderBloomDownInfo.FilePathName = L"Engine\\Shaders\\Bloom.hlsl";
         vertexShaderBloomDownInfo.EnterPoint = "BloomDownVS";
         vertexShaderBloomDownInfo.Target = "vs_5_0";
 
         VertexShaderBloomDown = TSingleton<FShaderManager>::GetInstance().GetOrCreate(vertexShaderBloomDownInfo);
 
         FShaderInfo pixelShaderBloomDownInfo;
-        pixelShaderBloomDownInfo.FilePathName = L"Engine\\Shader\\Bloom.hlsl";
+        pixelShaderBloomDownInfo.FilePathName = L"Engine\\Shaders\\Bloom.hlsl";
         pixelShaderBloomDownInfo.EnterPoint = "BloomDownPS";
         pixelShaderBloomDownInfo.Target = "ps_5_0";
 
@@ -242,14 +242,14 @@ void FPostProcessing::Init()
 
     {
         FShaderInfo vertexShaderBloomUpInfo;
-        vertexShaderBloomUpInfo.FilePathName = L"Engine\\Shader\\Bloom.hlsl";
+        vertexShaderBloomUpInfo.FilePathName = L"Engine\\Shaders\\Bloom.hlsl";
         vertexShaderBloomUpInfo.EnterPoint = "BloomUpVS";
         vertexShaderBloomUpInfo.Target = "vs_5_0";
 
         VertexShaderBloomUp = TSingleton<FShaderManager>::GetInstance().GetOrCreate(vertexShaderBloomUpInfo);
 
         FShaderInfo PixelShaderBloomUpInfo;
-        PixelShaderBloomUpInfo.FilePathName = L"Engine\\Shader\\Bloom.hlsl";
+        PixelShaderBloomUpInfo.FilePathName = L"Engine\\Shaders\\Bloom.hlsl";
         PixelShaderBloomUpInfo.EnterPoint = "BloomUpPS";
         PixelShaderBloomUpInfo.Target = "ps_5_0";
 
@@ -271,14 +271,14 @@ void FPostProcessing::Init()
 
     {
         FShaderInfo vertexShaderTonemapInfo;
-        vertexShaderTonemapInfo.FilePathName = L"Engine\\Shader\\Tonemap.hlsl";
+        vertexShaderTonemapInfo.FilePathName = L"Engine\\Shaders\\Tonemap.hlsl";
         vertexShaderTonemapInfo.EnterPoint = "TonemapVS";
         vertexShaderTonemapInfo.Target = "vs_5_0";
 
         VertexShaderTonemap = TSingleton<FShaderManager>::GetInstance().GetOrCreate(vertexShaderTonemapInfo);
 
         FShaderInfo pixelShaderTonemapInfo;
-        pixelShaderTonemapInfo.FilePathName = L"Engine\\Shader\\Tonemap.hlsl";
+        pixelShaderTonemapInfo.FilePathName = L"Engine\\Shaders\\Tonemap.hlsl";
         pixelShaderTonemapInfo.EnterPoint = "TonemapPS";
         pixelShaderTonemapInfo.Target = "ps_5_0";
 

@@ -3,15 +3,15 @@
 #include "FConfigManager.h"
 #include "Utility.h"
 
-const FString FConfigManager::ContentPath = "Content\\";
+const FString FConfigManager::ContentPath = "Engine\\Content\\";
 
-const FString FConfigManager::DefaultMapPath = "Content\\Map\\";
-const FString FConfigManager::DefaultStaticMeshPath = "Content\\StaticMesh\\";
-const FString FConfigManager::DefaultSkeletalMeshPath = "Content\\SkeletalMesh\\";
-const FString FConfigManager::DefaultSkeletonPath = "Content\\SkeletalMesh\\Skeleton\\";
-const FString FConfigManager::DefaultAnimSequencePath = "Content\\SkeletalMesh\\Animation\\";
-const FString FConfigManager::DefaultMaterialPath = "Content\\Material\\";
-const FString FConfigManager::DefaultTexturePath = "Content\\Texture\\";
+const FString FConfigManager::DefaultMapPath = "Engine\\Content\\Map\\";
+const FString FConfigManager::DefaultStaticMeshPath = "Engine\\Content\\StaticMesh\\";
+const FString FConfigManager::DefaultSkeletalMeshPath = "Engine\\Content\\SkeletalMesh\\";
+const FString FConfigManager::DefaultSkeletonPath = "Engine\\Content\\SkeletalMesh\\Skeleton\\";
+const FString FConfigManager::DefaultAnimSequencePath = "Engine\\Content\\SkeletalMesh\\Animation\\";
+const FString FConfigManager::DefaultMaterialPath = "Engine\\Content\\Material\\";
+const FString FConfigManager::DefaultTexturePath = "Engine\\Content\\Texture\\";
 
 const FString FConfigManager::DefaultMapFileSuffix = ".map";
 const FString FConfigManager::DefaultStaticMeshFileSuffix = ".stm";
@@ -55,7 +55,7 @@ void FConfigManager::Init()
     CSimpleIniA engineConfig;
     engineConfig.SetUnicode();
 
-    SI_Error rc = engineConfig.LoadFile("Config\\Engine.ini");
+    SI_Error rc = engineConfig.LoadFile("Engine\\Config\\Engine.ini");
     if (rc < 0)
     {
         //print error
