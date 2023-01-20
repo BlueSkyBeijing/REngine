@@ -95,4 +95,4 @@ WSAD控制相机前后左右移动
 
 截图
 
-![screenshot](Document/Image/current_screenshot.jpg)
+![screenshot](Engine/Documentation/Image/current_screenshot.jpg)

@@ -537,21 +537,27 @@ float ComputeReflectionCaptureMipFromRoughness(float roughness, float cubemapMax
 //---------------
 // EnvBRDF
 //---------------
-float3 EnvBRDFApprox(float3 specularColor, float roughness, float NoV)
+float2 EnvBRDFApproxLazarov(float roughness, float NoV)
 {
-	// [ Lazarov 2013, "Getting More Physical in Call of Duty: Black Ops II" ]
-	// Adaptation to fit our G term.
+    // [ Lazarov 2013, "Getting More Physical in Call of Duty: Black Ops II" ]
+    // Adaptation to fit our G term.
     const float4 c0 = { -1, -0.0275, -0.572, 0.022 };
     const float4 c1 = { 1, 0.0425, 1.04, -0.04 };
     float4 r = roughness * c0 + c1;
     float a004 = min(r.x * r.x, exp2(-9.28 * NoV)) * r.x + r.y;
     float2 ab = float2(-1.04, 1.04) * a004 + r.zw;
+    return ab;
+}
 
-	// Anything less than 2% is physically impossible and is instead considered to be shadowing
-	// Note: this is needed for the 'specular' show flag to work, since it uses a SpecularColor of 0
-    ab.y *= saturate(50.0 * specularColor.g);
+float3 EnvBRDFApprox(float3 specularColor, float roughness, float NoV)
+{
+    float2 ab = EnvBRDFApproxLazarov(roughness, NoV);
 
-    return specularColor * ab.x + ab.y;
+    // Anything less than 2% is physically impossible and is instead considered to be shadowing
+    // Note: this is needed for the 'specular' show flag to work, since it uses a SpecularColor of 0
+    float f90 = saturate(50.0 * specularColor.g);
+
+    return specularColor * ab.x + f90 * ab.y;
 }
 
 TextureCube EnvironmentMap : register(t1);
@@ -575,9 +581,9 @@ float3 GetImageBasedReflectionLighting(LightingContext litContext, MaterialConte
     float NoV = max(dot(litContext.ViewDir, litContext.Normal), 0.0);
 
     float3 specularColor = EnvBRDFApprox(matContext.SpecularColor, matContext.Roughness, NoV);
-    float3 SpecularIBL = specularLighting * specularColor;
+    float3 specularIBL = specularLighting * specularColor;
 
-    return SpecularIBL;
+    return specularIBL;
 }
 
 float3 GetImageBasedDiffuseLighting(LightingContext litContext, MaterialContext matContext)
@@ -585,4 +591,26 @@ float3 GetImageBasedDiffuseLighting(LightingContext litContext, MaterialContext 
     float3 diffuseLighting = matContext.DiffuseColor.rgb * 0.1;
 
     return diffuseLighting;
+}
+
+void RemapClearCoatDiffuseAndSpecularColor(float3 baseColor, float roughness, float metallic, float specular, float clearCoat, float NoV, inout float3 diffuseColor, inout float3 specularColor)
+{
+    // Attenuate base color and recompute diffuse color
+    float refractionScale = ((NoV * 0.5f + 0.5f) * NoV - 1) * saturate(1.25f - 1.25f * roughness) + 1;
+
+    float metalSpec = 0.9f;
+    float3 absorptionColor = baseColor * (1 / metalSpec);
+    float3 absorption = absorptionColor * ((NoV - 1) * 0.85 * (1 - lerp(absorptionColor, Square(absorptionColor), -0.78f)) + 1);
+
+    float f0 = 0.04f;
+    float fc = Pow5(1 - NoV);
+    float f = fc + (1 - fc) * f0;
+    float layerAttenuation = lerp(1, (1 - f), clearCoat);
+
+    float3 baseColorCoat = lerp(baseColor * layerAttenuation, metalSpec * absorption * refractionScale, metallic * clearCoat);
+    //BaseColor += Dither / 255.f;
+    diffuseColor = baseColorCoat - baseColorCoat * metallic;
+
+    float ccSpecular = lerp(specular, refractionScale, clearCoat);
+    specularColor = ComputeF0(ccSpecular, baseColorCoat, metallic);
 }

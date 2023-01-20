@@ -63,9 +63,30 @@ float4 PSMain(VertexShaderOutput pixelIn, bool IsFrontFace: SV_IsFrontFace) : SV
     }
 
 #if SHADING_MODEL != SHADING_MODEL_UNLIT
-    float3 envReflectionColor = GetImageBasedReflectionLighting(litContextDirectional, matContext);
-    lighting += envReflectionColor;
-    
+    float3 specularIBL= GetImageBasedReflectionLighting(litContextDirectional, matContext);
+    float3 specularIBLLighting = 0.0f;
+
+#if SHADING_MODEL == SHADING_MODEL_CLEAR_COAT
+    const float clearCoat = 1.0f;
+    const float clearCoatRoughness = 0.1f;
+
+    float NoV = max(dot(litContextDirectional.ViewDir, litContextDirectional.Normal), 0.0);
+    RemapClearCoatDiffuseAndSpecularColor(baseColor.rgb, roughness, metallic, specular, clearCoat, NoV, matContext.DiffuseColor, matContext.SpecularColor);
+
+    float f = EnvBRDFApprox(0.04, clearCoatRoughness, NoV).x;
+    f *= clearCoat;
+    float layerAttenuation = (1 - f);
+    float2 ab = EnvBRDFApproxLazarov(roughness, NoV);
+
+    specularIBLLighting += specularIBL * layerAttenuation * (matContext.SpecularColor * ab.x + ab.y * saturate(50 * matContext.SpecularColor.g) * (1 - clearCoat));
+
+    MaterialContext coatContext = matContext;
+    matContext.Roughness = clearCoatRoughness;
+    specularIBL = GetImageBasedReflectionLighting(litContextDirectional, coatContext);
+#endif
+    specularIBLLighting += specularIBL;
+    lighting += specularIBLLighting;
+
     float3 envDiffuseColor = GetImageBasedDiffuseLighting(litContextDirectional, matContext);
     lighting += envDiffuseColor;
 #endif
