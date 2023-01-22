@@ -82,6 +82,6 @@ private:
 
     std::mutex mRenderCommandMutex;
 
-    std::thread* mRenderThread;
+    FThread* mRenderThread;
     TArray<FRenderCommand*> mRenderCommands[FRAME_BUFFER_NUM];
 };

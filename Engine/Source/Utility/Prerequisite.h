@@ -41,6 +41,8 @@ using TWeakPtr = std::weak_ptr<T>;
 template<class T>
 using TUniquePtr = std::unique_ptr<T>;
 
+class FThread;
+
 enum EPixelFormat;
 enum EInputClassification;
 enum ELogLevel;

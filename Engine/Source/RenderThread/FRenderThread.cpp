@@ -14,8 +14,8 @@
 #include "FPipelineStateManager.h"
 #include "FShaderManager.h"
 #include "FLight.h"
+#include "FThread.h"
 #include "FRHIResourceManager.h"
-#include "WindowsUtility.h"
 
 
 FRenderThread::FRenderThread(FEngine* engine) :
@@ -38,15 +38,10 @@ FRenderThread::~FRenderThread()
 
 void FRenderThread::Start()
 {
-    mRenderThread = new std::thread(
-        [this]() 
-    {
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
-        SetThreadName(-1, "RenderThread");
-#endif
-        return this->start();
-    });
-    mRenderThread->detach();
+    mRenderThread = new FThread("RenderThread",
+        [this](){ return this->start(); });
+
+    mRenderThread->Join();
 }
 
 void FRenderThread::start()
