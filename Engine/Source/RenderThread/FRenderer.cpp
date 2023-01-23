@@ -119,8 +119,8 @@ void FRenderer::drawShadowPass()
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = meshBatch->Material->VertexShaderShadow;
-        info.PixelShader = meshBatch->Material->PixelShaderShadow;
+        info.VertexShader = meshBatch->Material->VertexShaderShadow.get();
+        info.PixelShader = meshBatch->Material->PixelShaderShadow.get();
         info.VertexLayout = &(meshBatch->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = true;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
@@ -159,8 +159,8 @@ void FRenderer::drawShadowPass()
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = meshBatch->Material->VertexShaderShadowGPUSkin;
-        info.PixelShader = meshBatch->Material->PixelShaderShadow;
+        info.VertexShader = meshBatch->Material->VertexShaderShadowGPUSkin.get();
+        info.PixelShader = meshBatch->Material->PixelShaderShadow.get();
         info.VertexLayout = &(meshBatch->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = true;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
@@ -277,8 +277,8 @@ void FRenderer::_drawSceneColorOpaque()
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = meshBatch->Material->VertexShader;
-        info.PixelShader = meshBatch->Material->PixelShader;
+        info.VertexShader = meshBatch->Material->VertexShader.get();
+        info.PixelShader = meshBatch->Material->PixelShader.get();
         info.VertexLayout = &(meshBatch->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = true;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
@@ -319,8 +319,8 @@ void FRenderer::_drawSceneColorOpaque()
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = meshBatch->Material->VertexShaderGPUSkin;
-        info.PixelShader = meshBatch->Material->PixelShaderGPUSkin;
+        info.VertexShader = meshBatch->Material->VertexShaderGPUSkin.get();
+        info.PixelShader = meshBatch->Material->PixelShaderGPUSkin.get();
         info.VertexLayout = &(meshBatch->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = true;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
@@ -374,8 +374,8 @@ void FRenderer::_drawSceneColorTranslucent()
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = meshBatch->Material->VertexShader;
-        info.PixelShader = meshBatch->Material->PixelShader;
+        info.VertexShader = meshBatch->Material->VertexShader.get();
+        info.PixelShader = meshBatch->Material->PixelShader.get();
         info.VertexLayout = &(meshBatch->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = false;
         info.DepthStencilState.DepthTest = CF_Less;
@@ -428,8 +428,8 @@ void FRenderer::_drawSceneColorTranslucent()
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = meshBatch->Material->VertexShaderGPUSkin;
-        info.PixelShader = meshBatch->Material->PixelShaderGPUSkin;
+        info.VertexShader = meshBatch->Material->VertexShaderGPUSkin.get();
+        info.PixelShader = meshBatch->Material->PixelShaderGPUSkin.get();
         info.VertexLayout = &(meshBatch->VertexLayout);
         info.DepthStencilState.bEnableDepthWrite = false;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;

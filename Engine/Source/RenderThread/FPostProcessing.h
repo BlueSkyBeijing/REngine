@@ -40,8 +40,8 @@ public:
 public:
     FRHIVertexBuffer* VertexBuffer;
     FRHIIndexBuffer* IndexBuffer;
-    FRHIShader* VertexShader;
-    FRHIShader* PixelShader;
+    TSharedPtr<FRHIShader> VertexShader;
+    TSharedPtr<FRHIShader> PixelShader;
 
 private:
     FRHI* mRHI;
@@ -99,17 +99,17 @@ private:
     FRHIRenderTarget* mRenderTarget;
     FFullScreenQuad* mFullScreenQuad;
 
-    FRHIShader* VertexShaderBloomSetup;
-    FRHIShader* PixelShaderBloomSetup;
+    TSharedPtr<FRHIShader> VertexShaderBloomSetup;
+    TSharedPtr<FRHIShader> PixelShaderBloomSetup;
 
-    FRHIShader* VertexShaderBloomDown;
-    FRHIShader* PixelShaderBloomDown;
+    TSharedPtr<FRHIShader> VertexShaderBloomDown;
+    TSharedPtr<FRHIShader> PixelShaderBloomDown;
 
-    FRHIShader* VertexShaderBloomUp;
-    FRHIShader* PixelShaderBloomUp;
+    TSharedPtr<FRHIShader> VertexShaderBloomUp;
+    TSharedPtr<FRHIShader> PixelShaderBloomUp;
 
-    FRHIShader* VertexShaderTonemap;
-    FRHIShader* PixelShaderTonemap;
+    TSharedPtr<FRHIShader> VertexShaderTonemap;
+    TSharedPtr<FRHIShader> PixelShaderTonemap;
 
     FRHIVertexLayout* mFullScreenLayout;
     FRHIConstantBuffer* mPostProcessConstantBuffer;

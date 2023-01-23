@@ -12,7 +12,7 @@ public:
     void Init();
     void UnInit();
 
-    FRHIShader* GetOrCreate(const FShaderInfo& shaderInfo);
+    TSharedPtr<FRHIShader> GetOrCreate(const FShaderInfo& shaderInfo);
 
 private:
     FShaderManager();
@@ -21,6 +21,6 @@ private:
     uint64 haskShaderInfo(const FShaderInfo& shaderInfo);
 
 private:
-    TMap<uint64, FRHIShader*> mShader;
+    TMap<uint64, TSharedPtr<FRHIShader>> mShader;
 
 };

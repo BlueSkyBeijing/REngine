@@ -19,14 +19,14 @@ public:
     }
 
 public:
-    FRHIShader* VertexShader;
-    FRHIShader* PixelShader;
-    FRHIShader* PixelShaderShadow;
-    FRHIShader* PixelShaderGPUSkin;
+    TSharedPtr<FRHIShader> VertexShader;
+    TSharedPtr<FRHIShader>PixelShader;
+    TSharedPtr<FRHIShader> PixelShaderShadow;
+    TSharedPtr<FRHIShader> PixelShaderGPUSkin;
 
-    FRHIShader* VertexShaderShadow;
-    FRHIShader* VertexShaderGPUSkin;
-    FRHIShader* VertexShaderShadowGPUSkin;
+    TSharedPtr<FRHIShader> VertexShaderShadow;
+    TSharedPtr<FRHIShader> VertexShaderGPUSkin;
+    TSharedPtr<FRHIShader> VertexShaderShadowGPUSkin;
 
     EBlendMode BlendMode;
     EMaterialShadingModel ShadingModel;

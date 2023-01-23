@@ -59,8 +59,8 @@ void FFullScreenQuad::Init()
     FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
     FPipelineStateInfo info;
     info.ShaderBindings = shaderBindings;
-    info.VertexShader = VertexShader;
-    info.PixelShader = PixelShader;
+    info.VertexShader = VertexShader.get();
+    info.PixelShader = PixelShader.get();
     info.VertexLayout = mLayout;
     info.DepthStencilState.bEnableDepthWrite = false;
     info.DepthStencilState.DepthTest = CF_Always;
@@ -201,8 +201,8 @@ void FPostProcessing::Init()
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = VertexShaderBloomSetup;
-        info.PixelShader = PixelShaderBloomSetup;
+        info.VertexShader = VertexShaderBloomSetup.get();
+        info.PixelShader = PixelShaderBloomSetup.get();
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
         info.DepthStencilState.DepthTest = CF_Always;
@@ -230,8 +230,8 @@ void FPostProcessing::Init()
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = VertexShaderBloomDown;
-        info.PixelShader = PixelShaderBloomDown;
+        info.VertexShader = VertexShaderBloomDown.get();
+        info.PixelShader = PixelShaderBloomDown.get();
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
         info.DepthStencilState.DepthTest = CF_Always;
@@ -259,8 +259,8 @@ void FPostProcessing::Init()
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = VertexShaderBloomUp;
-        info.PixelShader = PixelShaderBloomUp;
+        info.VertexShader = VertexShaderBloomUp.get();
+        info.PixelShader = PixelShaderBloomUp.get();
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
         info.DepthStencilState.DepthTest = CF_Always;
@@ -288,8 +288,8 @@ void FPostProcessing::Init()
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = VertexShaderTonemap;
-        info.PixelShader = PixelShaderTonemap;
+        info.VertexShader = VertexShaderTonemap.get();
+        info.PixelShader = PixelShaderTonemap.get();
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
         info.DepthStencilState.DepthTest = CF_Always;
@@ -425,8 +425,8 @@ void FPostProcessing::Draw()
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = VertexShaderBloomSetup;
-        info.PixelShader = PixelShaderBloomSetup;
+        info.VertexShader = VertexShaderBloomSetup.get();
+        info.PixelShader = PixelShaderBloomSetup.get();
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
         info.DepthStencilState.DepthTest = CF_Always;
@@ -462,8 +462,8 @@ void FPostProcessing::Draw()
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = VertexShaderBloomDown;
-        info.PixelShader = PixelShaderBloomDown;
+        info.VertexShader = VertexShaderBloomDown.get();
+        info.PixelShader = PixelShaderBloomDown.get();
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
         info.DepthStencilState.DepthTest = CF_Always;
@@ -500,8 +500,8 @@ void FPostProcessing::Draw()
 
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = VertexShaderBloomDown;
-        info.PixelShader = PixelShaderBloomDown;
+        info.VertexShader = VertexShaderBloomDown.get();
+        info.PixelShader = PixelShaderBloomDown.get();
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
         info.DepthStencilState.DepthTest = CF_Always;
@@ -539,8 +539,8 @@ void FPostProcessing::Draw()
 
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = VertexShaderBloomDown;
-        info.PixelShader = PixelShaderBloomDown;
+        info.VertexShader = VertexShaderBloomDown.get();
+        info.PixelShader = PixelShaderBloomDown.get();
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
         info.DepthStencilState.DepthTest = CF_Always;
@@ -577,8 +577,8 @@ void FPostProcessing::Draw()
 
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = VertexShaderBloomDown;
-        info.PixelShader = PixelShaderBloomDown;
+        info.VertexShader = VertexShaderBloomDown.get();
+        info.PixelShader = PixelShaderBloomDown.get();
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
         info.DepthStencilState.DepthTest = CF_Always;
@@ -615,8 +615,8 @@ void FPostProcessing::Draw()
 
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = VertexShaderBloomUp;
-        info.PixelShader = PixelShaderBloomUp;
+        info.VertexShader = VertexShaderBloomUp.get();
+        info.PixelShader = PixelShaderBloomUp.get();
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
         info.DepthStencilState.DepthTest = CF_Always;
@@ -654,8 +654,8 @@ void FPostProcessing::Draw()
 
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = VertexShaderBloomUp;
-        info.PixelShader = PixelShaderBloomUp;
+        info.VertexShader = VertexShaderBloomUp.get();
+        info.PixelShader = PixelShaderBloomUp.get();
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
         info.DepthStencilState.DepthTest = CF_Always;
@@ -694,8 +694,8 @@ void FPostProcessing::Draw()
 
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = VertexShaderBloomUp;
-        info.PixelShader = PixelShaderBloomUp;
+        info.VertexShader = VertexShaderBloomUp.get();
+        info.PixelShader = PixelShaderBloomUp.get();
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
         info.DepthStencilState.DepthTest = CF_Always;
@@ -734,8 +734,8 @@ void FPostProcessing::Draw()
 
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = VertexShaderBloomUp;
-        info.PixelShader = PixelShaderBloomUp;
+        info.VertexShader = VertexShaderBloomUp.get();
+        info.PixelShader = PixelShaderBloomUp.get();
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
         info.DepthStencilState.DepthTest = CF_Always;
@@ -776,8 +776,8 @@ void FPostProcessing::Draw()
 
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = VertexShaderTonemap;
-        info.PixelShader = PixelShaderTonemap;
+        info.VertexShader = VertexShaderTonemap.get();
+        info.PixelShader = PixelShaderTonemap.get();
         info.VertexLayout = mFullScreenLayout;
         info.DepthStencilState.bEnableDepthWrite = false;
         info.DepthStencilState.DepthTest = CF_Always;

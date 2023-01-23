@@ -167,8 +167,8 @@ void FStaticMeshRenderProxy::CreateRenderResource()
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = material->VertexShader;
-        info.PixelShader = material->PixelShader;
+        info.VertexShader = material->VertexShader.get();
+        info.PixelShader = material->PixelShader.get();
         info.VertexLayout = &meshBatch->VertexLayout;
         info.DepthStencilState.bEnableDepthWrite = !isTranslucent;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
@@ -190,8 +190,8 @@ void FStaticMeshRenderProxy::CreateRenderResource()
 
         FPipelineStateInfo infoShadow;
         infoShadow.ShaderBindings = shaderBindings;
-        infoShadow.VertexShader = material->VertexShaderShadow;
-        infoShadow.PixelShader = material->PixelShaderShadow;
+        infoShadow.VertexShader = material->VertexShaderShadow.get();
+        infoShadow.PixelShader = material->PixelShaderShadow.get();
         infoShadow.VertexLayout = &meshBatch->VertexLayout;
         infoShadow.DepthStencilState.bEnableDepthWrite = true;
         infoShadow.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
@@ -283,8 +283,8 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
         FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
         info.ShaderBindings = shaderBindings;
-        info.VertexShader = material->VertexShader;
-        info.PixelShader = material->PixelShader;
+        info.VertexShader = material->VertexShader.get();
+        info.PixelShader = material->PixelShader.get();
         info.VertexLayout = &meshBatch->VertexLayout;
         info.DepthStencilState.bEnableDepthWrite = !isTranslucent;
         info.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
@@ -306,8 +306,8 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
 
         FPipelineStateInfo infoGPUSkin;
         infoGPUSkin.ShaderBindings = shaderBindings;
-        infoGPUSkin.VertexShader = material->VertexShaderGPUSkin;
-        infoGPUSkin.PixelShader = material->PixelShaderGPUSkin;
+        infoGPUSkin.VertexShader = material->VertexShaderGPUSkin.get();
+        infoGPUSkin.PixelShader = material->PixelShaderGPUSkin.get();
         infoGPUSkin.VertexLayout = &meshBatch->VertexLayout;
         infoGPUSkin.DepthStencilState.bEnableDepthWrite = true;
         infoGPUSkin.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
@@ -320,8 +320,8 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
 
         FPipelineStateInfo infoGPUSkinShadow;
         infoGPUSkinShadow.ShaderBindings = shaderBindings;
-        infoGPUSkinShadow.VertexShader = material->VertexShaderShadowGPUSkin;
-        infoGPUSkinShadow.PixelShader = material->PixelShaderShadow;
+        infoGPUSkinShadow.VertexShader = material->VertexShaderShadowGPUSkin.get();
+        infoGPUSkinShadow.PixelShader = material->PixelShaderShadow.get();
         infoGPUSkinShadow.VertexLayout = &meshBatch->VertexLayout;
         infoGPUSkinShadow.DepthStencilState.bEnableDepthWrite = true;
         infoGPUSkinShadow.RenderTargetFormat = EPixelFormat::PF_R16G16B16A16_FLOAT;
