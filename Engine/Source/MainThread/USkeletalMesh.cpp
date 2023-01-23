@@ -196,8 +196,8 @@ void UAnimSequence::Unload()
 FAnimSequenceInstance::FAnimSequenceInstance(UAnimSequence* animSequence):
     mAnimSequence(animSequence)
 {
-    BoneFinalTransforms.resize(animSequence->GeSkeleton()->GetBoneInfos().size());
-    mBoneTransforms.resize(animSequence->GeSkeleton()->GetBoneInfos().size());
+    BoneFinalTransforms.resize(animSequence->GetSkeleton()->GetBoneInfos().size());
+    mBoneTransforms.resize(animSequence->GetSkeleton()->GetBoneInfos().size());
 }
 
 FAnimSequenceInstance::~FAnimSequenceInstance()
@@ -215,8 +215,8 @@ void FAnimSequenceInstance::Update(float deltaSeconds)
     const float oneFrameTime = mAnimSequence->GetSequenceLength() / mAnimSequence->GetNumberOfFrames();
     const float lerpFrames = (sequenceTime - oneFrameTime * keyFrame0) / oneFrameTime;
 
-    const TArray<FBoneInfo>& boneInfos = mAnimSequence->GeSkeleton()->GetBoneInfos();
-    const TArray<FTransform>& bonePose = mAnimSequence->GeSkeleton()->GetBonePose();
+    const TArray<FBoneInfo>& boneInfos = mAnimSequence->GetSkeleton()->GetBoneInfos();
+    const TArray<FTransform>& bonePose = mAnimSequence->GetSkeleton()->GetBonePose();
 
     for (uint32 i = 0; i < boneInfos.size(); ++i)
     {
@@ -297,7 +297,7 @@ void FAnimSequenceInstance::Update(float deltaSeconds)
 
 FAnimSequenceBlender::FAnimSequenceBlender(UAnimSequence* anim0, UAnimSequence* anim1): mAnimSequence0(anim0), mAnimSequence1(anim1)
 {
-    mSkeleton = anim0->GeSkeleton();
+    mSkeleton = anim0->GetSkeleton();
     mBoneTransforms.resize(mSkeleton->GetBoneInfos().size());
     BoneFinalTransforms.resize(mSkeleton->GetBoneInfos().size());
     

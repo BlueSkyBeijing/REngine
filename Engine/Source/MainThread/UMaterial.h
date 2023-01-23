@@ -12,7 +12,6 @@ public:
 
 public:
     FMaterial* Material;
-    FString FullFilePathName;
 
 public:
     virtual void Load() override;

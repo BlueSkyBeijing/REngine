@@ -26,7 +26,7 @@ public:
     virtual void Unload() override;
     void Update(float deltaSeconds);
 
-    inline const USkeletalMesh* GetSkeletalMesh() const
+    inline const TSharedPtr<USkeletalMesh> GetSkeletalMesh() const
     {
         return mSkeletalMesh;
     }
@@ -34,8 +34,8 @@ protected:
     virtual void createRenderProxy() override;
 
 private:
-    USkeletalMesh* mSkeletalMesh;
-    TArray<UMaterial*> mMaterials;
+    TSharedPtr<USkeletalMesh> mSkeletalMesh;
+    TArray<TSharedPtr<UMaterial>> mMaterials;
     FAnimSequenceInstance* mAnimSequence;
 
     FRenderProxy* mRenderProxy;

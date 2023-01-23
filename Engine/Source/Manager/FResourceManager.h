@@ -15,7 +15,7 @@ enum EResourceType
     RT_MaxNum
 };
 
-typedef TMap<FString, UResource*> TResourceMap;
+typedef TMap<FString, TSharedPtr<UResource>> TResourceMap;
 
 class FResourceManager
 {
@@ -25,7 +25,7 @@ public:
     void Init();
     void UnInit();
 
-    UResource* GetOrCreate(EResourceType resorceType, const FString& fullFileName);
+    TSharedPtr<UResource> GetOrCreate(EResourceType resorceType, const FString& fullFileName);
 
 private:
     FResourceManager();

@@ -23,20 +23,20 @@ USkeletalMeshObject::~USkeletalMeshObject()
 
 void USkeletalMeshObject::Load()
 {
-    mSkeletalMesh = dynamic_cast<USkeletalMesh*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_SkeletalMesh, FullResourcePath));
+    mSkeletalMesh = std::dynamic_pointer_cast<USkeletalMesh>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_SkeletalMesh, FullResourcePath));
 
     int32 numMat = int32(FullMaterialPaths.size());
     for (int i = 0; i < numMat; i++)
     {
-        UMaterial* mat = dynamic_cast<UMaterial*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Material, FullMaterialPaths[i]));
+        TSharedPtr<UMaterial> mat = std::dynamic_pointer_cast<UMaterial>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Material, FullMaterialPaths[i]));
 
         mMaterials.push_back(mat);
     }
 
-    UAnimSequence* animSequence = dynamic_cast<UAnimSequence*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Animation, FullAnimSequencePath));
-    animSequence->SeSkeleton(mSkeletalMesh->GetSkeleton());
+    TSharedPtr<UAnimSequence> animSequence = std::dynamic_pointer_cast<UAnimSequence>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Animation, FullAnimSequencePath));
+    animSequence->SetSkeleton(mSkeletalMesh->GetSkeleton());
     animSequence->Load();
-    mAnimSequence = new FAnimSequenceInstance(animSequence);
+    mAnimSequence = new FAnimSequenceInstance(animSequence.get());
 
     //create render proxy
     createRenderProxy();

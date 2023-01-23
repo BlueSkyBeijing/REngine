@@ -29,8 +29,8 @@ protected:
 
 private:
 
-    UStaticMesh* mStaticMesh;
-    TArray<UMaterial*> mMaterials;
+    TSharedPtr<UStaticMesh> mStaticMesh;
+    TArray<TSharedPtr<UMaterial>> mMaterials;
 
     FRenderProxy* mRenderProxy;
 };

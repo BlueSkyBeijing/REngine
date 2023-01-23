@@ -14,7 +14,7 @@ public:
     virtual void Unload() override;
     void Update(float deltaSeconds);
 
-    inline UCamera* GetCamera() const
+    inline TSharedPtr<UCamera> GetCamera() const
     {
         if (mCameras.size() > 0)
         {
@@ -30,11 +30,11 @@ protected:
     virtual void loadFromFile(FString fileName);
 
 private:
-    TArray<UCamera*> mCameras;
-    TArray<UDirectionalLight*> mDirectionalLights;
-    TArray<UPointLight*> mPointLights;
-    TArray<UStaticMeshObject*> mStaticMeshObjects;
-    TArray<USkeletalMeshObject*> mSkeletalMeshObjects;
+    TArray<TSharedPtr<UCamera>> mCameras;
+    TArray<TSharedPtr<UDirectionalLight>> mDirectionalLights;
+    TArray<TSharedPtr<UPointLight>> mPointLights;
+    TArray<TSharedPtr<UStaticMeshObject>> mStaticMeshObjects;
+    TArray<TSharedPtr<USkeletalMeshObject>> mSkeletalMeshObjects;
     FEngine* mEngine;
-    UPlayer* mPlayer;
+    TSharedPtr<UPlayer> mPlayer;
 };

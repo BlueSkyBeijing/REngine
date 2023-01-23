@@ -198,7 +198,7 @@ void FInputManager::OnMouseMove(WPARAM btnState, int32 x, int32 y)
 
         if (mEject)
         {
-            if (UCamera* cam = engine.GetWorld()->GetCamera())
+            if (TSharedPtr<UCamera> cam = engine.GetWorld()->GetCamera())
             {
                 if (mPan)
                 {
@@ -248,7 +248,7 @@ void FInputManager::OnMouseWheel(WPARAM btnState, int32 x, int32 y)
         const float deltaScale = mDeltaScale;
 
         FEngine& engine = TSingleton<FEngine>::GetInstance();
-        if (UCamera* cam = engine.GetWorld()->GetCamera())
+        if (TSharedPtr<UCamera> cam = engine.GetWorld()->GetCamera())
         {
             cam->AdjustMoveStraight(0.0001f * mDeltaScale * hiVal);
         }

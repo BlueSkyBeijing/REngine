@@ -112,12 +112,12 @@ public:
         return mAnimSequenceTracks;
     }
 
-    inline const USkeleton* GeSkeleton() const
+    inline const USkeleton* GetSkeleton() const
     {
         return mSkeleton;
     }
 
-    inline void SeSkeleton(const USkeleton* skeleton)
+    inline void SetSkeleton(const USkeleton* skeleton)
     {
         mSkeleton = skeleton;
     }

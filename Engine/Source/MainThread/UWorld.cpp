@@ -50,62 +50,56 @@ void UWorld::Unload()
 {
     for (auto it = mCameras.begin(); it != mCameras.end(); it++)
     {
-        UCamera* camera = *it;
+        TSharedPtr<UCamera> camera = *it;
         camera->Unload();
-        delete camera;
     }
     mCameras.clear();
 
     for (auto it = mDirectionalLights.begin(); it != mDirectionalLights.end(); it++)
     {
-        UDirectionalLight* directionalLight = *it;
+        TSharedPtr<UDirectionalLight> directionalLight = *it;
         directionalLight->Unload();
-        delete directionalLight;
     }
     mDirectionalLights.clear();
 
     for (auto it = mPointLights.begin(); it != mPointLights.end(); it++)
     {
-        UPointLight* pointLight = *it;
+        TSharedPtr<UPointLight> pointLight = *it;
         pointLight->Unload();
-        delete pointLight;
     }
     mPointLights.clear();
 
     for (auto it = mStaticMeshObjects.begin(); it != mStaticMeshObjects.end(); it++)
     {
-        UStaticMeshObject* staticMeshObject = *it;
+        TSharedPtr<UStaticMeshObject> staticMeshObject = *it;
         staticMeshObject->Unload();
-        delete staticMeshObject;
     }
     mStaticMeshObjects.clear();
 
     for (auto it = mSkeletalMeshObjects.begin(); it != mSkeletalMeshObjects.end(); it++)
     {
-        USkeletalMeshObject* skeletalMeshObject = *it;
+        TSharedPtr<USkeletalMeshObject> skeletalMeshObject = *it;
         skeletalMeshObject->Unload();
-        delete skeletalMeshObject;
     }
     mSkeletalMeshObjects.clear();
 
     if (mPlayer)
     {
         mPlayer->Unload();
-        delete mPlayer;
         mPlayer = nullptr;
     }
 }
 
 void UWorld::Update(float deltaSeconds)
 {
-    if (UCamera* cam = GetCamera())
+    if (TSharedPtr<UCamera> cam = GetCamera())
     {
         cam->Update();
     }
 
     for (auto it = mSkeletalMeshObjects.begin(); it != mSkeletalMeshObjects.end(); it++)
     {
-        USkeletalMeshObject* skeletalMeshObject = *it;
+        TSharedPtr<USkeletalMeshObject> skeletalMeshObject = *it;
         skeletalMeshObject->Update(deltaSeconds);
     }
 
@@ -240,7 +234,7 @@ void UWorld::loadFromFile(FString fileName)
         int32 camerDataIndex = 0;
         for (auto it = mCameras.begin(); it != mCameras.end(); it++)
         {
-            UCamera* camera = new UCamera();
+            TSharedPtr<UCamera> camera(new UCamera());
 
             camera->Position = cameraDatas[camerDataIndex].Position;
             camera->Target = cameraDatas[camerDataIndex].Target;
@@ -256,7 +250,7 @@ void UWorld::loadFromFile(FString fileName)
     }
     else
     {
-        UCamera* camera = new UCamera();
+        TSharedPtr<UCamera> camera(new UCamera());
 
         camera->Position = FVector3(500.0f, 500.0f, 500.0f);
         camera->Target = FVector3(0.0f, 0.0f, 0.0f);
@@ -272,7 +266,7 @@ void UWorld::loadFromFile(FString fileName)
     int32 directionalLightDataIndex = 0;
     for (auto it = mDirectionalLights.begin(); it != mDirectionalLights.end(); it++)
     {
-        UDirectionalLight* directionalLight = new UDirectionalLight();
+        TSharedPtr<UDirectionalLight> directionalLight(new UDirectionalLight());
 
         directionalLight->Color = directionalLightDatas[directionalLightDataIndex].Color;
         directionalLight->Direction = directionalLightDatas[directionalLightDataIndex].Direction;
@@ -291,7 +285,7 @@ void UWorld::loadFromFile(FString fileName)
     int32 pointLightDataIndex = 0;
     for (auto it = mPointLights.begin(); it != mPointLights.end(); it++)
     {
-        UPointLight* pointLight = new UPointLight();
+        TSharedPtr<UPointLight> pointLight(new UPointLight());
 
         pointLight->Color = pointLightDatas[pointLightDataIndex].Color;
         pointLight->Location = pointLightDatas[pointLightDataIndex].Location;
@@ -311,7 +305,7 @@ void UWorld::loadFromFile(FString fileName)
     int32 staticMeshObjectDataIndex = 0;
     for (auto it = mStaticMeshObjects.begin(); it != mStaticMeshObjects.end(); it++)
     {
-        UStaticMeshObject* staticMeshObject = new UStaticMeshObject();
+        TSharedPtr<UStaticMeshObject> staticMeshObject(new UStaticMeshObject());
 
         staticMeshObject->Position = staticMeshObjectDatas[staticMeshObjectDataIndex].Location;
         staticMeshObject->Rotation = staticMeshObjectDatas[staticMeshObjectDataIndex].Rotation;
@@ -341,11 +335,11 @@ void UWorld::loadFromFile(FString fileName)
     int32 skeletalMeshObjectDataIndex = 0;
     for (auto it = mSkeletalMeshObjects.begin(); it != mSkeletalMeshObjects.end(); it++)
     {
-        USkeletalMeshObject* skeletalMeshObject = new USkeletalMeshObject();
+        TSharedPtr<USkeletalMeshObject> skeletalMeshObject(new USkeletalMeshObject());
 
         skeletalMeshObject->Position = skeletalMeshObjectDatas[skeletalMeshObjectDataIndex].Location;
         skeletalMeshObject->Rotation = skeletalMeshObjectDatas[skeletalMeshObjectDataIndex].Rotation;
-        skeletalMeshObject->Scale = skeletalMeshObject[staticMeshObjectDataIndex].Scale;
+        skeletalMeshObject->Scale = skeletalMeshObjectDatas[skeletalMeshObjectDataIndex].Scale;
         skeletalMeshObject->FullResourcePath = FConfigManager::DefaultSkeletalMeshPath +
             FString(skeletalMeshObjectDatas[skeletalMeshObjectDataIndex].ResourceName.c_str()) +
             FConfigManager::DefaultSkeletalMeshFileSuffix;
@@ -372,7 +366,7 @@ void UWorld::loadFromFile(FString fileName)
 
     if (skeletalMeshObjectDatas.size() > 0)
     {
-        mPlayer = new UPlayer();
+        mPlayer.reset(new UPlayer());
         int32 numMat = int32(skeletalMeshObjectDatas[0].MaterialNames.size());
         for (int i = 0; i < numMat; i++)
         {
@@ -385,8 +379,8 @@ void UWorld::loadFromFile(FString fileName)
 
         mPlayer->SetSkeletalMeshFilePath((*mSkeletalMeshObjects.begin())->FullResourcePath);
         mPlayer->Load();
-        TSingleton<FPlayerController>::GetInstance().SetPlayer(mPlayer);
-        TSingleton<FPlayerController>::GetInstance().SetCamera(GetCamera());
+        TSingleton<FPlayerController>::GetInstance().SetPlayer(mPlayer.get());
+        TSingleton<FPlayerController>::GetInstance().SetCamera(GetCamera().get());
     }
 
 }

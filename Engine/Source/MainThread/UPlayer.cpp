@@ -29,13 +29,13 @@ void UPlayer::Load()
     mStateAnimMap.insert(std::make_pair(EPlayerState::PS_Stand, FString("Tutorial_Idle")));
     mStateAnimMap.insert(std::make_pair(EPlayerState::PS_Walk, FString("Tutorial_Walk_Fwd")));
 
-    mSkeletalMesh = dynamic_cast<USkeletalMesh*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_SkeletalMesh, mSkeletalMeshFilePath));
+    mSkeletalMesh = std::dynamic_pointer_cast<USkeletalMesh>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_SkeletalMesh, mSkeletalMeshFilePath));
     mSkeletalMesh->Name = "Player";
 
     int32 numMat = (int32)FullMaterialPaths.size();
     for (int i = 0; i < numMat; i++)
     {
-        UMaterial* mat = dynamic_cast<UMaterial*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Material, FullMaterialPaths[i]));
+        TSharedPtr<UMaterial> mat = std::dynamic_pointer_cast<UMaterial>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Material, FullMaterialPaths[i]));
 
         mMaterials.push_back(mat);
     }
@@ -43,17 +43,17 @@ void UPlayer::Load()
     const FString animFileName0 =  FConfigManager::DefaultAnimSequencePath + mStateAnimMap[EPlayerState::PS_Stand] + FConfigManager::DefaultAnimSequenceFileSuffix;
     const FString animFileName1 = FConfigManager::DefaultAnimSequencePath + mStateAnimMap[EPlayerState::PS_Walk] + FConfigManager::DefaultAnimSequenceFileSuffix;
 
-    mAnimRing[0] = dynamic_cast<UAnimSequence*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Animation, animFileName0));
-    mAnimRing[0]->SeSkeleton(mSkeletalMesh->GetSkeleton());
+    mAnimRing[0] = std::dynamic_pointer_cast<UAnimSequence>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Animation, animFileName0));
+    mAnimRing[0]->SetSkeleton(mSkeletalMesh->GetSkeleton());
     mAnimRing[0]->Name = mStateAnimMap[EPlayerState::PS_Stand];
     mAnimRing[0]->Load();
 
-    mAnimRing[1] = dynamic_cast<UAnimSequence*>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Animation, animFileName1));
-    mAnimRing[1]->SeSkeleton(mSkeletalMesh->GetSkeleton());
+    mAnimRing[1] = std::dynamic_pointer_cast<UAnimSequence>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Animation, animFileName1));
+    mAnimRing[1]->SetSkeleton(mSkeletalMesh->GetSkeleton());
     mAnimRing[0]->Name = mStateAnimMap[EPlayerState::PS_Walk];
     mAnimRing[1]->Load();
 
-    mAnimSequenceBlender = new FAnimSequenceBlender(mAnimRing[0], mAnimRing[1]);
+    mAnimSequenceBlender = new FAnimSequenceBlender(mAnimRing[0].get(), mAnimRing[1].get());
     mAnimWeightRing[0] = 1.0f;
     mAnimWeightRing[1] = 0.0f;
 
@@ -132,7 +132,7 @@ void UPlayer::Update(float deltaSeconds)
     mAnimWeightRing[mDestState] = mStateBlendTime / lerpTime;
     mAnimWeightRing[mSrcState] = 1.0f - mAnimWeightRing[mDestState];
 
-    mAnimSequenceBlender->SetAnimSequence(mAnimRing[mSrcState], mAnimRing[mDestState]);
+    mAnimSequenceBlender->SetAnimSequence(mAnimRing[mSrcState].get(), mAnimRing[mDestState].get());
     mAnimSequenceBlender->Blend(mAnimTimeRing[mSrcState], mAnimWeightRing[mSrcState], mAnimTimeRing[mDestState], mAnimWeightRing[mDestState]);
 
     FSkeletalMeshRenderProxy* proxy = dynamic_cast<FSkeletalMeshRenderProxy*>(mRenderProxy);

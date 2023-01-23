@@ -49,13 +49,13 @@ protected:
 
 private:
     FString mSkeletalMeshFilePath;
-    USkeletalMesh* mSkeletalMesh;
-    TArray<UMaterial*> mMaterials;
+    TSharedPtr<USkeletalMesh> mSkeletalMesh;
+    TArray<TSharedPtr<UMaterial>> mMaterials;
     FRenderProxy* mRenderProxy;
     FVector3 mOrientation;
 
     TMap<EPlayerState, FString> mStateAnimMap;
-    UAnimSequence* mAnimRing[PLAYER_ANIMATION_RING_NUM];
+    TSharedPtr<UAnimSequence> mAnimRing[PLAYER_ANIMATION_RING_NUM];
     float mAnimTimeRing[PLAYER_ANIMATION_RING_NUM];
     float mAnimWeightRing[PLAYER_ANIMATION_RING_NUM];
     FAnimSequenceBlender* mAnimSequenceBlender;
