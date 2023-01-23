@@ -19,12 +19,12 @@ public:
     void Init();
     void UnInit();
 
-    FRHIShaderBindings* GetShaderBindings();
+    TSharedPtr<FRHIShaderBindings> GetShaderBindings();
 
 private:
     FShaderBindingsManager();
     virtual ~FShaderBindingsManager();
 
 private:
-    TMap<int32, FRHIShaderBindings*> mShaderBindingss;
+    TMap<int32, TSharedPtr<FRHIShaderBindings>> mShaderBindingss;
 };

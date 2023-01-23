@@ -56,9 +56,9 @@ void FFullScreenQuad::Init()
 
     PixelShader = TSingleton<FShaderManager>::GetInstance().GetOrCreate(pixelShaderInfo);
 
-    FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+    TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
     FPipelineStateInfo info;
-    info.ShaderBindings = shaderBindings;
+    info.ShaderBindings = shaderBindings.get();
     info.VertexShader = VertexShader.get();
     info.PixelShader = PixelShader.get();
     info.VertexLayout = mLayout;
@@ -198,9 +198,9 @@ void FPostProcessing::Init()
 
         PixelShaderBloomSetup = TSingleton<FShaderManager>::GetInstance().GetOrCreate(pixelShaderBloomSetupInfo);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = VertexShaderBloomSetup.get();
         info.PixelShader = PixelShaderBloomSetup.get();
         info.VertexLayout = mFullScreenLayout;
@@ -227,9 +227,9 @@ void FPostProcessing::Init()
 
         PixelShaderBloomDown = TSingleton<FShaderManager>::GetInstance().GetOrCreate(pixelShaderBloomDownInfo);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = VertexShaderBloomDown.get();
         info.PixelShader = PixelShaderBloomDown.get();
         info.VertexLayout = mFullScreenLayout;
@@ -256,9 +256,9 @@ void FPostProcessing::Init()
 
         PixelShaderBloomUp = TSingleton<FShaderManager>::GetInstance().GetOrCreate(PixelShaderBloomUpInfo);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = VertexShaderBloomUp.get();
         info.PixelShader = PixelShaderBloomUp.get();
         info.VertexLayout = mFullScreenLayout;
@@ -285,9 +285,9 @@ void FPostProcessing::Init()
 
         PixelShaderTonemap = TSingleton<FShaderManager>::GetInstance().GetOrCreate(pixelShaderTonemapInfo);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = VertexShaderTonemap.get();
         info.PixelShader = PixelShaderTonemap.get();
         info.VertexLayout = mFullScreenLayout;
@@ -422,9 +422,9 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomSetup->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = VertexShaderBloomSetup.get();
         info.PixelShader = PixelShaderBloomSetup.get();
         info.VertexLayout = mFullScreenLayout;
@@ -459,9 +459,9 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomDown0->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = VertexShaderBloomDown.get();
         info.PixelShader = PixelShaderBloomDown.get();
         info.VertexLayout = mFullScreenLayout;
@@ -496,10 +496,10 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomDown1->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
 
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = VertexShaderBloomDown.get();
         info.PixelShader = PixelShaderBloomDown.get();
         info.VertexLayout = mFullScreenLayout;
@@ -535,10 +535,10 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomDown2->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
 
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = VertexShaderBloomDown.get();
         info.PixelShader = PixelShaderBloomDown.get();
         info.VertexLayout = mFullScreenLayout;
@@ -573,10 +573,10 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomDown3->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
 
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = VertexShaderBloomDown.get();
         info.PixelShader = PixelShaderBloomDown.get();
         info.VertexLayout = mFullScreenLayout;
@@ -611,10 +611,10 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomUp0->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
 
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = VertexShaderBloomUp.get();
         info.PixelShader = PixelShaderBloomUp.get();
         info.VertexLayout = mFullScreenLayout;
@@ -650,10 +650,10 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomUp1->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
 
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = VertexShaderBloomUp.get();
         info.PixelShader = PixelShaderBloomUp.get();
         info.VertexLayout = mFullScreenLayout;
@@ -690,10 +690,10 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomUp2->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
 
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = VertexShaderBloomUp.get();
         info.PixelShader = PixelShaderBloomUp.get();
         info.VertexLayout = mFullScreenLayout;
@@ -730,10 +730,10 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoRenderTargetBegin(mBloomUp3->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
 
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = VertexShaderBloomUp.get();
         info.PixelShader = PixelShaderBloomUp.get();
         info.VertexLayout = mFullScreenLayout;
@@ -772,10 +772,10 @@ void FPostProcessing::Draw()
         const FRHITransitionInfo infoDepthStencilBegin(mRenderTarget->DepthStencilTarget, ACCESS_COMMON, ACCESS_DEPTH_WRITE);
         mRHI->TransitionResource(infoDepthStencilBegin);
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
 
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = VertexShaderTonemap.get();
         info.PixelShader = PixelShaderTonemap.get();
         info.VertexLayout = mFullScreenLayout;

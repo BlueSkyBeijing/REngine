@@ -116,9 +116,9 @@ void FRenderer::drawShadowPass()
 
         mRHI->BeginEvent(meshBatch->DebugName.c_str());
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = meshBatch->Material->VertexShaderShadow.get();
         info.PixelShader = meshBatch->Material->PixelShaderShadow.get();
         info.VertexLayout = &(meshBatch->VertexLayout);
@@ -156,9 +156,9 @@ void FRenderer::drawShadowPass()
 
         mRHI->BeginEvent(meshBatch->DebugName.c_str());
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = meshBatch->Material->VertexShaderShadowGPUSkin.get();
         info.PixelShader = meshBatch->Material->PixelShaderShadow.get();
         info.VertexLayout = &(meshBatch->VertexLayout);
@@ -274,9 +274,9 @@ void FRenderer::_drawSceneColorOpaque()
 
         mRHI->BeginEvent(meshBatch->DebugName.c_str());
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = meshBatch->Material->VertexShader.get();
         info.PixelShader = meshBatch->Material->PixelShader.get();
         info.VertexLayout = &(meshBatch->VertexLayout);
@@ -316,9 +316,9 @@ void FRenderer::_drawSceneColorOpaque()
 
         mRHI->BeginEvent(meshBatch->DebugName.c_str());
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = meshBatch->Material->VertexShaderGPUSkin.get();
         info.PixelShader = meshBatch->Material->PixelShaderGPUSkin.get();
         info.VertexLayout = &(meshBatch->VertexLayout);
@@ -371,9 +371,9 @@ void FRenderer::_drawSceneColorTranslucent()
 
         mRHI->BeginEvent(meshBatch->DebugName.c_str());
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = meshBatch->Material->VertexShader.get();
         info.PixelShader = meshBatch->Material->PixelShader.get();
         info.VertexLayout = &(meshBatch->VertexLayout);
@@ -425,9 +425,9 @@ void FRenderer::_drawSceneColorTranslucent()
 
         mRHI->BeginEvent(meshBatch->DebugName.c_str());
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = meshBatch->Material->VertexShaderGPUSkin.get();
         info.PixelShader = meshBatch->Material->PixelShaderGPUSkin.get();
         info.VertexLayout = &(meshBatch->VertexLayout);

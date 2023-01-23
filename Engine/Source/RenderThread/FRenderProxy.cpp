@@ -164,9 +164,9 @@ void FStaticMeshRenderProxy::CreateRenderResource()
         meshBatch->BaseVertexLocation = 0;
         meshBatch->StartInstanceLocation = 0;
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = material->VertexShader.get();
         info.PixelShader = material->PixelShader.get();
         info.VertexLayout = &meshBatch->VertexLayout;
@@ -189,7 +189,7 @@ void FStaticMeshRenderProxy::CreateRenderResource()
         TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
 
         FPipelineStateInfo infoShadow;
-        infoShadow.ShaderBindings = shaderBindings;
+        infoShadow.ShaderBindings = shaderBindings.get();
         infoShadow.VertexShader = material->VertexShaderShadow.get();
         infoShadow.PixelShader = material->PixelShaderShadow.get();
         infoShadow.VertexLayout = &meshBatch->VertexLayout;
@@ -280,9 +280,9 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
         meshBatch->BaseVertexLocation = 0;
         meshBatch->StartInstanceLocation = 0;
 
-        FRHIShaderBindings* shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
+        TSharedPtr<FRHIShaderBindings> shaderBindings = TSingleton<FShaderBindingsManager>::GetInstance().GetShaderBindings();
         FPipelineStateInfo info;
-        info.ShaderBindings = shaderBindings;
+        info.ShaderBindings = shaderBindings.get();
         info.VertexShader = material->VertexShader.get();
         info.PixelShader = material->PixelShader.get();
         info.VertexLayout = &meshBatch->VertexLayout;
@@ -305,7 +305,7 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
         TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
 
         FPipelineStateInfo infoGPUSkin;
-        infoGPUSkin.ShaderBindings = shaderBindings;
+        infoGPUSkin.ShaderBindings = shaderBindings.get();
         infoGPUSkin.VertexShader = material->VertexShaderGPUSkin.get();
         infoGPUSkin.PixelShader = material->PixelShaderGPUSkin.get();
         infoGPUSkin.VertexLayout = &meshBatch->VertexLayout;
@@ -319,7 +319,7 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
         TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(infoGPUSkin);
 
         FPipelineStateInfo infoGPUSkinShadow;
-        infoGPUSkinShadow.ShaderBindings = shaderBindings;
+        infoGPUSkinShadow.ShaderBindings = shaderBindings.get();
         infoGPUSkinShadow.VertexShader = material->VertexShaderShadowGPUSkin.get();
         infoGPUSkinShadow.PixelShader = material->PixelShaderShadow.get();
         infoGPUSkinShadow.VertexLayout = &meshBatch->VertexLayout;

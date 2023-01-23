@@ -15,9 +15,9 @@ FShaderBindingsManager::~FShaderBindingsManager()
 {
 }
 
-FRHIShaderBindings* FShaderBindingsManager::GetShaderBindings()
+TSharedPtr<FRHIShaderBindings> FShaderBindingsManager::GetShaderBindings()
 {
-    TMap<int32, FRHIShaderBindings*>::iterator it = mShaderBindingss.begin();
+    TMap<int32, TSharedPtr<FRHIShaderBindings>>::iterator it = mShaderBindingss.begin();
     if (it != mShaderBindingss.end())
     {
         return it->second;
@@ -31,7 +31,7 @@ void FShaderBindingsManager::Init()
 {
     FRHI* rhi = TSingleton<FEngine>::GetInstance().GetRenderThread()->GetRHI();
 
-    FRHIShaderBindings* rootSignature = rhi->CreateShaderBindings();
+    TSharedPtr<FRHIShaderBindings> rootSignature(rhi->CreateShaderBindings());
 
     mShaderBindingss.insert(std::make_pair(0, rootSignature));
 }
@@ -39,14 +39,13 @@ void FShaderBindingsManager::Init()
 
 void FShaderBindingsManager::UnInit()
 {
-    TMap<int32, FRHIShaderBindings*>::iterator it = mShaderBindingss.begin();
+    TMap<int32, TSharedPtr<FRHIShaderBindings>>::iterator it = mShaderBindingss.begin();
     if (it != mShaderBindingss.end())
     {
         if (it->second != nullptr)
         {
-            FRHIShaderBindings* rootSignature = it->second;;
+            TSharedPtr<FRHIShaderBindings> rootSignature = it->second;;
             rootSignature->UnInit();
-            delete rootSignature;
         }
     }
 
