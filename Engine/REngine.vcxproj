@@ -19,205 +19,205 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\Source\Core\FEngine.cpp" />
-    <ClCompile Include="Engine\Source\Core\FThread.cpp" />
-    <ClCompile Include="Engine\Source\Main.cpp" />
-    <ClCompile Include="Engine\Source\MainThread\UCamera.cpp" />
-    <ClCompile Include="Engine\Source\MainThread\ULight.cpp" />
-    <ClCompile Include="Engine\Source\MainThread\UMaterial.cpp" />
-    <ClCompile Include="Engine\Source\MainThread\UObject.cpp" />
-    <ClCompile Include="Engine\Source\MainThread\UPlayer.cpp" />
-    <ClCompile Include="Engine\Source\MainThread\USkeletalMesh.cpp" />
-    <ClCompile Include="Engine\Source\MainThread\USkeletalMeshObject.cpp" />
-    <ClCompile Include="Engine\Source\MainThread\UStaticMesh.cpp" />
-    <ClCompile Include="Engine\Source\MainThread\UStaticMeshObject.cpp" />
-    <ClCompile Include="Engine\Source\MainThread\UTexture.cpp" />
-    <ClCompile Include="Engine\Source\MainThread\UWorld.cpp" />
-    <ClCompile Include="Engine\Source\Manager\FConfigManager.cpp" />
-    <ClCompile Include="Engine\Source\Manager\FConsoleVariableManager.cpp" />
-    <ClCompile Include="Engine\Source\Manager\FInputManager.cpp" />
-    <ClCompile Include="Engine\Source\Manager\FLogManager.cpp" />
-    <ClCompile Include="Engine\Source\Manager\FModuleManager.cpp" />
-    <ClCompile Include="Engine\Source\Manager\FPipelineStateManager.cpp" />
-    <ClCompile Include="Engine\Source\Manager\FPlayerController.cpp" />
-    <ClCompile Include="Engine\Source\Manager\FProjectManager.cpp" />
-    <ClCompile Include="Engine\Source\Manager\FResourceManager.cpp" />
-    <ClCompile Include="Engine\Source\Manager\FRHIResourceManager.cpp" />
-    <ClCompile Include="Engine\Source\Manager\FShaderBindingsManager.cpp" />
-    <ClCompile Include="Engine\Source\Manager\FSceneManager.cpp" />
-    <ClCompile Include="Engine\Source\Manager\FShaderManager.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\D3D12RHI\DDSTextureLoader.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\D3D12RHI\DX12Utility.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\D3D12RHI\FD3D12Buffer.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\D3D12RHI\FD3D12RHI.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\D3D12RHI\FD3D12PipelineState.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\D3D12RHI\FD3D12Resource.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\D3D12RHI\FD3D12RenderTarget.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\D3D12RHI\FD3D12ShaderBindings.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\D3D12RHI\FD3D12Shader.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\D3D12RHI\FD3D12Texture.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\D3D12RHI\FD3D12Vertex.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\FLight.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\FMaterial.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\FPostProcessing.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\FRenderCommand.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\FRenderer.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\FRenderProxy.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\FRenderThread.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\FScene.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\FView.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\RHI\FRHI.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\RHI\FRHIBuffer.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\RHI\FRHIPipelineState.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\RHI\FRHIResource.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\RHI\FRHIRenderTarget.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\RHI\FRHIShader.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\RHI\FRHIShaderBindings.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\RHI\FRHITexture.cpp" />
-    <ClCompile Include="Engine\Source\RenderThread\RHI\FRHIVertex.cpp" />
-    <ClCompile Include="Engine\Source\Utility\CityHash.cpp" />
-    <ClCompile Include="Engine\Source\Utility\FArchive.cpp" />
-    <ClCompile Include="Engine\Source\Utility\MathUtility.cpp" />
-    <ClCompile Include="Engine\Source\Utility\PrecompiledHeader.cpp">
+    <ClCompile Include="Source\Core\FEngine.cpp" />
+    <ClCompile Include="Source\Core\FThread.cpp" />
+    <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="Source\MainThread\UCamera.cpp" />
+    <ClCompile Include="Source\MainThread\ULight.cpp" />
+    <ClCompile Include="Source\MainThread\UMaterial.cpp" />
+    <ClCompile Include="Source\MainThread\UObject.cpp" />
+    <ClCompile Include="Source\MainThread\UPlayer.cpp" />
+    <ClCompile Include="Source\MainThread\USkeletalMesh.cpp" />
+    <ClCompile Include="Source\MainThread\USkeletalMeshObject.cpp" />
+    <ClCompile Include="Source\MainThread\UStaticMesh.cpp" />
+    <ClCompile Include="Source\MainThread\UStaticMeshObject.cpp" />
+    <ClCompile Include="Source\MainThread\UTexture.cpp" />
+    <ClCompile Include="Source\MainThread\UWorld.cpp" />
+    <ClCompile Include="Source\Manager\FConfigManager.cpp" />
+    <ClCompile Include="Source\Manager\FConsoleVariableManager.cpp" />
+    <ClCompile Include="Source\Manager\FInputManager.cpp" />
+    <ClCompile Include="Source\Manager\FLogManager.cpp" />
+    <ClCompile Include="Source\Manager\FModuleManager.cpp" />
+    <ClCompile Include="Source\Manager\FPipelineStateManager.cpp" />
+    <ClCompile Include="Source\Manager\FPlayerController.cpp" />
+    <ClCompile Include="Source\Manager\FProjectManager.cpp" />
+    <ClCompile Include="Source\Manager\FResourceManager.cpp" />
+    <ClCompile Include="Source\Manager\FRHIResourceManager.cpp" />
+    <ClCompile Include="Source\Manager\FShaderBindingsManager.cpp" />
+    <ClCompile Include="Source\Manager\FSceneManager.cpp" />
+    <ClCompile Include="Source\Manager\FShaderManager.cpp" />
+    <ClCompile Include="Source\RenderThread\D3D12RHI\DDSTextureLoader.cpp" />
+    <ClCompile Include="Source\RenderThread\D3D12RHI\DX12Utility.cpp" />
+    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12Buffer.cpp" />
+    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12RHI.cpp" />
+    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12PipelineState.cpp" />
+    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12Resource.cpp" />
+    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12RenderTarget.cpp" />
+    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12ShaderBindings.cpp" />
+    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12Shader.cpp" />
+    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12Texture.cpp" />
+    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12Vertex.cpp" />
+    <ClCompile Include="Source\RenderThread\FLight.cpp" />
+    <ClCompile Include="Source\RenderThread\FMaterial.cpp" />
+    <ClCompile Include="Source\RenderThread\FPostProcessing.cpp" />
+    <ClCompile Include="Source\RenderThread\FRenderCommand.cpp" />
+    <ClCompile Include="Source\RenderThread\FRenderer.cpp" />
+    <ClCompile Include="Source\RenderThread\FRenderProxy.cpp" />
+    <ClCompile Include="Source\RenderThread\FRenderThread.cpp" />
+    <ClCompile Include="Source\RenderThread\FScene.cpp" />
+    <ClCompile Include="Source\RenderThread\FView.cpp" />
+    <ClCompile Include="Source\RenderThread\RHI\FRHI.cpp" />
+    <ClCompile Include="Source\RenderThread\RHI\FRHIBuffer.cpp" />
+    <ClCompile Include="Source\RenderThread\RHI\FRHIPipelineState.cpp" />
+    <ClCompile Include="Source\RenderThread\RHI\FRHIResource.cpp" />
+    <ClCompile Include="Source\RenderThread\RHI\FRHIRenderTarget.cpp" />
+    <ClCompile Include="Source\RenderThread\RHI\FRHIShader.cpp" />
+    <ClCompile Include="Source\RenderThread\RHI\FRHIShaderBindings.cpp" />
+    <ClCompile Include="Source\RenderThread\RHI\FRHITexture.cpp" />
+    <ClCompile Include="Source\RenderThread\RHI\FRHIVertex.cpp" />
+    <ClCompile Include="Source\Utility\CityHash.cpp" />
+    <ClCompile Include="Source\Utility\FArchive.cpp" />
+    <ClCompile Include="Source\Utility\MathUtility.cpp" />
+    <ClCompile Include="Source\Utility\PrecompiledHeader.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Engine\Source\Utility\Utility.cpp" />
-    <ClCompile Include="Engine\Source\Utility\WindowsUtility.cpp" />
+    <ClCompile Include="Source\Utility\Utility.cpp" />
+    <ClCompile Include="Source\Utility\WindowsUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\Source\Core\FEngine.h" />
-    <ClInclude Include="Engine\Source\Core\FThread.h" />
-    <ClInclude Include="Engine\Source\Core\IModuleInterface.h" />
-    <ClInclude Include="Engine\Source\MainThread\UCamera.h" />
-    <ClInclude Include="Engine\Source\MainThread\ULight.h" />
-    <ClInclude Include="Engine\Source\MainThread\UMaterial.h" />
-    <ClInclude Include="Engine\Source\MainThread\UObject.h" />
-    <ClInclude Include="Engine\Source\MainThread\UPlayer.h" />
-    <ClInclude Include="Engine\Source\MainThread\USkeletalMesh.h" />
-    <ClInclude Include="Engine\Source\MainThread\USkeletalMeshObject.h" />
-    <ClInclude Include="Engine\Source\MainThread\UStaticMesh.h" />
-    <ClInclude Include="Engine\Source\MainThread\UStaticMeshObject.h" />
-    <ClInclude Include="Engine\Source\MainThread\UTexture.h" />
-    <ClInclude Include="Engine\Source\MainThread\UWorld.h" />
-    <ClInclude Include="Engine\Source\Manager\FConfigManager.h" />
-    <ClInclude Include="Engine\Source\Manager\FConsoleVariableManager.h" />
-    <ClInclude Include="Engine\Source\Manager\FInputManager.h" />
-    <ClInclude Include="Engine\Source\Manager\FLogManager.h" />
-    <ClInclude Include="Engine\Source\Manager\FModuleManager.h" />
-    <ClInclude Include="Engine\Source\Manager\FPipelineStateManager.h" />
-    <ClInclude Include="Engine\Source\Manager\FPlayerController.h" />
-    <ClInclude Include="Engine\Source\Manager\FProjectManager.h" />
-    <ClInclude Include="Engine\Source\Manager\FResourceManager.h" />
-    <ClInclude Include="Engine\Source\Manager\FRHIResourceManager.h" />
-    <ClInclude Include="Engine\Source\Manager\FShaderBindingsManager.h" />
-    <ClInclude Include="Engine\Source\Manager\FSceneManager.h" />
-    <ClInclude Include="Engine\Source\Manager\FShaderManager.h" />
-    <ClInclude Include="Engine\Source\RenderThread\D3D12RHI\d3dx12.h" />
-    <ClInclude Include="Engine\Source\RenderThread\D3D12RHI\DDSTextureLoader.h" />
-    <ClInclude Include="Engine\Source\RenderThread\D3D12RHI\DX12Utility.h" />
-    <ClInclude Include="Engine\Source\RenderThread\D3D12RHI\FD3D12Buffer.h" />
-    <ClInclude Include="Engine\Source\RenderThread\D3D12RHI\FD3D12Vertex.h" />
-    <ClInclude Include="Engine\Source\RenderThread\D3D12RHI\FD3D12RHI.h" />
-    <ClInclude Include="Engine\Source\RenderThread\D3D12RHI\FD3D12PipelineState.h" />
-    <ClInclude Include="Engine\Source\RenderThread\D3D12RHI\FD3D12Resource.h" />
-    <ClInclude Include="Engine\Source\RenderThread\D3D12RHI\FD3D12RenderTarget.h" />
-    <ClInclude Include="Engine\Source\RenderThread\D3D12RHI\FD3D12ShaderBindings.h" />
-    <ClInclude Include="Engine\Source\RenderThread\D3D12RHI\FD3D12Shader.h" />
-    <ClInclude Include="Engine\Source\RenderThread\D3D12RHI\FD3D12Texture.h" />
-    <ClInclude Include="Engine\Source\RenderThread\FLight.h" />
-    <ClInclude Include="Engine\Source\RenderThread\FMaterial.h" />
-    <ClInclude Include="Engine\Source\RenderThread\FPostProcessing.h" />
-    <ClInclude Include="Engine\Source\RenderThread\FRenderCommand.h" />
-    <ClInclude Include="Engine\Source\RenderThread\FRenderer.h" />
-    <ClInclude Include="Engine\Source\RenderThread\FRenderProxy.h" />
-    <ClInclude Include="Engine\Source\RenderThread\FRenderThread.h" />
-    <ClInclude Include="Engine\Source\RenderThread\FScene.h" />
-    <ClInclude Include="Engine\Source\RenderThread\FView.h" />
-    <ClInclude Include="Engine\Source\RenderThread\RHI\FRHI.h" />
-    <ClInclude Include="Engine\Source\RenderThread\RHI\FRHIBuffer.h" />
-    <ClInclude Include="Engine\Source\RenderThread\RHI\FRHIPipelineState.h" />
-    <ClInclude Include="Engine\Source\RenderThread\RHI\FRHIResource.h" />
-    <ClInclude Include="Engine\Source\RenderThread\RHI\FRHIRenderTarget.h" />
-    <ClInclude Include="Engine\Source\RenderThread\RHI\FRHIShader.h" />
-    <ClInclude Include="Engine\Source\RenderThread\RHI\FRHIShaderBindings.h" />
-    <ClInclude Include="Engine\Source\RenderThread\RHI\FRHITexture.h" />
-    <ClInclude Include="Engine\Source\RenderThread\RHI\FRHIVertex.h" />
-    <ClInclude Include="Engine\Source\Utility\CityHash.h" />
-    <ClInclude Include="Engine\Source\Utility\FArchive.h" />
-    <ClInclude Include="Engine\Source\Utility\MathUtility.h" />
-    <ClInclude Include="Engine\Source\Utility\PrecompiledHeader.h" />
-    <ClInclude Include="Engine\Source\Utility\Prerequisite.h" />
-    <ClInclude Include="Engine\Source\Utility\TSingleton.h" />
-    <ClInclude Include="Engine\Source\Utility\Utility.h" />
-    <ClInclude Include="Engine\Source\Utility\WindowsUtility.h" />
+    <ClInclude Include="Source\Core\FEngine.h" />
+    <ClInclude Include="Source\Core\FThread.h" />
+    <ClInclude Include="Source\Core\IModuleInterface.h" />
+    <ClInclude Include="Source\MainThread\UCamera.h" />
+    <ClInclude Include="Source\MainThread\ULight.h" />
+    <ClInclude Include="Source\MainThread\UMaterial.h" />
+    <ClInclude Include="Source\MainThread\UObject.h" />
+    <ClInclude Include="Source\MainThread\UPlayer.h" />
+    <ClInclude Include="Source\MainThread\USkeletalMesh.h" />
+    <ClInclude Include="Source\MainThread\USkeletalMeshObject.h" />
+    <ClInclude Include="Source\MainThread\UStaticMesh.h" />
+    <ClInclude Include="Source\MainThread\UStaticMeshObject.h" />
+    <ClInclude Include="Source\MainThread\UTexture.h" />
+    <ClInclude Include="Source\MainThread\UWorld.h" />
+    <ClInclude Include="Source\Manager\FConfigManager.h" />
+    <ClInclude Include="Source\Manager\FConsoleVariableManager.h" />
+    <ClInclude Include="Source\Manager\FInputManager.h" />
+    <ClInclude Include="Source\Manager\FLogManager.h" />
+    <ClInclude Include="Source\Manager\FModuleManager.h" />
+    <ClInclude Include="Source\Manager\FPipelineStateManager.h" />
+    <ClInclude Include="Source\Manager\FPlayerController.h" />
+    <ClInclude Include="Source\Manager\FProjectManager.h" />
+    <ClInclude Include="Source\Manager\FResourceManager.h" />
+    <ClInclude Include="Source\Manager\FRHIResourceManager.h" />
+    <ClInclude Include="Source\Manager\FShaderBindingsManager.h" />
+    <ClInclude Include="Source\Manager\FSceneManager.h" />
+    <ClInclude Include="Source\Manager\FShaderManager.h" />
+    <ClInclude Include="Source\RenderThread\D3D12RHI\d3dx12.h" />
+    <ClInclude Include="Source\RenderThread\D3D12RHI\DDSTextureLoader.h" />
+    <ClInclude Include="Source\RenderThread\D3D12RHI\DX12Utility.h" />
+    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12Buffer.h" />
+    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12Vertex.h" />
+    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12RHI.h" />
+    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12PipelineState.h" />
+    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12Resource.h" />
+    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12RenderTarget.h" />
+    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12ShaderBindings.h" />
+    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12Shader.h" />
+    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12Texture.h" />
+    <ClInclude Include="Source\RenderThread\FLight.h" />
+    <ClInclude Include="Source\RenderThread\FMaterial.h" />
+    <ClInclude Include="Source\RenderThread\FPostProcessing.h" />
+    <ClInclude Include="Source\RenderThread\FRenderCommand.h" />
+    <ClInclude Include="Source\RenderThread\FRenderer.h" />
+    <ClInclude Include="Source\RenderThread\FRenderProxy.h" />
+    <ClInclude Include="Source\RenderThread\FRenderThread.h" />
+    <ClInclude Include="Source\RenderThread\FScene.h" />
+    <ClInclude Include="Source\RenderThread\FView.h" />
+    <ClInclude Include="Source\RenderThread\RHI\FRHI.h" />
+    <ClInclude Include="Source\RenderThread\RHI\FRHIBuffer.h" />
+    <ClInclude Include="Source\RenderThread\RHI\FRHIPipelineState.h" />
+    <ClInclude Include="Source\RenderThread\RHI\FRHIResource.h" />
+    <ClInclude Include="Source\RenderThread\RHI\FRHIRenderTarget.h" />
+    <ClInclude Include="Source\RenderThread\RHI\FRHIShader.h" />
+    <ClInclude Include="Source\RenderThread\RHI\FRHIShaderBindings.h" />
+    <ClInclude Include="Source\RenderThread\RHI\FRHITexture.h" />
+    <ClInclude Include="Source\RenderThread\RHI\FRHIVertex.h" />
+    <ClInclude Include="Source\Utility\CityHash.h" />
+    <ClInclude Include="Source\Utility\FArchive.h" />
+    <ClInclude Include="Source\Utility\MathUtility.h" />
+    <ClInclude Include="Source\Utility\PrecompiledHeader.h" />
+    <ClInclude Include="Source\Utility\Prerequisite.h" />
+    <ClInclude Include="Source\Utility\TSingleton.h" />
+    <ClInclude Include="Source\Utility\Utility.h" />
+    <ClInclude Include="Source\Utility\WindowsUtility.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Engine\Shaders\Bloom.hlsl">
+    <FxCompile Include="Shaders\Bloom.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Engine\Shaders\Common.hlsl">
+    <FxCompile Include="Shaders\Common.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Engine\Shaders\DeferredShadingCommon.hlsl">
+    <FxCompile Include="Shaders\DeferredShadingCommon.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Engine\Shaders\DeferredShadingPS.hlsl">
+    <FxCompile Include="Shaders\DeferredShadingPS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Engine\Shaders\DeferredShadingVS.hlsl">
+    <FxCompile Include="Shaders\DeferredShadingVS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Engine\Shaders\ForwardShadingCommon.hlsl">
+    <FxCompile Include="Shaders\ForwardShadingCommon.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Engine\Shaders\ForwardShadingPS.hlsl">
+    <FxCompile Include="Shaders\ForwardShadingPS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Engine\Shaders\ForwardShadingVS.hlsl">
+    <FxCompile Include="Shaders\ForwardShadingVS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Engine\Shaders\LightingModel.hlsl">
+    <FxCompile Include="Shaders\LightingModel.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Engine\Shaders\Postprocess.hlsl">
+    <FxCompile Include="Shaders\Postprocess.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Engine\Shaders\ShadingCommon.hlsl">
+    <FxCompile Include="Shaders\ShadingCommon.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Engine\Shaders\ShadowDepthCommon.hlsl">
+    <FxCompile Include="Shaders\ShadowDepthCommon.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
@@ -225,7 +225,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Engine\Shaders\ShadowDepthPS.hlsl">
+    <FxCompile Include="Shaders\ShadowDepthPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
@@ -233,15 +233,15 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Engine\Shaders\ShadowDepthVS.hlsl">
+    <FxCompile Include="Shaders\ShadowDepthVS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Engine\Shaders\ShadowFiltering.hlsl">
+    <FxCompile Include="Shaders\ShadowFiltering.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Engine\Shaders\Tonemap.hlsl">
+    <FxCompile Include="Shaders\Tonemap.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -302,21 +302,21 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\Engine\Source;$(SolutionDir)\Engine\Source\Core;$(SolutionDir)\Engine\Source\Manager;$(SolutionDir)\Engine\Source\ThirdParty;$(SolutionDir)\Engine\Source\Utility;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\Source;$(ProjectDir)\Source\Core;$(ProjectDir)\Source\Manager;$(ProjectDir)\Source\ThirdParty;$(ProjectDir)\Source\Utility;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)\Engine\Source;$(SolutionDir)\Engine\Source\Core;$(SolutionDir)\Engine\Source\Manager;$(SolutionDir)\Engine\Source\ThirdParty;$(SolutionDir)\Engine\Source\Utility;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\Source;$(ProjectDir)\Source\Core;$(ProjectDir)\Source\Manager;$(ProjectDir)\Source\ThirdParty;$(ProjectDir)\Source\Utility;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)Engine\Binaries\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>Engine\Intermediate\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)\Binaries\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\Intermediate\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)Engine\Binaries\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>Engine\Intermediate\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)\Binaries\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>Intermediate\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -354,17 +354,17 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Engine\Source\Core;$(SolutionDir)\Engine\Source\Manager;$(SolutionDir)\Engine\Source\Utility;$(SolutionDir)\Engine\Source\RenderThread;$(SolutionDir)\Engine\Source\RenderThread\D3D12RHI;$(SolutionDir)\Engine\Source\RenderThread\RHI;$(SolutionDir)\Engine\Source\MainThread;$(SolutionDir)\Engine\Source\ThirdParty;$(SolutionDir)\Engine\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(SolutionDir)\Engine\Source\ThirdParty\Eigen;$(SolutionDir)\Engine\Source\ThirdParty\spdlog-1.x\include;$(SolutionDir)\Engine\Source\ThirdParty\spdlog-1.x;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Core;$(ProjectDir)\Source\Manager;$(ProjectDir)\Source\Utility;$(ProjectDir)\Source\RenderThread;$(ProjectDir)\Source\RenderThread\D3D12RHI;$(ProjectDir)\Source\RenderThread\RHI;$(ProjectDir)\Source\MainThread;$(ProjectDir)\Source\ThirdParty;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(ProjectDir)\Source\ThirdParty\Eigen;$(ProjectDir)\Source\ThirdParty\spdlog-1.x\include;$(ProjectDir)\Source\ThirdParty\spdlog-1.x;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3dcompiler.lib;D3D12.lib;dxgi.lib;$(SolutionDir)\Engine\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\bin\x64\WinPixEventRuntime.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3dcompiler.lib;D3D12.lib;dxgi.lib;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\bin\x64\WinPixEventRuntime.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)Engine\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\bin\x64\WinPixEventRuntime.dll  $(OutputPath)WinPixEventRuntime.dll  /y</Command>
+      <Command>copy $(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\bin\x64\WinPixEventRuntime.dll  $(OutputPath)WinPixEventRuntime.dll  /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -375,7 +375,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Engine\Source\Core;$(SolutionDir)\Engine\Source\Manager;$(SolutionDir)\Engine\Source\Utility;$(SolutionDir)\Engine\Source\RenderThread;$(SolutionDir)\Engine\Source\RenderThread\D3D12RHI;$(SolutionDir)\Engine\Source\RenderThread\RHI;$(SolutionDir)\Engine\Source\MainThread;$(SolutionDir)\Engine\Source\ThirdParty;$(SolutionDir)\Engine\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(SolutionDir)\Engine\Source\ThirdParty\Eigen;$(SolutionDir)\Engine\Source\ThirdParty\spdlog-1.x\include;$(SolutionDir)\Engine\Source\ThirdParty\spdlog-1.x;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Core;$(ProjectDir)\Source\Manager;$(ProjectDir)\Source\Utility;$(ProjectDir)\Source\RenderThread;$(ProjectDir)\Source\RenderThread\D3D12RHI;$(ProjectDir)\Source\RenderThread\RHI;$(ProjectDir)\Source\MainThread;$(ProjectDir)\Source\ThirdParty;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(ProjectDir)\Source\ThirdParty\Eigen;$(ProjectDir)\Source\ThirdParty\spdlog-1.x\include;$(ProjectDir)\Source\ThirdParty\spdlog-1.x;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -384,10 +384,10 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3dcompiler.lib;D3D12.lib;dxgi.lib;$(SolutionDir)\Engine\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\bin\x64\WinPixEventRuntime.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3dcompiler.lib;D3D12.lib;dxgi.lib;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\bin\x64\WinPixEventRuntime.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)Engine\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\bin\x64\WinPixEventRuntime.dll  $(OutputPath)WinPixEventRuntime.dll  /y</Command>
+      <Command>copy $(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\bin\x64\WinPixEventRuntime.dll  $(OutputPath)WinPixEventRuntime.dll  /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
