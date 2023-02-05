@@ -40,6 +40,7 @@
     <ClCompile Include="Engine\Source\Manager\FModuleManager.cpp" />
     <ClCompile Include="Engine\Source\Manager\FPipelineStateManager.cpp" />
     <ClCompile Include="Engine\Source\Manager\FPlayerController.cpp" />
+    <ClCompile Include="Engine\Source\Manager\FProjectManager.cpp" />
     <ClCompile Include="Engine\Source\Manager\FResourceManager.cpp" />
     <ClCompile Include="Engine\Source\Manager\FRHIResourceManager.cpp" />
     <ClCompile Include="Engine\Source\Manager\FShaderBindingsManager.cpp" />
@@ -106,6 +107,7 @@
     <ClInclude Include="Engine\Source\Manager\FModuleManager.h" />
     <ClInclude Include="Engine\Source\Manager\FPipelineStateManager.h" />
     <ClInclude Include="Engine\Source\Manager\FPlayerController.h" />
+    <ClInclude Include="Engine\Source\Manager\FProjectManager.h" />
     <ClInclude Include="Engine\Source\Manager\FResourceManager.h" />
     <ClInclude Include="Engine\Source\Manager\FRHIResourceManager.h" />
     <ClInclude Include="Engine\Source\Manager\FShaderBindingsManager.h" />

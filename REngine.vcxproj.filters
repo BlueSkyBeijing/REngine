@@ -216,6 +216,9 @@
     <ClCompile Include="Engine\Source\Manager\FModuleManager.cpp">
       <Filter>Engine\Source\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Source\Manager\FProjectManager.cpp">
+      <Filter>Engine\Source\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Source\Manager\FInputManager.h">
@@ -409,6 +412,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Source\Core\IModuleInterface.h">
       <Filter>Engine\Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\Manager\FProjectManager.h">
+      <Filter>Engine\Source\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
