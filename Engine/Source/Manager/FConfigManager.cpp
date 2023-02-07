@@ -4,11 +4,16 @@
 #include "Utility.h"
 
 
-FString FConfigManager::EngineWorkPath = "\\Engine\\";
-FString FConfigManager::ContentPath = "Content\\";
-FString FConfigManager::ShaderPath = "Shaders\\";
-FString FConfigManager::ConfigFile = "Config\\Engine.ini";
+FString FConfigManager::EngineDir = "\\Engine\\";
+FString FConfigManager::EngineContentDir = "Content\\";
+FString FConfigManager::EngineShaderDir = "Shaders\\";
+FString FConfigManager::EngineConfigFile = "Config\\Engine.ini";
 FString FConfigManager::LogFile = "Saved\\Logs\\Engine.log";
+
+FString FConfigManager::ProjectDir = "\\Project\\";
+FString FConfigManager::ProjectContentDir = "Content\\";
+FString FConfigManager::ProjectShaderDir = "Shaders\\";
+FString FConfigManager::ProjectConfigFile = "Config\\Engine.ini";
 
 FString FConfigManager::DefaultMapPath = "Content\\Map\\";
 FString FConfigManager::DefaultStaticMeshPath = "Content\\StaticMesh\\";
@@ -60,26 +65,30 @@ void FConfigManager::Init()
     char szFilePath[MAX_PATH + 1] = { 0 };
     GetModuleFileNameA(NULL, szFilePath, MAX_PATH);
     TArray<FString> subPaths;
-    StringSplit(szFilePath, EngineWorkPath, subPaths);
-    EngineWorkPath = subPaths[0] + EngineWorkPath;
+    StringSplit(szFilePath, EngineDir, subPaths);
+    EngineDir = subPaths[0] + EngineDir;
 
-    ContentPath = EngineWorkPath + ContentPath;
-    ShaderPath = EngineWorkPath + ShaderPath;
-    ConfigFile = EngineWorkPath + ConfigFile;
-    LogFile = EngineWorkPath + LogFile;
+    EngineContentDir = EngineDir + EngineContentDir;
+    EngineShaderDir = EngineDir + EngineShaderDir;
+    EngineConfigFile = EngineDir + EngineConfigFile;
 
-    DefaultMapPath = EngineWorkPath + DefaultMapPath;
-    DefaultStaticMeshPath = EngineWorkPath + DefaultStaticMeshPath;
-    DefaultSkeletalMeshPath = EngineWorkPath + DefaultSkeletalMeshPath;
-    DefaultSkeletonPath = EngineWorkPath + DefaultSkeletonPath;
-    DefaultAnimSequencePath = EngineWorkPath + DefaultAnimSequencePath;
-    DefaultMaterialPath = EngineWorkPath + DefaultMaterialPath;
-    DefaultTexturePath = EngineWorkPath + DefaultTexturePath;
+    ProjectContentDir = ProjectDir + ProjectContentDir;
+    ProjectShaderDir = ProjectDir + ProjectShaderDir;
+    ProjectConfigFile = ProjectDir + ProjectConfigFile;
+    LogFile = ProjectDir + LogFile;
+
+    DefaultMapPath = EngineDir + DefaultMapPath;
+    DefaultStaticMeshPath = EngineDir + DefaultStaticMeshPath;
+    DefaultSkeletalMeshPath = EngineDir + DefaultSkeletalMeshPath;
+    DefaultSkeletonPath = EngineDir + DefaultSkeletonPath;
+    DefaultAnimSequencePath = EngineDir + DefaultAnimSequencePath;
+    DefaultMaterialPath = EngineDir + DefaultMaterialPath;
+    DefaultTexturePath = EngineDir + DefaultTexturePath;
 
     CSimpleIniA engineConfig;
     engineConfig.SetUnicode();
 
-    SI_Error rc = engineConfig.LoadFile(FConfigManager::ConfigFile.c_str());
+    SI_Error rc = engineConfig.LoadFile(FConfigManager::EngineConfigFile.c_str());
     if (rc < 0)
     {
         //print error

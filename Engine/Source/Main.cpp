@@ -7,6 +7,7 @@
 #include "FEngine.h"
 #include "TSingleton.h"
 #include "FConsoleVariableManager.h"
+#include "FConfigManager.h"
 
 std::mutex EngineMutex;
 std::condition_variable EngineExitCondition;
@@ -53,7 +54,7 @@ LRESULT CALLBACK ConsoleVariableProc(int code, WPARAM wParam, LPARAM lParam)
     return ret;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
     //enable run-time memory check for debug builds.
 #if defined(DEBUG) | defined(_DEBUG)
@@ -65,6 +66,12 @@ int main()
     {
         printf("unable to install handler!");
         return -1;
+    }
+
+    if (argc > 1)
+    {
+        (strrchr(argv[1], '\\'))[1] = 0;
+        FConfigManager::ProjectDir = argv[1];
     }
 
     SetWindowsHookEx(WH_KEYBOARD_LL, ConsoleVariableProc, NULL, 0);

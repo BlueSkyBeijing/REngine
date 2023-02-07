@@ -11,11 +11,16 @@ public:
     void Init();
     void UnInit();
 
-    static FString EngineWorkPath;
-    static FString ContentPath;
-    static FString ShaderPath;
-    static FString ConfigFile;
+    static FString EngineDir;
+    static FString EngineContentDir;
+    static FString EngineShaderDir;
+    static FString EngineConfigFile;
     static FString LogFile;
+
+    static FString ProjectDir;
+    static FString ProjectContentDir;
+    static FString ProjectShaderDir;
+    static FString ProjectConfigFile;
 
     static FString DefaultMapPath;
     static FString DefaultStaticMeshPath;
