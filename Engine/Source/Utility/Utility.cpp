@@ -30,3 +30,22 @@ void ReplaceSubString(FString& str, const FString& before, const FString& after)
     }
 }
 
+void StringSplit(const FString& str, const FString& splitStr, TArray<FString>& res)
+{
+    if (str.size() == 0)
+    {
+        return;
+    }
+
+    FString strs = str + splitStr;
+    size_t pos = strs.find(splitStr);
+    size_t step = splitStr.size();
+
+    while (pos != strs.npos)
+    {
+        FString temp = strs.substr(0, pos);
+        res.push_back(temp);
+        strs = strs.substr(pos + step, strs.size());
+        pos = strs.find(splitStr);
+    }
+}

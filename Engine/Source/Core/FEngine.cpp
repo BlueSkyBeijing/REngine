@@ -40,8 +40,8 @@ void FEngine::Launch()
 
 void FEngine::init()
 {
-    TSingleton<FLogManager>::GetInstance().Init();
     TSingleton<FConfigManager>::GetInstance().Init();
+    TSingleton<FLogManager>::GetInstance().Init();
     TSingleton<FModuleManager>::GetInstance().Init();   
     TSingleton<FInputManager>::GetInstance().Init();
     TSingleton<FPlayerController>::GetInstance().Init();
@@ -77,8 +77,8 @@ void FEngine::unInit()
     delete mWorld;
     mWorld = nullptr;
 
-    TSingleton<FInputManager>::GetInstance().UnInit();
     TSingleton<FConfigManager>::GetInstance().UnInit();
+    TSingleton<FInputManager>::GetInstance().UnInit();
     TSingleton<FLogManager>::GetInstance().UnInit();
     TSingleton<FModuleManager>::GetInstance().UnInit();
     TSingleton<FPlayerController>::GetInstance().UnInit();

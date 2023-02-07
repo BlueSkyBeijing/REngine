@@ -11,19 +11,19 @@ public:
     void Init();
     void UnInit();
 
-    const static FString EngineWorkPath;
-    const static FString ContentPath;
-    const static FString ShaderPath;
-    const static FString ConfigFile;
-    const static FString LogFile;
+    static FString EngineWorkPath;
+    static FString ContentPath;
+    static FString ShaderPath;
+    static FString ConfigFile;
+    static FString LogFile;
 
-    const static FString DefaultMapPath;
-    const static FString DefaultStaticMeshPath;
-    const static FString DefaultSkeletalMeshPath;
-    const static FString DefaultSkeletonPath;
-    const static FString DefaultAnimSequencePath;
-    const static FString DefaultMaterialPath;
-    const static FString DefaultTexturePath;
+    static FString DefaultMapPath;
+    static FString DefaultStaticMeshPath;
+    static FString DefaultSkeletalMeshPath;
+    static FString DefaultSkeletonPath;
+    static FString DefaultAnimSequencePath;
+    static FString DefaultMaterialPath;
+    static FString DefaultTexturePath;
 
     const static FString DefaultMapFileSuffix;
     const static FString DefaultStaticMeshFileSuffix;
