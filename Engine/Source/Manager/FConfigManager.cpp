@@ -10,7 +10,7 @@ FString FConfigManager::EngineShaderDir = "Shaders\\";
 FString FConfigManager::EngineConfigFile = "Config\\Engine.ini";
 FString FConfigManager::LogFile = "Saved\\Logs\\Engine.log";
 
-FString FConfigManager::ProjectDir = "\\Project\\";
+FString FConfigManager::ProjectDir = "";
 FString FConfigManager::ProjectContentDir = "Content\\";
 FString FConfigManager::ProjectShaderDir = "Shaders\\";
 FString FConfigManager::ProjectConfigFile = "Config\\Engine.ini";
@@ -62,6 +62,8 @@ FConfigManager::~FConfigManager()
 
 void FConfigManager::Init()
 {
+    bool hasProject = (ProjectDir.size() > 0);
+
     char szFilePath[MAX_PATH + 1] = { 0 };
     GetModuleFileNameA(NULL, szFilePath, MAX_PATH);
     TArray<FString> subPaths;
@@ -75,20 +77,25 @@ void FConfigManager::Init()
     ProjectContentDir = ProjectDir + ProjectContentDir;
     ProjectShaderDir = ProjectDir + ProjectShaderDir;
     ProjectConfigFile = ProjectDir + ProjectConfigFile;
-    LogFile = ProjectDir + LogFile;
 
-    DefaultMapPath = EngineDir + DefaultMapPath;
-    DefaultStaticMeshPath = EngineDir + DefaultStaticMeshPath;
-    DefaultSkeletalMeshPath = EngineDir + DefaultSkeletalMeshPath;
-    DefaultSkeletonPath = EngineDir + DefaultSkeletonPath;
-    DefaultAnimSequencePath = EngineDir + DefaultAnimSequencePath;
-    DefaultMaterialPath = EngineDir + DefaultMaterialPath;
-    DefaultTexturePath = EngineDir + DefaultTexturePath;
+    FString LogDir = hasProject ? ProjectDir : EngineDir;
+    LogFile = LogDir + LogFile;
+
+    FString ContentDir = hasProject ? ProjectDir : EngineDir;
+    DefaultMapPath = ContentDir + DefaultMapPath;
+    DefaultStaticMeshPath = ContentDir + DefaultStaticMeshPath;
+    DefaultSkeletalMeshPath = ContentDir + DefaultSkeletalMeshPath;
+    DefaultSkeletonPath = ContentDir + DefaultSkeletonPath;
+    DefaultAnimSequencePath = ContentDir + DefaultAnimSequencePath;
+    DefaultMaterialPath = ContentDir + DefaultMaterialPath;
+    DefaultTexturePath = ContentDir + DefaultTexturePath;
 
     CSimpleIniA engineConfig;
     engineConfig.SetUnicode();
 
-    SI_Error rc = engineConfig.LoadFile(FConfigManager::EngineConfigFile.c_str());
+    FString ConfigFile = hasProject ? ProjectConfigFile : EngineConfigFile;
+
+    SI_Error rc = engineConfig.LoadFile(ConfigFile.c_str());
     if (rc < 0)
     {
         //print error
