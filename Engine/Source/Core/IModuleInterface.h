@@ -6,11 +6,11 @@ public:
 	{
 	}
 
-	virtual void StartupModule()
+	virtual void Init()
 	{
 	}
 
-	virtual void ShutdownModule()
+	virtual void UnInit()
 	{
 	}
 };
