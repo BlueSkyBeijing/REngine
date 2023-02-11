@@ -40,13 +40,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Makefile</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Makefile</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -73,14 +73,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)\Binaries\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\Intermediate\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeOutput>..\..\Engine\Binaries\x64\Debug\REngine.exe</NMakeOutput>
+    <NMakeOutput>..\..\Engine\Binaries\$(Platform)\$(Configuration)\REngine.exe</NMakeOutput>
     <IncludePath>$(ProjectDir)\..\..\Engine\Source\Core;$(ProjectDir)\..\..\Engine\Source\Manager;$(ProjectDir)\..\..\Engine\Source\Utility;$(ProjectDir)\..\..\Engine\Source\RenderThread;$(ProjectDir)\..\..\Engine\Source\RenderThread\D3D12RHI;$(ProjectDir)\..\..\Engine\Source\RenderThread\RHI;$(ProjectDir)\..\..\Engine\Source\MainThread;$(ProjectDir)\..\..\Engine\Source\ThirdParty;$(ProjectDir)\..\..\Engine\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(ProjectDir)\..\..\Engine\Source\ThirdParty\Eigen;$(ProjectDir)\..\..\Engine\Source\ThirdParty\spdlog-1.x\include;$(ProjectDir)\..\..\Engine\Source\ThirdParty\spdlog-1.x;%(AdditionalIncludeDirectories);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)\Binaries\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)\Intermediate\$(Platform)\$(Configuration)\</IntDir>
-    <NMakeOutput>
-    </NMakeOutput>
+    <NMakeOutput>..\..\Engine\Binaries\$(Platform)\$(Configuration)\REngine.exe</NMakeOutput>
     <IncludePath>$(ProjectDir)\..\..\Engine\Source\Core;$(ProjectDir)\..\..\Engine\Source\Manager;$(ProjectDir)\..\..\Engine\Source\Utility;$(ProjectDir)\..\..\Engine\Source\RenderThread;$(ProjectDir)\..\..\Engine\Source\RenderThread\D3D12RHI;$(ProjectDir)\..\..\Engine\Source\RenderThread\RHI;$(ProjectDir)\..\..\Engine\Source\MainThread;$(ProjectDir)\..\..\Engine\Source\ThirdParty;$(ProjectDir)\..\..\Engine\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(ProjectDir)\..\..\Engine\Source\ThirdParty\Eigen;$(ProjectDir)\..\..\Engine\Source\ThirdParty\spdlog-1.x\include;$(ProjectDir)\..\..\Engine\Source\ThirdParty\spdlog-1.x;%(AdditionalIncludeDirectories);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
