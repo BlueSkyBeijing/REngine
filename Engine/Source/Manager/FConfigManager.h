@@ -11,12 +11,16 @@ public:
     void Init();
     void UnInit();
 
+    static FString Platform;
+    static FString Configuration;
+
     static FString EngineDir;
     static FString EngineContentDir;
     static FString EngineShaderDir;
     static FString EngineConfigFile;
     static FString LogFile;
 
+    static FString ProjectName;
     static FString ProjectDir;
     static FString ProjectContentDir;
     static FString ProjectShaderDir;
@@ -30,6 +34,7 @@ public:
     static FString DefaultMaterialPath;
     static FString DefaultTexturePath;
 
+    const static FString ProjectFileSuffix;
     const static FString DefaultMapFileSuffix;
     const static FString DefaultStaticMeshFileSuffix;
     const static FString DefaultSkeletalMeshFileSuffix;

@@ -31,3 +31,5 @@ void ReadUnrealString(std::ifstream& file, FString& outString);
 void ReplaceSubString(FString& str, const FString& before, const FString& after);
 
 void StringSplit(const FString& str, const FString& splitStr, TArray<FString>& res);
+
+void FullFileNameSplit(const FString& fullFileName, FString& filePath, FString& fileName, FString& name, FString& suffix);

@@ -4,12 +4,16 @@
 #include "Utility.h"
 
 
+FString FConfigManager::Platform = "x86";
+FString FConfigManager::Configuration = "Debug";
+
 FString FConfigManager::EngineDir = "\\Engine\\";
 FString FConfigManager::EngineContentDir = "Content\\";
 FString FConfigManager::EngineShaderDir = "Shaders\\";
 FString FConfigManager::EngineConfigFile = "Config\\Engine.ini";
 FString FConfigManager::LogFile = "Saved\\Logs\\Engine.log";
 
+FString FConfigManager::ProjectName = "";
 FString FConfigManager::ProjectDir = "";
 FString FConfigManager::ProjectContentDir = "Content\\";
 FString FConfigManager::ProjectShaderDir = "Shaders\\";
@@ -23,6 +27,7 @@ FString FConfigManager::DefaultAnimSequencePath = "Content\\SkeletalMesh\\Animat
 FString FConfigManager::DefaultMaterialPath = "Content\\Material\\";
 FString FConfigManager::DefaultTexturePath = "Content\\Texture\\";
 
+const FString FConfigManager::ProjectFileSuffix = ".project";
 const FString FConfigManager::DefaultMapFileSuffix = ".map";
 const FString FConfigManager::DefaultStaticMeshFileSuffix = ".stm";
 const FString FConfigManager::DefaultSkeletalMeshFileSuffix = ".skm";

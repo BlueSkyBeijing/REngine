@@ -48,6 +48,8 @@ void FEngine::init()
     TSingleton<FResourceManager>::GetInstance().Init();
     TSingleton<FConsoleVariableManager>::GetInstance().Init();
 
+    TSingleton<FModuleManager>::GetInstance().LoadProjectMoudules(FConfigManager::ProjectDir, FConfigManager::ProjectName);
+
     createWindow();
 
     //start render thread

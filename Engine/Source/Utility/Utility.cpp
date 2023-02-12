@@ -49,3 +49,12 @@ void StringSplit(const FString& str, const FString& splitStr, TArray<FString>& r
         pos = strs.find(splitStr);
     }
 }
+
+void FullFileNameSplit(const FString& fullFileName, FString& filePath, FString& fileName, FString& name, FString& suffix)
+{
+    size_t iPos = fullFileName.find_last_of('\\');
+    filePath = fullFileName.substr(0, iPos + 1);
+    fileName = fullFileName.substr(iPos + 1, fullFileName.length() - iPos);
+    name = fileName.substr(0, fileName.rfind("."));
+    suffix = fileName.substr(fileName.find_last_of('.') + 1);
+}

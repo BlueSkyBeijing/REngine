@@ -8,6 +8,7 @@
 #include "TSingleton.h"
 #include "FConsoleVariableManager.h"
 #include "FConfigManager.h"
+#include "Utility.h"
 
 std::mutex EngineMutex;
 std::condition_variable EngineExitCondition;
@@ -70,8 +71,19 @@ int main(int argc, char* argv[])
 
     if (argc > 1)
     {
-        (strrchr(argv[1], '\\'))[1] = 0;
-        FConfigManager::ProjectDir = argv[1];
+        FString filePath;
+        FString fileName;
+        FString name;
+        FString suffix;
+        FullFileNameSplit(argv[1], filePath, fileName, name, suffix);
+        FConfigManager::ProjectDir = filePath;
+        FConfigManager::ProjectName = name;
+    }
+
+    if (argc > 3)
+    {
+        FConfigManager::Platform = argv[2];
+        FConfigManager::Configuration = argv[3];
     }
 
     SetWindowsHookEx(WH_KEYBOARD_LL, ConsoleVariableProc, NULL, 0);
