@@ -219,6 +219,9 @@
     <ClCompile Include="Source\Manager\FProjectManager.cpp">
       <Filter>Engine\Source\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Source\RenderThread\FShadingModel.cpp">
+      <Filter>Engine\Source\RenderThread</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Manager\FInputManager.h">
@@ -415,6 +418,9 @@
     </ClInclude>
     <ClInclude Include="Source\Manager\FProjectManager.h">
       <Filter>Engine\Source\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RenderThread\FShadingModel.h">
+      <Filter>Engine\Source\RenderThread</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

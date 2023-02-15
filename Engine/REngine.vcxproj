@@ -65,6 +65,7 @@
     <ClCompile Include="Source\RenderThread\FRenderProxy.cpp" />
     <ClCompile Include="Source\RenderThread\FRenderThread.cpp" />
     <ClCompile Include="Source\RenderThread\FScene.cpp" />
+    <ClCompile Include="Source\RenderThread\FShadingModel.cpp" />
     <ClCompile Include="Source\RenderThread\FView.cpp" />
     <ClCompile Include="Source\RenderThread\RHI\FRHI.cpp" />
     <ClCompile Include="Source\RenderThread\RHI\FRHIBuffer.cpp" />
@@ -133,6 +134,7 @@
     <ClInclude Include="Source\RenderThread\FRenderProxy.h" />
     <ClInclude Include="Source\RenderThread\FRenderThread.h" />
     <ClInclude Include="Source\RenderThread\FScene.h" />
+    <ClInclude Include="Source\RenderThread\FShadingModel.h" />
     <ClInclude Include="Source\RenderThread\FView.h" />
     <ClInclude Include="Source\RenderThread\RHI\FRHI.h" />
     <ClInclude Include="Source\RenderThread\RHI\FRHIBuffer.h" />

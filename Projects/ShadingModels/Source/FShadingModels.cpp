@@ -1,3 +1,4 @@
+#include "PrecompiledHeader.h"
 #include "FShadingModels.h"
 
 FShadingModels::~FShadingModels()
