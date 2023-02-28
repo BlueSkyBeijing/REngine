@@ -8,3 +8,8 @@
 /Engine/Intermediate
 /Engine/Saved
 /Engine/Binaries
+*.user
+/Projects/ShadingModels/Binaries/
+/Projects/ShadingModels/Intermediate/
+/Projects/ShadingModels/Saved/
+/Projects/ShadingModels/.vs
