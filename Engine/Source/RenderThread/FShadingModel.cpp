@@ -69,3 +69,18 @@ void FShadingModel::Init()
 void FShadingModel::UnInit()
 {
 }
+
+void FShadingModel::UnInitAllShadingModels()
+{
+    TMap<int32, FShadingModel*>::iterator it = ShadingModels.begin();
+    if (it != ShadingModels.end())
+    {
+        if (it->second != nullptr)
+        {
+            FShadingModel* shadingModel = it->second;;
+            shadingModel->UnInit();
+            delete shadingModel;
+        }
+    }
+    ShadingModels.clear();
+}

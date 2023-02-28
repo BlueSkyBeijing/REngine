@@ -16,6 +16,8 @@ public:
     virtual void UnInit();
 
     static const FShadingModel* GetShadingModel(int32 id);
+    static void UnInitAllShadingModels();
+
 public:
     int32 Value;
     FShaderInfo VertexShaderInfo;

@@ -53,6 +53,10 @@ void FEngine::init()
     shadingModel->Init();
     FShadingModel::ShadingModels.insert(std::make_pair(0, shadingModel));
 
+    shadingModel = new FShadingModel(1);
+    shadingModel->Init();
+    FShadingModel::ShadingModels.insert(std::make_pair(1, shadingModel));
+
     shadingModel = new FShadingModel(2);
     shadingModel->Init();
     FShadingModel::ShadingModels.insert(std::make_pair(2, shadingModel));
@@ -123,6 +127,7 @@ void FEngine::unInit()
     TSingleton<FPlayerController>::GetInstance().UnInit();
     TSingleton<FResourceManager>::GetInstance().UnInit();
     TSingleton<FConsoleVariableManager>::GetInstance().UnInit();
+    FShadingModel::UnInitAllShadingModels();
 
     mInited = false;
 }
