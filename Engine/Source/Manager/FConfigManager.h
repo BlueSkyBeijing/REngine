@@ -3,7 +3,7 @@
 
 #include "TSingleton.h"
 
-class FConfigManager
+class DLL_API FConfigManager
 {
     friend class TSingleton<FConfigManager>;
 

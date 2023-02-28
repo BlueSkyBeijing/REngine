@@ -3,12 +3,34 @@
 #include "Utility.h"
 #include "CityHash.h"
 
-uint64 HashMemory(const char* Data, int32 NumBytes)
+DLL_API std::wstring StringToWString(const FString & str)
+{
+    int32 len = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, nullptr, 0);
+    wchar_t* wide = new wchar_t[len + 1];
+    memset(wide, '\0', sizeof(wchar_t) * (len + 1));
+    MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, wide, len);
+    std::wstring w_str(wide);
+    delete[] wide;
+    return w_str;
+}
+
+DLL_API FString WStringToString(const std::wstring & wstr)
+{
+    int32 len = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), static_cast<int32>(wstr.size()), nullptr, 0, nullptr, nullptr);
+    char* buffer = new char[len + 1];
+    memset(buffer, '\0', sizeof(char) * (len + 1));
+    WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), static_cast<int32>(wstr.size()), buffer, len, nullptr, nullptr);
+    FString result(buffer);
+    delete[] buffer;
+    return result;
+}
+
+DLL_API uint64 HashMemory(const char* Data, int32 NumBytes)
 {
     return CityHash64(Data, NumBytes);
 }
 
-void ReadUnrealString(std::ifstream& file, FString& outString)
+DLL_API void ReadUnrealString(std::ifstream& file, FString& outString)
 {
     int32 stringSize;
     file.read((char*)&stringSize, sizeof(int32));
@@ -18,7 +40,7 @@ void ReadUnrealString(std::ifstream& file, FString& outString)
     outString = FString(outString.c_str());
 }
 
-void ReplaceSubString(FString& str, const FString& before, const FString& after)
+DLL_API void ReplaceSubString(FString& str, const FString& before, const FString& after)
 {
     for (FString::size_type pos(0); pos != FString::npos; pos += after.length())
     {
@@ -30,7 +52,7 @@ void ReplaceSubString(FString& str, const FString& before, const FString& after)
     }
 }
 
-void StringSplit(const FString& str, const FString& splitStr, TArray<FString>& res)
+DLL_API void StringSplit(const FString& str, const FString& splitStr, TArray<FString>& res)
 {
     if (str.size() == 0)
     {
@@ -50,7 +72,7 @@ void StringSplit(const FString& str, const FString& splitStr, TArray<FString>& r
     }
 }
 
-void FullFileNameSplit(const FString& fullFileName, FString& filePath, FString& fileName, FString& name, FString& suffix)
+DLL_API void FullFileNameSplit(const FString& fullFileName, FString& filePath, FString& fileName, FString& name, FString& suffix)
 {
     size_t iPos = fullFileName.find_last_of('\\');
     filePath = fullFileName.substr(0, iPos + 1);

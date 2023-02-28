@@ -5,12 +5,17 @@
 #include "FRHI.h"
 
 
-class FShadingModel
+class DLL_API FShadingModel
 {
 public:
-    FShadingModel();
+    FShadingModel(int32 inValue);
     virtual ~FShadingModel();
 
+    virtual void Init();
+
+    virtual void UnInit();
+
+    static const FShadingModel* GetShadingModel(int32 id);
 public:
     int32 Value;
     FShaderInfo VertexShaderInfo;
@@ -21,4 +26,5 @@ public:
     FShaderInfo VertexShaderGPUSkinInfo;
     FShaderInfo VertexShaderShadowGPUSkinInfo;
 public:
+    static TMap<int32, FShadingModel*> ShadingModels;
 };

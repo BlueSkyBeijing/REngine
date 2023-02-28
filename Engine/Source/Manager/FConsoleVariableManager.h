@@ -3,7 +3,7 @@
 
 #include "TSingleton.h"
 
-class FConsoleVariableManager
+class DLL_API FConsoleVariableManager
 {
     friend class TSingleton<FConsoleVariableManager>;
 

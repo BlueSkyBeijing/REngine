@@ -11,6 +11,7 @@
 #include "FConsoleVariableManager.h"
 #include "UWorld.h"
 #include "UCamera.h"
+#include "FShadingModel.h"
 
 //disable chinese typewriting
 #include <imm.h>  
@@ -47,6 +48,42 @@ void FEngine::init()
     TSingleton<FPlayerController>::GetInstance().Init();
     TSingleton<FResourceManager>::GetInstance().Init();
     TSingleton<FConsoleVariableManager>::GetInstance().Init();
+
+    FShadingModel* shadingModel = new FShadingModel(0);
+    shadingModel->Init();
+    FShadingModel::ShadingModels.insert(std::make_pair(0, shadingModel));
+
+    shadingModel = new FShadingModel(2);
+    shadingModel->Init();
+    FShadingModel::ShadingModels.insert(std::make_pair(2, shadingModel));
+
+    shadingModel = new FShadingModel(3);
+    shadingModel->Init();
+    FShadingModel::ShadingModels.insert(std::make_pair(3, shadingModel));
+
+    shadingModel = new FShadingModel(4);
+    shadingModel->Init();
+    FShadingModel::ShadingModels.insert(std::make_pair(4, shadingModel));
+
+    //shadingModel = new FShadingModel(5);
+    //shadingModel->Init();
+    //FShadingModel::ShadingModels.insert(std::make_pair(5, shadingModel));
+
+    shadingModel = new FShadingModel(6);
+    shadingModel->Init();
+    FShadingModel::ShadingModels.insert(std::make_pair(6, shadingModel));
+
+    //shadingModel = new FShadingModel(7);
+    //shadingModel->Init();
+    //FShadingModel::ShadingModels.insert(std::make_pair(7, shadingModel));
+
+    shadingModel = new FShadingModel(8);
+    shadingModel->Init();
+    FShadingModel::ShadingModels.insert(std::make_pair(8, shadingModel));
+
+    shadingModel = new FShadingModel(9);
+    shadingModel->Init();
+    FShadingModel::ShadingModels.insert(std::make_pair(9, shadingModel));
 
     TSingleton<FModuleManager>::GetInstance().LoadProjectMoudules(FConfigManager::ProjectDir, FConfigManager::ProjectName);
 

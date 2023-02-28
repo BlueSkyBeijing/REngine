@@ -4,7 +4,7 @@
 #include "TSingleton.h"
 
 
-class FEngine
+class DLL_API FEngine
 {
     friend class TSingleton<FEngine>;
 public:

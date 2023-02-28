@@ -33,9 +33,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Main.cpp">
-      <Filter>Engine\Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Manager\FInputManager.cpp">
       <Filter>Engine\Source\Manager</Filter>
     </ClCompile>

@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 template<typename T>
-class TSingleton
+class DLL_API TSingleton
 {
 public:
     static T& GetInstance()

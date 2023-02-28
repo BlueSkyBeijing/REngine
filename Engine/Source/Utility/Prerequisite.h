@@ -137,3 +137,9 @@ class FD3D12Texture;
 class FD3D12Texture;
 
 #define FRAME_BUFFER_NUM 2
+
+#ifdef DLL_EXPORTS
+#define DLL_API  _declspec(dllexport)
+#else
+#define DLL_API  _declspec(dllimport)
+#endif
