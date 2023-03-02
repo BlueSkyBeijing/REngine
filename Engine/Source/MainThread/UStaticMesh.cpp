@@ -6,7 +6,7 @@
 
 UStaticMesh::UStaticMesh()
 {
-    FullFilePathName = "Content\\StaticMesh\\SM_Rock.stm";
+    FullFilePathName = FString("Content\\StaticMesh\\SM_Rock.stm");
 }
 
 UStaticMesh::~UStaticMesh()

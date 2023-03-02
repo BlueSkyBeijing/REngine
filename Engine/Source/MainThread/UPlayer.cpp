@@ -25,12 +25,12 @@ UPlayer::~UPlayer()
 
 void UPlayer::Load()
 {
-    Name = "Player";
+    Name = FString("Player");
     mStateAnimMap.insert(std::make_pair(EPlayerState::PS_Stand, FString("Tutorial_Idle")));
     mStateAnimMap.insert(std::make_pair(EPlayerState::PS_Walk, FString("Tutorial_Walk_Fwd")));
 
     mSkeletalMesh = std::dynamic_pointer_cast<USkeletalMesh>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_SkeletalMesh, mSkeletalMeshFilePath));
-    mSkeletalMesh->Name = "Player";
+    mSkeletalMesh->Name = FString("Player");
 
     int32 numMat = (int32)FullMaterialPaths.size();
     for (int i = 0; i < numMat; i++)
@@ -40,8 +40,8 @@ void UPlayer::Load()
         mMaterials.push_back(mat);
     }
 
-    const FString animFileName0 =  FConfigManager::DefaultAnimSequencePath + mStateAnimMap[EPlayerState::PS_Stand] + FConfigManager::DefaultAnimSequenceFileSuffix;
-    const FString animFileName1 = FConfigManager::DefaultAnimSequencePath + mStateAnimMap[EPlayerState::PS_Walk] + FConfigManager::DefaultAnimSequenceFileSuffix;
+    const FString animFileName0 =  *FConfigManager::DefaultAnimSequencePath + mStateAnimMap[EPlayerState::PS_Stand] + *FConfigManager::DefaultAnimSequenceFileSuffix;
+    const FString animFileName1 = *FConfigManager::DefaultAnimSequencePath + mStateAnimMap[EPlayerState::PS_Walk] + *FConfigManager::DefaultAnimSequenceFileSuffix;
 
     mAnimRing[0] = std::dynamic_pointer_cast<UAnimSequence>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Animation, animFileName0));
     mAnimRing[0]->SetSkeleton(mSkeletalMesh->GetSkeleton());

@@ -66,9 +66,9 @@ void USkeletalMesh::Load()
     skeletalMeshFile.read((char*)&stringSize, sizeof(int32));
     skeletalMeshFile.read((char*)ResourceName.data(), stringSize);
 
-    FullSkeletonPath = FConfigManager::DefaultSkeletonPath +
+    FullSkeletonPath = *FConfigManager::DefaultSkeletonPath +
         FString(ResourceName.c_str()) +
-        FConfigManager::DefaultSkeletonFileSuffix;
+        *FConfigManager::DefaultSkeletonFileSuffix;
 
     skeletalMeshFile.close();
 

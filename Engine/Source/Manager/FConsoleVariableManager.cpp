@@ -3,7 +3,7 @@
 #include "FConsoleVariableManager.h"
 
 FConsoleVariableManager::FConsoleVariableManager() :
-    mCommandHistoryFileName("Saved\\CommandHistory.txt")
+    mCommandHistoryFileName(new FString("Saved\\CommandHistory.txt"))
 {
 }
 
@@ -24,16 +24,18 @@ void FConsoleVariableManager::Init()
 
     mConsole->bindCommand("printHistory", printHistory, "Print the current command history buffer for the console.");
 
-    mConsole->loadHistoryBuffer(mCommandHistoryFileName);
+    mConsole->loadHistoryBuffer(*mCommandHistoryFileName);
 }
 
 void FConsoleVariableManager::UnInit()
 {
-    mConsole->saveHistoryBuffer(mCommandHistoryFileName);
+    mConsole->saveHistoryBuffer(*mCommandHistoryFileName);
 
     delete mConsole;
     mConsole = nullptr;
 
+    delete mCommandHistoryFileName;
+    mCommandHistoryFileName = nullptr;
 }
 
 template <class T>

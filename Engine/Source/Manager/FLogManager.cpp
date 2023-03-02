@@ -4,7 +4,7 @@
 #include "FConfigManager.h"
 
 FLogManager::FLogManager() :
-    mLogFileName(FConfigManager::LogFile)
+    mLogFileName(*FConfigManager::LogFile)
 {
 }
 

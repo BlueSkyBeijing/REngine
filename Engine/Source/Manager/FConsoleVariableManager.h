@@ -31,7 +31,7 @@ private:
 
 private:
     Virtuoso::QuakeStyleConsole* mConsole;
-    FString mCommandHistoryFileName;
+    FString* mCommandHistoryFileName;
 
 };
 

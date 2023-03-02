@@ -20,13 +20,13 @@ public:
 
 public:
     int32 Value;
-    FShaderInfo VertexShaderInfo;
-    FShaderInfo PixelShaderInfo;
-    FShaderInfo PixelShaderShadowInfo;
-    FShaderInfo PixelShaderGPUSkinInfo;
-    FShaderInfo VertexShaderShadowInfo;
-    FShaderInfo VertexShaderGPUSkinInfo;
-    FShaderInfo VertexShaderShadowGPUSkinInfo;
+    FShaderInfo* VertexShaderInfo;
+    FShaderInfo* PixelShaderInfo;
+    FShaderInfo* PixelShaderShadowInfo;
+    FShaderInfo* PixelShaderGPUSkinInfo;
+    FShaderInfo* VertexShaderShadowInfo;
+    FShaderInfo* VertexShaderGPUSkinInfo;
+    FShaderInfo* VertexShaderShadowGPUSkinInfo;
 public:
-    static TMap<int32, FShadingModel*> ShadingModels;
+    static TMap<int32, FShadingModel*>* ShadingModels;
 };
