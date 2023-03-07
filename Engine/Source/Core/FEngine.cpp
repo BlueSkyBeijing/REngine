@@ -55,43 +55,43 @@ void FEngine::init()
 
     FShadingModel* shadingModel = new FShadingModel(0);
     shadingModel->Init();
-    FShadingModel::ShadingModels->insert(std::make_pair(0, shadingModel));
+    FShadingModel::ShadingModels->insert(std::pair<int32, FShadingModel*>(0, shadingModel));
 
     shadingModel = new FShadingModel(1);
     shadingModel->Init();
-    FShadingModel::ShadingModels->insert(std::make_pair(1, shadingModel));
+    FShadingModel::ShadingModels->insert(std::pair<int32, FShadingModel*>(1, shadingModel));
 
     shadingModel = new FShadingModel(2);
     shadingModel->Init();
-    FShadingModel::ShadingModels->insert(std::make_pair(2, shadingModel));
+    FShadingModel::ShadingModels->insert(std::pair<int32, FShadingModel*>(2, shadingModel));
 
     shadingModel = new FShadingModel(3);
     shadingModel->Init();
-    FShadingModel::ShadingModels->insert(std::make_pair(3, shadingModel));
+    FShadingModel::ShadingModels->insert(std::pair<int32, FShadingModel*>(3, shadingModel));
 
     shadingModel = new FShadingModel(4);
     shadingModel->Init();
-    FShadingModel::ShadingModels->insert(std::make_pair(4, shadingModel));
+    FShadingModel::ShadingModels->insert(std::pair<int32, FShadingModel*>(4, shadingModel));
 
     //shadingModel = new FShadingModel(5);
     //shadingModel->Init();
-    //FShadingModel::ShadingModels.insert(std::make_pair(5, shadingModel));
+    //FShadingModel::ShadingModels.insert(std::pair<int32, FShadingModel*>(5, shadingModel));
 
     shadingModel = new FShadingModel(6);
     shadingModel->Init();
-    FShadingModel::ShadingModels->insert(std::make_pair(6, shadingModel));
+    FShadingModel::ShadingModels->insert(std::pair<int32, FShadingModel*>(6, shadingModel));
 
     //shadingModel = new FShadingModel(7);
     //shadingModel->Init();
-    //FShadingModel::ShadingModels.insert(std::make_pair(7, shadingModel));
+    //FShadingModel::ShadingModels.insert(std::pair<int32, FShadingModel*>(7, shadingModel));
 
     shadingModel = new FShadingModel(8);
     shadingModel->Init();
-    FShadingModel::ShadingModels->insert(std::make_pair(8, shadingModel));
+    FShadingModel::ShadingModels->insert(std::pair<int32, FShadingModel*>(8, shadingModel));
 
     shadingModel = new FShadingModel(9);
     shadingModel->Init();
-    FShadingModel::ShadingModels->insert(std::make_pair(9, shadingModel));
+    FShadingModel::ShadingModels->insert(std::pair<int32, FShadingModel*>(9, shadingModel));
 
     TSingleton<FModuleManager>::GetInstance().LoadProjectMoudules(*FConfigManager::ProjectDir, *FConfigManager::ProjectName);
 

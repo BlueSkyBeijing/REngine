@@ -46,7 +46,7 @@ void FShadingModel::Init()
     PixelShaderInfo->FilePathName = StringToWString(*FConfigManager::EngineShaderDir + "ForwardShadingPS.hlsl");
     PixelShaderInfo->EnterPoint = "PSMain";
     PixelShaderInfo->Target = "ps_5_0";
-    PixelShaderInfo->Defines.insert(std::make_pair("SHADING_MODEL", std::to_string(Value)));
+    PixelShaderInfo->Defines.insert(std::pair<FString, FString>("SHADING_MODEL", std::to_string(Value)));
 
     PixelShaderShadowInfo->FilePathName = StringToWString(*FConfigManager::EngineShaderDir + "ShadowDepthPS.hlsl");
     PixelShaderShadowInfo->EnterPoint = "PSMain";
@@ -55,8 +55,8 @@ void FShadingModel::Init()
     PixelShaderGPUSkinInfo->FilePathName = StringToWString(*FConfigManager::EngineShaderDir + "ForwardShadingPS.hlsl");
     PixelShaderGPUSkinInfo->EnterPoint = "PSMain";
     PixelShaderGPUSkinInfo->Target = "ps_5_0";
-    PixelShaderGPUSkinInfo->Defines.insert(std::make_pair("SHADING_MODEL", std::to_string(Value)));
-    PixelShaderGPUSkinInfo->Defines.insert(std::make_pair("GPU_SKIN", "1"));
+    PixelShaderGPUSkinInfo->Defines.insert(std::pair<FString, FString>("SHADING_MODEL", std::to_string(Value)));
+    PixelShaderGPUSkinInfo->Defines.insert(std::pair<FString, FString>("GPU_SKIN", "1"));
 
     VertexShaderShadowInfo->FilePathName = StringToWString(*FConfigManager::EngineShaderDir + "ShadowDepthVS.hlsl");
     VertexShaderShadowInfo->EnterPoint = "VSMain";
@@ -65,12 +65,12 @@ void FShadingModel::Init()
     VertexShaderGPUSkinInfo->FilePathName = StringToWString(*FConfigManager::EngineShaderDir + "ForwardShadingVS.hlsl");
     VertexShaderGPUSkinInfo->EnterPoint = "VSMain";
     VertexShaderGPUSkinInfo->Target = "vs_5_0";
-    VertexShaderGPUSkinInfo->Defines.insert(std::make_pair("GPU_SKIN", "1"));
+    VertexShaderGPUSkinInfo->Defines.insert(std::pair<FString, FString>("GPU_SKIN", "1"));
 
     VertexShaderShadowGPUSkinInfo->FilePathName = StringToWString(*FConfigManager::EngineShaderDir + "ShadowDepthVS.hlsl");
     VertexShaderShadowGPUSkinInfo->EnterPoint = "VSMain";
     VertexShaderShadowGPUSkinInfo->Target = "vs_5_0";
-    VertexShaderShadowGPUSkinInfo->Defines.insert(std::make_pair("GPU_SKIN", "1"));
+    VertexShaderShadowGPUSkinInfo->Defines.insert(std::pair<FString, FString>("GPU_SKIN", "1"));
 
 }
 

@@ -89,35 +89,35 @@ void FCustomShadingModel::Init()
     VertexShaderGPUSkinInfo = new FShaderInfo;
     VertexShaderShadowGPUSkinInfo = new FShaderInfo;
 
-    VertexShaderInfo->FilePathName = StringToWString(*FConfigManager::EngineShaderDir + "ForwardShadingVS.hlsl");
+    VertexShaderInfo->FilePathName = StringToWString(*FConfigManager::ProjectShaderDir + "ForwardShadingVS.hlsl");
     VertexShaderInfo->EnterPoint = "VSMain";
     VertexShaderInfo->Target = "vs_5_0";
 
-    PixelShaderInfo->FilePathName = StringToWString(*FConfigManager::EngineShaderDir + "ForwardShadingPS.hlsl");
+    PixelShaderInfo->FilePathName = StringToWString(*FConfigManager::ProjectShaderDir + "ForwardShadingPS.hlsl");
     PixelShaderInfo->EnterPoint = "PSMain";
     PixelShaderInfo->Target = "ps_5_0";
     PixelShaderInfo->Defines.insert(std::make_pair("SHADING_MODEL", std::to_string(Value)));
 
-    PixelShaderShadowInfo->FilePathName = StringToWString(*FConfigManager::EngineShaderDir + "ShadowDepthPS.hlsl");
+    PixelShaderShadowInfo->FilePathName = StringToWString(*FConfigManager::ProjectShaderDir + "ShadowDepthPS.hlsl");
     PixelShaderShadowInfo->EnterPoint = "PSMain";
     PixelShaderShadowInfo->Target = "ps_5_0";
 
-    PixelShaderGPUSkinInfo->FilePathName = StringToWString(*FConfigManager::EngineShaderDir + "ForwardShadingPS.hlsl");
+    PixelShaderGPUSkinInfo->FilePathName = StringToWString(*FConfigManager::ProjectShaderDir + "ForwardShadingPS.hlsl");
     PixelShaderGPUSkinInfo->EnterPoint = "PSMain";
     PixelShaderGPUSkinInfo->Target = "ps_5_0";
     PixelShaderGPUSkinInfo->Defines.insert(std::make_pair("SHADING_MODEL", std::to_string(Value)));
     PixelShaderGPUSkinInfo->Defines.insert(std::make_pair("GPU_SKIN", "1"));
 
-    VertexShaderShadowInfo->FilePathName = StringToWString(*FConfigManager::EngineShaderDir + "ShadowDepthVS.hlsl");
+    VertexShaderShadowInfo->FilePathName = StringToWString(*FConfigManager::ProjectShaderDir + "ShadowDepthVS.hlsl");
     VertexShaderShadowInfo->EnterPoint = "VSMain";
     VertexShaderShadowInfo->Target = "vs_5_0";
 
-    VertexShaderGPUSkinInfo->FilePathName = StringToWString(*FConfigManager::EngineShaderDir + "ForwardShadingVS.hlsl");
+    VertexShaderGPUSkinInfo->FilePathName = StringToWString(*FConfigManager::ProjectShaderDir + "ForwardShadingVS.hlsl");
     VertexShaderGPUSkinInfo->EnterPoint = "VSMain";
     VertexShaderGPUSkinInfo->Target = "vs_5_0";
     VertexShaderGPUSkinInfo->Defines.insert(std::make_pair("GPU_SKIN", "1"));
 
-    VertexShaderShadowGPUSkinInfo->FilePathName = StringToWString(*FConfigManager::EngineShaderDir + "ShadowDepthVS.hlsl");
+    VertexShaderShadowGPUSkinInfo->FilePathName = StringToWString(*FConfigManager::ProjectShaderDir + "ShadowDepthVS.hlsl");
     VertexShaderShadowGPUSkinInfo->EnterPoint = "VSMain";
     VertexShaderShadowGPUSkinInfo->Target = "vs_5_0";
     VertexShaderShadowGPUSkinInfo->Defines.insert(std::make_pair("GPU_SKIN", "1"));
