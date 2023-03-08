@@ -1,4 +1,5 @@
-#include "ForwardShadingCommon.hlsl"
+#include "../../../Engine/Shaders/ForwardShadingCommon.hlsl"
+#include "../../../Engine/Shaders/Common.hlsl"
 
 VertexShaderOutput VSMain(VertexShaderInput vertexIn)
 {

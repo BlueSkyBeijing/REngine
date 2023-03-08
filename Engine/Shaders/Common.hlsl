@@ -1,3 +1,6 @@
+#ifndef __Common__
+#define __Common__
+
 #define PI 3.1415926
 
 float Square(float x)
@@ -175,3 +178,5 @@ float3x3 AssembleTangentToWorld( float3 tangentToWorld0, float4 tangentToWorld2)
 	// Transform from tangent space to world space
 	return float3x3(tangentToWorld0, tangentToWorld1, tangentToWorld2.xyz);
 }
+
+#endif // __Common__

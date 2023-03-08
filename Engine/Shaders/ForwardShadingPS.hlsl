@@ -1,5 +1,6 @@
 #include "ForwardShadingCommon.hlsl"
 #include "ShadowFiltering.hlsl"
+#include "LightingModel.hlsl"
 
 Texture2D DiffuseMap : register(t0);
 SamplerState DiffuseSamplerState : register(s0);

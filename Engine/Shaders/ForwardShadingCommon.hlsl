@@ -1,4 +1,3 @@
-#include "ShadingCommon.hlsl"
 
 #define MAX_POINT_LIGHT_NUM 4
 
