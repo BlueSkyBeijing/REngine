@@ -112,7 +112,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Core;$(ProjectDir)\Source\Manager;$(ProjectDir)\Source\Utility;$(ProjectDir)\Source\RenderThread;$(ProjectDir)\Source\RenderThread\D3D12RHI;$(ProjectDir)\Source\RenderThread\RHI;$(ProjectDir)\Source\MainThread;$(ProjectDir)\Source\ThirdParty;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(ProjectDir)\Source\ThirdParty\Eigen;$(ProjectDir)\Source\ThirdParty\spdlog-1.x\include;$(ProjectDir)\Source\ThirdParty\spdlog-1.x;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Core;$(ProjectDir)\Source\Manager;$(ProjectDir)\Source\Utility;$(ProjectDir)\Source\Rendering;$(ProjectDir)\Source\Rendering\D3D12RHI;$(ProjectDir)\Source\Rendering\RHI;$(ProjectDir)\Source\UObject;$(ProjectDir)\Source\ThirdParty;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(ProjectDir)\Source\ThirdParty\Eigen;$(ProjectDir)\Source\ThirdParty\spdlog-1.x\include;$(ProjectDir)\Source\ThirdParty\spdlog-1.x;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,7 +129,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Core;$(ProjectDir)\Source\Manager;$(ProjectDir)\Source\Utility;$(ProjectDir)\Source\RenderThread;$(ProjectDir)\Source\RenderThread\D3D12RHI;$(ProjectDir)\Source\RenderThread\RHI;$(ProjectDir)\Source\MainThread;$(ProjectDir)\Source\ThirdParty;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(ProjectDir)\Source\ThirdParty\Eigen;$(ProjectDir)\Source\ThirdParty\spdlog-1.x\include;$(ProjectDir)\Source\ThirdParty\spdlog-1.x;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Core;$(ProjectDir)\Source\Manager;$(ProjectDir)\Source\Utility;$(ProjectDir)\Source\Rendering;$(ProjectDir)\Source\Rendering\D3D12RHI;$(ProjectDir)\Source\Rendering\RHI;$(ProjectDir)\Source\UObject;$(ProjectDir)\Source\ThirdParty;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(ProjectDir)\Source\ThirdParty\Eigen;$(ProjectDir)\Source\ThirdParty\spdlog-1.x\include;$(ProjectDir)\Source\ThirdParty\spdlog-1.x;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

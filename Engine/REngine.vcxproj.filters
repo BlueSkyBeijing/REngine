@@ -19,16 +19,16 @@
     <Filter Include="Engine\Source\Manager">
       <UniqueIdentifier>{f5719a8e-d7a7-4c5a-8b32-7e7912aec79d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Source\RenderThread">
+    <Filter Include="Engine\Source\Rendering">
       <UniqueIdentifier>{e75510b1-89e3-4311-865a-e1f51190fdf5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Source\MainThread">
+    <Filter Include="Engine\Source\UObject">
       <UniqueIdentifier>{610d619a-2af2-4f4c-8be1-552121203cc8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Source\RenderThread\RHI">
+    <Filter Include="Engine\Source\Rendering\RHI">
       <UniqueIdentifier>{de5ef717-fc44-4261-82f1-bf86aa51e1ae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Source\RenderThread\D3D12RHI">
+    <Filter Include="Engine\Source\Rendering\D3D12RHI">
       <UniqueIdentifier>{f805898a-3324-4c15-bf84-42cde8953496}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -57,134 +57,134 @@
     <ClCompile Include="Source\Manager\FResourceManager.cpp">
       <Filter>Engine\Source\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Source\MainThread\UCamera.cpp">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClCompile Include="Source\UObject\UCamera.cpp">
+      <Filter>Engine\Source\UObject</Filter>
     </ClCompile>
-    <ClCompile Include="Source\MainThread\ULight.cpp">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClCompile Include="Source\UObject\ULight.cpp">
+      <Filter>Engine\Source\UObject</Filter>
     </ClCompile>
-    <ClCompile Include="Source\MainThread\UMaterial.cpp">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClCompile Include="Source\UObject\UMaterial.cpp">
+      <Filter>Engine\Source\UObject</Filter>
     </ClCompile>
-    <ClCompile Include="Source\MainThread\UObject.cpp">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClCompile Include="Source\UObject\UObject.cpp">
+      <Filter>Engine\Source\UObject</Filter>
     </ClCompile>
-    <ClCompile Include="Source\MainThread\UStaticMesh.cpp">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClCompile Include="Source\UObject\UStaticMesh.cpp">
+      <Filter>Engine\Source\UObject</Filter>
     </ClCompile>
-    <ClCompile Include="Source\MainThread\UStaticMeshObject.cpp">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClCompile Include="Source\UObject\UStaticMeshObject.cpp">
+      <Filter>Engine\Source\UObject</Filter>
     </ClCompile>
-    <ClCompile Include="Source\MainThread\UTexture.cpp">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClCompile Include="Source\UObject\UTexture.cpp">
+      <Filter>Engine\Source\UObject</Filter>
     </ClCompile>
-    <ClCompile Include="Source\MainThread\UWorld.cpp">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClCompile Include="Source\UObject\UWorld.cpp">
+      <Filter>Engine\Source\UObject</Filter>
     </ClCompile>
     <ClCompile Include="Source\Core\FEngine.cpp">
       <Filter>Engine\Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\FMaterial.cpp">
-      <Filter>Engine\Source\RenderThread</Filter>
+    <ClCompile Include="Source\Rendering\FMaterial.cpp">
+      <Filter>Engine\Source\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\FPostProcessing.cpp">
-      <Filter>Engine\Source\RenderThread</Filter>
+    <ClCompile Include="Source\Rendering\FPostProcessing.cpp">
+      <Filter>Engine\Source\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\FRenderer.cpp">
-      <Filter>Engine\Source\RenderThread</Filter>
+    <ClCompile Include="Source\Rendering\FRenderer.cpp">
+      <Filter>Engine\Source\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\FRenderProxy.cpp">
-      <Filter>Engine\Source\RenderThread</Filter>
+    <ClCompile Include="Source\Rendering\FRenderProxy.cpp">
+      <Filter>Engine\Source\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\FRenderThread.cpp">
-      <Filter>Engine\Source\RenderThread</Filter>
+    <ClCompile Include="Source\Rendering\RenderThread.cpp">
+      <Filter>Engine\Source\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\FScene.cpp">
-      <Filter>Engine\Source\RenderThread</Filter>
+    <ClCompile Include="Source\Rendering\FScene.cpp">
+      <Filter>Engine\Source\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\FView.cpp">
-      <Filter>Engine\Source\RenderThread</Filter>
+    <ClCompile Include="Source\Rendering\FView.cpp">
+      <Filter>Engine\Source\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\RHI\FRHI.cpp">
-      <Filter>Engine\Source\RenderThread\RHI</Filter>
+    <ClCompile Include="Source\Rendering\RHI\FRHI.cpp">
+      <Filter>Engine\Source\Rendering\RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\RHI\FRHIBuffer.cpp">
-      <Filter>Engine\Source\RenderThread\RHI</Filter>
+    <ClCompile Include="Source\Rendering\RHI\FRHIBuffer.cpp">
+      <Filter>Engine\Source\Rendering\RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\RHI\FRHIPipelineState.cpp">
-      <Filter>Engine\Source\RenderThread\RHI</Filter>
+    <ClCompile Include="Source\Rendering\RHI\FRHIPipelineState.cpp">
+      <Filter>Engine\Source\Rendering\RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\RHI\FRHIResource.cpp">
-      <Filter>Engine\Source\RenderThread\RHI</Filter>
+    <ClCompile Include="Source\Rendering\RHI\FRHIResource.cpp">
+      <Filter>Engine\Source\Rendering\RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\RHI\FRHIRenderTarget.cpp">
-      <Filter>Engine\Source\RenderThread\RHI</Filter>
+    <ClCompile Include="Source\Rendering\RHI\FRHIRenderTarget.cpp">
+      <Filter>Engine\Source\Rendering\RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\RHI\FRHIShader.cpp">
-      <Filter>Engine\Source\RenderThread\RHI</Filter>
+    <ClCompile Include="Source\Rendering\RHI\FRHIShader.cpp">
+      <Filter>Engine\Source\Rendering\RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\RHI\FRHIShaderBindings.cpp">
-      <Filter>Engine\Source\RenderThread\RHI</Filter>
+    <ClCompile Include="Source\Rendering\RHI\FRHIShaderBindings.cpp">
+      <Filter>Engine\Source\Rendering\RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\RHI\FRHITexture.cpp">
-      <Filter>Engine\Source\RenderThread\RHI</Filter>
+    <ClCompile Include="Source\Rendering\RHI\FRHITexture.cpp">
+      <Filter>Engine\Source\Rendering\RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\RHI\FRHIVertex.cpp">
-      <Filter>Engine\Source\RenderThread\RHI</Filter>
+    <ClCompile Include="Source\Rendering\RHI\FRHIVertex.cpp">
+      <Filter>Engine\Source\Rendering\RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12Buffer.cpp">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClCompile Include="Source\Rendering\D3D12RHI\FD3D12Buffer.cpp">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12RHI.cpp">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClCompile Include="Source\Rendering\D3D12RHI\FD3D12RHI.cpp">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12PipelineState.cpp">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClCompile Include="Source\Rendering\D3D12RHI\FD3D12PipelineState.cpp">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12Resource.cpp">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClCompile Include="Source\Rendering\D3D12RHI\FD3D12Resource.cpp">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12RenderTarget.cpp">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClCompile Include="Source\Rendering\D3D12RHI\FD3D12RenderTarget.cpp">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12ShaderBindings.cpp">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClCompile Include="Source\Rendering\D3D12RHI\FD3D12ShaderBindings.cpp">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12Shader.cpp">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClCompile Include="Source\Rendering\D3D12RHI\FD3D12Shader.cpp">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12Texture.cpp">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClCompile Include="Source\Rendering\D3D12RHI\FD3D12Texture.cpp">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12Vertex.cpp">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClCompile Include="Source\Rendering\D3D12RHI\FD3D12Vertex.cpp">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\D3D12RHI\DDSTextureLoader.cpp">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClCompile Include="Source\Rendering\D3D12RHI\DDSTextureLoader.cpp">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\D3D12RHI\DX12Utility.cpp">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClCompile Include="Source\Rendering\D3D12RHI\DX12Utility.cpp">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClCompile>
     <ClCompile Include="Source\Utility\PrecompiledHeader.cpp">
       <Filter>Engine\Source\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\FRenderCommand.cpp">
-      <Filter>Engine\Source\RenderThread</Filter>
+    <ClCompile Include="Source\Rendering\FRenderCommand.cpp">
+      <Filter>Engine\Source\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Source\Utility\MathUtility.cpp">
       <Filter>Engine\Source\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\FLight.cpp">
-      <Filter>Engine\Source\RenderThread</Filter>
+    <ClCompile Include="Source\Rendering\FLight.cpp">
+      <Filter>Engine\Source\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Source\Utility\CityHash.cpp">
       <Filter>Engine\Source\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="Source\MainThread\USkeletalMesh.cpp">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClCompile Include="Source\UObject\USkeletalMesh.cpp">
+      <Filter>Engine\Source\UObject</Filter>
     </ClCompile>
-    <ClCompile Include="Source\MainThread\USkeletalMeshObject.cpp">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClCompile Include="Source\UObject\USkeletalMeshObject.cpp">
+      <Filter>Engine\Source\UObject</Filter>
     </ClCompile>
     <ClCompile Include="Source\Utility\Utility.cpp">
       <Filter>Engine\Source\Utility</Filter>
@@ -192,8 +192,8 @@
     <ClCompile Include="Source\Manager\FPlayerController.cpp">
       <Filter>Engine\Source\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Source\MainThread\UPlayer.cpp">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClCompile Include="Source\UObject\UPlayer.cpp">
+      <Filter>Engine\Source\UObject</Filter>
     </ClCompile>
     <ClCompile Include="Source\Utility\FArchive.cpp">
       <Filter>Engine\Source\Utility</Filter>
@@ -216,8 +216,8 @@
     <ClCompile Include="Source\Manager\FProjectManager.cpp">
       <Filter>Engine\Source\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RenderThread\FShadingModel.cpp">
-      <Filter>Engine\Source\RenderThread</Filter>
+    <ClCompile Include="Source\Rendering\FShadingModel.cpp">
+      <Filter>Engine\Source\Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -254,116 +254,116 @@
     <ClInclude Include="Source\Manager\FResourceManager.h">
       <Filter>Engine\Source\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Source\MainThread\UCamera.h">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClInclude Include="Source\UObject\UCamera.h">
+      <Filter>Engine\Source\UObject</Filter>
     </ClInclude>
-    <ClInclude Include="Source\MainThread\ULight.h">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClInclude Include="Source\UObject\ULight.h">
+      <Filter>Engine\Source\UObject</Filter>
     </ClInclude>
-    <ClInclude Include="Source\MainThread\UMaterial.h">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClInclude Include="Source\UObject\UMaterial.h">
+      <Filter>Engine\Source\UObject</Filter>
     </ClInclude>
-    <ClInclude Include="Source\MainThread\UObject.h">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClInclude Include="Source\UObject\UObject.h">
+      <Filter>Engine\Source\UObject</Filter>
     </ClInclude>
-    <ClInclude Include="Source\MainThread\UStaticMesh.h">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClInclude Include="Source\UObject\UStaticMesh.h">
+      <Filter>Engine\Source\UObject</Filter>
     </ClInclude>
-    <ClInclude Include="Source\MainThread\UStaticMeshObject.h">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClInclude Include="Source\UObject\UStaticMeshObject.h">
+      <Filter>Engine\Source\UObject</Filter>
     </ClInclude>
-    <ClInclude Include="Source\MainThread\UTexture.h">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClInclude Include="Source\UObject\UTexture.h">
+      <Filter>Engine\Source\UObject</Filter>
     </ClInclude>
-    <ClInclude Include="Source\MainThread\UWorld.h">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClInclude Include="Source\UObject\UWorld.h">
+      <Filter>Engine\Source\UObject</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\FEngine.h">
       <Filter>Engine\Source\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\FMaterial.h">
-      <Filter>Engine\Source\RenderThread</Filter>
+    <ClInclude Include="Source\Rendering\FMaterial.h">
+      <Filter>Engine\Source\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\FPostProcessing.h">
-      <Filter>Engine\Source\RenderThread</Filter>
+    <ClInclude Include="Source\Rendering\FPostProcessing.h">
+      <Filter>Engine\Source\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\FRenderer.h">
-      <Filter>Engine\Source\RenderThread</Filter>
+    <ClInclude Include="Source\Rendering\FRenderer.h">
+      <Filter>Engine\Source\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\FRenderProxy.h">
-      <Filter>Engine\Source\RenderThread</Filter>
+    <ClInclude Include="Source\Rendering\FRenderProxy.h">
+      <Filter>Engine\Source\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\FRenderThread.h">
-      <Filter>Engine\Source\RenderThread</Filter>
+    <ClInclude Include="Source\Rendering\FRendering.h">
+      <Filter>Engine\Source\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\FScene.h">
-      <Filter>Engine\Source\RenderThread</Filter>
+    <ClInclude Include="Source\Rendering\FScene.h">
+      <Filter>Engine\Source\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\FView.h">
-      <Filter>Engine\Source\RenderThread</Filter>
+    <ClInclude Include="Source\Rendering\FView.h">
+      <Filter>Engine\Source\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\RHI\FRHI.h">
-      <Filter>Engine\Source\RenderThread\RHI</Filter>
+    <ClInclude Include="Source\Rendering\RHI\FRHI.h">
+      <Filter>Engine\Source\Rendering\RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\RHI\FRHIBuffer.h">
-      <Filter>Engine\Source\RenderThread\RHI</Filter>
+    <ClInclude Include="Source\Rendering\RHI\FRHIBuffer.h">
+      <Filter>Engine\Source\Rendering\RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\RHI\FRHIPipelineState.h">
-      <Filter>Engine\Source\RenderThread\RHI</Filter>
+    <ClInclude Include="Source\Rendering\RHI\FRHIPipelineState.h">
+      <Filter>Engine\Source\Rendering\RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\RHI\FRHIResource.h">
-      <Filter>Engine\Source\RenderThread\RHI</Filter>
+    <ClInclude Include="Source\Rendering\RHI\FRHIResource.h">
+      <Filter>Engine\Source\Rendering\RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\RHI\FRHIRenderTarget.h">
-      <Filter>Engine\Source\RenderThread\RHI</Filter>
+    <ClInclude Include="Source\Rendering\RHI\FRHIRenderTarget.h">
+      <Filter>Engine\Source\Rendering\RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\RHI\FRHIShader.h">
-      <Filter>Engine\Source\RenderThread\RHI</Filter>
+    <ClInclude Include="Source\Rendering\RHI\FRHIShader.h">
+      <Filter>Engine\Source\Rendering\RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\RHI\FRHIShaderBindings.h">
-      <Filter>Engine\Source\RenderThread\RHI</Filter>
+    <ClInclude Include="Source\Rendering\RHI\FRHIShaderBindings.h">
+      <Filter>Engine\Source\Rendering\RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\RHI\FRHITexture.h">
-      <Filter>Engine\Source\RenderThread\RHI</Filter>
+    <ClInclude Include="Source\Rendering\RHI\FRHITexture.h">
+      <Filter>Engine\Source\Rendering\RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\RHI\FRHIVertex.h">
-      <Filter>Engine\Source\RenderThread\RHI</Filter>
+    <ClInclude Include="Source\Rendering\RHI\FRHIVertex.h">
+      <Filter>Engine\Source\Rendering\RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12Buffer.h">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClInclude Include="Source\Rendering\D3D12RHI\FD3D12Buffer.h">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12Vertex.h">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClInclude Include="Source\Rendering\D3D12RHI\FD3D12Vertex.h">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12RHI.h">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClInclude Include="Source\Rendering\D3D12RHI\FD3D12RHI.h">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12PipelineState.h">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClInclude Include="Source\Rendering\D3D12RHI\FD3D12PipelineState.h">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12Resource.h">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClInclude Include="Source\Rendering\D3D12RHI\FD3D12Resource.h">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12RenderTarget.h">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClInclude Include="Source\Rendering\D3D12RHI\FD3D12RenderTarget.h">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12ShaderBindings.h">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClInclude Include="Source\Rendering\D3D12RHI\FD3D12ShaderBindings.h">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12Shader.h">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClInclude Include="Source\Rendering\D3D12RHI\FD3D12Shader.h">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12Texture.h">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClInclude Include="Source\Rendering\D3D12RHI\FD3D12Texture.h">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\D3D12RHI\d3dx12.h">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClInclude Include="Source\Rendering\D3D12RHI\d3dx12.h">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\D3D12RHI\DDSTextureLoader.h">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClInclude Include="Source\Rendering\D3D12RHI\DDSTextureLoader.h">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\D3D12RHI\DX12Utility.h">
-      <Filter>Engine\Source\RenderThread\D3D12RHI</Filter>
+    <ClInclude Include="Source\Rendering\D3D12RHI\DX12Utility.h">
+      <Filter>Engine\Source\Rendering\D3D12RHI</Filter>
     </ClInclude>
     <ClInclude Include="Source\Utility\PrecompiledHeader.h">
       <Filter>Engine\Source\Utility</Filter>
@@ -371,29 +371,29 @@
     <ClInclude Include="Source\Utility\Prerequisite.h">
       <Filter>Engine\Source\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\FRenderCommand.h">
-      <Filter>Engine\Source\RenderThread</Filter>
+    <ClInclude Include="Source\Rendering\FRenderCommand.h">
+      <Filter>Engine\Source\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Source\Utility\MathUtility.h">
       <Filter>Engine\Source\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\FLight.h">
-      <Filter>Engine\Source\RenderThread</Filter>
+    <ClInclude Include="Source\Rendering\FLight.h">
+      <Filter>Engine\Source\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Source\Utility\CityHash.h">
       <Filter>Engine\Source\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Source\MainThread\USkeletalMesh.h">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClInclude Include="Source\UObject\USkeletalMesh.h">
+      <Filter>Engine\Source\UObject</Filter>
     </ClInclude>
-    <ClInclude Include="Source\MainThread\USkeletalMeshObject.h">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClInclude Include="Source\UObject\USkeletalMeshObject.h">
+      <Filter>Engine\Source\UObject</Filter>
     </ClInclude>
     <ClInclude Include="Source\Manager\FPlayerController.h">
       <Filter>Engine\Source\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Source\MainThread\UPlayer.h">
-      <Filter>Engine\Source\MainThread</Filter>
+    <ClInclude Include="Source\UObject\UPlayer.h">
+      <Filter>Engine\Source\UObject</Filter>
     </ClInclude>
     <ClInclude Include="Source\Utility\FArchive.h">
       <Filter>Engine\Source\Utility</Filter>
@@ -416,8 +416,8 @@
     <ClInclude Include="Source\Manager\FProjectManager.h">
       <Filter>Engine\Source\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RenderThread\FShadingModel.h">
-      <Filter>Engine\Source\RenderThread</Filter>
+    <ClInclude Include="Source\Rendering\FShadingModel.h">
+      <Filter>Engine\Source\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

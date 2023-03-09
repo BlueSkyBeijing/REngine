@@ -21,17 +21,17 @@
   <ItemGroup>
     <ClCompile Include="Source\Core\FEngine.cpp" />
     <ClCompile Include="Source\Core\FThread.cpp" />
-    <ClCompile Include="Source\MainThread\UCamera.cpp" />
-    <ClCompile Include="Source\MainThread\ULight.cpp" />
-    <ClCompile Include="Source\MainThread\UMaterial.cpp" />
-    <ClCompile Include="Source\MainThread\UObject.cpp" />
-    <ClCompile Include="Source\MainThread\UPlayer.cpp" />
-    <ClCompile Include="Source\MainThread\USkeletalMesh.cpp" />
-    <ClCompile Include="Source\MainThread\USkeletalMeshObject.cpp" />
-    <ClCompile Include="Source\MainThread\UStaticMesh.cpp" />
-    <ClCompile Include="Source\MainThread\UStaticMeshObject.cpp" />
-    <ClCompile Include="Source\MainThread\UTexture.cpp" />
-    <ClCompile Include="Source\MainThread\UWorld.cpp" />
+    <ClCompile Include="Source\UObject\UCamera.cpp" />
+    <ClCompile Include="Source\UObject\ULight.cpp" />
+    <ClCompile Include="Source\UObject\UMaterial.cpp" />
+    <ClCompile Include="Source\UObject\UObject.cpp" />
+    <ClCompile Include="Source\UObject\UPlayer.cpp" />
+    <ClCompile Include="Source\UObject\USkeletalMesh.cpp" />
+    <ClCompile Include="Source\UObject\USkeletalMeshObject.cpp" />
+    <ClCompile Include="Source\UObject\UStaticMesh.cpp" />
+    <ClCompile Include="Source\UObject\UStaticMeshObject.cpp" />
+    <ClCompile Include="Source\UObject\UTexture.cpp" />
+    <ClCompile Include="Source\UObject\UWorld.cpp" />
     <ClCompile Include="Source\Manager\FConfigManager.cpp" />
     <ClCompile Include="Source\Manager\FConsoleVariableManager.cpp" />
     <ClCompile Include="Source\Manager\FInputManager.cpp" />
@@ -45,36 +45,36 @@
     <ClCompile Include="Source\Manager\FShaderBindingsManager.cpp" />
     <ClCompile Include="Source\Manager\FSceneManager.cpp" />
     <ClCompile Include="Source\Manager\FShaderManager.cpp" />
-    <ClCompile Include="Source\RenderThread\D3D12RHI\DDSTextureLoader.cpp" />
-    <ClCompile Include="Source\RenderThread\D3D12RHI\DX12Utility.cpp" />
-    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12Buffer.cpp" />
-    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12RHI.cpp" />
-    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12PipelineState.cpp" />
-    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12Resource.cpp" />
-    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12RenderTarget.cpp" />
-    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12ShaderBindings.cpp" />
-    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12Shader.cpp" />
-    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12Texture.cpp" />
-    <ClCompile Include="Source\RenderThread\D3D12RHI\FD3D12Vertex.cpp" />
-    <ClCompile Include="Source\RenderThread\FLight.cpp" />
-    <ClCompile Include="Source\RenderThread\FMaterial.cpp" />
-    <ClCompile Include="Source\RenderThread\FPostProcessing.cpp" />
-    <ClCompile Include="Source\RenderThread\FRenderCommand.cpp" />
-    <ClCompile Include="Source\RenderThread\FRenderer.cpp" />
-    <ClCompile Include="Source\RenderThread\FRenderProxy.cpp" />
-    <ClCompile Include="Source\RenderThread\FRenderThread.cpp" />
-    <ClCompile Include="Source\RenderThread\FScene.cpp" />
-    <ClCompile Include="Source\RenderThread\FShadingModel.cpp" />
-    <ClCompile Include="Source\RenderThread\FView.cpp" />
-    <ClCompile Include="Source\RenderThread\RHI\FRHI.cpp" />
-    <ClCompile Include="Source\RenderThread\RHI\FRHIBuffer.cpp" />
-    <ClCompile Include="Source\RenderThread\RHI\FRHIPipelineState.cpp" />
-    <ClCompile Include="Source\RenderThread\RHI\FRHIResource.cpp" />
-    <ClCompile Include="Source\RenderThread\RHI\FRHIRenderTarget.cpp" />
-    <ClCompile Include="Source\RenderThread\RHI\FRHIShader.cpp" />
-    <ClCompile Include="Source\RenderThread\RHI\FRHIShaderBindings.cpp" />
-    <ClCompile Include="Source\RenderThread\RHI\FRHITexture.cpp" />
-    <ClCompile Include="Source\RenderThread\RHI\FRHIVertex.cpp" />
+    <ClCompile Include="Source\Rendering\D3D12RHI\DDSTextureLoader.cpp" />
+    <ClCompile Include="Source\Rendering\D3D12RHI\DX12Utility.cpp" />
+    <ClCompile Include="Source\Rendering\D3D12RHI\FD3D12Buffer.cpp" />
+    <ClCompile Include="Source\Rendering\D3D12RHI\FD3D12RHI.cpp" />
+    <ClCompile Include="Source\Rendering\D3D12RHI\FD3D12PipelineState.cpp" />
+    <ClCompile Include="Source\Rendering\D3D12RHI\FD3D12Resource.cpp" />
+    <ClCompile Include="Source\Rendering\D3D12RHI\FD3D12RenderTarget.cpp" />
+    <ClCompile Include="Source\Rendering\D3D12RHI\FD3D12ShaderBindings.cpp" />
+    <ClCompile Include="Source\Rendering\D3D12RHI\FD3D12Shader.cpp" />
+    <ClCompile Include="Source\Rendering\D3D12RHI\FD3D12Texture.cpp" />
+    <ClCompile Include="Source\Rendering\D3D12RHI\FD3D12Vertex.cpp" />
+    <ClCompile Include="Source\Rendering\FLight.cpp" />
+    <ClCompile Include="Source\Rendering\FMaterial.cpp" />
+    <ClCompile Include="Source\Rendering\FPostProcessing.cpp" />
+    <ClCompile Include="Source\Rendering\FRenderCommand.cpp" />
+    <ClCompile Include="Source\Rendering\FRenderer.cpp" />
+    <ClCompile Include="Source\Rendering\FRenderProxy.cpp" />
+    <ClCompile Include="Source\Rendering\FRenderThread.cpp" />
+    <ClCompile Include="Source\Rendering\FScene.cpp" />
+    <ClCompile Include="Source\Rendering\FShadingModel.cpp" />
+    <ClCompile Include="Source\Rendering\FView.cpp" />
+    <ClCompile Include="Source\Rendering\RHI\FRHI.cpp" />
+    <ClCompile Include="Source\Rendering\RHI\FRHIBuffer.cpp" />
+    <ClCompile Include="Source\Rendering\RHI\FRHIPipelineState.cpp" />
+    <ClCompile Include="Source\Rendering\RHI\FRHIResource.cpp" />
+    <ClCompile Include="Source\Rendering\RHI\FRHIRenderTarget.cpp" />
+    <ClCompile Include="Source\Rendering\RHI\FRHIShader.cpp" />
+    <ClCompile Include="Source\Rendering\RHI\FRHIShaderBindings.cpp" />
+    <ClCompile Include="Source\Rendering\RHI\FRHITexture.cpp" />
+    <ClCompile Include="Source\Rendering\RHI\FRHIVertex.cpp" />
     <ClCompile Include="Source\Utility\CityHash.cpp" />
     <ClCompile Include="Source\Utility\FArchive.cpp" />
     <ClCompile Include="Source\Utility\MathUtility.cpp" />
@@ -89,17 +89,17 @@
     <ClInclude Include="Source\Core\FEngine.h" />
     <ClInclude Include="Source\Core\FThread.h" />
     <ClInclude Include="Source\Core\IModuleInterface.h" />
-    <ClInclude Include="Source\MainThread\UCamera.h" />
-    <ClInclude Include="Source\MainThread\ULight.h" />
-    <ClInclude Include="Source\MainThread\UMaterial.h" />
-    <ClInclude Include="Source\MainThread\UObject.h" />
-    <ClInclude Include="Source\MainThread\UPlayer.h" />
-    <ClInclude Include="Source\MainThread\USkeletalMesh.h" />
-    <ClInclude Include="Source\MainThread\USkeletalMeshObject.h" />
-    <ClInclude Include="Source\MainThread\UStaticMesh.h" />
-    <ClInclude Include="Source\MainThread\UStaticMeshObject.h" />
-    <ClInclude Include="Source\MainThread\UTexture.h" />
-    <ClInclude Include="Source\MainThread\UWorld.h" />
+    <ClInclude Include="Source\UObject\UCamera.h" />
+    <ClInclude Include="Source\UObject\ULight.h" />
+    <ClInclude Include="Source\UObject\UMaterial.h" />
+    <ClInclude Include="Source\UObject\UObject.h" />
+    <ClInclude Include="Source\UObject\UPlayer.h" />
+    <ClInclude Include="Source\UObject\USkeletalMesh.h" />
+    <ClInclude Include="Source\UObject\USkeletalMeshObject.h" />
+    <ClInclude Include="Source\UObject\UStaticMesh.h" />
+    <ClInclude Include="Source\UObject\UStaticMeshObject.h" />
+    <ClInclude Include="Source\UObject\UTexture.h" />
+    <ClInclude Include="Source\UObject\UWorld.h" />
     <ClInclude Include="Source\Manager\FConfigManager.h" />
     <ClInclude Include="Source\Manager\FConsoleVariableManager.h" />
     <ClInclude Include="Source\Manager\FInputManager.h" />
@@ -113,37 +113,37 @@
     <ClInclude Include="Source\Manager\FShaderBindingsManager.h" />
     <ClInclude Include="Source\Manager\FSceneManager.h" />
     <ClInclude Include="Source\Manager\FShaderManager.h" />
-    <ClInclude Include="Source\RenderThread\D3D12RHI\d3dx12.h" />
-    <ClInclude Include="Source\RenderThread\D3D12RHI\DDSTextureLoader.h" />
-    <ClInclude Include="Source\RenderThread\D3D12RHI\DX12Utility.h" />
-    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12Buffer.h" />
-    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12Vertex.h" />
-    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12RHI.h" />
-    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12PipelineState.h" />
-    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12Resource.h" />
-    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12RenderTarget.h" />
-    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12ShaderBindings.h" />
-    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12Shader.h" />
-    <ClInclude Include="Source\RenderThread\D3D12RHI\FD3D12Texture.h" />
-    <ClInclude Include="Source\RenderThread\FLight.h" />
-    <ClInclude Include="Source\RenderThread\FMaterial.h" />
-    <ClInclude Include="Source\RenderThread\FPostProcessing.h" />
-    <ClInclude Include="Source\RenderThread\FRenderCommand.h" />
-    <ClInclude Include="Source\RenderThread\FRenderer.h" />
-    <ClInclude Include="Source\RenderThread\FRenderProxy.h" />
-    <ClInclude Include="Source\RenderThread\FRenderThread.h" />
-    <ClInclude Include="Source\RenderThread\FScene.h" />
-    <ClInclude Include="Source\RenderThread\FShadingModel.h" />
-    <ClInclude Include="Source\RenderThread\FView.h" />
-    <ClInclude Include="Source\RenderThread\RHI\FRHI.h" />
-    <ClInclude Include="Source\RenderThread\RHI\FRHIBuffer.h" />
-    <ClInclude Include="Source\RenderThread\RHI\FRHIPipelineState.h" />
-    <ClInclude Include="Source\RenderThread\RHI\FRHIResource.h" />
-    <ClInclude Include="Source\RenderThread\RHI\FRHIRenderTarget.h" />
-    <ClInclude Include="Source\RenderThread\RHI\FRHIShader.h" />
-    <ClInclude Include="Source\RenderThread\RHI\FRHIShaderBindings.h" />
-    <ClInclude Include="Source\RenderThread\RHI\FRHITexture.h" />
-    <ClInclude Include="Source\RenderThread\RHI\FRHIVertex.h" />
+    <ClInclude Include="Source\Rendering\D3D12RHI\d3dx12.h" />
+    <ClInclude Include="Source\Rendering\D3D12RHI\DDSTextureLoader.h" />
+    <ClInclude Include="Source\Rendering\D3D12RHI\DX12Utility.h" />
+    <ClInclude Include="Source\Rendering\D3D12RHI\FD3D12Buffer.h" />
+    <ClInclude Include="Source\Rendering\D3D12RHI\FD3D12Vertex.h" />
+    <ClInclude Include="Source\Rendering\D3D12RHI\FD3D12RHI.h" />
+    <ClInclude Include="Source\Rendering\D3D12RHI\FD3D12PipelineState.h" />
+    <ClInclude Include="Source\Rendering\D3D12RHI\FD3D12Resource.h" />
+    <ClInclude Include="Source\Rendering\D3D12RHI\FD3D12RenderTarget.h" />
+    <ClInclude Include="Source\Rendering\D3D12RHI\FD3D12ShaderBindings.h" />
+    <ClInclude Include="Source\Rendering\D3D12RHI\FD3D12Shader.h" />
+    <ClInclude Include="Source\Rendering\D3D12RHI\FD3D12Texture.h" />
+    <ClInclude Include="Source\Rendering\FLight.h" />
+    <ClInclude Include="Source\Rendering\FMaterial.h" />
+    <ClInclude Include="Source\Rendering\FPostProcessing.h" />
+    <ClInclude Include="Source\Rendering\FRenderCommand.h" />
+    <ClInclude Include="Source\Rendering\FRenderer.h" />
+    <ClInclude Include="Source\Rendering\FRenderProxy.h" />
+    <ClInclude Include="Source\Rendering\FRendering.h" />
+    <ClInclude Include="Source\Rendering\FScene.h" />
+    <ClInclude Include="Source\Rendering\FShadingModel.h" />
+    <ClInclude Include="Source\Rendering\FView.h" />
+    <ClInclude Include="Source\Rendering\RHI\FRHI.h" />
+    <ClInclude Include="Source\Rendering\RHI\FRHIBuffer.h" />
+    <ClInclude Include="Source\Rendering\RHI\FRHIPipelineState.h" />
+    <ClInclude Include="Source\Rendering\RHI\FRHIResource.h" />
+    <ClInclude Include="Source\Rendering\RHI\FRHIRenderTarget.h" />
+    <ClInclude Include="Source\Rendering\RHI\FRHIShader.h" />
+    <ClInclude Include="Source\Rendering\RHI\FRHIShaderBindings.h" />
+    <ClInclude Include="Source\Rendering\RHI\FRHITexture.h" />
+    <ClInclude Include="Source\Rendering\RHI\FRHIVertex.h" />
     <ClInclude Include="Source\Utility\CityHash.h" />
     <ClInclude Include="Source\Utility\FArchive.h" />
     <ClInclude Include="Source\Utility\MathUtility.h" />
@@ -331,7 +331,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Core;$(ProjectDir)\Source\Manager;$(ProjectDir)\Source\Utility;$(ProjectDir)\Source\RenderThread;$(ProjectDir)\Source\RenderThread\D3D12RHI;$(ProjectDir)\Source\RenderThread\RHI;$(ProjectDir)\Source\MainThread;$(ProjectDir)\Source\ThirdParty;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(ProjectDir)\Source\ThirdParty\Eigen;$(ProjectDir)\Source\ThirdParty\spdlog-1.x\include;$(ProjectDir)\Source\ThirdParty\spdlog-1.x;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Core;$(ProjectDir)\Source\Manager;$(ProjectDir)\Source\Utility;$(ProjectDir)\Source\Rendering;$(ProjectDir)\Source\Rendering\D3D12RHI;$(ProjectDir)\Source\Rendering\RHI;$(ProjectDir)\Source\UObject;$(ProjectDir)\Source\ThirdParty;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(ProjectDir)\Source\ThirdParty\Eigen;$(ProjectDir)\Source\ThirdParty\spdlog-1.x\include;$(ProjectDir)\Source\ThirdParty\spdlog-1.x;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -352,7 +352,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Core;$(ProjectDir)\Source\Manager;$(ProjectDir)\Source\Utility;$(ProjectDir)\Source\RenderThread;$(ProjectDir)\Source\RenderThread\D3D12RHI;$(ProjectDir)\Source\RenderThread\RHI;$(ProjectDir)\Source\MainThread;$(ProjectDir)\Source\ThirdParty;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(ProjectDir)\Source\ThirdParty\Eigen;$(ProjectDir)\Source\ThirdParty\spdlog-1.x\include;$(ProjectDir)\Source\ThirdParty\spdlog-1.x;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Core;$(ProjectDir)\Source\Manager;$(ProjectDir)\Source\Utility;$(ProjectDir)\Source\Rendering;$(ProjectDir)\Source\Rendering\D3D12RHI;$(ProjectDir)\Source\Rendering\RHI;$(ProjectDir)\Source\UObject;$(ProjectDir)\Source\ThirdParty;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(ProjectDir)\Source\ThirdParty\Eigen;$(ProjectDir)\Source\ThirdParty\spdlog-1.x\include;$(ProjectDir)\Source\ThirdParty\spdlog-1.x;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
