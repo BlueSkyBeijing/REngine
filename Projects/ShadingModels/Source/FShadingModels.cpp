@@ -40,9 +40,9 @@ void FShadingModels::Init()
     shadingModel->Init();
     FShadingModel::ShadingModels->insert(std::make_pair(6, shadingModel));
 
-    //shadingModel = new FCustomShadingModel(7);
-    //shadingModel->Init();
-    //FShadingModel::ShadingModels->insert(std::make_pair(7, shadingModel));
+    shadingModel = new FCustomShadingModel(7);
+    shadingModel->Init();
+    FShadingModel::ShadingModels->insert(std::make_pair(7, shadingModel));
 
     shadingModel = new FCustomShadingModel(8);
     shadingModel->Init();
