@@ -317,6 +317,228 @@ float3 TwoSidedBxDF(float3 normal, float3 lightDir, float3 lightColor, float lig
     return lighting;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Transmittance functions
+
+struct FHairTransmittanceData
+{
+    bool bUseLegacyAbsorption;
+    bool bUseSeparableR;
+    bool bUseBacklit;
+
+    float  OpaqueVisibility;
+    float3 LocalScattering;
+    float3 GlobalScattering;
+
+};
+
+FHairTransmittanceData InitHairTransmittanceData(bool bMultipleScatterEnable = true)
+{
+    FHairTransmittanceData o;
+    o.bUseLegacyAbsorption = true;
+    o.bUseSeparableR = true;
+    o.bUseBacklit = false;
+
+    o.OpaqueVisibility = 1;
+    o.LocalScattering = 0;
+    o.GlobalScattering = 1;
+
+    return o;
+}
+
+FHairTransmittanceData InitHairStrandsTransmittanceData(bool bMultipleScatterEnable = false)
+{
+    FHairTransmittanceData o = InitHairTransmittanceData(bMultipleScatterEnable);
+    o.bUseLegacyAbsorption = false;
+    o.bUseBacklit = true;
+    return o;
+}
+
+// Utility functions
+float Hair_g(float B, float Theta)
+{
+    return exp(-0.5 * Pow2(Theta) / (B * B)) / (sqrt(2 * PI) * B);
+}
+
+float Hair_F(float CosTheta)
+{
+    const float n = 1.55;
+    const float F0 = Pow2((1 - n) / (1 + n));
+    return F0 + (1 - F0) * Pow5(1 - CosTheta);
+}
+
+float3 KajiyaKayDiffuseAttenuation(float Metallic, float3 BaseColor, float3 L, float3 V, half3 N, float Shadow)
+{
+    // Use soft Kajiya Kay diffuse attenuation
+    float KajiyaDiffuse = 1 - abs(dot(N, L));
+
+    float3 FakeNormal = normalize(V - N * dot(V, N));
+    //N = normalize( DiffuseN + FakeNormal * 2 );
+    N = FakeNormal;
+
+    // Hack approximation for multiple scattering.
+    float Wrap = 1;
+    float NoL = saturate((dot(N, L) + Wrap) / Square(1 + Wrap));
+    float DiffuseScatter = (1 / PI) * lerp(NoL, KajiyaDiffuse, 0.33) * Metallic;
+    float Luma = Luminance(BaseColor);
+    float3 ScatterTint = pow(abs(BaseColor / Luma), 1 - Shadow);
+    return sqrt(abs(BaseColor)) * DiffuseScatter * ScatterTint;
+}
+
+float3 EvaluateHairMultipleScattering(
+    const FHairTransmittanceData TransmittanceData,
+    const float Roughness,
+    const float3 Fs)
+{
+    return TransmittanceData.GlobalScattering * (Fs + TransmittanceData.LocalScattering) * TransmittanceData.OpaqueVisibility;
+}
+
+// Hair BSDF
+// Approximation to HairShadingRef using concepts from the following papers:
+// [Marschner et al. 2003, "Light Scattering from Human Hair Fibers"]
+// [Pekelis et al. 2015, "A Data-Driven Light Scattering Model for Hair"]
+float3 HairShading(float3 BaseColor, float Metallic, float Roughness, float Specular, float3 L, float3 V, half3 N, float Shadow, FHairTransmittanceData HairTransmittance, float InBacklit, float Area, uint2 Random)
+{
+    // to prevent NaN with decals
+    // OR-18489 HERO: IGGY: RMB on E ability causes blinding hair effect
+    // OR-17578 HERO: HAMMER: E causes blinding light on heroes with hair
+    float ClampedRoughness = clamp(Roughness, 1 / 255.0f, 1.0f);
+
+    //const float3 DiffuseN	= OctahedronToUnitVector( GBuffer.CustomData.xy * 2 - 1 );
+    const float Backlit = min(InBacklit, 1);
+
+    // UE-155845: KajiyaKayDiffuseAttenuation() is not energy conservative, so we define a correction factor to prevent it from adding light.
+    // This is not actually physically correct and simply a hack to prevent certain objects with hair materials from glowing when Lumen is enabled.
+    float KajiyaKayDiffuseFactor = 1.0f;
+
+    // N is the vector parallel to hair pointing toward root
+
+    const float VoL = dot(V, L);
+    const float SinThetaL = clamp(dot(N, L), -1.f, 1.f);
+    const float SinThetaV = clamp(dot(N, V), -1.f, 1.f);
+    float CosThetaD = cos(0.5 * abs(asin(SinThetaV) - asin(SinThetaL)));
+
+    //CosThetaD = abs( CosThetaD ) < 0.01 ? 0.01 : CosThetaD;
+
+    const float3 Lp = L - SinThetaL * N;
+    const float3 Vp = V - SinThetaV * N;
+    const float CosPhi = dot(Lp, Vp) * rsqrt(dot(Lp, Lp) * dot(Vp, Vp) + 1e-4);
+    const float CosHalfPhi = sqrt(saturate(0.5 + 0.5 * CosPhi));
+    //const float Phi = acosFast( CosPhi );
+
+    float n = 1.55;
+    //float n_prime = sqrt( n*n - 1 + Pow2( CosThetaD ) ) / CosThetaD;
+    float n_prime = 1.19 / CosThetaD + 0.36 * CosThetaD;
+
+    float Shift = 0.035;
+    float Alpha[] =
+    {
+        -Shift * 2,
+        Shift,
+        Shift * 4,
+    };
+    float B[] =
+    {
+        Area + Pow2(ClampedRoughness),
+        Area + Pow2(ClampedRoughness) / 2,
+        Area + Pow2(ClampedRoughness) * 2,
+    };
+
+    float3 S = 0;
+    {
+        const float sa = sin(Alpha[0]);
+        const float ca = cos(Alpha[0]);
+        float ShiftR = 2 * sa * (ca * CosHalfPhi * sqrt(1 - SinThetaV * SinThetaV) + sa * SinThetaV);
+        float BScale = HairTransmittance.bUseSeparableR ? sqrt(2.0) * CosHalfPhi : 1;
+        float Mp = Hair_g(B[0] * BScale, SinThetaL + SinThetaV - ShiftR);
+        float Np = 0.25 * CosHalfPhi;
+        float Fp = Hair_F(sqrt(saturate(0.5 + 0.5 * VoL)));
+        S += Mp * Np * Fp * (Specular * 2) * lerp(1, Backlit, saturate(-VoL));
+
+        KajiyaKayDiffuseFactor -= Fp;
+    }
+
+    // TT
+    {
+        float Mp = Hair_g(B[1], SinThetaL + SinThetaV - Alpha[1]);
+
+        float a = 1 / n_prime;
+        //float h = CosHalfPhi * rsqrt( 1 + a*a - 2*a * sqrt( 0.5 - 0.5 * CosPhi ) );
+        //float h = CosHalfPhi * ( ( 1 - Pow2( CosHalfPhi ) ) * a + 1 );
+        float h = CosHalfPhi * (1 + a * (0.6 - 0.8 * CosPhi));
+        //float h = 0.4;
+        //float yi = asinFast(h);
+        //float yt = asinFast(h / n_prime);
+
+        float f = Hair_F(CosThetaD * sqrt(saturate(1 - h * h)));
+        float Fp = Pow2(1 - f);
+        //float3 Tp = pow( GBuffer.BaseColor, 0.5 * ( 1 + cos(2*yt) ) / CosThetaD );
+        //float3 Tp = pow( GBuffer.BaseColor, 0.5 * cos(yt) / CosThetaD );
+        float3 Tp = 0;
+        {
+            Tp = pow(abs(BaseColor), 0.5 * sqrt(1 - Pow2(h * a)) / CosThetaD);
+        }
+
+        //float t = asin( 1 / n_prime );
+        //float d = ( sqrt(2) - t ) / ( 1 - t );
+        //float s = -0.5 * PI * (1 - 1 / n_prime) * log( 2*d - 1 - 2 * sqrt( d * (d - 1) ) );
+        //float s = 0.35;
+        //float Np = exp( (Phi - PI) / s ) / ( s * Pow2( 1 + exp( (Phi - PI) / s ) ) );
+        //float Np = 0.71 * exp( -1.65 * Pow2(Phi - PI) );
+        float Np = exp(-3.65 * CosPhi - 3.98);
+
+        S += Mp * Np * Fp * Tp * Backlit;
+
+        KajiyaKayDiffuseFactor -= Fp;
+    }
+
+    // TRT
+    {
+        float Mp = Hair_g(B[2], SinThetaL + SinThetaV - Alpha[2]);
+
+        //float h = 0.75;
+        float f = Hair_F(CosThetaD * 0.5);
+        float Fp = Pow2(1 - f) * f;
+        //float3 Tp = pow( GBuffer.BaseColor, 1.6 / CosThetaD );
+        float3 Tp = pow(abs(BaseColor), 0.8 / CosThetaD);
+
+        //float s = 0.15;
+        //float Np = 0.75 * exp( Phi / s ) / ( s * Pow2( 1 + exp( Phi / s ) ) );
+        float Np = exp(17 * CosPhi - 16.78);
+
+        S += Mp * Np * Fp * Tp;
+
+        KajiyaKayDiffuseFactor -= Fp;
+    }
+
+    {
+        S = EvaluateHairMultipleScattering(HairTransmittance, ClampedRoughness, S);
+        S += KajiyaKayDiffuseAttenuation(Metallic, BaseColor, L, V, N, Shadow) * saturate(KajiyaKayDiffuseFactor);
+    }
+
+    S = -min(-S, 0.0);
+    return S;
+}
+
+float3 HairBxDF(float3 lightColor, float lightIntensity, half3 N, half3 V, half3 L, float shadow, float thickness)
+{
+    float TransmissionShadow = shadow;
+    FHairTransmittanceData HairTransmittance = InitHairTransmittanceData();
+    float3 BaseColor = float3(0.5, 0.5, 0.5);
+    float Metallic = 0;
+    float Roughness = 0.1;
+    float Specular = 0.5;
+    const float3 BsdfValue = HairShading(BaseColor, Metallic, Roughness, Specular, L, V, N, TransmissionShadow, HairTransmittance, 1, 0, uint2(0, 0));
+
+    float3 transmission = BsdfValue;
+
+    float3 lighting = transmission;
+    lighting *= lightColor * lightIntensity;
+
+    return lighting;
+
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 float D_InvGGX(float a2, float NoH)
 {
@@ -452,7 +674,7 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
 #elif SHADING_MODEL == SHADING_MODEL_TWO_SIDE_FOLIAGE
     return TwoSidedBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, specularColor, subsurfaceColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_HAIR
-    return DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, specularColor, shadow);
+    return HairBxDF(lightColor, lightIntensity, normal, lightDir, viewDir, shadow, thickness);
 #elif SHADING_MODEL == SHADING_MODEL_CLOTH
     float3 fuzzColor = float3(1, 1, 1);
     float cloth = 1;

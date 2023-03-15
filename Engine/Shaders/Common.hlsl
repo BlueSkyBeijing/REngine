@@ -50,6 +50,11 @@ float3 RGBMDecode( float4 rgbm )
 	return rgbm.rgb * (rgbm.a * 64.0f);
 }
 
+float Luminance(float3 linearColor)
+{
+    return dot(linearColor, float3(0.3, 0.59, 0.11));
+}
+
 struct MaterialContext
 {
     float3 BaseColor;
