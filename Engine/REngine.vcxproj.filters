@@ -96,7 +96,7 @@
     <ClCompile Include="Source\Rendering\FRenderProxy.cpp">
       <Filter>Engine\Source\Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Rendering\RenderThread.cpp">
+    <ClCompile Include="Source\Rendering\FRenderThread.cpp">
       <Filter>Engine\Source\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Source\Rendering\FScene.cpp">
@@ -291,6 +291,9 @@
       <Filter>Engine\Source\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Source\Rendering\FRenderProxy.h">
+      <Filter>Engine\Source\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rendering\FRenderThread.h">
       <Filter>Engine\Source\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Source\Rendering\FRendering.h">

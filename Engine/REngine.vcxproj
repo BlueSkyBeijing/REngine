@@ -131,6 +131,7 @@
     <ClInclude Include="Source\Rendering\FRenderCommand.h" />
     <ClInclude Include="Source\Rendering\FRenderer.h" />
     <ClInclude Include="Source\Rendering\FRenderProxy.h" />
+    <ClInclude Include="Source\Rendering\FRenderThread.h" />
     <ClInclude Include="Source\Rendering\FRendering.h" />
     <ClInclude Include="Source\Rendering\FScene.h" />
     <ClInclude Include="Source\Rendering\FShadingModel.h" />

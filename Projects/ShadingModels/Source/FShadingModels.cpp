@@ -51,16 +51,6 @@ void FShadingModels::Init()
     shadingModel = new FCustomShadingModel(9);
     shadingModel->Init();
     FShadingModel::ShadingModels->insert(std::make_pair(9, shadingModel));
-
-    //FShadingModel::ShadingModels->insert(std::make_pair(3, new FCustomShadingModel(3)));
-    //FShadingModel::ShadingModels->insert(std::make_pair(4, new FCustomShadingModel(4)));
-    ////FShadingModel::ShadingModels->insert(std::make_pair(5, FCustomShadingModel(5)));
-    //FShadingModel::ShadingModels->insert(std::make_pair(6, new FCustomShadingModel(6)));
-    ////FShadingModel::ShadingModels->insert(std::make_pair(7, FCustomShadingModel(7)));
-    //FShadingModel::ShadingModels->insert(std::make_pair(8, new FCustomShadingModel(8)));
-    //FShadingModel::ShadingModels->insert(std::make_pair(9, new FCustomShadingModel(9)))
-
-
 }
 
 void FShadingModels::UnInit()
@@ -132,5 +122,4 @@ void FCustomShadingModel::UnInit()
     delete VertexShaderShadowInfo;
     delete VertexShaderGPUSkinInfo;
     delete VertexShaderShadowGPUSkinInfo;
-
 }
