@@ -520,15 +520,11 @@ float3 HairShading(float3 BaseColor, float Metallic, float Roughness, float Spec
     return S;
 }
 
-float3 HairBxDF(float3 lightColor, float lightIntensity, half3 N, half3 V, half3 L, float shadow, float thickness)
+float3 HairBxDF(float3 lightColor, float lightIntensity, half3 N, half3 V, half3 L, float shadow, float thickness, float3 baseColor, float metallic, float roughness, float specular)
 {
     float TransmissionShadow = shadow;
     FHairTransmittanceData HairTransmittance = InitHairTransmittanceData();
-    float3 BaseColor = float3(0.5, 0.5, 0.5);
-    float Metallic = 0;
-    float Roughness = 0.1;
-    float Specular = 0.5;
-    const float3 BsdfValue = HairShading(BaseColor, Metallic, Roughness, Specular, L, V, N, TransmissionShadow, HairTransmittance, 1, 0, uint2(0, 0));
+    const float3 BsdfValue = HairShading(baseColor, metallic, roughness, specular, L, V, N, TransmissionShadow, HairTransmittance, 1, 0, uint2(0, 0));
 
     float3 transmission = BsdfValue;
 
@@ -536,7 +532,6 @@ float3 HairBxDF(float3 lightColor, float lightIntensity, half3 N, half3 V, half3
     lighting *= lightColor * lightIntensity;
 
     return lighting;
-
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -657,7 +652,7 @@ void CalculateDiffuseAndSpecularColor(float specular, float metallic, inout floa
     diffuseColor = diffuseColor - diffuseColor * metallic;
 }
 
-float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float roughness, float opacity, float3 specularColor, float3 emissiveColor, float3 subsurfaceColor, float metallic, float shadow, float thickness)
+float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float roughness, float opacity, float3 specularColor, float3 emissiveColor, float3 subsurfaceColor, float metallic, float shadow, float thickness, float specular, float3 baseColor)
 {        
 #if SHADING_MODEL == SHADING_MODEL_UNLIT
     return Unlit(normal, lightDir, lightColor, lightIntensity, viewDir, emissiveColor, shadow);
@@ -674,7 +669,7 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
 #elif SHADING_MODEL == SHADING_MODEL_TWO_SIDE_FOLIAGE
     return TwoSidedBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, specularColor, subsurfaceColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_HAIR
-    return HairBxDF(lightColor, lightIntensity, normal, lightDir, viewDir, shadow, thickness);
+    return HairBxDF(lightColor, lightIntensity, normal, lightDir, viewDir, shadow, thickness, baseColor, metallic, roughness, specular);
 #elif SHADING_MODEL == SHADING_MODEL_CLOTH
     float3 fuzzColor = float3(1, 1, 1);
     float cloth = 1;
@@ -707,7 +702,9 @@ float3 Lighting(LightingContext litContext, MaterialContext matContext)
         matContext.SubsurfaceColor, 
         matContext.Metallic, 
         litContext.Shadow, 
-        litContext.Thickness);
+        litContext.Thickness,
+        matContext.BaseColor,
+        matContext.Specular);
         
     return  lighting;
 

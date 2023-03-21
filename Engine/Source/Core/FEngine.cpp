@@ -75,15 +75,15 @@ void FEngine::init()
 
     //shadingModel = new FShadingModel(5);
     //shadingModel->Init();
-    //FShadingModel::ShadingModels.insert(std::pair<int32, FShadingModel*>(5, shadingModel));
+    //FShadingModel::ShadingModels->insert(std::pair<int32, FShadingModel*>(5, shadingModel));
 
     shadingModel = new FShadingModel(6);
     shadingModel->Init();
     FShadingModel::ShadingModels->insert(std::pair<int32, FShadingModel*>(6, shadingModel));
 
-    //shadingModel = new FShadingModel(7);
-    //shadingModel->Init();
-    //FShadingModel::ShadingModels.insert(std::pair<int32, FShadingModel*>(7, shadingModel));
+    shadingModel = new FShadingModel(7);
+    shadingModel->Init();
+    FShadingModel::ShadingModels->insert(std::pair<int32, FShadingModel*>(7, shadingModel));
 
     shadingModel = new FShadingModel(8);
     shadingModel->Init();
