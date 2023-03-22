@@ -13,7 +13,8 @@
 #include "DDSTextureLoader.h"
 #include "FEngine.h"
 #include "TSingleton.h"
-
+#include "Utility.h"
+#include "FConfigManager.h"
 
 
 int32 FD3D12RHI::msRTVCount = 0;
@@ -475,7 +476,14 @@ FRHIShader* FD3D12RHI::GetOrCreate(const FShaderInfo& shaderInfo)
         shaderDefines[index] = defineEnd;
     }
 
-    D3DCompileFromFile(shaderInfo.FilePathName.c_str(), shaderDefines, D3D_COMPILE_STANDARD_FILE_INCLUDE, shaderInfo.EnterPoint.c_str(), shaderInfo.Target.c_str(), compileFlags, 0, &shader->mShader, &errors);
+    FString filePath;
+    FString fileName;
+    FString name;
+    FString suffix;
+    FullFileNameSplit(WStringToString(shaderInfo.FilePathName).c_str(), filePath, fileName, name, suffix);
+
+    FShaderInclude shaderInclude(filePath.c_str(), (*FConfigManager::EngineShaderDir).c_str());
+    D3DCompileFromFile(shaderInfo.FilePathName.c_str(), shaderDefines, &shaderInclude, shaderInfo.EnterPoint.c_str(), shaderInfo.Target.c_str(), compileFlags, 0, &shader->mShader, &errors);
     if (errors != nullptr)
     {
         OutputDebugStringA((char*)errors->GetBufferPointer());

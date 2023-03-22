@@ -1,4 +1,4 @@
-#include "../../../Engine/Shaders/Common.hlsl"
+#include <Common.hlsl>
 
 #define SHADING_MODEL_UNLIT 0
 #define SHADING_MODEL_DEFAULT_LIT 1

@@ -1,5 +1,5 @@
-#include "../../../Engine/Shaders/ForwardShadingCommon.hlsl"
-#include "../../../Engine/Shaders/ShadowFiltering.hlsl"
+#include <ForwardShadingCommon.hlsl>
+#include <ShadowFiltering.hlsl>
 #include "LightingModel.hlsl"
 
 Texture2D DiffuseMap : register(t0);
