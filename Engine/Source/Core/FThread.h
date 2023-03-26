@@ -15,4 +15,5 @@ protected:
 private:
 	std::function<void(void)> mFunc;
 	std::thread* mThread;
+	FString mName;
 };

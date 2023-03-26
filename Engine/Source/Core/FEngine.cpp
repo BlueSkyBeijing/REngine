@@ -12,6 +12,7 @@
 #include "UWorld.h"
 #include "UCamera.h"
 #include "FShadingModel.h"
+#include "WindowsUtility.h"
 
 //disable chinese typewriting
 #include <imm.h>  
@@ -41,6 +42,10 @@ void FEngine::Launch()
 
 void FEngine::init()
 {
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+    SetThreadName(-1, "MainThread");
+#endif
+
     mTimer = new std::chrono::high_resolution_clock;
     mLastFrameTime = new std::chrono::steady_clock::time_point;
     mCurFrameTime = new std::chrono::steady_clock::time_point;;
