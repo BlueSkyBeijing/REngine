@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="Source\Core\FEngine.cpp" />
     <ClCompile Include="Source\Core\FThread.cpp" />
+    <ClCompile Include="Source\Rendering\FShader.cpp" />
     <ClCompile Include="Source\UObject\UCamera.cpp" />
     <ClCompile Include="Source\UObject\ULight.cpp" />
     <ClCompile Include="Source\UObject\UMaterial.cpp" />
@@ -89,6 +90,7 @@
     <ClInclude Include="Source\Core\FEngine.h" />
     <ClInclude Include="Source\Core\FThread.h" />
     <ClInclude Include="Source\Core\IModuleInterface.h" />
+    <ClInclude Include="Source\Rendering\FShader.h" />
     <ClInclude Include="Source\UObject\UCamera.h" />
     <ClInclude Include="Source\UObject\ULight.h" />
     <ClInclude Include="Source\UObject\UMaterial.h" />

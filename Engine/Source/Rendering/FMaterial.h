@@ -20,7 +20,7 @@ public:
 
 public:
     TSharedPtr<FRHIShader> VertexShader;
-    TSharedPtr<FRHIShader>PixelShader;
+    TSharedPtr<FRHIShader> PixelShader;
     TSharedPtr<FRHIShader> PixelShaderShadow;
     TSharedPtr<FRHIShader> PixelShaderGPUSkin;
 

@@ -219,6 +219,9 @@
     <ClCompile Include="Source\Rendering\FShadingModel.cpp">
       <Filter>Engine\Source\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Rendering\FShader.cpp">
+      <Filter>Engine\Source\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Manager\FInputManager.h">
@@ -420,6 +423,9 @@
       <Filter>Engine\Source\Manager</Filter>
     </ClInclude>
     <ClInclude Include="Source\Rendering\FShadingModel.h">
+      <Filter>Engine\Source\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rendering\FShader.h">
       <Filter>Engine\Source\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
