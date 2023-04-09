@@ -286,7 +286,7 @@ void FRenderer::_drawSceneColorOpaque()
         {
             info.RasterizerState.CullMode = CM_None;
         }
-
+        info.RasterizerState.bAllowMSAA = true;
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
         mRHI->SetPipelineState(pipelineState);
@@ -328,7 +328,7 @@ void FRenderer::_drawSceneColorOpaque()
         {
             info.RasterizerState.CullMode = CM_None;
         }
-
+        info.RasterizerState.bAllowMSAA = true;
         FRHIPipelineState* pipelineState = TSingleton<FPipelineStateManager>::GetInstance().GetPipleLineState(info);
 
         mRHI->SetPipelineState(pipelineState);
@@ -476,6 +476,9 @@ void FRenderer::initSceneColorPass()
     mSceneColor = mRHI->CreateRenderTarget(TSingleton<FConfigManager>::GetInstance().WindowWidth,
         TSingleton<FConfigManager>::GetInstance().WindowHeight, 1, PF_R16G16B16A16_FLOAT, PF_D24_UNORM_S8_UINT);
 
+    mSceneColorMS = mRHI->CreateRenderTarget(TSingleton<FConfigManager>::GetInstance().WindowWidth,
+        TSingleton<FConfigManager>::GetInstance().WindowHeight, 2, PF_R16G16B16A16_FLOAT, PF_D24_UNORM_S8_UINT);
+
     createSceneColorPassConstantBuffer();
 }
 
@@ -483,11 +486,11 @@ void FRenderer::drawSceneColorPass()
 {
     mRHI->BeginEvent("SceneColor");
 
-    mRHI->SetRenderTarget(mSceneColor);
+    mRHI->SetRenderTarget(mSceneColorMS);
 
-    const FRHITransitionInfo infoRenderTargetBegin(mSceneColor->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
+    const FRHITransitionInfo infoRenderTargetBegin(mSceneColorMS->RenderTargets[0], ACCESS_RESOLVE_SOURCE, ACCESS_RENDER_TARGET);
     mRHI->TransitionResource(infoRenderTargetBegin);
-    const FRHITransitionInfo infoDepthStencilBegin(mSceneColor->DepthStencilTarget, ACCESS_GENERIC_READ, ACCESS_DEPTH_WRITE);
+    const FRHITransitionInfo infoDepthStencilBegin(mSceneColorMS->DepthStencilTarget, ACCESS_GENERIC_READ, ACCESS_DEPTH_WRITE);
     mRHI->TransitionResource(infoDepthStencilBegin);
 
     const FVector4 clearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -501,8 +504,19 @@ void FRenderer::drawSceneColorPass()
     _drawSceneColorOpaque();
     _drawSceneColorTranslucent();
 
-    const FRHITransitionInfo infoRederTargetEnd(mSceneColor->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_PRESENT);
+
+    const FRHITransitionInfo infoRederTargetEnd1(mSceneColorMS->RenderTargets[0], ACCESS_RENDER_TARGET, ACCESS_RESOLVE_SOURCE);
+    mRHI->TransitionResource(infoRederTargetEnd1);
+
+    const FRHITransitionInfo infoRederTargetEnd(mSceneColor->RenderTargets[0], ACCESS_PRESENT, ACCESS_RESOLVE_DEST);
     mRHI->TransitionResource(infoRederTargetEnd);
+
+    mRHI->ResolveSubresource(mSceneColor->RenderTargets[0], mSceneColorMS->RenderTargets[0], PF_R16G16B16A16_FLOAT);
+
+    const FRHITransitionInfo infoRederTargetEnd2(mSceneColor->RenderTargets[0], ACCESS_RESOLVE_DEST, ACCESS_PRESENT);
+    mRHI->TransitionResource(infoRederTargetEnd2);
+
+
     const FRHITransitionInfo infoDepthStencilEnd(mSceneColor->DepthStencilTarget, ACCESS_DEPTH_WRITE, ACCESS_GENERIC_READ);
     mRHI->TransitionResource(infoDepthStencilEnd);
 

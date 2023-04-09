@@ -45,6 +45,7 @@ public:
     virtual FRHITexture* CreateTexture(const std::wstring& filePathName, FRHITextureCreateDesc& desc);
     virtual FRHIRenderTarget* CreateRenderTarget(uint32 width, uint32 hight, uint32 numTarget, EPixelFormat formatTarget, EPixelFormat formatDepthStencil) override;
     virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) override;
+    virtual void ResolveSubresource(FRHITexture* dest, FRHITexture* src, EPixelFormat format) override;
 
     virtual void UpdateConstantBuffer(FRHIConstantBuffer* constantBuffer, uint32 structureSize, uint8* bufferData) override;
 

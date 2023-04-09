@@ -645,9 +645,9 @@ FRHIPipelineState* FD3D12RHI::CreatePipelineState(const FPipelineStateInfo& info
     RasterizerState.DepthBiasClamp = D3D12_DEFAULT_DEPTH_BIAS_CLAMP;
     RasterizerState.SlopeScaledDepthBias = D3D12_DEFAULT_SLOPE_SCALED_DEPTH_BIAS;
     RasterizerState.DepthClipEnable = info.DepthStencilState.bEnableDepthWrite;
-    RasterizerState.MultisampleEnable = FALSE;
+    RasterizerState.MultisampleEnable = TRUE;
     RasterizerState.AntialiasedLineEnable = FALSE;
-    RasterizerState.ForcedSampleCount = 0;
+    RasterizerState.ForcedSampleCount = info.RasterizerState.bAllowMSAA ? 0 : 0;
     RasterizerState.ConservativeRaster = D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF;
 
     psoDesc.RasterizerState = RasterizerState;
@@ -687,7 +687,7 @@ FRHIPipelineState* FD3D12RHI::CreatePipelineState(const FPipelineStateInfo& info
     psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
     psoDesc.NumRenderTargets = (ps == nullptr) ? 0 : 1;
     psoDesc.RTVFormats[0] = (ps == nullptr) ? DXGI_FORMAT_UNKNOWN : translatePixelFormat(info.RenderTargetFormat);
-    psoDesc.SampleDesc.Count = 1;
+    psoDesc.SampleDesc.Count = info.RasterizerState.bAllowMSAA ? 8 : 1;
     psoDesc.SampleDesc.Quality = 0;
     psoDesc.DSVFormat = mDepthStencilFormat;
     THROW_IF_FAILED(mDX12Device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState->mDX12PipleLineState)));
@@ -743,7 +743,7 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
 
     if (formatTarget != PF_UNKNOWN)
     {
-        for (uint32 i = 0; i < numTarget; i++)
+        for (uint32 i = 0; i < 1; i++)
         {
             FD3D12Texture* renderTexture = new FD3D12Texture;
 
@@ -760,7 +760,7 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
             renderTargetDesc.DepthOrArraySize = 1;
             renderTargetDesc.MipLevels = 1;
             renderTargetDesc.Format = pixelFormat;
-            renderTargetDesc.SampleDesc.Count = 1;
+            renderTargetDesc.SampleDesc.Count = numTarget > 1 ? 8 : 1;
             renderTargetDesc.SampleDesc.Quality = 0;
             renderTargetDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
             renderTargetDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
@@ -792,7 +792,7 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
             D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
             srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
             srvDesc.Format = renderTexture->GetDX12Resource()->GetDesc().Format;
-            srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+            srvDesc.ViewDimension = numTarget > 1 ? D3D12_SRV_DIMENSION_TEXTURE2DMS : D3D12_SRV_DIMENSION_TEXTURE2D;
             srvDesc.Texture2D.MostDetailedMip = 0;
             srvDesc.Texture2D.MipLevels = renderTexture->GetDX12Resource()->GetDesc().MipLevels;
             srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
@@ -818,7 +818,7 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
         depthStencilDesc.DepthOrArraySize = 1;
         depthStencilDesc.MipLevels = 1;
         depthStencilDesc.Format = (formatDepthStencil == PF_R24_UNORM_X8_TYPELESS) ? DXGI_FORMAT_R24G8_TYPELESS : DXGI_FORMAT_D24_UNORM_S8_UINT;
-        depthStencilDesc.SampleDesc.Count = 1;
+        depthStencilDesc.SampleDesc.Count = numTarget > 1 ? 8 : 1;
         depthStencilDesc.SampleDesc.Quality = 0;
         depthStencilDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
         depthStencilDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
@@ -841,7 +841,7 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
         //create descriptor to mip level 0 of entire resource using the format of the resource.
         D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
         dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
-        dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+        dsvDesc.ViewDimension = numTarget > 1 ? D3D12_DSV_DIMENSION_TEXTURE2DMS : D3D12_DSV_DIMENSION_TEXTURE2D;
         dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
         dsvDesc.Texture2D.MipSlice = 0;
         mDX12Device->CreateDepthStencilView(depthStencil->GetDX12Resource().Get(), &dsvDesc, descriptorHandleDS);
@@ -854,7 +854,7 @@ FRHIRenderTarget* FD3D12RHI::CreateRenderTarget(uint32 width, uint32 hight, uint
         D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
         srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
         srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
-        srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+        srvDesc.ViewDimension =  numTarget > 1 ? D3D12_SRV_DIMENSION_TEXTURE2DMS : D3D12_SRV_DIMENSION_TEXTURE2D;;
         srvDesc.Texture2D.MostDetailedMip = 0;
         srvDesc.Texture2D.MipLevels = 1;
         srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
@@ -952,7 +952,7 @@ FRHIRenderWindow* FD3D12RHI::CreateRenderWindow(uint32 width, uint32 hight)
     //create descriptor to mip level 0 of entire resource using the format of the resource.
     D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
     dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
-    dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+    dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2DMS;
     dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
     dsvDesc.Texture2D.MipSlice = 0;
     mDX12Device->CreateDepthStencilView(depthStencil->GetDX12Resource().Get(), &dsvDesc, descriptorHandleDS);
@@ -967,6 +967,15 @@ FRHIRenderWindow* FD3D12RHI::CreateRenderWindow(uint32 width, uint32 hight)
     FlushCommandQueue();
 
     return renderTarget;
+}
+
+void FD3D12RHI::ResolveSubresource(FRHITexture* dest, FRHITexture* src, EPixelFormat format)
+{
+    DXGI_FORMAT pixelFormat = translatePixelFormat(format);
+    FD3D12Texture* srcDX = dynamic_cast<FD3D12Texture*>(src);
+    FD3D12Texture* destDX = dynamic_cast<FD3D12Texture*>(dest);
+
+    mDX12CommandList->ResolveSubresource(destDX->GetDX12Resource().Get(), 0, srcDX->GetDX12Resource().Get(), 0, pixelFormat);
 }
 
 void FD3D12RHI::UpdateConstantBuffer(FRHIConstantBuffer* constantBuffer, uint32 structureSize, uint8* bufferData)

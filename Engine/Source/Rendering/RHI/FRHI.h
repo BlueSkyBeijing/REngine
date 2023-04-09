@@ -543,6 +543,7 @@ public:
     virtual FRHIRenderTarget* CreateRenderTarget(uint32 width, uint32 hight, uint32 numTarget, EPixelFormat formatTarget, EPixelFormat formatDepthStencil) = 0;
     virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) = 0;
 
+    virtual void ResolveSubresource(FRHITexture* dest, FRHITexture* src, EPixelFormat format) = 0;
     virtual void UpdateConstantBuffer(FRHIConstantBuffer* constantBuffer, uint32 structureSize, uint8* bufferData) = 0;
 
     virtual void TransitionResource(const FRHITransitionInfo& info) = 0;

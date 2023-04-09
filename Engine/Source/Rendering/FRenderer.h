@@ -79,6 +79,7 @@ private:
     FRHIConstantBuffer* mSceneColorPassConstantBuffer;
     FRHIConstantBuffer* mShadowPassConstantBuffer;
     FRHIRenderTarget* mSceneColor;
+    FRHIRenderTarget* mSceneColorMS;
     FRHIRenderTarget* mShadowMap;
     FMatrix4x4 mShadowTransform;
     FPostProcessing* mPostProcessing;
