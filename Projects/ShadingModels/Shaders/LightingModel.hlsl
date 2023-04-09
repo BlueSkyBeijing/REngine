@@ -703,8 +703,8 @@ float3 Lighting(LightingContext litContext, MaterialContext matContext)
         matContext.Metallic, 
         litContext.Shadow, 
         litContext.Thickness,
-        matContext.BaseColor,
-        matContext.Specular);
+        matContext.Specular,
+        matContext.BaseColor);
         
     return  lighting;
 
