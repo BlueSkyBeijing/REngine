@@ -46,6 +46,8 @@ int32 FConfigManager::WindowHeight = 768;
 int32 FConfigManager::ShadowMapWidth = 1024;
 int32 FConfigManager::ShadowMapHeight = 1024;
 
+int32 FConfigManager::MSAACount = 1;
+
 FString *FConfigManager::KeyNum1Cmd = new FString("");
 FString *FConfigManager::KeyNum2Cmd = new FString("");
 FString *FConfigManager::KeyNum3Cmd = new FString("");
@@ -124,6 +126,9 @@ void FConfigManager::Init()
 
     std::stringstream streamShadowMapHeight(engineConfig.GetValue("Render", "ShadowMapHeight", "1024"));
     streamShadowMapHeight >> ShadowMapHeight;
+
+    std::stringstream streamMSAACount(engineConfig.GetValue("Render", "MSAACount", "1"));
+    streamMSAACount >> MSAACount;
 
     std::stringstream streamKeyNum1Cmd(engineConfig.GetValue("Key", "KeyNum1Cmd", ""));
     streamKeyNum1Cmd >> *FConfigManager::KeyNum1Cmd;

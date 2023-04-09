@@ -43,7 +43,7 @@ public:
     virtual FRHIShaderBindings* CreateShaderBindings() override;
     virtual FRHIPipelineState* CreatePipelineState(const FPipelineStateInfo& info) override;
     virtual FRHITexture* CreateTexture(const std::wstring& filePathName, FRHITextureCreateDesc& desc);
-    virtual FRHIRenderTarget* CreateRenderTarget(uint32 width, uint32 hight, uint32 numTarget, EPixelFormat formatTarget, EPixelFormat formatDepthStencil) override;
+    virtual FRHIRenderTarget* CreateRenderTarget(uint32 width, uint32 hight, uint32 numTarget, EPixelFormat formatTarget, EPixelFormat formatDepthStencil, int msaaCount = 1) override;
     virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) override;
     virtual void ResolveSubresource(FRHITexture* dest, FRHITexture* src, EPixelFormat format) override;
 

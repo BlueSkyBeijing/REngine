@@ -50,6 +50,7 @@ public:
     static int32 WindowHeight;
     static int32 ShadowMapWidth;
     static int32 ShadowMapHeight;
+    static int32 MSAACount;
 
     static FString* KeyNum1Cmd;
     static FString* KeyNum2Cmd;

@@ -540,7 +540,7 @@ public:
     virtual FRHIShaderBindings* CreateShaderBindings() = 0;
     virtual FRHIPipelineState* CreatePipelineState(const FPipelineStateInfo& info) = 0;
     virtual FRHITexture* CreateTexture(const std::wstring& filePathName, FRHITextureCreateDesc& desc) = 0;
-    virtual FRHIRenderTarget* CreateRenderTarget(uint32 width, uint32 hight, uint32 numTarget, EPixelFormat formatTarget, EPixelFormat formatDepthStencil) = 0;
+    virtual FRHIRenderTarget* CreateRenderTarget(uint32 width, uint32 hight, uint32 numTarget, EPixelFormat formatTarget, EPixelFormat formatDepthStencil, int msaaCount = 1) = 0;
     virtual FRHIRenderWindow* CreateRenderWindow(uint32 width, uint32 hight) = 0;
 
     virtual void ResolveSubresource(FRHITexture* dest, FRHITexture* src, EPixelFormat format) = 0;

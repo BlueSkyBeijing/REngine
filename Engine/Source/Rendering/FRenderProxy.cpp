@@ -185,7 +185,8 @@ void FStaticMeshRenderProxy::CreateRenderResource()
         {
             info.RasterizerState.CullMode = CM_None;
         }
-        info.RasterizerState.bAllowMSAA = true;
+        info.RasterizerState.bAllowMSAA = TSingleton<FConfigManager>::GetInstance().MSAACount > 1;
+
         TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
 
         FPipelineStateInfo infoShadow;
@@ -301,7 +302,6 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
         {
             info.RasterizerState.CullMode = CM_None;
         }
-        info.RasterizerState.bAllowMSAA = true;
 
         TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(info);
 
@@ -316,7 +316,7 @@ void FSkeletalMeshRenderProxy::CreateRenderResource()
         {
             infoGPUSkin.RasterizerState.CullMode = CM_None;
         }
-        infoGPUSkin.RasterizerState.bAllowMSAA = true;
+        infoGPUSkin.RasterizerState.bAllowMSAA = TSingleton<FConfigManager>::GetInstance().MSAACount > 1;
 
         TSingleton<FPipelineStateManager>::GetInstance().CreatePipleLineState(infoGPUSkin);
 
