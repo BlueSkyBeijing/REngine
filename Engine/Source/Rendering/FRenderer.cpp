@@ -556,9 +556,9 @@ void FRenderer::unInitSceneColorPass()
 
     if (mSceneColorMS)
     {
-        mSceneColor->UnInit();
-        delete mSceneColor;
-        mSceneColor = nullptr;
+        mSceneColorMS->UnInit();
+        delete mSceneColorMS;
+        mSceneColorMS = nullptr;
     }
 
     mSceneColorPassConstantBuffer->UnInit();
