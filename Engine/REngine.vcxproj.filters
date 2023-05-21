@@ -299,9 +299,6 @@
     <ClInclude Include="Source\Rendering\FRenderThread.h">
       <Filter>Engine\Source\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Rendering\FRendering.h">
-      <Filter>Engine\Source\Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Rendering\FScene.h">
       <Filter>Engine\Source\Rendering</Filter>
     </ClInclude>

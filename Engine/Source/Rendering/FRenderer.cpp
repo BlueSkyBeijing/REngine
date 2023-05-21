@@ -496,7 +496,7 @@ void FRenderer::drawSceneColorPass()
     {
         mRHI->SetRenderTarget(mSceneColorMS);
 
-        const FRHITransitionInfo infoRenderTargetBegin(mSceneColorMS->RenderTargets[0], ACCESS_RESOLVE_SOURCE, ACCESS_RENDER_TARGET);
+        const FRHITransitionInfo infoRenderTargetBegin(mSceneColorMS->RenderTargets[0], ACCESS_COMMON, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
         const FRHITransitionInfo infoDepthStencilBegin(mSceneColorMS->DepthStencilTarget, ACCESS_GENERIC_READ, ACCESS_DEPTH_WRITE);
         mRHI->TransitionResource(infoDepthStencilBegin);
@@ -505,9 +505,9 @@ void FRenderer::drawSceneColorPass()
     {
         mRHI->SetRenderTarget(mSceneColor);
 
-        const FRHITransitionInfo infoRenderTargetBegin(mSceneColor->RenderTargets[0], ACCESS_PRESENT, ACCESS_RENDER_TARGET);
+        const FRHITransitionInfo infoRenderTargetBegin(mSceneColor->RenderTargets[0], ACCESS_COMMON, ACCESS_RENDER_TARGET);
         mRHI->TransitionResource(infoRenderTargetBegin);
-        const FRHITransitionInfo infoDepthStencilBegin(mSceneColor->DepthStencilTarget, ACCESS_GENERIC_READ, ACCESS_DEPTH_WRITE);
+        const FRHITransitionInfo infoDepthStencilBegin(mSceneColor->DepthStencilTarget, ACCESS_DEPTH_WRITE, ACCESS_DEPTH_WRITE);
         mRHI->TransitionResource(infoDepthStencilBegin);
     }
 
@@ -535,6 +535,13 @@ void FRenderer::drawSceneColorPass()
 
         const FRHITransitionInfo infoRederTargetEnd(mSceneColor->RenderTargets[0], ACCESS_RESOLVE_DEST, ACCESS_PRESENT);
         mRHI->TransitionResource(infoRederTargetEnd);
+
+        // transit back to init state
+        const FRHITransitionInfo infoRederTargetInit(mSceneColorMS->RenderTargets[0], ACCESS_RESOLVE_SOURCE, ACCESS_COMMON);
+        mRHI->TransitionResource(infoRederTargetInit);
+        const FRHITransitionInfo infoDepthStencilInit(mSceneColorMS->DepthStencilTarget, ACCESS_DEPTH_WRITE, ACCESS_GENERIC_READ);
+        mRHI->TransitionResource(infoDepthStencilInit);
+
     }
     else
     {
@@ -542,10 +549,9 @@ void FRenderer::drawSceneColorPass()
         mRHI->TransitionResource(infoRederTargetEnd);
     }
 
-    const FRHITransitionInfo infoDepthStencilEnd(mSceneColor->DepthStencilTarget, ACCESS_DEPTH_WRITE, ACCESS_GENERIC_READ);
-    mRHI->TransitionResource(infoDepthStencilEnd);
-
     mRHI->EndEvent();
+
+
 }
 
 void FRenderer::unInitSceneColorPass()
