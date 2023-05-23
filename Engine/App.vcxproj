@@ -112,13 +112,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Core;$(ProjectDir)\Source\Manager;$(ProjectDir)\Source\Utility;$(ProjectDir)\Source\Rendering;$(ProjectDir)\Source\Rendering\D3D12RHI;$(ProjectDir)\Source\Rendering\RHI;$(ProjectDir)\Source\UObject;$(ProjectDir)\Source\ThirdParty;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(ProjectDir)\Source\ThirdParty\Eigen;$(ProjectDir)\Source\ThirdParty\spdlog-1.x\include;$(ProjectDir)\Source\ThirdParty\spdlog-1.x;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Core;$(ProjectDir)\Source\Manager;$(ProjectDir)\Source\Utility;$(ProjectDir)\Source\Rendering;$(ProjectDir)\Source\Rendering\D3D12RHI;$(ProjectDir)\Source\Rendering\RHI;$(ProjectDir)\Source\UObject;$(ProjectDir)\Source\ThirdParty;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(ProjectDir)\Source\ThirdParty\Eigen;$(ProjectDir)\Source\ThirdParty\spdlog-1.x\include;$(ProjectDir)\Source\ThirdParty\spdlog-1.x;$(ProjectDir)\Source\ThirdParty\VisualLeakDetector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)\Binaries\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>REngine.lib;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\bin\x64\WinPixEventRuntime.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>REngine.lib;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\bin\x64\WinPixEventRuntime.lib;$(ProjectDir)\Source\ThirdParty\VisualLeakDetector\lib\Win64\vld.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -129,7 +129,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Core;$(ProjectDir)\Source\Manager;$(ProjectDir)\Source\Utility;$(ProjectDir)\Source\Rendering;$(ProjectDir)\Source\Rendering\D3D12RHI;$(ProjectDir)\Source\Rendering\RHI;$(ProjectDir)\Source\UObject;$(ProjectDir)\Source\ThirdParty;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(ProjectDir)\Source\ThirdParty\Eigen;$(ProjectDir)\Source\ThirdParty\spdlog-1.x\include;$(ProjectDir)\Source\ThirdParty\spdlog-1.x;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Core;$(ProjectDir)\Source\Manager;$(ProjectDir)\Source\Utility;$(ProjectDir)\Source\Rendering;$(ProjectDir)\Source\Rendering\D3D12RHI;$(ProjectDir)\Source\Rendering\RHI;$(ProjectDir)\Source\UObject;$(ProjectDir)\Source\ThirdParty;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(ProjectDir)\Source\ThirdParty\Eigen;$(ProjectDir)\Source\ThirdParty\spdlog-1.x\include;$(ProjectDir)\Source\ThirdParty\spdlog-1.x;$(ProjectDir)\Source\ThirdParty\VisualLeakDetector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -137,7 +137,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)\Binaries\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>REngine.lib;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\bin\x64\WinPixEventRuntime.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>REngine.lib;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\bin\x64\WinPixEventRuntime.lib;$(ProjectDir)\Source\ThirdParty\VisualLeakDetector\lib\Win64\vld.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

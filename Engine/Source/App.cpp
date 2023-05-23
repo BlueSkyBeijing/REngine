@@ -1,8 +1,5 @@
-﻿#include "PrecompiledHeader.h"
-
-#if defined(DEBUG) | defined(_DEBUG)
-#define _CRTDBG_MAP_ALLOC
-#endif
+﻿#include "vld.h"
+#include "PrecompiledHeader.h"
 
 #include "FEngine.h"
 #include "TSingleton.h"
@@ -57,12 +54,6 @@ LRESULT CALLBACK ConsoleVariableProc(int code, WPARAM wParam, LPARAM lParam)
 
 int main(int argc, char* argv[])
 {
-    //enable run-time memory check for debug builds.
-#if defined(DEBUG) | defined(_DEBUG)
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    //_CrtSetBreakAlloc(1597);
-#endif
-
     if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)CosonleHandler, TRUE) == FALSE)
     {
         printf("unable to install handler!");

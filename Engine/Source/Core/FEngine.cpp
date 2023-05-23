@@ -1,4 +1,5 @@
-﻿#include "PrecompiledHeader.h"
+﻿#include "vld.h"
+#include "PrecompiledHeader.h"
 
 #include "FEngine.h"
 #include "FRenderThread.h"

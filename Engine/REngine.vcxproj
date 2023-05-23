@@ -333,17 +333,21 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Core;$(ProjectDir)\Source\Manager;$(ProjectDir)\Source\Utility;$(ProjectDir)\Source\Rendering;$(ProjectDir)\Source\Rendering\D3D12RHI;$(ProjectDir)\Source\Rendering\RHI;$(ProjectDir)\Source\UObject;$(ProjectDir)\Source\ThirdParty;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(ProjectDir)\Source\ThirdParty\Eigen;$(ProjectDir)\Source\ThirdParty\spdlog-1.x\include;$(ProjectDir)\Source\ThirdParty\spdlog-1.x;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Core;$(ProjectDir)\Source\Manager;$(ProjectDir)\Source\Utility;$(ProjectDir)\Source\Rendering;$(ProjectDir)\Source\Rendering\D3D12RHI;$(ProjectDir)\Source\Rendering\RHI;$(ProjectDir)\Source\UObject;$(ProjectDir)\Source\ThirdParty;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(ProjectDir)\Source\ThirdParty\Eigen;$(ProjectDir)\Source\ThirdParty\spdlog-1.x\include;$(ProjectDir)\Source\ThirdParty\spdlog-1.x;$(ProjectDir)\Source\ThirdParty\VisualLeakDetector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3dcompiler.lib;D3D12.lib;dxgi.lib;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\bin\x64\WinPixEventRuntime.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3dcompiler.lib;D3D12.lib;dxgi.lib;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\bin\x64\WinPixEventRuntime.lib;$(ProjectDir)\Source\ThirdParty\VisualLeakDetector\lib\Win64\vld.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\bin\x64\WinPixEventRuntime.dll  $(OutputPath)WinPixEventRuntime.dll  /y</Command>
+      <Command>copy $(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\bin\x64\WinPixEventRuntime.dll  $(OutputPath)WinPixEventRuntime.dll  /y
+copy $(ProjectDir)\Source\ThirdParty\VisualLeakDetector\bin\Win64\dbghelp.dll  $(OutputPath)dbghelp.dll  /y
+copy $(ProjectDir)\Source\ThirdParty\VisualLeakDetector\bin\Win64\vld_x64.dll  $(OutputPath)vld_x64.dll /y
+copy $(ProjectDir)\Source\ThirdParty\VisualLeakDetector\bin\Win64\Microsoft.DTfW.DHL.manifest  $(OutputPath)Microsoft.DTfW.DHL.manifest /y
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -354,7 +358,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Core;$(ProjectDir)\Source\Manager;$(ProjectDir)\Source\Utility;$(ProjectDir)\Source\Rendering;$(ProjectDir)\Source\Rendering\D3D12RHI;$(ProjectDir)\Source\Rendering\RHI;$(ProjectDir)\Source\UObject;$(ProjectDir)\Source\ThirdParty;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(ProjectDir)\Source\ThirdParty\Eigen;$(ProjectDir)\Source\ThirdParty\spdlog-1.x\include;$(ProjectDir)\Source\ThirdParty\spdlog-1.x;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Source\Core;$(ProjectDir)\Source\Manager;$(ProjectDir)\Source\Utility;$(ProjectDir)\Source\Rendering;$(ProjectDir)\Source\Rendering\D3D12RHI;$(ProjectDir)\Source\Rendering\RHI;$(ProjectDir)\Source\UObject;$(ProjectDir)\Source\ThirdParty;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\Include\WinPixEventRuntime;$(ProjectDir)\Source\ThirdParty\Eigen;$(ProjectDir)\Source\ThirdParty\spdlog-1.x\include;$(ProjectDir)\Source\ThirdParty\spdlog-1.x;$(ProjectDir)\Source\ThirdParty\VisualLeakDetector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -363,10 +367,14 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3dcompiler.lib;D3D12.lib;dxgi.lib;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\bin\x64\WinPixEventRuntime.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3dcompiler.lib;D3D12.lib;dxgi.lib;$(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\bin\x64\WinPixEventRuntime.lib;$(ProjectDir)\Source\ThirdParty\VisualLeakDetector\lib\Win64\vld.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\bin\x64\WinPixEventRuntime.dll  $(OutputPath)WinPixEventRuntime.dll  /y</Command>
+      <Command>copy $(ProjectDir)\Source\ThirdParty\WinPixEventRuntime.1.0.210209001\bin\x64\WinPixEventRuntime.dll  $(OutputPath)WinPixEventRuntime.dll  /y
+copy $(ProjectDir)\Source\ThirdParty\VisualLeakDetector\bin\Win64\dbghelp.dll  $(OutputPath)dbghelp.dll  /y
+copy $(ProjectDir)\Source\ThirdParty\VisualLeakDetector\bin\Win64\vld_x64.dll  $(OutputPath)vld_x64.dll /y
+copy $(ProjectDir)\Source\ThirdParty\VisualLeakDetector\bin\Win64\Microsoft.DTfW.DHL.manifest  $(OutputPath)Microsoft.DTfW.DHL.manifest /y
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

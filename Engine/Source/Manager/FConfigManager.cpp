@@ -4,41 +4,41 @@
 #include "Utility.h"
 
 
-FString *FConfigManager::Platform = new FString("x86");
-FString *FConfigManager::Configuration = new FString("Debug");
+FString *FConfigManager::Platform = nullptr;
+FString *FConfigManager::Configuration = nullptr;
 
-FString *FConfigManager::EngineDir = new FString("\\Engine\\");
-FString *FConfigManager::EngineContentDir = new FString("Content\\");
-FString *FConfigManager::EngineShaderDir = new FString("Shaders\\");
-FString *FConfigManager::EngineConfigFile = new FString("Config\\Engine.ini");
-FString *FConfigManager::LogFile = new FString("Saved\\Logs\\Engine.log");
+FString *FConfigManager::EngineDir = nullptr;
+FString *FConfigManager::EngineContentDir = nullptr;
+FString *FConfigManager::EngineShaderDir = nullptr;
+FString *FConfigManager::EngineConfigFile = nullptr;
+FString *FConfigManager::LogFile = nullptr;
 
-FString *FConfigManager::ProjectName = new FString("");
-FString *FConfigManager::ProjectDir = new FString("");
-FString *FConfigManager::ProjectContentDir = new FString("Content\\");
-FString *FConfigManager::ProjectShaderDir = new FString("Shaders\\");
-FString *FConfigManager::ProjectConfigFile = new FString("Config\\Engine.ini");
+FString *FConfigManager::ProjectName = nullptr;
+FString *FConfigManager::ProjectDir = nullptr;
+FString *FConfigManager::ProjectContentDir = nullptr;
+FString *FConfigManager::ProjectShaderDir = nullptr;
+FString *FConfigManager::ProjectConfigFile = nullptr;
 
-FString *FConfigManager::DefaultMapPath = new FString("Content\\Map\\");
-FString *FConfigManager::DefaultStaticMeshPath = new FString("Content\\StaticMesh\\");
-FString *FConfigManager::DefaultSkeletalMeshPath = new FString("Content\\SkeletalMesh\\");
-FString *FConfigManager::DefaultSkeletonPath = new FString("Content\\SkeletalMesh\\Skeleton\\");
-FString *FConfigManager::DefaultAnimSequencePath = new FString("Content\\SkeletalMesh\\Animation\\");
-FString *FConfigManager::DefaultMaterialPath = new FString("Content\\Material\\");
-FString *FConfigManager::DefaultTexturePath = new FString("Content\\Texture\\");
+FString *FConfigManager::DefaultMapPath = nullptr;
+FString *FConfigManager::DefaultStaticMeshPath = nullptr;
+FString *FConfigManager::DefaultSkeletalMeshPath = nullptr;
+FString *FConfigManager::DefaultSkeletonPath = nullptr;
+FString *FConfigManager::DefaultAnimSequencePath = nullptr;
+FString *FConfigManager::DefaultMaterialPath = nullptr;
+FString *FConfigManager::DefaultTexturePath = nullptr;
 
-const FString *FConfigManager::ProjectFileSuffix = new FString(".project");
-const FString *FConfigManager::DefaultMapFileSuffix = new FString(".map");
-const FString *FConfigManager::DefaultStaticMeshFileSuffix = new FString(".stm");
-const FString *FConfigManager::DefaultSkeletalMeshFileSuffix = new FString(".skm");
-const FString *FConfigManager::DefaultSkeletonFileSuffix = new FString(".skt");
-const FString *FConfigManager::DefaultAnimSequenceFileSuffix = new FString(".anm");
-const FString *FConfigManager::DefaultMaterialFileSuffix = new FString(".mtl");
-const FString *FConfigManager::DefaultTextureFileSuffix = new FString(".dds");
+const FString *FConfigManager::ProjectFileSuffix = nullptr;
+const FString *FConfigManager::DefaultMapFileSuffix = nullptr;
+const FString *FConfigManager::DefaultStaticMeshFileSuffix = nullptr;
+const FString *FConfigManager::DefaultSkeletalMeshFileSuffix = nullptr;
+const FString *FConfigManager::DefaultSkeletonFileSuffix = nullptr;
+const FString *FConfigManager::DefaultAnimSequenceFileSuffix = nullptr;
+const FString *FConfigManager::DefaultMaterialFileSuffix = nullptr;
+const FString *FConfigManager::DefaultTextureFileSuffix = nullptr;
 
 const int32 FConfigManager::FrameBufferNum = 2;
 
-FString *FConfigManager::DefaultMap = new FString("Default.map");
+FString *FConfigManager::DefaultMap = nullptr;
 
 int32 FConfigManager::WindowWidth = 1366;
 int32 FConfigManager::WindowHeight = 768;
@@ -48,16 +48,16 @@ int32 FConfigManager::ShadowMapHeight = 1024;
 
 int32 FConfigManager::MSAACount = 1;
 
-FString *FConfigManager::KeyNum1Cmd = new FString("");
-FString *FConfigManager::KeyNum2Cmd = new FString("");
-FString *FConfigManager::KeyNum3Cmd = new FString("");
-FString *FConfigManager::KeyNum4Cmd = new FString("");
-FString *FConfigManager::KeyNum5Cmd = new FString("");
-FString *FConfigManager::KeyNum6Cmd = new FString("");
-FString *FConfigManager::KeyNum7Cmd = new FString("");
-FString *FConfigManager::KeyNum8Cmd = new FString("");
-FString *FConfigManager::KeyNum9Cmd = new FString("");
-FString *FConfigManager::KeyNum0Cmd = new FString("");
+FString *FConfigManager::KeyNum1Cmd = nullptr;
+FString *FConfigManager::KeyNum2Cmd = nullptr;
+FString *FConfigManager::KeyNum3Cmd = nullptr;
+FString *FConfigManager::KeyNum4Cmd = nullptr;
+FString *FConfigManager::KeyNum5Cmd = nullptr;
+FString *FConfigManager::KeyNum6Cmd = nullptr;
+FString *FConfigManager::KeyNum7Cmd = nullptr;
+FString *FConfigManager::KeyNum8Cmd = nullptr;
+FString *FConfigManager::KeyNum9Cmd = nullptr;
+FString *FConfigManager::KeyNum0Cmd = nullptr;
 
 FConfigManager::FConfigManager()
 {
@@ -69,6 +69,51 @@ FConfigManager::~FConfigManager()
 
 void FConfigManager::Init()
 {
+    FConfigManager::Platform = new FString("x86");
+    FConfigManager::Configuration = new FString("Debug");
+
+    FConfigManager::EngineDir = new FString("\\Engine\\");
+    FConfigManager::EngineContentDir = new FString("Content\\");
+    FConfigManager::EngineShaderDir = new FString("Shaders\\");
+    FConfigManager::EngineConfigFile = new FString("Config\\Engine.ini");
+    FConfigManager::LogFile = new FString("Saved\\Logs\\Engine.log");
+
+    FConfigManager::ProjectName = new FString("");
+    FConfigManager::ProjectDir = new FString("");
+    FConfigManager::ProjectContentDir = new FString("Content\\");
+    FConfigManager::ProjectShaderDir = new FString("Shaders\\");
+    FConfigManager::ProjectConfigFile = new FString("Config\\Engine.ini");
+
+    FConfigManager::DefaultMapPath = new FString("Content\\Map\\");
+    FConfigManager::DefaultStaticMeshPath = new FString("Content\\StaticMesh\\");
+    FConfigManager::DefaultSkeletalMeshPath = new FString("Content\\SkeletalMesh\\");
+    FConfigManager::DefaultSkeletonPath = new FString("Content\\SkeletalMesh\\Skeleton\\");
+    FConfigManager::DefaultAnimSequencePath = new FString("Content\\SkeletalMesh\\Animation\\");
+    FConfigManager::DefaultMaterialPath = new FString("Content\\Material\\");
+    FConfigManager::DefaultTexturePath = new FString("Content\\Texture\\");
+
+    FConfigManager::ProjectFileSuffix = new FString(".project");
+    FConfigManager::DefaultMapFileSuffix = new FString(".map");
+    FConfigManager::DefaultStaticMeshFileSuffix = new FString(".stm");
+    FConfigManager::DefaultSkeletalMeshFileSuffix = new FString(".skm");
+    FConfigManager::DefaultSkeletonFileSuffix = new FString(".skt");
+    FConfigManager::DefaultAnimSequenceFileSuffix = new FString(".anm");
+    FConfigManager::DefaultMaterialFileSuffix = new FString(".mtl");
+    FConfigManager::DefaultTextureFileSuffix = new FString(".dds");
+
+    FConfigManager::DefaultMap = new FString("Default.map");
+
+    FConfigManager::KeyNum1Cmd = new FString("");
+    FConfigManager::KeyNum2Cmd = new FString("");
+    FConfigManager::KeyNum3Cmd = new FString("");
+    FConfigManager::KeyNum4Cmd = new FString("");
+    FConfigManager::KeyNum5Cmd = new FString("");
+    FConfigManager::KeyNum6Cmd = new FString("");
+    FConfigManager::KeyNum7Cmd = new FString("");
+    FConfigManager::KeyNum8Cmd = new FString("");
+    FConfigManager::KeyNum9Cmd = new FString("");
+    FConfigManager::KeyNum0Cmd = new FString("");
+
     bool hasProject = (FConfigManager::ProjectDir->size() > 0);
 
     char szFilePath[MAX_PATH + 1] = { 0 };
