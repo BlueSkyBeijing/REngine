@@ -3,6 +3,7 @@
 
 #include "TSingleton.h"
 
+//#include "vld.h"
 
 class DLL_API FEngine
 {

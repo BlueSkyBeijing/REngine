@@ -41,6 +41,18 @@ using TWeakPtr = std::weak_ptr<T>;
 template<class T>
 using TUniquePtr = std::unique_ptr<T>;
 
+template<class T, class... Args>
+std::shared_ptr<T> TMakeShared(Args&&... args)
+{
+    return std::make_shared<T>(std::forward<Args>(args)...);
+}
+
+template<class T, class... Args>
+std::unique_ptr<T> TMakeUnique(Args&&... args)
+{
+    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+}
+
 class FThread;
 
 enum EPixelFormat;
@@ -143,3 +155,90 @@ class FD3D12Texture;
 #else
 #define DLL_API  _declspec(dllimport)
 #endif
+
+
+#define DECLARE_SHAREDPTR(ClassName) \
+	typedef TSharedPtr<ClassName> ClassName##Ptr;
+
+
+DECLARE_SHAREDPTR(UObject)
+DECLARE_SHAREDPTR(UWorld)
+DECLARE_SHAREDPTR(UTexture2D)
+DECLARE_SHAREDPTR(UTextureCube)
+DECLARE_SHAREDPTR(UStaticMeshObject)
+DECLARE_SHAREDPTR(USkeletalMeshObject)
+DECLARE_SHAREDPTR(UAnimSequence)
+DECLARE_SHAREDPTR(USkeleton)
+DECLARE_SHAREDPTR(UPlayer)
+DECLARE_SHAREDPTR(UCamera)
+DECLARE_SHAREDPTR(USkeletalMeshObject)
+DECLARE_SHAREDPTR(USkeletalMesh)
+DECLARE_SHAREDPTR(UMaterial)
+DECLARE_SHAREDPTR(UResource)
+DECLARE_SHAREDPTR(UPointLight)
+DECLARE_SHAREDPTR(UDirectionalLight)
+
+DECLARE_SHAREDPTR(FEngine)
+DECLARE_SHAREDPTR(FRenderThread)
+DECLARE_SHAREDPTR(FRenderer)
+DECLARE_SHAREDPTR(FScene)
+DECLARE_SHAREDPTR(FView)
+DECLARE_SHAREDPTR(FViewPort)
+DECLARE_SHAREDPTR(FRenderProxy)
+DECLARE_SHAREDPTR(FMeshBatch)
+DECLARE_SHAREDPTR(FMaterial)
+DECLARE_SHAREDPTR(FDirectionalLight)
+DECLARE_SHAREDPTR(FShaderInfo)
+DECLARE_SHAREDPTR(FPipelineStateInfo)
+DECLARE_SHAREDPTR(FStaticMeshRenderProxy)
+DECLARE_SHAREDPTR(FSkeletalMeshRenderProxy)
+DECLARE_SHAREDPTR(FAnimSequenceBlender)
+DECLARE_SHAREDPTR(FResourceManager)
+DECLARE_SHAREDPTR(FAnimSequenceInstance)
+DECLARE_SHAREDPTR(FLight)
+DECLARE_SHAREDPTR(FPointLight)
+DECLARE_SHAREDPTR(IModuleInterface)
+
+DECLARE_SHAREDPTR(FSceneManager)
+DECLARE_SHAREDPTR(FShaderManager)
+DECLARE_SHAREDPTR(FInputManager)
+DECLARE_SHAREDPTR(FShaderBindingsManager)
+DECLARE_SHAREDPTR(FPipelineStateManager)
+DECLARE_SHAREDPTR(FShaderManager)
+DECLARE_SHAREDPTR(FShaderBindingsManager)
+DECLARE_SHAREDPTR(FPipelineStateManager)
+DECLARE_SHAREDPTR(FRenderCommand)
+DECLARE_SHAREDPTR(FPostProcessing)
+DECLARE_SHAREDPTR(FScreenVertex)
+DECLARE_SHAREDPTR(FPlayerController)
+DECLARE_SHAREDPTR(FConsoleVariableManager)
+
+DECLARE_SHAREDPTR(FRHI)
+DECLARE_SHAREDPTR(FRHIResource)
+DECLARE_SHAREDPTR(FRHIShader)
+DECLARE_SHAREDPTR(FRHITexture)
+DECLARE_SHAREDPTR(FRHIBuffer)
+DECLARE_SHAREDPTR(FRHIIndexBuffer)
+DECLARE_SHAREDPTR(FRHIVertexBuffer)
+DECLARE_SHAREDPTR(FRHIIndexBuffer)
+DECLARE_SHAREDPTR(FRHIRenderTarget)
+DECLARE_SHAREDPTR(FRHIShader)
+DECLARE_SHAREDPTR(FRHIPipelineState)
+DECLARE_SHAREDPTR(FRHIVertexBuffer)
+DECLARE_SHAREDPTR(FRHIIndexBuffer)
+DECLARE_SHAREDPTR(FRHIShaderBindings)
+DECLARE_SHAREDPTR(FRHIRenderWindow)
+DECLARE_SHAREDPTR(FRHIRenderTarget)
+DECLARE_SHAREDPTR(FRHIVertexLayout)
+DECLARE_SHAREDPTR(FRHIConstantBuffer)
+
+DECLARE_SHAREDPTR(FD3D12ShaderBindings)
+DECLARE_SHAREDPTR(FD3D12Shader)
+DECLARE_SHAREDPTR(FD3D12VertexLayout)
+DECLARE_SHAREDPTR(FD3D12RenderWindow)
+DECLARE_SHAREDPTR(FD3D12RenderTarget)
+DECLARE_SHAREDPTR(FD3D12PipelineState)
+DECLARE_SHAREDPTR(FD3D12VertexBuffer)
+DECLARE_SHAREDPTR(FD3D12ShaderBindings)
+DECLARE_SHAREDPTR(FD3D12Texture)
+DECLARE_SHAREDPTR(FD3D12Texture)

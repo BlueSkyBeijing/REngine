@@ -49,14 +49,14 @@ HRESULT __stdcall FShaderInclude::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFil
             includeFile.read(buf, fileSize);
             includeFile.close();
             *ppData = buf;
-            *pBytes = fileSize;
+            *pBytes = (UINT)fileSize;
         }
         else {
             return E_FAIL;
         }
         return S_OK;
     }
-    catch (std::exception& e) {
+    catch (std::exception& ) {
         return E_FAIL;
     }
 }

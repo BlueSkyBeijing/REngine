@@ -44,7 +44,7 @@ TSharedPtr<UResource> FResourceManager::GetOrCreate(EResourceType resorceType, c
         {
         case RT_StaticMesh:
         {
-            TSharedPtr<UResource> staticMesh(new UStaticMesh());
+            TSharedPtr<UResource> staticMesh = TMakeShared<UStaticMesh>();
             staticMesh->FullFilePathName = fullFileName;
             staticMesh->Load();
 
@@ -55,7 +55,7 @@ TSharedPtr<UResource> FResourceManager::GetOrCreate(EResourceType resorceType, c
             break;
         case RT_SkeletalMesh:
         {
-            TSharedPtr<UResource> skeletalMesh(new USkeletalMesh());
+            TSharedPtr<UResource> skeletalMesh = TMakeShared<USkeletalMesh>();
             skeletalMesh->FullFilePathName = fullFileName;
             skeletalMesh->Load();
 
@@ -78,7 +78,7 @@ TSharedPtr<UResource> FResourceManager::GetOrCreate(EResourceType resorceType, c
         break;
         case RT_Animation:
         {
-            TSharedPtr<UResource> animSequence(new UAnimSequence());
+            TSharedPtr<UResource> animSequence = TMakeShared<UAnimSequence>();
             animSequence->FullFilePathName = fullFileName;
             //animSequence->Load();
 
@@ -89,7 +89,7 @@ TSharedPtr<UResource> FResourceManager::GetOrCreate(EResourceType resorceType, c
             break;
         case RT_Texture:
         {
-            TSharedPtr<UResource> texture2D(new UTexture2D());
+            TSharedPtr<UResource> texture2D = TMakeShared<UTexture2D>();
             texture2D->FullFilePathName = fullFileName;
             texture2D->Load();
 
@@ -100,7 +100,7 @@ TSharedPtr<UResource> FResourceManager::GetOrCreate(EResourceType resorceType, c
         break;
         case RT_Material:
         {
-            TSharedPtr<UResource> material(new UMaterial());
+            TSharedPtr<UResource> material = TMakeShared<UMaterial>();
             material->FullFilePathName = fullFileName;
             material->Load();
 

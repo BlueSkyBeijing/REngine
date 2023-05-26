@@ -1,5 +1,4 @@
-﻿#include "vld.h"
-#include "PrecompiledHeader.h"
+﻿#include "PrecompiledHeader.h"
 
 #include "FEngine.h"
 #include "TSingleton.h"

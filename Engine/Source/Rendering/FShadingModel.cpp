@@ -13,7 +13,7 @@ FShadingModel::~FShadingModel()
 {
 }
 
-TMap<int32, FShadingModel*>* FShadingModel::ShadingModels = nullptr;
+TMap<int32, FShadingModel*>* FShadingModel::ShadingModels = new TMap<int32, FShadingModel*>;
 
 const FShadingModel* FShadingModel::GetShadingModel(int32 id)
 {
@@ -31,8 +31,6 @@ const FShadingModel* FShadingModel::GetShadingModel(int32 id)
 
 void FShadingModel::Init()
 {
-    FShadingModel::ShadingModels = new TMap<int32, FShadingModel*>;
-
     VertexShaderInfo = new FShaderInfo;
     PixelShaderInfo = new FShaderInfo;
     PixelShaderShadowInfo = new FShaderInfo;
@@ -102,6 +100,6 @@ void FShadingModel::UnInitAllShadingModels()
     }
     ShadingModels->clear();
 
-    delete ShadingModels;
-    ShadingModels = nullptr;
+    //delete ShadingModels;
+    //ShadingModels = nullptr;
 }
