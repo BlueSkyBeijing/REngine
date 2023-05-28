@@ -393,6 +393,58 @@ float3 EvaluateHairMultipleScattering(
     return TransmittanceData.GlobalScattering * (Fs + TransmittanceData.LocalScattering) * TransmittanceData.OpaqueVisibility;
 }
 
+float3 noise(float3 dir, float3 pos, float intensity)
+{
+    float3 p0 = floor(pos);
+    float3 p1 = p0 + float3(1.0, 0.0, 0.0);
+    float3 p2 = p0 + float3(0.0, 1.0, 0.0);
+    float3 p3 = p0 + float3(1.0, 1.0, 0.0);
+    float3 p4 = p0 + float3(0.0, 0.0, 1.0);
+    float3 p5 = p0 + float3(1.0, 0.0, 1.0);
+    float3 p6 = p0 + float3(0.0, 1.0, 1.0);
+    float3 p7 = p0 + float3(1.0, 1.0, 1.0);
+
+    float3 d0 = dir * (pos - p0);
+    float3 d1 = dir * (pos - p1);
+    float3 d2 = dir * (pos - p2);
+    float3 d3 = dir * (pos - p3);
+    float3 d4 = dir * (pos - p4);
+    float3 d5 = dir * (pos - p5);
+    float3 d6 = dir * (pos - p6);
+    float3 d7 = dir * (pos - p7);
+
+    float3 g0 = normalize(d0);
+    float3 g1 = normalize(d1);
+    float3 g2 = normalize(d2);
+    float3 g3 = normalize(d3);
+    float3 g4 = normalize(d4);
+    float3 g5 = normalize(d5);
+    float3 g6 = normalize(d6);
+    float3 g7 = normalize(d7);
+
+    float n0 = dot(g0, d0);
+    float n1 = dot(g1, d1);
+    float n2 = dot(g2, d2);
+    float n3 = dot(g3, d3);
+    float n4 = dot(g4, d4);
+    float n5 = dot(g5, d5);
+    float n6 = dot(g6, d6);
+    float n7 = dot(g7, d7);
+
+    float3 weights = smoothstep(0.0, 1.0, abs(dir));
+    float4x4 b = float4x4(
+        n0, n1, n2, n3,
+        n4, n5, n6, n7,
+        0.0, 0.0, 0.0, 0.0,
+        0.0, 0.0, 0.0, 0.0
+        );
+
+    float3 offset = intensity * normalize(dot(weights, mul(b, float4(1.0, pos.x - p0.x, pos.y - p0.y, pos.z - p0.z))));
+    float3 newDir = dir + offset;
+
+    return normalize(newDir);
+}
+
 // Hair BSDF
 // Approximation to HairShadingRef using concepts from the following papers:
 // [Marschner et al. 2003, "Light Scattering from Human Hair Fibers"]
@@ -412,7 +464,7 @@ float3 HairShading(float3 BaseColor, float Metallic, float Roughness, float Spec
     float KajiyaKayDiffuseFactor = 1.0f;
 
     // N is the vector parallel to hair pointing toward root
-
+    //N = noise(N, V*100, 0.5);
     const float VoL = dot(V, L);
     const float SinThetaL = clamp(dot(N, L), -1.f, 1.f);
     const float SinThetaV = clamp(dot(N, V), -1.f, 1.f);
@@ -522,11 +574,11 @@ float3 HairShading(float3 BaseColor, float Metallic, float Roughness, float Spec
 
 float3 HairBxDF(float3 lightColor, float lightIntensity, half3 N, half3 V, half3 L, float shadow, float thickness, float3 baseColor, float metallic, float roughness, float specular)
 {
-    float TransmissionShadow = shadow;
+    float TransmissionShadow = thickness;
     FHairTransmittanceData HairTransmittance = InitHairTransmittanceData();
     const float3 BsdfValue = HairShading(baseColor, metallic, roughness, specular, L, V, N, TransmissionShadow, HairTransmittance, 1, 0, uint2(0, 0));
 
-    float3 transmission = BsdfValue;
+    float3 transmission = BsdfValue * shadow;
 
     float3 lighting = transmission;
     lighting *= lightColor * lightIntensity;
