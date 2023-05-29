@@ -723,7 +723,7 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
 #elif SHADING_MODEL == SHADING_MODEL_HAIR
     return HairBxDF(lightColor, lightIntensity, normal, lightDir, viewDir, shadow, thickness, baseColor, metallic, roughness, specular);
 #elif SHADING_MODEL == SHADING_MODEL_CLOTH
-    float3 fuzzColor = float3(1, 1, 1);
+    float3 fuzzColor = subsurfaceColor;
     float cloth = 1;
     return ClothBxDF(normal, viewDir, lightDir, lightColor, lightIntensity, fuzzColor, cloth, roughness, diffuseColor, specularColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_EYE
