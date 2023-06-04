@@ -572,11 +572,11 @@ float3 HairShading(float3 BaseColor, float Metallic, float Roughness, float Spec
     return S;
 }
 
-float3 HairBxDF(float3 lightColor, float lightIntensity, half3 N, half3 V, half3 L, float shadow, float thickness, float3 baseColor, float metallic, float roughness, float specular)
+float3 HairBxDF(float3 lightColor, float lightIntensity, half3 N, half3 V, half3 L, float shadow, float thickness, float4 baseColor, float metallic, float roughness, float specular)
 {
-    float TransmissionShadow = shadow;
+    float TransmissionShadow = thickness;
     FHairTransmittanceData HairTransmittance = InitHairTransmittanceData();
-    const float3 BsdfValue = HairShading(baseColor, metallic, roughness, specular, L, V, N, TransmissionShadow, HairTransmittance, 1, 0, uint2(0, 0));
+    const float3 BsdfValue = HairShading(baseColor.rgb, metallic, roughness, specular, L, V, N, TransmissionShadow, HairTransmittance, 1, 0, uint2(0, 0));
 
     float3 transmission = BsdfValue * shadow;
 
@@ -631,14 +631,14 @@ float3 OctahedronToUnitVector( float2 oct )
 	return normalize(normal);
 }
 
-float3 EyeBxDF(float3 normal, float3 viewDir, float3 lightDir, float3 lightColor, float lightIntensity, float specular, float3 specularColor, float3 diffuseColor, float roughness, float shadow )
+float3 EyeBxDF(float3 normal, float3 viewDir, float3 lightDir, float3 lightColor, float lightIntensity, float specular, float3 specularColor, float3 diffuseColor, float4 baseColor, float roughness, float shadow )
 {
     float NoL = max(dot(lightDir, normal), 0.00001);
 
     float2 oct = 1;
     float3 irisNormal		= OctahedronToUnitVector(oct);
 	const float  irisDistance	= 1;
-	const float  irisMask		= 1;
+	const float  irisMask		= baseColor.a;
 
 	// Blend in the negative intersection normal to create some concavity
 	// Not great as it ties the concavity to the convexity of the cornea surface
@@ -704,7 +704,7 @@ void CalculateDiffuseAndSpecularColor(float specular, float metallic, inout floa
     diffuseColor = diffuseColor - diffuseColor * metallic;
 }
 
-float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float roughness, float opacity, float3 specularColor, float3 emissiveColor, float3 subsurfaceColor, float metallic, float shadow, float thickness, float specular, float3 baseColor)
+float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 viewDir, float3 diffuseColor, float roughness, float opacity, float3 specularColor, float3 emissiveColor, float3 subsurfaceColor, float metallic, float shadow, float thickness, float specular, float4 baseColor)
 {        
 #if SHADING_MODEL == SHADING_MODEL_UNLIT
     return Unlit(normal, lightDir, lightColor, lightIntensity, viewDir, emissiveColor, shadow);
@@ -727,7 +727,7 @@ float3 Lighting(float3 normal, float3 lightDir, float3 lightColor, float lightIn
     float cloth = 1;
     return ClothBxDF(normal, viewDir, lightDir, lightColor, lightIntensity, fuzzColor, cloth, roughness, diffuseColor, specularColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_EYE
-    return EyeBxDF(normal, viewDir, lightDir, lightColor, lightIntensity, 0, specularColor, diffuseColor, roughness, shadow);
+    return EyeBxDF(normal, viewDir, lightDir, lightColor, lightIntensity, 0, specularColor, diffuseColor, baseColor, roughness, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_SIGLE_LAYER_WATER
     return DefaultLitBxDF(normal, lightDir, lightColor, lightIntensity, viewDir, diffuseColor, roughness, specularColor, shadow);
 #elif SHADING_MODEL == SHADING_MODEL_THIN_TRANSLUCENT

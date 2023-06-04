@@ -57,7 +57,7 @@ float Luminance(float3 linearColor)
 
 struct MaterialContext
 {
-    float3 BaseColor;
+    float4 BaseColor;
     float Metallic;
     float Specular;
     float Roughness;
@@ -71,7 +71,7 @@ struct MaterialContext
 };
 
 void InitMaterialContext(inout MaterialContext context,
-    float3 baseColor,
+    float4 baseColor,
     float metallic,
     float specular,
     float roughness,

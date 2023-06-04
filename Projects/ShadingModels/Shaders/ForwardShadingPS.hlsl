@@ -43,7 +43,7 @@ float4 PSMain(VertexShaderOutput pixelIn, bool IsFrontFace: SV_IsFrontFace) : SV
     subsurfaceColor *= SubsurfaceColorScale;
 
     MaterialContext matContext;
-    InitMaterialContext(matContext, baseColor.rgb, metallic, specular, roughness, opacity, emissiveColor.rgb, subsurfaceColor.rgb);
+    InitMaterialContext(matContext, baseColor, metallic, specular, roughness, opacity, emissiveColor.rgb, subsurfaceColor.rgb);
     CalculateDiffuseAndSpecularColor(matContext.Specular, matContext.Metallic, matContext.DiffuseColor, matContext.SpecularColor);
 
     LightingContext litContextDirectional;
