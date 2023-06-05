@@ -10,7 +10,7 @@ FShadingModels::~FShadingModels()
 
 void FShadingModels::Init()
 {
-    FShadingModel::UnInitAllShadingModels();
+    FShadingModel::ClearAllShadingModels();
 
     FShadingModel* shadingModel = new FCustomShadingModel(0);
     shadingModel->Init();

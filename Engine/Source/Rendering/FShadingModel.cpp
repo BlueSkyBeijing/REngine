@@ -86,7 +86,7 @@ void FShadingModel::UnInit()
 
 }
 
-void FShadingModel::UnInitAllShadingModels()
+void FShadingModel::ClearAllShadingModels()
 {
     TMap<int32, FShadingModel*>::iterator it = ShadingModels->begin();
     if (it != ShadingModels->end())
@@ -99,7 +99,12 @@ void FShadingModel::UnInitAllShadingModels()
         }
     }
     ShadingModels->clear();
+}
 
-    //delete ShadingModels;
-    //ShadingModels = nullptr;
+void FShadingModel::UnInitAllShadingModels()
+{
+    ClearAllShadingModels();
+
+    delete ShadingModels;
+    ShadingModels = nullptr;
 }

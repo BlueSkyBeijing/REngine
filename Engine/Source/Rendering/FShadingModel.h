@@ -16,6 +16,7 @@ public:
     virtual void UnInit();
 
     static const FShadingModel* GetShadingModel(int32 id);
+    static void ClearAllShadingModels();
     static void UnInitAllShadingModels();
 
 public:
