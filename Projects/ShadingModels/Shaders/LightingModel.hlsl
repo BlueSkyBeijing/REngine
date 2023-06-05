@@ -839,7 +839,19 @@ float3 GetImageBasedReflectionLighting(LightingContext litContext, MaterialConte
 
 float3 GetImageBasedDiffuseLighting(LightingContext litContext, MaterialContext matContext)
 {
-    float3 diffuseLighting = matContext.DiffuseColor.rgb * 0.1;
+#if SHADING_MODEL == SHADING_MODEL_CLEAR_COAT
+    float3 viewDir = litContext.ViewDir;
+    float roughness = matContext.Roughness;
+    float3 specularColor = matContext.SpecularColor;
+    float3 normal = litContext.Normal;
+    float3 r = reflect(-viewDir, normal);
+    float4 diffuseIBLSample = EnvironmentMap.SampleLevel(EnvironmentMapSampe, r, 5);
+    float3 diffuseIBL = RGBMDecode(diffuseIBLSample, 16.0f);
+    diffuseIBL = diffuseIBL * diffuseIBL * 0.4;
+    return diffuseIBL;
+#endif
+
+    float3 diffuseLighting = matContext.DiffuseColor.rgb * 0.5;
 
     return diffuseLighting;
 }
