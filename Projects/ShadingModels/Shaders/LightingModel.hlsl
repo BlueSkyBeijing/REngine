@@ -578,7 +578,7 @@ float3 HairBxDF(float3 lightColor, float lightIntensity, half3 N, half3 V, half3
     FHairTransmittanceData HairTransmittance = InitHairTransmittanceData();
     const float3 BsdfValue = HairShading(baseColor.rgb, metallic, roughness, specular, L, V, N, TransmissionShadow, HairTransmittance, 1, 0, uint2(0, 0));
 
-    float3 transmission = BsdfValue * shadow;
+    float3 transmission = BsdfValue;
 
     float3 lighting = transmission;
     lighting *= lightColor * lightIntensity;
