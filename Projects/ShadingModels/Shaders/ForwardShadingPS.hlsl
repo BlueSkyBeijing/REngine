@@ -69,7 +69,7 @@ float4 PSMain(VertexShaderOutput pixelIn, bool IsFrontFace: SV_IsFrontFace) : SV
 
 #if SHADING_MODEL == SHADING_MODEL_CLEAR_COAT
     const float clearCoat = 1.0f;
-    const float clearCoatRoughness = 0.01f;
+    const float clearCoatRoughness = 0.04f;
 
     float NoV = max(dot(litContextDirectional.ViewDir, litContextDirectional.Normal), 0.0);
     RemapClearCoatDiffuseAndSpecularColor(baseColor.rgb, roughness, metallic, specular, clearCoat, NoV, matContext.DiffuseColor, matContext.SpecularColor);
@@ -82,7 +82,7 @@ float4 PSMain(VertexShaderOutput pixelIn, bool IsFrontFace: SV_IsFrontFace) : SV
     specularIBLLighting += specularIBL * layerAttenuation * (matContext.SpecularColor * ab.x + ab.y * saturate(50 * matContext.SpecularColor.g) * (1 - clearCoat)) * 10.0;
 
     MaterialContext coatContext = matContext;
-    matContext.Roughness = clearCoatRoughness;
+    coatContext.Roughness = clearCoatRoughness;
     specularIBL = GetImageBasedReflectionLighting(litContextDirectional, coatContext);
 #endif
     specularIBLLighting += specularIBL;
