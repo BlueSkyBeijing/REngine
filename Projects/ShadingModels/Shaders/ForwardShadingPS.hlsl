@@ -69,7 +69,7 @@ float4 PSMain(VertexShaderOutput pixelIn, bool IsFrontFace: SV_IsFrontFace) : SV
 
 #if SHADING_MODEL == SHADING_MODEL_CLEAR_COAT
     const float clearCoat = 1.0f;
-    const float clearCoatRoughness = 0.04f;
+    const float clearCoatRoughness = 0.01f;
 
     float NoV = max(dot(litContextDirectional.ViewDir, litContextDirectional.Normal), 0.0);
     RemapClearCoatDiffuseAndSpecularColor(baseColor.rgb, roughness, metallic, specular, clearCoat, NoV, matContext.DiffuseColor, matContext.SpecularColor);
