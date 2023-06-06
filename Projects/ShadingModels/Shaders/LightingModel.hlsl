@@ -851,7 +851,7 @@ float3 GetImageBasedDiffuseLighting(LightingContext litContext, MaterialContext 
     return diffuseIBL;
 #endif
 
-    float3 diffuseLighting = matContext.DiffuseColor.rgb * 0.5;
+    float3 diffuseLighting = matContext.DiffuseColor.rgb * 0.15;
 
     return diffuseLighting;
 }
