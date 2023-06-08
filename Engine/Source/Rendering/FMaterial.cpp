@@ -43,25 +43,25 @@ void FMaterial::Init()
         return;
     }
 
-    VertexShader = TSingleton<FShaderManager>::GetInstance().GetOrCreate(*shadingModel->VertexShaderInfo);
+    VertexShader = TSingleton<FShaderManager>::GetInstance().GetOrCreate(shadingModel->VertexShaderInfo);
 
-    FShaderInfo pixelShaderInfo = *shadingModel->PixelShaderInfo;
+    FShaderInfo pixelShaderInfo = shadingModel->PixelShaderInfo;
     pixelShaderInfo.Defines.insert(std::make_pair("MATERIALBLENDING_MASKED", std::to_string(int(BlendMode == BM_Masked))));
     PixelShader = TSingleton<FShaderManager>::GetInstance().GetOrCreate(pixelShaderInfo);
 
-    FShaderInfo pixelShaderShadowInfo = *shadingModel->PixelShaderShadowInfo;
+    FShaderInfo pixelShaderShadowInfo = shadingModel->PixelShaderShadowInfo;
     pixelShaderShadowInfo.Defines.insert(std::make_pair("MATERIALBLENDING_MASKED", std::to_string(int(BlendMode == BM_Masked))));
     PixelShaderShadow = TSingleton<FShaderManager>::GetInstance().GetOrCreate(pixelShaderShadowInfo);
 
-    FShaderInfo pixelShaderGPUSkinInfo = *shadingModel->PixelShaderGPUSkinInfo;
+    FShaderInfo pixelShaderGPUSkinInfo = shadingModel->PixelShaderGPUSkinInfo;
     pixelShaderGPUSkinInfo.Defines.insert(std::make_pair("MATERIALBLENDING_MASKED", std::to_string(int(BlendMode == BM_Masked))));
     PixelShaderGPUSkin = TSingleton<FShaderManager>::GetInstance().GetOrCreate(pixelShaderGPUSkinInfo);
 
-    VertexShaderShadow = TSingleton<FShaderManager>::GetInstance().GetOrCreate(*shadingModel->VertexShaderShadowInfo);
+    VertexShaderShadow = TSingleton<FShaderManager>::GetInstance().GetOrCreate(shadingModel->VertexShaderShadowInfo);
 
-    VertexShaderGPUSkin = TSingleton<FShaderManager>::GetInstance().GetOrCreate(*shadingModel->VertexShaderGPUSkinInfo);
+    VertexShaderGPUSkin = TSingleton<FShaderManager>::GetInstance().GetOrCreate(shadingModel->VertexShaderGPUSkinInfo);
 
-    VertexShaderShadowGPUSkin = TSingleton<FShaderManager>::GetInstance().GetOrCreate(*shadingModel->VertexShaderShadowGPUSkinInfo);
+    VertexShaderShadowGPUSkin = TSingleton<FShaderManager>::GetInstance().GetOrCreate(shadingModel->VertexShaderShadowGPUSkinInfo);
 
     for (const auto& tex : mTexturePaths)
     {
@@ -74,12 +74,12 @@ void FMaterial::Init()
     }
 
     const FString envCubeTexture = "T_EnvCube";
-    const FString envMap = *FConfigManager::DefaultTexturePath + envCubeTexture + *FConfigManager::DefaultTextureFileSuffix;
+    const FString envMap = FConfigManager::DefaultTexturePath + envCubeTexture + FConfigManager::DefaultTextureFileSuffix;
     FRHIResource* texture = TSingleton<FRHIResourceManager>::GetInstance().GetOrCreate(ERHIResourceType::RHIRT_TextureCube, envMap);
     EnvMap = dynamic_cast<FRHITexture*>(texture);
 
     const FString preIntegratedBRDFTexture = "T_PreintegratedSkinBRDF";
-    const FString preIntegratedBRDF = *FConfigManager::DefaultTexturePath + preIntegratedBRDFTexture + *FConfigManager::DefaultTextureFileSuffix;
+    const FString preIntegratedBRDF = FConfigManager::DefaultTexturePath + preIntegratedBRDFTexture + FConfigManager::DefaultTextureFileSuffix;
     texture = TSingleton<FRHIResourceManager>::GetInstance().GetOrCreate(ERHIResourceType::RHIRT_Texture2D, preIntegratedBRDF);
     PreIntegratedBRDF = dynamic_cast<FRHITexture*>(texture);
 

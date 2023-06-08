@@ -482,7 +482,7 @@ FRHIShader* FD3D12RHI::GetOrCreate(const FShaderInfo& shaderInfo)
     FString suffix;
     FullFileNameSplit(WStringToString(shaderInfo.FilePathName).c_str(), filePath, fileName, name, suffix);
 
-    FShaderInclude shaderInclude(filePath.c_str(), (*FConfigManager::EngineShaderDir).c_str());
+    FShaderInclude shaderInclude(filePath.c_str(), (FConfigManager::EngineShaderDir).c_str());
     D3DCompileFromFile(shaderInfo.FilePathName.c_str(), shaderDefines, &shaderInclude, shaderInfo.EnterPoint.c_str(), shaderInfo.Target.c_str(), compileFlags, 0, &shader->mShader, &errors);
     if (errors != nullptr)
     {

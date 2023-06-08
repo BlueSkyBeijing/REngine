@@ -50,9 +50,9 @@ void UMaterial::Load()
         FString texFile;
         ReadUnrealString(materialFile, texFile);
 
-        texFile = *FConfigManager::DefaultTexturePath +
+        texFile = FConfigManager::DefaultTexturePath +
             texFile +
-            *FConfigManager::DefaultTextureFileSuffix;
+            FConfigManager::DefaultTextureFileSuffix;
 
         mTexturePaths.insert(std::pair<FString, FString>(texName, texFile));
     }

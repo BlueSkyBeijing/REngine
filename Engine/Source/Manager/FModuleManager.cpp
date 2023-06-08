@@ -48,7 +48,7 @@ IModuleInterface* FModuleManager::FindModule(FString InModuleName)
 
 bool FModuleManager::LoadProjectMoudules(const FString& projectPath, const FString& projectName)
 {
-	FString dllFileName = projectPath + "Binaries\\" + *FConfigManager::Platform + "\\" + *FConfigManager::Configuration + "\\" + projectName + ".dll";
+	FString dllFileName = projectPath + "Binaries\\" + FConfigManager::Platform + "\\" + FConfigManager::Configuration + "\\" + projectName + ".dll";
 	HINSTANCE handle = LoadLibraryA(dllFileName.c_str());
 	typedef IModuleInterface* (*InitializeModuleFunPtr)();
 	if (handle == nullptr)

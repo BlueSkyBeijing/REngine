@@ -40,8 +40,8 @@ void UPlayer::Load()
         mMaterials.push_back(mat);
     }
 
-    const FString animFileName0 =  *FConfigManager::DefaultAnimSequencePath + mStateAnimMap[EPlayerState::PS_Stand] + *FConfigManager::DefaultAnimSequenceFileSuffix;
-    const FString animFileName1 = *FConfigManager::DefaultAnimSequencePath + mStateAnimMap[EPlayerState::PS_Walk] + *FConfigManager::DefaultAnimSequenceFileSuffix;
+    const FString animFileName0 =  FConfigManager::DefaultAnimSequencePath + mStateAnimMap[EPlayerState::PS_Stand] + FConfigManager::DefaultAnimSequenceFileSuffix;
+    const FString animFileName1 = FConfigManager::DefaultAnimSequencePath + mStateAnimMap[EPlayerState::PS_Walk] + FConfigManager::DefaultAnimSequenceFileSuffix;
 
     mAnimRing[0] = std::dynamic_pointer_cast<UAnimSequence>(TSingleton<FResourceManager>::GetInstance().GetOrCreate(EResourceType::RT_Animation, animFileName0));
     mAnimRing[0]->SetSkeleton(mSkeletalMesh->GetSkeleton());

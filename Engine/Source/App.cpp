@@ -66,14 +66,14 @@ int main(int argc, char* argv[])
         FString name;
         FString suffix;
         FullFileNameSplit(argv[1], filePath, fileName, name, suffix);
-        *FConfigManager::ProjectDir = filePath;
-        *FConfigManager::ProjectName = name;
+        FConfigManager::ProjectDir = filePath;
+        FConfigManager::ProjectName = name;
     }
 
     if (argc > 3)
     {
-        *FConfigManager::Platform = argv[2];
-        *FConfigManager::Configuration = argv[3];
+        FConfigManager::Platform = argv[2];
+        FConfigManager::Configuration = argv[3];
     }
 
     SetWindowsHookEx(WH_KEYBOARD_LL, ConsoleVariableProc, NULL, 0);

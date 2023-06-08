@@ -77,3 +77,6 @@
 #else
 // other os
 #endif
+
+// disable std warnings in dll export
+#pragma warning( disable : 4251 )

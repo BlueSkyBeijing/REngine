@@ -89,7 +89,7 @@ void InitMaterialContext(inout MaterialContext context,
 
     context.EmissiveColor = emissiveColor;
     context.SubsurfaceColor = subsurfaceColor;
-    context.DiffuseColor = baseColor;
+    context.DiffuseColor = baseColor.rgb;
     context.SpecularColor = float3(0,0,0);
 }
 

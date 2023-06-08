@@ -109,61 +109,61 @@ void FInputManager::OnKeyUp(WPARAM btnState)
     {
         case 0x30:
         {
-            FString cmd = *TSingleton<FConfigManager>::GetInstance().KeyNum0Cmd;
+            FString cmd = TSingleton<FConfigManager>::GetInstance().KeyNum0Cmd;
             TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand(cmd);
         }
         break;
         case 0x31:
         {
-            FString cmd = *TSingleton<FConfigManager>::GetInstance().KeyNum1Cmd;
+            FString cmd = TSingleton<FConfigManager>::GetInstance().KeyNum1Cmd;
             TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand(cmd);
         }
         break;
         case 0x32:
         {
-            FString cmd = *TSingleton<FConfigManager>::GetInstance().KeyNum2Cmd;
+            FString cmd = TSingleton<FConfigManager>::GetInstance().KeyNum2Cmd;
             TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand(cmd);
         }
         break;
         case 0x33:
         {
-            FString cmd = *TSingleton<FConfigManager>::GetInstance().KeyNum3Cmd;
+            FString cmd = TSingleton<FConfigManager>::GetInstance().KeyNum3Cmd;
             TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand(cmd);
         }
         break;
         case 0x34:
         {
-            FString cmd = *TSingleton<FConfigManager>::GetInstance().KeyNum4Cmd;
+            FString cmd = TSingleton<FConfigManager>::GetInstance().KeyNum4Cmd;
             TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand(cmd);
         }
         break;
         case 0x35:
         {
-            FString cmd = *TSingleton<FConfigManager>::GetInstance().KeyNum5Cmd;
+            FString cmd = TSingleton<FConfigManager>::GetInstance().KeyNum5Cmd;
             TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand(cmd);
         }
         break;
         case 0x36:
         {
-            FString cmd = *TSingleton<FConfigManager>::GetInstance().KeyNum6Cmd;
+            FString cmd = TSingleton<FConfigManager>::GetInstance().KeyNum6Cmd;
             TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand(cmd);
         }
         break;
         case 0x37:
         {
-            FString cmd = *TSingleton<FConfigManager>::GetInstance().KeyNum7Cmd;
+            FString cmd = TSingleton<FConfigManager>::GetInstance().KeyNum7Cmd;
             TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand(cmd);
         }
         break;
         case 0x38:
         {
-            FString cmd = *TSingleton<FConfigManager>::GetInstance().KeyNum8Cmd;
+            FString cmd = TSingleton<FConfigManager>::GetInstance().KeyNum8Cmd;
             TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand(cmd);
         }
         break;
         case 0x39:
         {
-            FString cmd = *TSingleton<FConfigManager>::GetInstance().KeyNum9Cmd;
+            FString cmd = TSingleton<FConfigManager>::GetInstance().KeyNum9Cmd;
             TSingleton<FConsoleVariableManager>::GetInstance().ProcessCommand(cmd);
         }
         break;
