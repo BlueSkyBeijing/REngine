@@ -63,36 +63,30 @@ WSAD控制相机前后左右移动
 
 ## 目前进展
 
-读取UE4导出的二进制staticmesh，目前仅有position,normal,texcoord信息，渲染basecolor贴图作为颜色输出。
-
-独立出renderthread，封装rhi层，增加渲染线程和主线程同步
+读取UE4导出的二进制staticmesh
 
 读取场景文件
 
-摄像机控制
+摄像机控制和UE相同
 
-简单的BlinnPhong光照效果
+shadowmap, bloom效果
 
-简单的shadowmap效果
+骨骼动画及融合效果
 
-简单的bloom效果
-
-简单的骨骼动画及融合效果
-
-简单第三人称相机
-
-材质存储basecolor和blendmode和opacity
-
-半透明物体
-
-点光源（暂无根据影响的点光源动态选择最优shader）
-
-目前仍有很多方面需要完善
-
-目前只是初步实现unlit, default lit, subsurface, preintegrated skin, two side foliage, clear coat, cloth(clear coat 和 cloth还没搞透彻, 其它的还有能量守恒部分还没有弄清楚)， 还没有仔细调效果。
-
-还剩下几个比较复杂的subsurface profile, eye, hair, water以及thin translucent还没搞清楚
+实现unlit, default lit, subsurface, preintegrated skin, two side foliage, clear coat, cloth(clear coat 和 cloth
 
 截图
 
-![screenshot](Engine/Documentation/Image/current_screenshot.jpg)
+![screenshot](Engine/Documentation/Image/defaultlit.jpg)
+
+![screenshot](Engine/Documentation/Image/skin.jpg)
+
+![screenshot](Engine/Documentation/Image/subsurface.jpg)
+
+![screenshot](Engine/Documentation/Image/foliage.jpg)
+
+![screenshot](Engine/Documentation/Image/clearcoat.jpg)
+
+![screenshot](Engine/Documentation/Image/cloth.jpg)
+
+![screenshot](Engine/Documentation/Image/hair.jpg)
