@@ -77,16 +77,16 @@ shadowmap, bloom效果
 
 截图
 
-![screenshot](Engine/Documentation/Image/defaultlit.jpg)
+![screenshot](Engine/Documentation/Image/defaultlit.png)
 
-![screenshot](Engine/Documentation/Image/skin.jpg)
+![screenshot](Engine/Documentation/Image/skin.png)
 
-![screenshot](Engine/Documentation/Image/subsurface.jpg)
+![screenshot](Engine/Documentation/Image/subsurface.png)
 
-![screenshot](Engine/Documentation/Image/foliage.jpg)
+![screenshot](Engine/Documentation/Image/foliage.png)
 
-![screenshot](Engine/Documentation/Image/clearcoat.jpg)
+![screenshot](Engine/Documentation/Image/clearcoat.png)
 
-![screenshot](Engine/Documentation/Image/cloth.jpg)
+![screenshot](Engine/Documentation/Image/cloth.png)
 
-![screenshot](Engine/Documentation/Image/hair.jpg)
+![screenshot](Engine/Documentation/Image/hair.png)
